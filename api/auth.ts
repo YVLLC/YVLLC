@@ -1,12 +1,13 @@
+import type { NextApiRequest, NextApiResponse } from "next";
 const jwt = require("jsonwebtoken");
 
-const USERS = {
+const USERS: { [email: string]: { password: string } } = {
   "admin@yesviral.com": { password: "testadmin123" },
 };
 
 const JWT_SECRET = process.env.JWT_SECRET || "supersecret";
 
-export default function handler(req, res) {
+export default function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
@@ -30,6 +31,10 @@ export default function handler(req, res) {
   } else {
     return res.status(400).json({ error: "Invalid mode" });
   }
+
+  const token = jwt.sign({ email }, JWT_SECRET, { expiresIn: "7d" });
+  return res.status(200).json({ token });
+}
 
   const token = jwt.sign({ email }, JWT_SECRET, { expiresIn: "7d" });
   return res.status(200).json({ token });
