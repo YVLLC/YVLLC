@@ -1,13 +1,12 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-import jwt from "jsonwebtoken";
+const jwt = require("jsonwebtoken");
 
-const USERS: { [email: string]: { password: string } } = {
+const USERS = {
   "admin@yesviral.com": { password: "testadmin123" },
 };
 
 const JWT_SECRET = process.env.JWT_SECRET || "supersecret";
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
+export default function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
