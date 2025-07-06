@@ -1,5 +1,6 @@
+// pages/api/auth.ts
 import type { NextApiRequest, NextApiResponse } from "next";
-const jwt = require("jsonwebtoken");
+import jwt from "jsonwebtoken";
 
 const USERS: { [email: string]: { password: string } } = {
   "admin@yesviral.com": { password: "testadmin123" },
@@ -23,20 +24,15 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     if (!user || user.password !== password) {
       return res.status(401).json({ error: "Invalid credentials" });
     }
-
-    const token = jwt.sign({ email }, JWT_SECRET, { expiresIn: "7d" });
-    return res.status(200).json({ token });
-
   } else if (mode === "signup") {
     if (USERS[email]) {
       return res.status(409).json({ error: "User already exists" });
     }
-
     USERS[email] = { password };
-    const token = jwt.sign({ email }, JWT_SECRET, { expiresIn: "7d" });
-    return res.status(200).json({ token });
-
   } else {
     return res.status(400).json({ error: "Invalid mode" });
   }
+
+  const token = jwt.sign({ email }, JWT_SECRET, { expiresIn: "7d" });
+  return res.status(200).json({ token });
 }
