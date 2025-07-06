@@ -1,0 +1,74 @@
+.admin-dashboard {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: #ffffff;
+  color: #111111;
+  font-family: 'Inter', sans-serif;
+}
+
+.admin-dashboard h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+
+.admin-orders-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 2rem;
+  background: #f9f9f9;
+}
+
+.admin-orders-table th,
+.admin-orders-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.admin-orders-table th {
+  background-color: #e6f0ff;
+  color: #005fcc;
+  font-weight: 600;
+}
+
+.admin-orders-table tr:hover {
+  background-color: #f1f8ff;
+}
+
+.status-pill {
+  display: inline-block;
+  padding: 0.3rem 0.6rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.status-completed {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.status-pending {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.status-processing {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.status-cancelled {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+.admin-login-notice {
+  text-align: center;
+  margin-top: 2rem;
+  font-size: 1rem;
+  color: #ef4444;
+}

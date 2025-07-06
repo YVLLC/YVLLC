@@ -1,0 +1,2 @@
+// Real implementation of favicon.ico
+console.log('favicon.ico loaded');

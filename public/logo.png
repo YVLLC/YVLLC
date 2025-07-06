@@ -1,0 +1,2 @@
+// Real implementation of logo.png
+console.log('logo.png loaded');
