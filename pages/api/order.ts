@@ -1,37 +1,47 @@
-// pages/api/order.ts
 import type { NextApiRequest, NextApiResponse } from "next";
-import axios from "axios";
+import jwt from "jsonwebtoken";
 
-const JAP_API_KEY = process.env.JAP_API_KEY || "YOUR_JAP_API_KEY";
+// Dummy order data – replace with DB later if needed
+const ORDERS = [
+  {
+    _id: "1",
+    orderId: "123456",
+    service: "Instagram Followers",
+    link: "https://instagram.com/yourpage",
+    quantity: 1000,
+    status: "Completed",
+    createdAt: new Date().toISOString(),
+  },
+  {
+    _id: "2",
+    orderId: "789012",
+    service: "TikTok Likes",
+    link: "https://tiktok.com/@user/video/xyz",
+    quantity: 500,
+    status: "Pending",
+    createdAt: new Date().toISOString(),
+  },
+];
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== "POST") {
+const JWT_SECRET = process.env.JWT_SECRET || "supersecret";
+
+export default function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method !== "GET") {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { serviceId, link, quantity } = req.body;
-
-  if (!serviceId || !link || !quantity) {
-    return res.status(400).json({ error: "Missing required fields" });
+  // 🔐 Check Authorization header
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({ error: "Unauthorized" });
   }
 
-  try {
-    const response = await axios.post("https://justanotherpanel.com/api/v2", null, {
-      params: {
-        key: JAP_API_KEY,
-        action: "add",
-        service: serviceId,
-        link,
-        quantity,
-      },
-    });
+  const token = authHeader.split(" ")[1];
 
-    if (response.data && response.data.order) {
-      return res.status(200).json({ success: true, orderId: response.data.order });
-    } else {
-      return res.status(500).json({ error: "Invalid response from JAP API", raw: response.data });
-    }
-  } catch (err: any) {
-    return res.status(500).json({ error: "Failed to create order", details: err.message });
+  try {
+    jwt.verify(token, JWT_SECRET); // Throws error if invalid
+    return res.status(200).json({ orders: ORDERS });
+  } catch (err) {
+    return res.status(401).json({ error: "Invalid token" });
   }
 }
