@@ -60,7 +60,7 @@ export default function Home() {
           </div>
           <div className="hidden md:block">
             <Image
-              src="/hero-illustration.svg"
+              src="/hero-illustration.png"
               alt="Social Media Growth"
               width={500}
               height={400}
