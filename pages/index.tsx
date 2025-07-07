@@ -1,8 +1,30 @@
 import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
+import { ChevronDown } from "lucide-react";
+import { useState } from "react";
 
 export default function Home() {
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const toggleFaq = (index: number) => {
+    setOpenFaq(openFaq === index ? null : index);
+  };
+
+  const faqs = [
+    {
+      q: "Are these real followers and likes?",
+      a: "Yes — we use tested promotion systems that provide real and lasting engagement."
+    },
+    {
+      q: "Do you need my password?",
+      a: "Never. Just your username or post URL is enough."
+    },
+    {
+      q: "How fast is delivery?",
+      a: "Most orders start processing within 0–30 minutes after payment."
+    }
+  ];
+
   return (
     <>
       <Head>
@@ -15,86 +37,69 @@ export default function Home() {
 
       <main className="px-4 sm:px-6 max-w-7xl mx-auto py-16 space-y-28">
         {/* Hero */}
-        <section className="text-center space-y-8">
-          <Image
-            src="/hero-growth.svg"
-            alt="Social Media Growth"
-            width={200}
-            height={200}
-            className="mx-auto"
-          />
-          <h1 className="text-4xl sm:text-6xl font-extrabold text-[#007BFF] leading-tight">
-            Buy Real Followers, Likes & Views
-            <br className="hidden sm:inline" /> Boost Your Social Presence Fast.
-          </h1>
-          <p className="text-[#444] text-base sm:text-xl max-w-2xl mx-auto">
-            Join 100,000+ creators and brands growing daily with YesViral’s lightning-fast services.
-          </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4 mt-6">
-            <Link href="/checkout">
-              <button className="btn-primary text-base sm:text-lg px-6 sm:px-8 py-3 rounded-full shadow hover:scale-105 transition-transform">
-                View Services
-              </button>
-            </Link>
-            <Link href="/track-order">
-              <button className="btn-secondary text-base sm:text-lg px-6 sm:px-8 py-3 rounded-full hover:scale-105 transition-transform">
-                Try Free Likes
-              </button>
-            </Link>
+        <section className="grid md:grid-cols-2 gap-12 items-center">
+          <div className="space-y-6 text-center md:text-left">
+            <h1 className="text-4xl sm:text-5xl font-extrabold text-[#007BFF] leading-tight">
+              Supercharge Your Social Growth Instantly
+            </h1>
+            <p className="text-[#444] text-base sm:text-lg max-w-xl mx-auto md:mx-0">
+              Get real followers, likes, and views in minutes. Trusted by over 100,000 creators and brands worldwide.
+            </p>
+            <div className="flex flex-col sm:flex-row justify-center md:justify-start gap-4">
+              <Link href="/checkout">
+                <button className="bg-[#007BFF] text-white font-semibold px-8 py-3 rounded-xl shadow-lg hover:bg-[#005FCC] transition text-lg">
+                  View Services
+                </button>
+              </Link>
+              <Link href="/track-order">
+                <button className="bg-white text-[#007BFF] border border-[#007BFF] font-semibold px-8 py-3 rounded-xl hover:bg-[#E6F0FF] transition text-lg">
+                  Try Free Likes
+                </button>
+              </Link>
+            </div>
+          </div>
+          <div className="hidden md:block">
+            <Image
+              src="/hero-illustration.svg"
+              alt="Social Media Growth"
+              width={500}
+              height={400}
+              className="w-full h-auto"
+            />
           </div>
         </section>
 
-        {/* About */}
-        <section id="about" className="text-center space-y-6">
-          <h2 className="text-3xl sm:text-4xl font-bold">Why YesViral?</h2>
-          <p className="max-w-3xl mx-auto text-[#444] text-base sm:text-lg">
-            We’re not just a reseller panel. YesViral is a premium performance-based platform trusted by influencers, agencies, and creators who demand real results — fast.
+        {/* Why YesViral */}
+        <section id="about" className="bg-[#F9FAFB] p-10 rounded-2xl text-center shadow-sm space-y-5">
+          <h2 className="text-3xl sm:text-4xl font-bold text-[#111]">Why Choose YesViral?</h2>
+          <p className="text-[#444] max-w-3xl mx-auto text-base sm:text-lg">
+            We’re not just another reseller. We’re a full-scale growth engine. Lightning-fast delivery, 24/7 support, and real engagement.
           </p>
-          <div className="grid sm:grid-cols-3 gap-6 mt-8">
-            {["Instant Delivery", "Real Engagement", "Secure & Private"].map((label, i) => (
-              <div key={i} className="bg-white border border-[#CFE4FF] p-6 rounded-xl shadow hover:shadow-md transition">
-                <p className="text-lg font-semibold mb-2 text-[#007BFF]">{label}</p>
-                <p className="text-[#444] text-sm">
-                  {label === "Instant Delivery"
-                    ? "Your orders start in minutes — no waiting, no guessing."
-                    : label === "Real Engagement"
-                    ? "Authentic followers, likes, and views from verified traffic sources."
-                    : "We never ask for passwords. Your data stays 100% safe."}
+        </section>
+
+        {/* How It Works */}
+        <section id="how-it-works" className="space-y-10">
+          <h2 className="text-center text-3xl sm:text-4xl font-bold">How It Works</h2>
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 text-center">
+            {["Choose a Service", "Enter Info", "Get Results"].map((title, i) => (
+              <div key={i} className="bg-white border border-[#CFE4FF] rounded-xl p-6 shadow-md hover:shadow-xl transition">
+                <div className="text-4xl font-bold text-[#007BFF] mb-3">{i + 1}</div>
+                <h3 className="text-lg font-semibold mb-1">{title}</h3>
+                <p className="text-sm text-[#444]">
+                  {i === 0
+                    ? "Pick your platform and what you need — followers, likes, or views."
+                    : i === 1
+                    ? "Just your username or post URL. No password ever required."
+                    : "See growth begin in minutes — smooth, secure, and fast."}
                 </p>
               </div>
             ))}
           </div>
         </section>
 
-        {/* How It Works */}
-        <section id="how-it-works" className="space-y-10">
-          <h2 className="text-center text-3xl sm:text-4xl font-bold">How It Works</h2>
-          <div className="grid sm:grid-cols-3 gap-8 text-center">
-            {[{
-              step: "1",
-              title: "Choose a Service",
-              desc: "Select what you need — followers, likes, views, or more."
-            }, {
-              step: "2",
-              title: "Enter Your Info",
-              desc: "Input your username or post URL. No login needed."
-            }, {
-              step: "3",
-              title: "Watch Growth Begin",
-              desc: "Our system activates in minutes. Real results, fast."
-            }].map(({ step, title, desc }) => (
-              <div key={step} className="bg-white p-6 rounded-xl shadow border border-[#eee] hover:shadow-lg transition">
-                <div className="text-4xl font-bold text-[#007BFF] mb-3">{step}</div>
-                <h3 className="text-lg font-semibold mb-1">{title}</h3>
-                <p className="text-[#444] text-sm sm:text-base">{desc}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
         {/* Testimonials */}
-        <section id="testimonials" className="space-y-8">
-          <h2 className="text-center text-3xl sm:text-4xl font-bold">Customer Love 💙</h2>
+        <section id="testimonials" className="space-y-6">
+          <h2 className="text-center text-3xl sm:text-4xl font-bold">Customer Reviews</h2>
           <div className="grid md:grid-cols-2 gap-6">
             {[{
               quote: "I gained real followers in under an hour — and they didn’t drop!",
@@ -103,7 +108,7 @@ export default function Home() {
               quote: "Great support, great pricing, real growth. Worth every cent.",
               name: "Jake B."
             }].map(({ quote, name }) => (
-              <div key={name} className="bg-white border border-[#ddd] p-6 rounded-xl shadow-sm hover:shadow-md">
+              <div key={name} className="bg-white border border-gray-200 p-6 rounded-xl shadow">
                 <p className="italic text-[#111]">“{quote}”</p>
                 <p className="mt-3 text-sm text-[#444] font-semibold">– {name}</p>
               </div>
@@ -114,34 +119,32 @@ export default function Home() {
         {/* FAQ */}
         <section id="faq" className="space-y-6">
           <h2 className="text-center text-3xl sm:text-4xl font-bold">FAQs</h2>
-          <div className="space-y-5 max-w-3xl mx-auto">
-            {[{
-              q: "Are these real followers and likes?",
-              a: "Yes — we use proven promotional systems to deliver authentic and lasting engagement."
-            }, {
-              q: "Do you need my password?",
-              a: "Never. We only ask for your username or post URL — nothing else."
-            }, {
-              q: "How fast is delivery?",
-              a: "Most orders begin processing within 0–30 minutes after payment."
-            }].map(({ q, a }) => (
-              <div key={q}>
-                <p className="font-semibold text-[#111]">{q}</p>
-                <p className="text-[#444] text-sm sm:text-base">{a}</p>
+          <div className="max-w-3xl mx-auto space-y-4">
+            {faqs.map(({ q, a }, index) => (
+              <div key={index} className="border border-gray-200 rounded-xl p-4 cursor-pointer" onClick={() => toggleFaq(index)}>
+                <div className="flex justify-between items-center">
+                  <p className="font-medium text-[#111]">{q}</p>
+                  <ChevronDown
+                    className={`w-5 h-5 transition-transform ${openFaq === index ? "rotate-180" : "rotate-0"}`}
+                  />
+                </div>
+                {openFaq === index && (
+                  <p className="mt-3 text-sm text-[#444]">{a}</p>
+                )}
               </div>
             ))}
           </div>
         </section>
 
-        {/* Final CTA */}
-        <section className="text-center space-y-5 mt-24">
-          <h2 className="text-3xl sm:text-4xl font-bold">Ready to Dominate Social Media?</h2>
+        {/* CTA */}
+        <section className="text-center space-y-4 mt-20">
+          <h2 className="text-3xl sm:text-4xl font-bold">Ready to Go Viral?</h2>
           <p className="text-[#444] text-base sm:text-lg">
-            Choose your service, place your order, and watch your profile blow up — instantly.
+            Start growing now — choose your package and watch your stats climb.
           </p>
           <Link href="/checkout">
-            <button className="btn-primary px-6 sm:px-10 py-3 text-base sm:text-lg rounded-full hover:scale-105 transition">
-              Start Growing Now
+            <button className="bg-[#007BFF] text-white px-8 py-3 text-lg rounded-xl hover:bg-[#005FCC] transition">
+              View Services
             </button>
           </Link>
         </section>
