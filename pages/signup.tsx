@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
-import axios from "axios";
+import { supabase } from "@/lib/supabase"; // ✅ must exist
 
 export default function SignupPage() {
   const router = useRouter();
@@ -14,16 +14,19 @@ export default function SignupPage() {
     setError("");
     setSuccess(false);
 
-    try {
-      const res = await axios.post("/api/signup", { email, password });
-      if (res.status === 200) {
-        setSuccess(true);
-        setTimeout(() => router.push("/login"), 1500);
-      }
-    } catch (err: any) {
-      console.error(err);
-      setError(err?.response?.data?.message || "Signup failed.");
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+    });
+
+    if (error) {
+      console.error("Signup error:", error.message);
+      setError(error.message || "Signup failed.");
+      return;
     }
+
+    setSuccess(true);
+    setTimeout(() => router.push("/login"), 1500);
   };
 
   return (
@@ -32,7 +35,11 @@ export default function SignupPage() {
         <h1 className="text-2xl font-bold text-center mb-4">Create an Account</h1>
 
         {error && <p className="text-red-500 mb-3 text-sm">{error}</p>}
-        {success && <p className="text-green-600 mb-3 text-sm">Account created! Redirecting to login...</p>}
+        {success && (
+          <p className="text-green-600 mb-3 text-sm">
+            Account created! Redirecting to login...
+          </p>
+        )}
 
         <form onSubmit={handleSignup} className="space-y-4">
           <div>

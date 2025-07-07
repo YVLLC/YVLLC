@@ -1,45 +1,45 @@
-import { useState } from "react";
+// pages/signup.tsx
+import { FormEvent, useState } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
 
-export default function LoginPage() {
+export default function SignupPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleSignup = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setError("");
+    setError(null);
+    setSuccess(false);
 
     try {
-      const res = await axios.post("/api/auth", {
-        email,
-        password,
-        mode: "login", // 🔐 Required
-      });
+      const res = await axios.post("/api/signup", { email, password });
 
-      if (res.status === 200 && res.data.token) {
-        // ✅ Save token to localStorage
-        localStorage.setItem("admin_token", res.data.token);
-        router.push("/admin");
+      if (res.status === 200) {
+        setSuccess(true);
+        setTimeout(() => router.push("/login"), 1500);
       } else {
-        setError("Login failed. No token received.");
+        setError("Unexpected error. Please try again.");
       }
     } catch (err: any) {
-      console.error(err);
-      setError(err?.response?.data?.error || "Login failed.");
+      console.error("Signup error:", err);
+      const message = err?.response?.data?.message || "Signup failed.";
+      setError(message);
     }
   };
 
   return (
     <main className="flex items-center justify-center min-h-screen bg-[#F9FAFB] px-4">
       <div className="w-full max-w-md bg-white p-8 rounded-xl shadow">
-        <h1 className="text-2xl font-bold text-center mb-4">Admin Login</h1>
+        <h1 className="text-2xl font-bold text-center mb-4">Create an Account</h1>
 
-        {error && <p className="text-red-500 mb-3 text-sm">{error}</p>}
+        {error && <p className="text-red-500 mb-3 text-sm text-center">{error}</p>}
+        {success && <p className="text-green-600 mb-3 text-sm text-center">Account created! Redirecting...</p>}
 
-        <form onSubmit={handleLogin} className="space-y-4">
+        <form onSubmit={handleSignup} className="space-y-4">
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-[#111]">
               Email
@@ -70,9 +70,9 @@ export default function LoginPage() {
 
           <button
             type="submit"
-            className="w-full bg-[#007BFF] text-white py-2 rounded-lg hover:bg-[#005FCC]"
+            className="w-full bg-[#007BFF] text-white py-2 rounded-lg hover:bg-[#005FCC] transition"
           >
-            Log In
+            Sign Up
           </button>
         </form>
       </div>
