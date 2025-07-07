@@ -1,12 +1,13 @@
 // pages/api/signup.ts
 import type { NextApiRequest, NextApiResponse } from "next";
 
-interface User {
-  password: string;
+// Define custom global type extension for USERS
+declare global {
+  var USERS: { [email: string]: { password: string } };
 }
 
-const USERS: { [email: string]: User } =
-  global.USERS || (global.USERS = {}); // shared across API routes while running
+// Ensure USERS exists on the global object
+global.USERS = global.USERS || {};
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") {
@@ -19,10 +20,11 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     return res.status(400).json({ message: "Missing fields" });
   }
 
-  if (USERS[email]) {
+  if (global.USERS[email]) {
     return res.status(409).json({ message: "User already exists" });
   }
 
-  USERS[email] = { password };
+  global.USERS[email] = { password };
+
   return res.status(200).json({ message: "Signup successful" });
 }
