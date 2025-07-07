@@ -1,45 +1,43 @@
-// pages/signup.tsx
-import { FormEvent, useState } from "react";
+import { useState, FormEvent } from "react";
 import { useRouter } from "next/router";
-import axios from "axios";
+import { supabase } from "@/lib/supabase";
 
-export default function SignupPage() {
+export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleSignup = async (e: FormEvent<HTMLFormElement>) => {
+  const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
-    setSuccess(false);
+    setLoading(true);
 
-    try {
-      const res = await axios.post("/api/signup", { email, password });
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
 
-      if (res.status === 200) {
-        setSuccess(true);
-        setTimeout(() => router.push("/login"), 1500);
+    if (error) {
+      console.error("Login error:", error.message);
+      setError("Invalid email or password.");
+      setLoading(false);
+    } else {
+      // Optional: Replace with actual admin check
+      if (email === "admin@yesviral.com") {
+        router.push("/admin");
       } else {
-        setError("Unexpected error. Please try again.");
+        router.push("/dashboard");
       }
-    } catch (err: any) {
-      console.error("Signup error:", err);
-      const message = err?.response?.data?.message || "Signup failed.";
-      setError(message);
     }
   };
 
   return (
     <main className="flex items-center justify-center min-h-screen bg-[#F9FAFB] px-4">
       <div className="w-full max-w-md bg-white p-8 rounded-xl shadow">
-        <h1 className="text-2xl font-bold text-center mb-4">Create an Account</h1>
+        <h1 className="text-2xl font-bold text-center mb-4">Log In</h1>
 
         {error && <p className="text-red-500 mb-3 text-sm text-center">{error}</p>}
-        {success && <p className="text-green-600 mb-3 text-sm text-center">Account created! Redirecting...</p>}
 
-        <form onSubmit={handleSignup} className="space-y-4">
+        <form onSubmit={handleLogin} className="space-y-4">
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-[#111]">
               Email
@@ -71,8 +69,9 @@ export default function SignupPage() {
           <button
             type="submit"
             className="w-full bg-[#007BFF] text-white py-2 rounded-lg hover:bg-[#005FCC] transition"
+            disabled={loading}
           >
-            Sign Up
+            {loading ? "Logging in..." : "Log In"}
           </button>
         </form>
       </div>
