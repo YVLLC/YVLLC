@@ -1,66 +1,37 @@
-import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
+// pages/api/order.ts
+import type { NextApiRequest, NextApiResponse } from "next";
 import axios from "axios";
-import OrderCard from "@/components/OrderCard";
 
-export default function AdminPage() {
-  const router = useRouter();
-  const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState(true);
+const JAP_API_KEY = process.env.JAP_API_KEY || "YOUR_JAP_API_KEY";
 
-  useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        const res = await axios.get("/api/admin/orders");
-        setOrders(res.data.orders || []);
-      } catch (err) {
-        console.error("Not authorized or error:", err);
-        router.push("/login");
-      } finally {
-        setLoading(false);
-      }
-    };
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed" });
+  }
 
-    fetchOrders();
-  }, [router]);
+  const { serviceId, link, quantity } = req.body;
 
-  const handleLogout = () => {
-    document.cookie = "token=; Max-Age=0; Path=/;";
-    router.push("/login");
-  };
+  if (!serviceId || !link || !quantity) {
+    return res.status(400).json({ error: "Missing required fields" });
+  }
 
-  return (
-    <main className="max-w-5xl mx-auto px-4 py-12">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Admin Dashboard</h1>
-        <button
-          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-          onClick={handleLogout}
-        >
-          Log Out
-        </button>
-      </div>
-      {loading ? (
-        <p>Loading orders...</p>
-      ) : (
-        <div className="grid gap-4">
-          {orders.length > 0 ? (
-            orders.map((order: any) => (
-              <OrderCard
-                key={order._id}
-                orderId={order.orderId}
-                service={order.service}
-                usernameOrLink={order.link}
-                quantity={order.quantity}
-                status={order.status}
-                createdAt={order.createdAt}
-              />
-            ))
-          ) : (
-            <p>No orders found.</p>
-          )}
-        </div>
-      )}
-    </main>
-  );
+  try {
+    const response = await axios.post("https://justanotherpanel.com/api/v2", null, {
+      params: {
+        key: JAP_API_KEY,
+        action: "add",
+        service: serviceId,
+        link,
+        quantity,
+      },
+    });
+
+    if (response.data && response.data.order) {
+      return res.status(200).json({ success: true, orderId: response.data.order });
+    } else {
+      return res.status(500).json({ error: "Invalid response from JAP API", raw: response.data });
+    }
+  } catch (err: any) {
+    return res.status(500).json({ error: "Failed to create order", details: err.message });
+  }
 }
