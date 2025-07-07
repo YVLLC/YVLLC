@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/router";
+import Image from "next/image";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -9,26 +10,28 @@ export default function Header() {
   const navLinks = [
     { name: "Home", href: "/" },
     { name: "Track Order", href: "/track-order" },
-    { name: "FAQ", href: "/faq" },
+    { name: "FAQ", href: "/#faq" },
     { name: "Login", href: "/login" },
+    { name: "Sign Up", href: "/signup" },
   ];
 
   return (
-    <header className="bg-white shadow-sm border-b border-[#CFE4FF]">
+    <header className="bg-white shadow-sm border-b border-[#CFE4FF] sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="text-2xl font-bold text-[#007BFF]">
-          YesViral
+        <Link href="/" className="flex items-center space-x-2">
+          <Image src="/logo.svg" alt="YesViral Logo" width={32} height={32} />
+          <span className="text-2xl font-bold text-[#007BFF]">YesViral</span>
         </Link>
 
         {/* Desktop Nav */}
-        <nav className="hidden md:flex space-x-6 text-sm font-medium">
+        <nav className="hidden md:flex space-x-6 text-sm font-medium items-center">
           {navLinks.map((link) => (
             <Link
               key={link.name}
               href={link.href}
-              className={`hover:text-[#005FCC] ${
-                router.pathname === link.href ? "text-[#005FCC]" : "text-[#111]"
+              className={`hover:text-[#005FCC] transition-colors duration-200 ${
+                router.asPath === link.href ? "text-[#005FCC]" : "text-[#111]"
               }`}
             >
               {link.name}
@@ -54,8 +57,9 @@ export default function Header() {
               key={link.name}
               href={link.href}
               className={`block text-sm font-medium ${
-                router.pathname === link.href ? "text-[#005FCC]" : "text-[#111]"
+                router.asPath === link.href ? "text-[#005FCC]" : "text-[#111]"
               }`}
+              onClick={() => setIsOpen(false)}
             >
               {link.name}
             </Link>
