@@ -16,14 +16,18 @@ export default function LoginPage() {
       const res = await axios.post("/api/auth", {
         email,
         password,
-        mode: "login", // ✅ Required for the backend to work
+        mode: "login",
       });
 
-      if (res.status === 200) {
+      if (res.status === 200 && res.data.token) {
+        // ✅ Save token to localStorage
+        localStorage.setItem("yesviral_admin_token", res.data.token);
         router.push("/admin");
+      } else {
+        setError("Login failed. No token returned.");
       }
     } catch (err: any) {
-      console.error(err);
+      console.error("Login error:", err);
       setError(err?.response?.data?.error || "Login failed.");
     }
   };
