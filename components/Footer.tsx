@@ -1,23 +1,36 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Footer() {
   return (
-    <footer className="bg-[#E6F0FF] text-[#111] py-12 px-4 border-t border-[#CFE4FF]">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+    <footer className="bg-[#E6F0FF] text-[#111] pt-16 pb-10 px-6 border-t border-[#CFE4FF]">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10">
         {/* Column 1 – Logo + About */}
-        <div>
-          <h3 className="text-xl font-bold mb-2">YesViral</h3>
-          <p className="text-sm text-[#444]">
+        <div className="text-center md:text-left">
+          <div className="flex flex-col items-center md:items-start">
+            <div className="mb-2">
+              <Image
+                src="/logo.png"
+                alt="YesViral Logo"
+                width={60}
+                height={60}
+                className="rounded-full select-none pointer-events-none"
+                draggable={false}
+              />
+            </div>
+            <h3 className="text-2xl font-extrabold text-[#007BFF]">YesViral</h3>
+          </div>
+          <p className="text-sm text-[#444] mt-4 max-w-xs mx-auto md:mx-0">
             The #1 source for premium social media growth. Trusted by 1,000s of creators and businesses.
           </p>
         </div>
 
         {/* Column 2 – Quick Links */}
         <div>
-          <h4 className="font-semibold mb-2">Quick Links</h4>
-          <ul className="space-y-1 text-sm text-[#444]">
+          <h4 className="font-semibold text-lg mb-3">Quick Links</h4>
+          <ul className="space-y-2 text-sm text-[#444]">
             <li><Link href="/">Home</Link></li>
-            <li><Link href="/faq">FAQ</Link></li>
+            <li><Link href="/#faq">FAQ</Link></li>
             <li><Link href="/track-order">Track Order</Link></li>
             <li><Link href="/login">Login</Link></li>
             <li><Link href="/admin">Admin</Link></li>
@@ -26,8 +39,8 @@ export default function Footer() {
 
         {/* Column 3 – Free Tools */}
         <div>
-          <h4 className="font-semibold mb-2">Free Tools</h4>
-          <ul className="space-y-1 text-sm text-[#444]">
+          <h4 className="font-semibold text-lg mb-3">Free Tools</h4>
+          <ul className="space-y-2 text-sm text-[#444]">
             <li><Link href="/tools/instagram-video-downloader">Instagram Video Downloader</Link></li>
             <li><Link href="/tools/profile-picture-viewer">IG Profile Picture Viewer</Link></li>
             <li><Link href="/tools/story-downloader">Instagram Story Downloader</Link></li>
@@ -45,8 +58,8 @@ export default function Footer() {
 
         {/* Column 4 – Legal */}
         <div>
-          <h4 className="font-semibold mb-2">Legal</h4>
-          <ul className="space-y-1 text-sm text-[#444]">
+          <h4 className="font-semibold text-lg mb-3">Legal</h4>
+          <ul className="space-y-2 text-sm text-[#444]">
             <li><Link href="/terms">Terms & Conditions</Link></li>
             <li><Link href="/privacy">Privacy Policy</Link></li>
             <li><Link href="/contact">Contact Us</Link></li>
@@ -54,7 +67,7 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="text-center text-xs text-[#888] mt-10">
+      <div className="text-center text-xs text-[#888] mt-12">
         &copy; {new Date().getFullYear()} YesViral. All rights reserved.
       </div>
     </footer>
