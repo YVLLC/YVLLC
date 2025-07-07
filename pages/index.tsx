@@ -12,110 +12,127 @@ export default function Home() {
         />
       </Head>
 
-      <main className="px-4 max-w-7xl mx-auto py-16 space-y-32 text-[#111]">
+      <main className="px-6 max-w-7xl mx-auto py-16 space-y-28">
         {/* Hero */}
-        <section className="text-center space-y-6">
-          <h1 className="text-5xl sm:text-6xl font-extrabold leading-tight bg-gradient-to-r from-blue-500 to-blue-700 text-transparent bg-clip-text">
-            Supercharge Your Social Growth
+        <section className="text-center space-y-8">
+          <h1 className="text-5xl sm:text-6xl font-extrabold text-[#007BFF] leading-tight">
+            Dominate Social Growth with YesViral
           </h1>
-          <p className="text-lg text-[#444] max-w-2xl mx-auto">
-            Buy real followers, likes, and views for Instagram, TikTok, YouTube & more. Instant delivery. No password needed. Trusted by 10,000+ creators.
+          <p className="text-[#444] text-lg sm:text-xl max-w-2xl mx-auto">
+            Buy authentic followers, likes, and views across Instagram, TikTok, YouTube & more. Secure. Instant. Real.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4 mt-6">
             <Link href="/checkout">
-              <button className="px-6 py-3 rounded-xl text-white font-semibold bg-gradient-to-r from-blue-600 to-blue-400 hover:from-blue-700 hover:to-blue-500 transition">
+              <button className="btn-primary text-lg px-8 py-3 rounded-xl shadow-lg hover:scale-105 transition-transform">
                 Get Started
               </button>
             </Link>
             <Link href="/track-order">
-              <button className="px-6 py-3 rounded-xl text-blue-700 border border-blue-200 bg-white hover:bg-blue-50 transition">
+              <button className="btn-secondary text-lg px-8 py-3 rounded-xl hover:scale-105 transition-transform">
                 Track Order
               </button>
             </Link>
           </div>
         </section>
 
-        {/* Why YesViral */}
-        <section className="text-center space-y-6">
-          <h2 className="text-3xl font-bold">Why Choose YesViral?</h2>
-          <p className="text-[#444] max-w-2xl mx-auto">
-            We go beyond typical panels — our smart delivery engine ensures real engagement that sticks. No fake bots. Just growth that builds brand trust.
+        {/* About */}
+        <section id="about" className="text-center space-y-5">
+          <h2 className="section-title text-3xl sm:text-4xl">Why YesViral?</h2>
+          <p className="section-subtext max-w-3xl mx-auto text-base sm:text-lg">
+            We’re more than a reseller panel. YesViral is a full-scale, top-tier growth engine. Thousands of influencers, brands, and agencies trust us for results that don’t just stick — they snowball.
           </p>
-          <div className="grid sm:grid-cols-3 gap-6 mt-10">
-            <div className="p-6 bg-white rounded-2xl shadow border text-left">
-              <h3 className="font-bold text-lg mb-2">⚡ Instant Delivery</h3>
-              <p className="text-sm text-[#444]">Most orders start in under 60 seconds. Seriously fast.</p>
-            </div>
-            <div className="p-6 bg-white rounded-2xl shadow border text-left">
-              <h3 className="font-bold text-lg mb-2">🔒 100% Safe</h3>
-              <p className="text-sm text-[#444]">No password required. We never ask for sensitive info.</p>
-            </div>
-            <div className="p-6 bg-white rounded-2xl shadow border text-left">
-              <h3 className="font-bold text-lg mb-2">💬 24/7 Support</h3>
-              <p className="text-sm text-[#444]">Chat with a real human whenever you need help.</p>
-            </div>
-          </div>
         </section>
 
         {/* How It Works */}
-        <section className="space-y-10">
-          <h2 className="text-center text-3xl font-bold">How It Works</h2>
-          <div className="grid md:grid-cols-3 gap-6 text-center">
+        <section id="how-it-works" className="space-y-10">
+          <h2 className="section-title text-center text-3xl sm:text-4xl">How It Works</h2>
+          <div className="grid md:grid-cols-3 gap-8 text-center">
             {[
-              ["1", "Choose a Service", "Pick what you need: followers, likes, views or comments."],
-              ["2", "Enter Info", "Provide just your username or post link. No login needed."],
-              ["3", "Get Results", "Orders start within minutes. Real, organic-style growth."],
-            ].map(([step, title, desc]) => (
-              <div key={step} className="bg-white p-6 rounded-2xl border shadow-sm">
-                <div className="text-5xl font-bold text-blue-600 mb-3">{step}</div>
-                <p className="font-semibold text-lg mb-1">{title}</p>
-                <p className="text-[#444] text-sm">{desc}</p>
+              {
+                step: "1",
+                title: "Choose a Service",
+                desc: "Pick a platform and what you need — followers, likes, views, or comments."
+              },
+              {
+                step: "2",
+                title: "Enter Your Info",
+                desc: "Provide your username or post link. Never your password."
+              },
+              {
+                step: "3",
+                title: "Get Fast Results",
+                desc: "Orders start within minutes. You’ll see results roll in naturally and rapidly."
+              }
+            ].map(({ step, title, desc }) => (
+              <div key={step} className="card transition hover:shadow-xl">
+                <div className="text-5xl font-bold text-[#007BFF] mb-3">{step}</div>
+                <h3 className="text-xl font-semibold mb-2">{title}</h3>
+                <p className="text-[#444] text-sm sm:text-base">{desc}</p>
               </div>
             ))}
           </div>
         </section>
 
         {/* Testimonials */}
-        <section className="space-y-8">
-          <h2 className="text-center text-3xl font-bold">Real Reviews</h2>
+        <section id="testimonials" className="space-y-6">
+          <h2 className="section-title text-center text-3xl sm:text-4xl">What Customers Say</h2>
           <div className="grid md:grid-cols-2 gap-6">
-            <div className="bg-white p-6 rounded-2xl shadow border text-sm">
-              <p className="italic">“Insane speed and support. Gained 1k followers in 30 mins!”</p>
-              <p className="mt-2 font-semibold text-[#444]">– Ayesha K.</p>
-            </div>
-            <div className="bg-white p-6 rounded-2xl shadow border text-sm">
-              <p className="italic">“Tried others but YesViral is the only one that actually works.”</p>
-              <p className="mt-2 font-semibold text-[#444]">– Marcus L.</p>
-            </div>
+            {[
+              {
+                quote: "I gained real followers in under an hour — and they didn’t drop!",
+                name: "Taylor M."
+              },
+              {
+                quote: "Great support, great pricing, real growth. Worth every cent.",
+                name: "Jake B."
+              }
+            ].map(({ quote, name }) => (
+              <div
+                key={name}
+                className="card border border-gray-200 p-6 rounded-xl shadow-md bg-white"
+              >
+                <p className="italic text-[#111]">“{quote}”</p>
+                <p className="mt-3 text-sm text-[#444] font-semibold">– {name}</p>
+              </div>
+            ))}
           </div>
         </section>
 
         {/* FAQ */}
         <section id="faq" className="space-y-6">
-          <h2 className="text-center text-3xl font-bold">FAQs</h2>
-          <div className="grid sm:grid-cols-3 gap-6 text-sm text-left">
-            <div>
-              <p className="font-semibold mb-1">Are these real followers?</p>
-              <p className="text-[#444]">Yes. All services are backed by real promotions and tested methods.</p>
-            </div>
-            <div>
-              <p className="font-semibold mb-1">Is my account safe?</p>
-              <p className="text-[#444]">100%. No password is ever requested or stored.</p>
-            </div>
-            <div>
-              <p className="font-semibold mb-1">What if I need help?</p>
-              <p className="text-[#444]">Live chat or email — we’ve got 24/7 support ready for you.</p>
-            </div>
+          <h2 className="section-title text-center text-3xl sm:text-4xl">Frequently Asked Questions</h2>
+          <div className="space-y-5 max-w-3xl mx-auto">
+            {[
+              {
+                q: "Are these real followers and likes?",
+                a: "Yes — we use tested promotion systems that provide real and lasting engagement."
+              },
+              {
+                q: "Do you need my password?",
+                a: "Never. Just your username or post URL is enough."
+              },
+              {
+                q: "How fast is delivery?",
+                a: "Most orders start processing within 0–30 minutes after payment."
+              }
+            ].map(({ q, a }) => (
+              <div key={q}>
+                <p className="font-semibold text-[#111]">{q}</p>
+                <p className="text-[#444] text-sm sm:text-base">{a}</p>
+              </div>
+            ))}
           </div>
         </section>
 
         {/* CTA */}
-        <section className="text-center mt-20 space-y-4">
-          <h2 className="text-3xl font-bold">Ready to Go Viral?</h2>
-          <p className="text-[#444]">Select your service and see real growth — today.</p>
+        <section className="text-center space-y-4 mt-20">
+          <h2 className="text-3xl sm:text-4xl font-bold">Ready to Go Viral?</h2>
+          <p className="text-[#444] text-base sm:text-lg">
+            Start growing your brand today — choose a service and go big.
+          </p>
           <Link href="/checkout">
-            <button className="px-8 py-3 rounded-xl text-white font-bold text-lg bg-gradient-to-r from-blue-600 to-blue-400 hover:from-blue-700 hover:to-blue-500 transition">
-              Order Now
+            <button className="btn-primary px-8 py-3 text-lg rounded-xl hover:scale-105 transition">
+              Choose a Service
             </button>
           </Link>
         </section>
