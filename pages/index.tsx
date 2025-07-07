@@ -25,12 +25,12 @@ Over 100,000 creators, brands, and influencers trust us to power their growth �
           <div className="flex flex-col sm:flex-row justify-center gap-4 mt-6">
             <Link href="/checkout">
               <button className="btn-primary text-lg px-8 py-3 rounded-xl shadow-lg hover:scale-105 transition-transform">
-                Get Started
+                View Services
               </button>
             </Link>
             <Link href="/track-order">
               <button className="btn-secondary text-lg px-8 py-3 rounded-xl hover:scale-105 transition-transform">
-                Track Order
+                Try Free Likes
               </button>
             </Link>
           </div>
@@ -40,7 +40,7 @@ Over 100,000 creators, brands, and influencers trust us to power their growth �
         <section id="about" className="text-center space-y-5">
           <h2 className="section-title text-3xl sm:text-4xl">Why YesViral?</h2>
           <p className="section-subtext max-w-3xl mx-auto text-base sm:text-lg">
-            We’re more than a reseller panel. YesViral is a full-scale, top-tier growth engine. Thousands of influencers, brands, and agencies trust us for results that don’t just stick — they snowball.
+            YesViral is a full-scale, top-tier growth engine. Thousands of influencers, brands, and agencies trust us for results that don’t just stick — they snowball.
           </p>
         </section>
 
