@@ -1,5 +1,6 @@
 import Head from "next/head";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Home() {
   return (
@@ -12,24 +13,23 @@ export default function Home() {
         />
       </Head>
 
-      <main className="px-6 max-w-7xl mx-auto py-16 space-y-28">
+      <main className="px-4 sm:px-6 max-w-7xl mx-auto py-16 space-y-28">
         {/* Hero */}
-        <section className="text-center space-y-8">
-          <h1 className="text-5xl sm:text-6xl font-extrabold text-[#007BFF] leading-tight">
-            Buy Social Media Followers, Likes & Views. Fast.
-            Boost your Social-Proof in Minutes!
+        <section className="text-center space-y-6">
+          <h1 className="text-4xl sm:text-5xl font-extrabold text-[#007BFF] leading-tight">
+            Get Real Followers, Likes & Views – Fast.
           </h1>
-          <p className="text-[#444] text-lg sm:text-xl max-w-2xl mx-auto">
-Over 100,000 creators, brands, and influencers trust us to power their growth — because results matter.
+          <p className="text-[#444] text-base sm:text-lg max-w-2xl mx-auto">
+            Join 100,000+ creators and brands using YesViral to grow faster and smarter.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4 mt-6">
             <Link href="/checkout">
-              <button className="btn-primary text-lg px-8 py-3 rounded-xl shadow-lg hover:scale-105 transition-transform">
+              <button className="btn-primary text-base sm:text-lg px-6 sm:px-8 py-3 rounded-lg shadow hover:scale-105 transition-transform">
                 View Services
               </button>
             </Link>
             <Link href="/track-order">
-              <button className="btn-secondary text-lg px-8 py-3 rounded-xl hover:scale-105 transition-transform">
+              <button className="btn-secondary text-base sm:text-lg px-6 sm:px-8 py-3 rounded-lg hover:scale-105 transition-transform">
                 Try Free Likes
               </button>
             </Link>
@@ -37,38 +37,28 @@ Over 100,000 creators, brands, and influencers trust us to power their growth �
         </section>
 
         {/* About */}
-        <section id="about" className="text-center space-y-5">
-          <h2 className="section-title text-3xl sm:text-4xl">Why YesViral?</h2>
-          <p className="section-subtext max-w-3xl mx-auto text-base sm:text-lg">
-            YesViral is a full-scale, top-tier growth engine. Thousands of influencers, brands, and agencies trust us for results that don’t just stick — they snowball.
+        <section id="about" className="text-center space-y-4">
+          <h2 className="text-2xl sm:text-3xl font-bold">Why YesViral?</h2>
+          <p className="max-w-3xl mx-auto text-[#444] text-base sm:text-lg">
+            YesViral isn’t just another panel. It’s a trusted engine for real growth. Thousands trust our platform for reliable, secure, and high-quality services across social platforms.
           </p>
         </section>
 
         {/* How It Works */}
         <section id="how-it-works" className="space-y-10">
-          <h2 className="section-title text-center text-3xl sm:text-4xl">How It Works</h2>
-          <div className="grid md:grid-cols-3 gap-8 text-center">
-            {[
-              {
-                step: "1",
-                title: "Choose a Service",
-                desc: "Pick a platform and what you need — followers, likes, views, or comments."
-              },
-              {
-                step: "2",
-                title: "Enter Your Info",
-                desc: "Provide your username or post link. Never your password."
-              },
-              {
-                step: "3",
-                title: "Get Fast Results",
-                desc: "Orders start within minutes. You’ll see results roll in naturally and rapidly."
-              }
-            ].map(({ step, title, desc }) => (
-              <div key={step} className="card transition hover:shadow-xl">
-                <div className="text-5xl font-bold text-[#007BFF] mb-3">{step}</div>
-                <h3 className="text-xl font-semibold mb-2">{title}</h3>
-                <p className="text-[#444] text-sm sm:text-base">{desc}</p>
+          <h2 className="text-center text-2xl sm:text-3xl font-bold">How It Works</h2>
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 text-center">
+            {["Choose a Service", "Enter Info", "Get Results"].map((title, i) => (
+              <div key={i} className="bg-white border border-[#CFE4FF] rounded-xl p-6 shadow-sm hover:shadow-md transition">
+                <div className="text-4xl font-bold text-[#007BFF] mb-3">{i + 1}</div>
+                <h3 className="text-lg font-semibold mb-1">{title}</h3>
+                <p className="text-sm text-[#444]">
+                  {i === 0
+                    ? "Pick your platform and what you need — followers, likes, or views."
+                    : i === 1
+                    ? "Just your username or post URL. No password ever required."
+                    : "See growth begin in minutes — smooth, secure, and fast."}
+                </p>
               </div>
             ))}
           </div>
@@ -76,24 +66,18 @@ Over 100,000 creators, brands, and influencers trust us to power their growth �
 
         {/* Testimonials */}
         <section id="testimonials" className="space-y-6">
-          <h2 className="section-title text-center text-3xl sm:text-4xl">What Customers Say</h2>
-          <div className="grid md:grid-cols-2 gap-6">
-            {[
-              {
-                quote: "I gained real followers in under an hour — and they didn’t drop!",
-                name: "Taylor M."
-              },
-              {
-                quote: "Great support, great pricing, real growth. Worth every cent.",
-                name: "Jake B."
-              }
-            ].map(({ quote, name }) => (
-              <div
-                key={name}
-                className="card border border-gray-200 p-6 rounded-xl shadow-md bg-white"
-              >
+          <h2 className="text-center text-2xl sm:text-3xl font-bold">What Customers Say</h2>
+          <div className="grid sm:grid-cols-2 gap-6">
+            {[{
+              quote: "I gained real followers in under an hour — and they didn’t drop!",
+              name: "Taylor M."
+            }, {
+              quote: "Great support, great pricing, real growth. Worth every cent.",
+              name: "Jake B."
+            }].map(({ quote, name }) => (
+              <div key={name} className="bg-white border border-[#eee] p-6 rounded-lg shadow-sm">
                 <p className="italic text-[#111]">“{quote}”</p>
-                <p className="mt-3 text-sm text-[#444] font-semibold">– {name}</p>
+                <p className="mt-3 text-sm text-[#444] font-medium">– {name}</p>
               </div>
             ))}
           </div>
@@ -101,22 +85,18 @@ Over 100,000 creators, brands, and influencers trust us to power their growth �
 
         {/* FAQ */}
         <section id="faq" className="space-y-6">
-          <h2 className="section-title text-center text-3xl sm:text-4xl">Frequently Asked Questions</h2>
+          <h2 className="text-center text-2xl sm:text-3xl font-bold">FAQs</h2>
           <div className="space-y-5 max-w-3xl mx-auto">
-            {[
-              {
-                q: "Are these real followers and likes?",
-                a: "Yes — we use tested promotion systems that provide real and lasting engagement."
-              },
-              {
-                q: "Do you need my password?",
-                a: "Never. Just your username or post URL is enough."
-              },
-              {
-                q: "How fast is delivery?",
-                a: "Most orders start processing within 0–30 minutes after payment."
-              }
-            ].map(({ q, a }) => (
+            {[{
+              q: "Are these real followers and likes?",
+              a: "Yes — we use tested promotion systems that provide real and lasting engagement."
+            }, {
+              q: "Do you need my password?",
+              a: "Never. Just your username or post URL is enough."
+            }, {
+              q: "How fast is delivery?",
+              a: "Most orders start processing within 0–30 minutes after payment."
+            }].map(({ q, a }) => (
               <div key={q}>
                 <p className="font-semibold text-[#111]">{q}</p>
                 <p className="text-[#444] text-sm sm:text-base">{a}</p>
@@ -127,13 +107,13 @@ Over 100,000 creators, brands, and influencers trust us to power their growth �
 
         {/* CTA */}
         <section className="text-center space-y-4 mt-20">
-          <h2 className="text-3xl sm:text-4xl font-bold">Ready to Go Viral?</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold">Ready to Go Viral?</h2>
           <p className="text-[#444] text-base sm:text-lg">
-            Start growing your brand today — choose a service and go big.
+            Start growing now — choose your package and watch your stats climb.
           </p>
           <Link href="/checkout">
-            <button className="btn-primary px-8 py-3 text-lg rounded-xl hover:scale-105 transition">
-              Choose a Service
+            <button className="btn-primary px-6 sm:px-8 py-3 text-base sm:text-lg rounded-lg hover:scale-105 transition">
+              View Services
             </button>
           </Link>
         </section>
