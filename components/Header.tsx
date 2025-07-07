@@ -20,7 +20,7 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center space-x-2">
-          <Image src="/logo.svg" alt="YesViral Logo" width={32} height={32} />
+          <Image src="/logo.png" alt="YesViral Logo" width={32} height={32} />
           <span className="text-2xl font-bold text-[#007BFF]">YesViral</span>
         </Link>
 
