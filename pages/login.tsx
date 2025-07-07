@@ -1,3 +1,4 @@
+// pages/login.tsx
 import { useState } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
@@ -16,14 +17,12 @@ export default function LoginPage() {
       const res = await axios.post("/api/auth", {
         email,
         password,
-        mode: "login", // required
+        mode: "login",
       });
 
-      if (res.status === 200) {
-        // ✅ Save token to localStorage
-        localStorage.setItem("token", res.data.token);
-
-        // redirect
+      // ✅ Save token to localStorage
+      if (res.status === 200 && res.data.token) {
+        localStorage.setItem("admin_token", res.data.token);
         router.push("/admin");
       }
     } catch (err: any) {
