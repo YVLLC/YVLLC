@@ -40,7 +40,7 @@ export default function Footer() {
         {/* Column 3 – Free Tools */}
         <div>
           <h4 className="font-semibold text-lg mb-3">Free Tools</h4>
-          <ul className="space-y-2 text-sm text-[#444]">
+          <ul className="space-y-2 text-sm text-[#444] max-h-48 overflow-y-auto pr-2">
             <li><Link href="/tools/instagram-video-downloader">Instagram Video Downloader</Link></li>
             <li><Link href="/tools/profile-picture-viewer">IG Profile Picture Viewer</Link></li>
             <li><Link href="/tools/story-downloader">Instagram Story Downloader</Link></li>
@@ -65,6 +65,31 @@ export default function Footer() {
             <li><Link href="/contact">Contact Us</Link></li>
           </ul>
         </div>
+      </div>
+
+      {/* Trust Badges */}
+      <div className="max-w-7xl mx-auto mt-12 flex flex-wrap items-center justify-center gap-6">
+        <div className="flex items-center gap-3">
+          <Image src="/trust/secure.svg" alt="Secure Checkout" width={40} height={40} />
+          <p className="text-sm font-medium text-[#111]">Secure Checkout</p>
+        </div>
+        <div className="flex items-center gap-3">
+          <Image src="/trust/guarantee.svg" alt="Money Back Guarantee" width={40} height={40} />
+          <p className="text-sm font-medium text-[#111]">Money Back Guarantee</p>
+        </div>
+        <div className="flex items-center gap-3">
+          <Image src="/trust/support.svg" alt="24/7 Support" width={40} height={40} />
+          <p className="text-sm font-medium text-[#111]">24/7 Live Support</p>
+        </div>
+      </div>
+
+      {/* Payment Badges */}
+      <div className="max-w-7xl mx-auto mt-10 flex justify-center gap-4 flex-wrap">
+        <Image src="/badges/visa.svg" alt="Visa" width={50} height={30} />
+        <Image src="/badges/mastercard.svg" alt="Mastercard" width={50} height={30} />
+        <Image src="/badges/amex.svg" alt="Amex" width={50} height={30} />
+        <Image src="/badges/paypal.svg" alt="PayPal" width={50} height={30} />
+        <Image src="/badges/stripe.svg" alt="Stripe" width={50} height={30} />
       </div>
 
       <div className="text-center text-xs text-[#888] mt-12">
