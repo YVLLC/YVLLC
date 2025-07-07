@@ -8,13 +8,26 @@ export default function AdminPage() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // ✅ Check token on mount
   useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      router.push("/login");
+      return;
+    }
+
     const fetchOrders = async () => {
       try {
-        const res = await axios.get("/api/admin/orders");
+        const res = await axios.get("/api/admin/orders", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         setOrders(res.data.orders || []);
       } catch (err) {
-        console.error("Not authorized or error:", err);
+        console.error("Unauthorized or error:", err);
+        localStorage.removeItem("token");
         router.push("/login");
       } finally {
         setLoading(false);
@@ -25,7 +38,7 @@ export default function AdminPage() {
   }, [router]);
 
   const handleLogout = () => {
-    document.cookie = "token=; Max-Age=0; Path=/;";
+    localStorage.removeItem("token");
     router.push("/login");
   };
 
@@ -34,12 +47,13 @@ export default function AdminPage() {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Admin Dashboard</h1>
         <button
-          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
           onClick={handleLogout}
+          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
         >
           Log Out
         </button>
       </div>
+
       {loading ? (
         <p>Loading orders...</p>
       ) : (
