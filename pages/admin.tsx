@@ -1,3 +1,4 @@
+// pages/admin.tsx
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
@@ -8,10 +9,8 @@ export default function AdminPage() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // ✅ Check token on mount
   useEffect(() => {
-    const token = localStorage.getItem("token");
-
+    const token = localStorage.getItem("admin_token");
     if (!token) {
       router.push("/login");
       return;
@@ -26,8 +25,7 @@ export default function AdminPage() {
         });
         setOrders(res.data.orders || []);
       } catch (err) {
-        console.error("Unauthorized or error:", err);
-        localStorage.removeItem("token");
+        console.error("Not authorized or error:", err);
         router.push("/login");
       } finally {
         setLoading(false);
@@ -38,7 +36,7 @@ export default function AdminPage() {
   }, [router]);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    localStorage.removeItem("admin_token");
     router.push("/login");
   };
 
@@ -46,10 +44,7 @@ export default function AdminPage() {
     <main className="max-w-5xl mx-auto px-4 py-12">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Admin Dashboard</h1>
-        <button
-          onClick={handleLogout}
-          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-        >
+        <button onClick={handleLogout} className="text-sm text-red-500 underline">
           Log Out
         </button>
       </div>
