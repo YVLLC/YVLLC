@@ -1,4 +1,3 @@
-// pages/admin.tsx
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
@@ -8,9 +7,11 @@ export default function AdminPage() {
   const router = useRouter();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [checkedAuth, setCheckedAuth] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("admin_token");
+
     if (!token) {
       router.push("/login");
       return;
@@ -23,9 +24,11 @@ export default function AdminPage() {
             Authorization: `Bearer ${token}`,
           },
         });
+
         setOrders(res.data.orders || []);
+        setCheckedAuth(true);
       } catch (err) {
-        console.error("Not authorized or error:", err);
+        console.error("Auth failed:", err);
         router.push("/login");
       } finally {
         setLoading(false);
@@ -33,42 +36,45 @@ export default function AdminPage() {
     };
 
     fetchOrders();
-  }, [router]);
+  }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem("admin_token");
-    router.push("/login");
-  };
+  if (!checkedAuth && loading) {
+    return <div className="text-center mt-10">Checking login...</div>;
+  }
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-12">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Admin Dashboard</h1>
-        <button onClick={handleLogout} className="text-sm text-red-500 underline">
+        <button
+          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+          onClick={() => {
+            localStorage.removeItem("admin_token");
+            router.push("/login");
+          }}
+        >
           Log Out
         </button>
       </div>
 
       {loading ? (
         <p>Loading orders...</p>
-      ) : (
+      ) : orders.length > 0 ? (
         <div className="grid gap-4">
-          {orders.length > 0 ? (
-            orders.map((order: any) => (
-              <OrderCard
-                key={order._id}
-                orderId={order.orderId}
-                service={order.service}
-                usernameOrLink={order.link}
-                quantity={order.quantity}
-                status={order.status}
-                createdAt={order.createdAt}
-              />
-            ))
-          ) : (
-            <p>No orders found.</p>
-          )}
+          {orders.map((order: any) => (
+            <OrderCard
+              key={order._id}
+              orderId={order.orderId}
+              service={order.service}
+              usernameOrLink={order.link}
+              quantity={order.quantity}
+              status={order.status}
+              createdAt={order.createdAt}
+            />
+          ))}
         </div>
+      ) : (
+        <p>No orders found.</p>
       )}
     </main>
   );
