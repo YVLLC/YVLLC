@@ -1,5 +1,7 @@
+// pages/api/order.ts
 import type { NextApiRequest, NextApiResponse } from "next";
 import axios from "axios";
+import qs from "qs";
 
 const JAP_API_KEY = process.env.JAP_API_KEY || "YOUR_JAP_API_KEY";
 
@@ -15,15 +17,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const response = await axios.post("https://justanotherpanel.com/api/v2", null, {
-      params: {
+    const response = await axios.post(
+      "https://justanotherpanel.com/api/v2",
+      qs.stringify({
         key: JAP_API_KEY,
         action: "add",
         service: serviceId,
         link,
         quantity,
-      },
-    });
+      }),
+      {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      }
+    );
 
     if (response.data && response.data.order) {
       return res.status(200).json({ success: true, orderId: response.data.order });
