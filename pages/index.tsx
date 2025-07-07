@@ -16,10 +16,11 @@ export default function Home() {
         {/* Hero */}
         <section className="text-center space-y-8">
           <h1 className="text-5xl sm:text-6xl font-extrabold text-[#007BFF] leading-tight">
-            Dominate Social Growth with YesViral
+            Buy Social Media Followers, Likes & Views. Fast.
+            Boost your Social-Proof in Minutes!
           </h1>
           <p className="text-[#444] text-lg sm:text-xl max-w-2xl mx-auto">
-            Buy authentic followers, likes, and views across Instagram, TikTok, YouTube & more. Secure. Instant. Real.
+Over 100,000 creators, brands, and influencers trust us to power their growth — because results matter.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4 mt-6">
             <Link href="/checkout">
