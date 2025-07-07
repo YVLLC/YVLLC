@@ -1,4 +1,3 @@
-// pages/login.tsx
 import { useState } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
@@ -17,13 +16,15 @@ export default function LoginPage() {
       const res = await axios.post("/api/auth", {
         email,
         password,
-        mode: "login",
+        mode: "login", // 🔐 Required
       });
 
-      // ✅ Save token to localStorage
       if (res.status === 200 && res.data.token) {
+        // ✅ Save token to localStorage
         localStorage.setItem("admin_token", res.data.token);
         router.push("/admin");
+      } else {
+        setError("Login failed. No token received.");
       }
     } catch (err: any) {
       console.error(err);
