@@ -7,26 +7,12 @@ export default function AdminPage() {
   const router = useRouter();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [authorized, setAuthorized] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      router.push("/login");
-      return;
-    }
-
     const fetchOrders = async () => {
       try {
-        const res = await axios.get("/api/admin/orders", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
+        const res = await axios.get("/api/admin/orders");
         setOrders(res.data.orders || []);
-        setAuthorized(true);
       } catch (err) {
         console.error("Not authorized or error:", err);
         router.push("/login");
@@ -39,48 +25,41 @@ export default function AdminPage() {
   }, [router]);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    document.cookie = "token=; Max-Age=0; Path=/;";
     router.push("/login");
   };
-
-  if (loading) {
-    return (
-      <main className="flex items-center justify-center h-screen">
-        <p className="text-[#444] text-sm">Loading admin dashboard...</p>
-      </main>
-    );
-  }
-
-  if (!authorized) return null;
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-12">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-[#007BFF]">Admin Dashboard</h1>
+        <h1 className="text-2xl font-bold">Admin Dashboard</h1>
         <button
+          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
           onClick={handleLogout}
-          className="bg-[#EF4444] text-white px-4 py-2 rounded-lg hover:bg-[#dc2626] text-sm"
         >
           Log Out
         </button>
       </div>
-
-      {orders.length > 0 ? (
-        <div className="grid gap-4">
-          {orders.map((order: any) => (
-            <OrderCard
-              key={order._id}
-              orderId={order.orderId}
-              service={order.service}
-              usernameOrLink={order.link}
-              quantity={order.quantity}
-              status={order.status}
-              createdAt={order.createdAt}
-            />
-          ))}
-        </div>
+      {loading ? (
+        <p>Loading orders...</p>
       ) : (
-        <p>No orders found.</p>
+        <div className="grid gap-4">
+          {orders.length > 0 ? (
+            orders.map((order: any) => (
+              <OrderCard
+                key={order._id}
+                orderId={order.orderId}
+                service={order.service}
+                usernameOrLink={order.link}
+                quantity={order.quantity}
+                status={order.status}
+                createdAt={order.createdAt}
+              />
+            ))
+          ) : (
+            <p>No orders found.</p>
+          )}
+        </div>
       )}
     </main>
   );
