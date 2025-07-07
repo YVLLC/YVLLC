@@ -5,23 +5,63 @@ export default function Contact() {
     <>
       <Head>
         <title>Contact Us | YesViral</title>
+        <meta name="description" content="Need help? Contact YesViral's support team and get fast assistance with your orders or questions." />
       </Head>
-      <main className="container py-10 space-y-6 max-w-2xl mx-auto">
-        <h1 className="text-3xl font-bold text-center">Contact Us</h1>
-        <p className="text-center text-[#444]">
-          Have a question, issue, or need support? Reach out and we’ll get back to you fast.
-        </p>
-        <form className="space-y-4">
-          <input type="text" placeholder="Your Name" className="w-full" required />
-          <input type="email" placeholder="Your Email" className="w-full" required />
-          <textarea placeholder="Your Message" rows={5} className="w-full" required />
-          <button type="submit" className="btn-primary w-full">
-            Send Message
-          </button>
-        </form>
-        <p className="text-sm text-center text-[#888] mt-6">
-          For urgent support, email us at <a href="mailto:support@yesviral.com" className="text-[#007BFF]">support@yesviral.com</a>
-        </p>
+
+      <main className="bg-[#F9FAFB] min-h-screen py-16 px-4">
+        <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-xl p-8 md:p-12">
+          <h1 className="text-4xl font-extrabold text-center text-[#007BFF] mb-6">
+            Contact YesViral Support
+          </h1>
+          <p className="text-center text-[#444] mb-8">
+            Have questions or need help? Our team is here for you 7 days a week.
+            Fill out the form below or email us directly at{" "}
+            <a href="mailto:support@yesviral.com" className="text-[#007BFF] font-medium underline">support@yesviral.com</a>.
+          </p>
+
+          <form className="space-y-6">
+            <div>
+              <label className="block text-sm font-medium text-[#111] mb-1">Your Name</label>
+              <input
+                type="text"
+                placeholder="Enter your full name"
+                className="w-full border border-[#CFE4FF] rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#007BFF]"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-[#111] mb-1">Email Address</label>
+              <input
+                type="email"
+                placeholder="you@example.com"
+                className="w-full border border-[#CFE4FF] rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#007BFF]"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-[#111] mb-1">Your Message</label>
+              <textarea
+                rows={5}
+                placeholder="How can we help you?"
+                className="w-full border border-[#CFE4FF] rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#007BFF]"
+                required
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="w-full bg-[#007BFF] hover:bg-[#005FCC] text-white font-semibold py-3 rounded-lg transition duration-200"
+            >
+              Send Message
+            </button>
+          </form>
+
+          <div className="text-center text-sm text-[#888] mt-10">
+            Response time: <span className="font-medium text-[#111]">under 24 hours</span>
+          </div>
+        </div>
       </main>
     </>
   );
