@@ -16,18 +16,14 @@ export default function LoginPage() {
       const res = await axios.post("/api/auth", {
         email,
         password,
-        mode: "login",
+        mode: "login"
       });
 
-      if (res.status === 200 && res.data.token) {
-        // ✅ Save token to localStorage
-        localStorage.setItem("yesviral_admin_token", res.data.token);
+      if (res.status === 200) {
         router.push("/admin");
-      } else {
-        setError("Login failed. No token returned.");
       }
     } catch (err: any) {
-      console.error("Login error:", err);
+      console.error(err);
       setError(err?.response?.data?.error || "Login failed.");
     }
   };
@@ -41,12 +37,9 @@ export default function LoginPage() {
 
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-[#111]">
-              Email
-            </label>
+            <label className="block text-sm font-medium text-[#111]">Email</label>
             <input
               type="email"
-              id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -55,12 +48,9 @@ export default function LoginPage() {
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-[#111]">
-              Password
-            </label>
+            <label className="block text-sm font-medium text-[#111]">Password</label>
             <input
               type="password"
-              id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
