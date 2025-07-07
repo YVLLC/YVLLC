@@ -16,10 +16,14 @@ export default function LoginPage() {
       const res = await axios.post("/api/auth", {
         email,
         password,
-        mode: "login"
+        mode: "login", // required
       });
 
       if (res.status === 200) {
+        // ✅ Save token to localStorage
+        localStorage.setItem("token", res.data.token);
+
+        // redirect
         router.push("/admin");
       }
     } catch (err: any) {
@@ -37,9 +41,12 @@ export default function LoginPage() {
 
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-[#111]">Email</label>
+            <label htmlFor="email" className="block text-sm font-medium text-[#111]">
+              Email
+            </label>
             <input
               type="email"
+              id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -48,9 +55,12 @@ export default function LoginPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-[#111]">Password</label>
+            <label htmlFor="password" className="block text-sm font-medium text-[#111]">
+              Password
+            </label>
             <input
               type="password"
+              id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
