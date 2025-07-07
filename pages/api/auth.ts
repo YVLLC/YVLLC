@@ -2,13 +2,17 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import jwt from "jsonwebtoken";
 
+// Extend globalThis so TypeScript knows about USERS
+declare global {
+  var USERS: { [email: string]: { password: string } };
+}
+
 const JWT_SECRET = process.env.JWT_SECRET || "supersecret";
 
-// Shared user storage (in-memory across requests during runtime)
-const USERS: { [email: string]: { password: string } } =
-  (global as any).USERS || ((global as any).USERS = {
-    "admin@yesviral.com": { password: "testadmin123" }, // default admin
-  });
+// Use global to store users in-memory
+global.USERS = global.USERS || {
+  "admin@yesviral.com": { password: "testadmin123" },
+};
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") {
@@ -22,15 +26,15 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 
   if (mode === "login") {
-    const user = USERS[email];
+    const user = global.USERS[email];
     if (!user || user.password !== password) {
       return res.status(401).json({ error: "Invalid credentials" });
     }
   } else if (mode === "signup") {
-    if (USERS[email]) {
+    if (global.USERS[email]) {
       return res.status(409).json({ error: "User already exists" });
     }
-    USERS[email] = { password };
+    global.USERS[email] = { password };
   } else {
     return res.status(400).json({ error: "Invalid mode" });
   }
