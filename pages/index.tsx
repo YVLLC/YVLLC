@@ -35,7 +35,7 @@ export default function Home() {
         />
       </Head>
 
-      <main className="px-4 sm:px-6 max-w-7xl mx-auto py-16 space-y-28">
+      <main className="px-4 sm:px-6 max-w-7xl mx-auto py-16 space-y-28 select-none">
         {/* Hero */}
         <section className="grid md:grid-cols-2 gap-12 items-center">
           <div className="space-y-6 text-center md:text-left">
@@ -58,14 +58,18 @@ export default function Home() {
               </Link>
             </div>
           </div>
-          <div className="hidden md:block">
-            <Image
-              src="/hero-illustration.png"
-              alt="Social Media Growth"
-              width={500}
-              height={400}
-              className="w-full h-auto"
-            />
+          <div className="hidden md:flex justify-center">
+            <div className="pointer-events-none">
+              <Image
+                src="/hero-illustration.png"
+                alt="Social Media Growth"
+                width={500}
+                height={400}
+                className="w-full max-w-[400px] h-auto object-contain"
+                draggable={false}
+                unselectable="on"
+              />
+            </div>
           </div>
         </section>
 
