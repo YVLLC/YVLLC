@@ -13,13 +13,18 @@ export default function LoginPage() {
     setError("");
 
     try {
-      const res = await axios.post("/api/auth", { email, password });
+      const res = await axios.post("/api/auth", {
+        email,
+        password,
+        mode: "login", // ✅ Required for the backend to work
+      });
+
       if (res.status === 200) {
-        router.push("/admin"); // Redirect to dashboard
+        router.push("/admin");
       }
     } catch (err: any) {
       console.error(err);
-      setError(err?.response?.data?.message || "Login failed.");
+      setError(err?.response?.data?.error || "Login failed.");
     }
   };
 
