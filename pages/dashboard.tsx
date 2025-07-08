@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { supabase } from "@/lib/supabase";
 import Image from "next/image";
+import { Toaster, toast } from "react-hot-toast";
 
 interface Order {
   id: string;
@@ -72,12 +73,10 @@ export default function DashboardPage() {
   };
 
   const placeOrder = async () => {
-    const selected = availableServices.find(s => s.name === selectedService);
+    const selected = availableServices.find((s) => s.name === selectedService);
     const amount = (selected?.price || 0) * quantity;
 
-    alert(`Checkout Ready: \nService: ${selectedService}\nQty: ${quantity}\nAmount: $${amount.toFixed(2)}`);
-
-    // Here you'd trigger Stripe Checkout or JAP API
+    toast.success(`Checkout Ready for $${amount.toFixed(2)}`);
   };
 
   const TabContent = () => {
@@ -127,18 +126,98 @@ export default function DashboardPage() {
           </div>
         </div>
       );
-            })}
-          </div>
+    }
+
+    if (activeTab === "orders") {
+      return (
+        <div>
+          <h2 className="text-xl font-bold mb-4">Active Orders</h2>
+          <ul className="space-y-4">
+            {orders.map((order) => (
+              <li key={order.id} className="border p-4 rounded-xl">
+                <p><strong>Service:</strong> {order.service}</p>
+                <p><strong>Quantity:</strong> {order.quantity}</p>
+                <p><strong>Status:</strong> {order.status}</p>
+                <p className="text-sm text-[#666]">Placed: {new Date(order.created_at).toLocaleString()}</p>
+              </li>
+            ))}
+          </ul>
         </div>
-      
       );
     }
 
-    return null; // Other tab content is unchanged for brevity
+    if (activeTab === "completed") {
+      return (
+        <div>
+          <h2 className="text-xl font-bold mb-4">Completed Orders</h2>
+          <ul className="space-y-4">
+            {completedOrders.map((order) => (
+              <li key={order.id} className="border p-4 rounded-xl bg-green-50">
+                <p><strong>Service:</strong> {order.service}</p>
+                <p><strong>Quantity:</strong> {order.quantity}</p>
+                <p><strong>Status:</strong> {order.status}</p>
+                <p className="text-sm text-[#666]">Completed: {new Date(order.created_at).toLocaleString()}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      );
+    }
+
+    if (activeTab === "analytics") {
+      return (
+        <div>
+          <h2 className="text-xl font-bold mb-4">Analytics</h2>
+          <p>Total Orders: {analytics.total}</p>
+          <p>Completed Orders: {analytics.completed}</p>
+        </div>
+      );
+    }
+
+    if (activeTab === "profile") {
+      return (
+        <div className="space-y-4">
+          <h2 className="text-xl font-bold">Profile</h2>
+          {editingProfile ? (
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={profileName}
+                onChange={(e) => setProfileName(e.target.value)}
+                className="border px-3 py-2 rounded-md"
+              />
+              <button
+                onClick={() => setEditingProfile(false)}
+                className="bg-[#007BFF] text-white px-4 py-2 rounded hover:bg-[#005FCC]"
+              >
+                Save
+              </button>
+            </div>
+          ) : (
+            <div className="flex justify-between items-center">
+              <p><strong>Email:</strong> {userEmail}</p>
+              <button
+                onClick={() => setEditingProfile(true)}
+                className="text-sm text-[#007BFF] hover:underline"
+              >
+                Edit
+              </button>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    if (activeTab === "security") {
+      return <p className="text-sm">Security settings coming soon.</p>;
+    }
+
+    return null;
   };
 
   return (
     <main className="min-h-screen bg-[#F9FAFB] text-[#111]">
+      <Toaster position="top-right" />
       <div className="max-w-6xl mx-auto px-4 py-12">
         <div className="flex justify-between items-center mb-10">
           <div className="flex items-center gap-3">
@@ -156,24 +235,15 @@ export default function DashboardPage() {
         <div className="flex flex-col md:flex-row gap-6">
           <div className="w-full md:w-1/4 bg-white p-4 rounded-xl border border-[#CFE4FF] shadow-sm">
             <div className="flex flex-col space-y-2">
-              {[
-                ["orders", "Orders"],
-                ["completed", "Completed Orders"],
-                ["services", "Services"],
-                ["analytics", "Analytics"],
-                ["profile", "Profile"],
-                ["security", "Security"],
-              ].map(([key, label]) => (
+              {["orders", "completed", "services", "analytics", "profile", "security"].map((key) => (
                 <button
                   key={key}
                   onClick={() => setActiveTab(key)}
                   className={`text-left px-4 py-2 rounded-lg transition font-medium ${
-                    activeTab === key
-                      ? "bg-[#007BFF] text-white"
-                      : "hover:bg-[#E6F0FF] text-[#111]"
+                    activeTab === key ? "bg-[#007BFF] text-white" : "hover:bg-[#E6F0FF] text-[#111]"
                   }`}
                 >
-                  {label}
+                  {key.charAt(0).toUpperCase() + key.slice(1)}
                 </button>
               ))}
             </div>
