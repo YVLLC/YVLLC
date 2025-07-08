@@ -1,60 +1,24 @@
 import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
-import { ChevronDown, ShieldCheck, Clock, UserCheck, Zap, Star, ThumbsUp, MessageCircle } from "lucide-react";
+import { ChevronDown, ShieldCheck, Clock, UserCheck, Zap, Star, MessageCircle } from "lucide-react";
 import { useState } from "react";
+import OrderModal from "@/components/OrderModal";
 
-// Payment SVGs as a component (copy/paste anywhere)
+// Payment Icons
 const PaymentIcons = () => (
   <div className="flex gap-2">
-    {/* Visa */}
-    <span title="Visa" className="flex items-center">
-      <svg width="34" height="20" viewBox="0 0 36 24" fill="none">
-        <rect width="36" height="24" rx="4" fill="#fff" />
-        <text x="7" y="16" fill="#007BFF" fontWeight="bold" fontSize="14" fontFamily="sans-serif">VISA</text>
-      </svg>
-    </span>
-    {/* Mastercard */}
-    <span title="Mastercard" className="flex items-center">
-      <svg width="34" height="20" viewBox="0 0 36 24" fill="none">
-        <rect width="36" height="24" rx="4" fill="#fff" />
-        <circle cx="14" cy="12" r="7" fill="#007BFF" fillOpacity="0.6" />
-        <circle cx="22" cy="12" r="7" fill="#007BFF" fillOpacity="0.9" />
-      </svg>
-    </span>
-    {/* Apple Pay */}
-    <span title="Apple Pay" className="flex items-center">
-      <svg width="34" height="20" viewBox="0 0 36 24" fill="none">
-        <rect width="36" height="24" rx="4" fill="#fff" />
-        <circle cx="11" cy="12" r="5" fill="#007BFF" />
-        <rect x="19" y="7" width="10" height="10" rx="2" fill="#005FCC" />
-        <text x="19" y="21" fill="#fff" fontWeight="bold" fontSize="8" fontFamily="sans-serif">Pay</text>
-      </svg>
-    </span>
-    {/* Google Pay */}
-    <span title="Google Pay" className="flex items-center">
-      <svg width="34" height="20" viewBox="0 0 36 24" fill="none">
-        <rect width="36" height="24" rx="4" fill="#fff" />
-        <rect x="7" y="7" width="10" height="10" rx="2" fill="#007BFF" />
-        <rect x="19" y="7" width="10" height="10" rx="2" fill="#005FCC" />
-        <text x="11" y="21" fill="#fff" fontWeight="bold" fontSize="8" fontFamily="sans-serif">G</text>
-        <text x="24" y="21" fill="#fff" fontWeight="bold" fontSize="8" fontFamily="sans-serif">Pay</text>
-      </svg>
-    </span>
-    {/* Bitcoin */}
-    <span title="Bitcoin" className="flex items-center">
-      <svg width="34" height="20" viewBox="0 0 36 24" fill="none">
-        <rect width="36" height="24" rx="4" fill="#fff" />
-        <circle cx="18" cy="12" r="7" fill="#007BFF" />
-        <text x="13" y="17" fill="#fff" fontWeight="bold" fontSize="13" fontFamily="monospace">₿</text>
-      </svg>
-    </span>
+    <span title="Visa"><svg width="34" height="20" viewBox="0 0 36 24"><rect width="36" height="24" rx="4" fill="#fff" /><text x="7" y="16" fill="#007BFF" fontWeight="bold" fontSize="14" fontFamily="sans-serif">VISA</text></svg></span>
+    <span title="Mastercard"><svg width="34" height="20" viewBox="0 0 36 24"><rect width="36" height="24" rx="4" fill="#fff" /><circle cx="14" cy="12" r="7" fill="#007BFF" fillOpacity="0.6" /><circle cx="22" cy="12" r="7" fill="#007BFF" fillOpacity="0.9" /></svg></span>
+    <span title="Apple Pay"><svg width="34" height="20" viewBox="0 0 36 24"><rect width="36" height="24" rx="4" fill="#fff" /><circle cx="11" cy="12" r="5" fill="#007BFF" /><rect x="19" y="7" width="10" height="10" rx="2" fill="#005FCC" /><text x="19" y="21" fill="#fff" fontWeight="bold" fontSize="8" fontFamily="sans-serif">Pay</text></svg></span>
+    <span title="Google Pay"><svg width="34" height="20" viewBox="0 0 36 24"><rect width="36" height="24" rx="4" fill="#fff" /><rect x="7" y="7" width="10" height="10" rx="2" fill="#007BFF" /><rect x="19" y="7" width="10" height="10" rx="2" fill="#005FCC" /><text x="11" y="21" fill="#fff" fontWeight="bold" fontSize="8" fontFamily="sans-serif">G</text><text x="24" y="21" fill="#fff" fontWeight="bold" fontSize="8" fontFamily="sans-serif">Pay</text></svg></span>
+    <span title="Bitcoin"><svg width="34" height="20" viewBox="0 0 36 24"><rect width="36" height="24" rx="4" fill="#fff" /><circle cx="18" cy="12" r="7" fill="#007BFF" /><text x="13" y="17" fill="#fff" fontWeight="bold" fontSize="13" fontFamily="monospace">₿</text></svg></span>
   </div>
 );
 
 const SERVICES = [
   {
-    name: "Instagram Service",
+    name: "Instagram Services",
     price: "$0.09 / 100",
     description: "Boost your IG presence with real followers.",
     icon: (
@@ -70,7 +34,7 @@ const SERVICES = [
     count: "2,000+ bought this week"
   },
   {
-    name: "TikTok Service",
+    name: "TikTok Services",
     price: "$0.08 / 100",
     description: "Get instant likes on your videos.",
     icon: (
@@ -88,7 +52,7 @@ const SERVICES = [
     count: "1,400+ bought this week"
   },
   {
-    name: "YouTube Service",
+    name: "YouTube Services",
     price: "$0.05 / 1000",
     description: "Skyrocket your video reach and impressions.",
     icon: (
@@ -104,6 +68,8 @@ const SERVICES = [
     count: "950+ bought this week"
   }
 ];
+
+// ... Put your FAQS, HOW_IT_WORKS, TESTIMONIALS here, unchanged...
 
 const FAQS = [
   {
@@ -199,25 +165,22 @@ const TESTIMONIALS = [
 
 export default function Home() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [orderModalOpen, setOrderModalOpen] = useState(false);
   const toggleFaq = (index: number) => setOpenFaq(openFaq === index ? null : index);
 
   return (
     <>
       <Head>
         <title>YesViral – Buy Real Followers, Likes & Views</title>
-        <meta
-          name="description"
-          content="Grow your social media with YesViral. Buy real followers, likes, views, and more across Instagram, TikTok, YouTube & beyond — fast, secure, and trusted."
-        />
+        <meta name="description" content="Grow your social media with YesViral. Buy real followers, likes, views, and more across Instagram, TikTok, YouTube & beyond — fast, secure, and trusted." />
       </Head>
-      {/* Sticky Chat/Support CTA */}
+      <OrderModal open={orderModalOpen} onClose={() => setOrderModalOpen(false)} />
       <Link href="/support" className="fixed bottom-6 right-6 z-50">
         <button className="flex items-center gap-2 bg-white shadow-lg px-5 py-3 rounded-full border border-[#CFE4FF] hover:bg-[#F2F9FF] transition group">
           <MessageCircle className="text-[#007BFF] group-hover:scale-110 transition" size={20} />
           <span className="font-semibold text-[#007BFF] text-sm">Live Support</span>
         </button>
       </Link>
-
       <main className="px-4 sm:px-6 max-w-7xl mx-auto py-14 space-y-28 select-none">
         {/* Hero Section */}
         <section className="grid md:grid-cols-2 gap-12 items-center">
@@ -233,18 +196,18 @@ export default function Home() {
               Get real followers, likes, and views in minutes. No logins, no risk. Start your viral growth journey with YesViral.
             </p>
             <div className="flex flex-col sm:flex-row justify-center md:justify-start gap-4">
-              <Link href="#order">
-                <button className="bg-[#007BFF] text-white font-semibold px-8 py-3 rounded-xl shadow-lg hover:bg-[#005FCC] transition text-lg">
-                  Order Now
-                </button>
-              </Link>
+              <button
+                className="bg-[#007BFF] text-white font-semibold px-8 py-3 rounded-xl shadow-lg hover:bg-[#005FCC] transition text-lg"
+                onClick={() => setOrderModalOpen(true)}
+              >
+                Order Now
+              </button>
               <Link href="/track-order">
                 <button className="bg-white text-[#007BFF] border border-[#007BFF] font-semibold px-8 py-3 rounded-xl hover:bg-[#E6F0FF] transition text-lg">
                   Try Free Likes
                 </button>
               </Link>
             </div>
-            {/* Payment Icons in hero */}
             <div className="flex flex-wrap gap-3 mt-6 justify-center md:justify-start items-center">
               <PaymentIcons />
               <span className="ml-2 text-xs text-[#555] font-medium mt-2 hidden sm:inline">
@@ -290,11 +253,12 @@ export default function Home() {
                   <span className="text-sm font-medium text-[#007BFF]">{price}</span>
                   <span className="text-xs text-[#111] bg-[#E8F1FF] px-2 py-0.5 rounded">{count}</span>
                 </div>
-                <Link href="/checkout" className="mt-4">
-                  <button className="w-full bg-[#007BFF] text-white text-sm px-4 py-2 rounded-lg font-bold hover:bg-[#005FCC] shadow transition transform hover:scale-[1.03] active:scale-95">
-                    Order
-                  </button>
-                </Link>
+                <button
+                  className="mt-4 w-full bg-[#007BFF] text-white text-sm px-4 py-2 rounded-lg font-bold hover:bg-[#005FCC] shadow transition transform hover:scale-[1.03] active:scale-95"
+                  onClick={() => setOrderModalOpen(true)}
+                >
+                  Order
+                </button>
               </div>
             ))}
           </div>
@@ -422,11 +386,12 @@ export default function Home() {
             Start growing now — choose your package and watch your stats climb.
           </p>
           <div className="mt-8">
-            <Link href="/checkout">
-              <button className="bg-[#007BFF] text-white px-8 py-3 text-lg rounded-xl hover:bg-[#005FCC] font-bold shadow transition">
-                View Services
-              </button>
-            </Link>
+            <button
+              className="bg-[#007BFF] text-white px-8 py-3 text-lg rounded-xl hover:bg-[#005FCC] font-bold shadow transition"
+              onClick={() => setOrderModalOpen(true)}
+            >
+              View Services
+            </button>
           </div>
         </section>
       </main>
