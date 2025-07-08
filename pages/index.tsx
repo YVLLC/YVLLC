@@ -1,7 +1,7 @@
 import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
-import { ChevronDown, ShieldCheck, Clock, UserCheck, Zap, Star, MessageCircle } from "lucide-react";
+import { ChevronDown, ShieldCheck, Clock, UserCheck, Zap, RefreshCcw, MessageCircle } from "lucide-react";
 import { useState } from "react";
 import OrderModal from "@/components/OrderModal";
 
@@ -68,8 +68,6 @@ const SERVICES = [
     count: "950+ bought this week"
   }
 ];
-
-// ... Put your FAQS, HOW_IT_WORKS, TESTIMONIALS here, unchanged...
 
 const FAQS = [
   {
@@ -186,8 +184,8 @@ export default function Home() {
         <section className="grid md:grid-cols-2 gap-12 items-center">
           <div className="space-y-7 text-center md:text-left">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#E8F1FF] rounded-full mb-2 text-xs font-bold text-[#007BFF] tracking-wide shadow-sm">
-              <Star size={16} className="text-yellow-400" />
-              Trusted by 100,000+ Creators
+              <RefreshCcw size={16} className="text-[#00B67A]" />
+              30 Day Refill Guarantee
             </div>
             <h1 className="text-5xl sm:text-6xl font-extrabold text-[#007BFF] leading-tight drop-shadow-sm">
               Blow Up Your Socials. <br /> Real Growth. No Waiting.
@@ -289,9 +287,9 @@ export default function Home() {
               <span className="text-sm text-[#444]">Chat any time, any day</span>
             </div>
             <div className="flex flex-col items-center max-w-[170px]">
-              <Star className="text-[#007BFF]" size={32} />
-              <span className="font-semibold mt-2">Money-back</span>
-              <span className="text-sm text-[#444]">If not delivered as promised</span>
+              <RefreshCcw className="text-[#00B67A]" size={32} />
+              <span className="font-semibold mt-2">30 Day Refill</span>
+              <span className="text-sm text-[#444]">Results drop? We'll refill for free—no questions asked, 30 days guaranteed.</span>
             </div>
           </div>
           <div className="flex justify-center gap-8 mt-7 text-[#007BFF] font-bold text-lg">
@@ -325,7 +323,9 @@ export default function Home() {
                   {Array(5)
                     .fill(0)
                     .map((_, j) => (
-                      <Star key={j} size={16} className="text-yellow-400" />
+                      <svg key={j} width={16} height={16} viewBox="0 0 20 20" fill="#FCD34D">
+                        <polygon points="10,2 12.5,7.5 18,8 14,12 15,18 10,15 5,18 6,12 2,8 7.5,7.5" />
+                      </svg>
                     ))}
                 </div>
                 <p className="italic text-[#222] text-base font-medium mb-2">“{quote}”</p>
