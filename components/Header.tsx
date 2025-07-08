@@ -4,8 +4,11 @@ import { useRouter } from "next/router";
 import Image from "next/image";
 import { Menu, X, ChevronDown, Instagram, Youtube, Music2, UserPlus, ThumbsUp, Eye } from "lucide-react";
 
-// Define services (edit these as you want)
-const SERVICES = {
+// --- Type for platform keys ---
+type PlatformKey = "instagram" | "tiktok" | "youtube";
+
+// --- Services ---
+const SERVICES: Record<PlatformKey, { label: string; href: string; icon: JSX.Element }[]> = {
   instagram: [
     { label: "Buy Followers", href: "/checkout?service=instagram-followers", icon: <UserPlus size={18} className="text-[#E1306C]" /> },
     { label: "Buy Likes", href: "/checkout?service=instagram-likes", icon: <ThumbsUp size={18} className="text-[#E1306C]" /> },
@@ -38,11 +41,10 @@ const navLinks = [
 ];
 
 export default function Header() {
-  const [dropdown, setDropdown] = useState<string | null>(null);
+  const [dropdown, setDropdown] = useState<PlatformKey | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
 
-  // Only allow one dropdown open, and close when mouse leaves nav area
   return (
     <header className="bg-white border-b border-[#CFE4FF] sticky top-0 z-50 shadow-sm">
       <div className="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-8 py-3 min-h-[74px]">
@@ -69,9 +71,9 @@ export default function Header() {
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold text-base hover:bg-[#F5FAFF] transition group ${
                   dropdown === tab.key ? "text-[#007BFF]" : "text-[#111]"
                 }`}
-                onMouseEnter={() => setDropdown(tab.key)}
-                onFocus={() => setDropdown(tab.key)}
-                onClick={() => setDropdown(dropdown === tab.key ? null : tab.key)}
+                onMouseEnter={() => setDropdown(tab.key as PlatformKey)}
+                onFocus={() => setDropdown(tab.key as PlatformKey)}
+                onClick={() => setDropdown(dropdown === tab.key ? null : (tab.key as PlatformKey))}
                 type="button"
                 aria-haspopup="true"
                 aria-expanded={dropdown === tab.key}
@@ -83,7 +85,7 @@ export default function Header() {
               {/* Dropdown: Only if active */}
               {dropdown === tab.key && (
                 <div className="absolute left-0 top-[110%] w-64 bg-white border border-[#CFE4FF] rounded-xl shadow-xl p-2 flex flex-col gap-1 z-50 animate-dropdown">
-                  {SERVICES[tab.key].map(item => (
+                  {SERVICES[tab.key as PlatformKey].map(item => (
                     <Link
                       key={item.label}
                       href={item.href}
@@ -136,7 +138,7 @@ export default function Header() {
                 <ChevronDown className="ml-auto w-4 h-4 transition-transform group-open:rotate-180" />
               </summary>
               <div className="ml-6 my-1 flex flex-col gap-1">
-                {SERVICES[tab.key].map(item => (
+                {SERVICES[tab.key as PlatformKey].map(item => (
                   <Link
                     key={item.label}
                     href={item.href}
