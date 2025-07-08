@@ -2,7 +2,8 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
-import { Menu, X, ChevronDown, Instagram, Youtube, Music2, UserPlus, ThumbsUp, Eye } from "lucide-react";
+import { Menu, X, ChevronDown, Instagram, Youtube, Music2, UserPlus, ThumbsUp, Eye, LogOut } from "lucide-react";
+import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 
 const MEGA_MENUS = {
   instagram: [
@@ -71,6 +72,8 @@ export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [hoverTab, setHoverTab] = useState<string | null>(null);
   const router = useRouter();
+  const user = useUser();
+  const supabase = useSupabaseClient();
 
   const navLinks = [
     { name: "FAQ", href: "/#faq" },
@@ -95,6 +98,12 @@ export default function Header() {
     }
   ];
 
+  // SIGN OUT logic
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    router.push("/"); // redirect home or wherever
+  };
+
   return (
     <header className="bg-white border-b border-[#CFE4FF] sticky top-0 z-50 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-8 py-3 flex items-center justify-between min-h-[72px]">
@@ -115,7 +124,6 @@ export default function Header() {
 
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-1 ml-2">
-          {/* Mega Tabs */}
           {megaTabs.map(tab => (
             <div
               key={tab.key}
@@ -135,7 +143,6 @@ export default function Header() {
                 <span>{tab.label}</span>
                 <ChevronDown className={`w-4 h-4 ml-1 transition-transform duration-150 ${hoverTab === tab.key ? "rotate-180" : ""}`} />
               </button>
-              {/* Dropdown Mega Menu */}
               {hoverTab === tab.key && (
                 <div className="absolute left-0 top-[110%] w-80 bg-white rounded-xl border border-[#CFE4FF] shadow-2xl z-50 py-3 animate-fadeInFast">
                   <div className="flex flex-col gap-1">
@@ -158,10 +165,8 @@ export default function Header() {
             </div>
           ))}
 
-          {/* Divider */}
           <span className="w-px h-7 mx-3 bg-[#E7ECF3]" />
 
-          {/* Nav Links */}
           {navLinks.map(link => (
             <Link
               key={link.name}
@@ -174,17 +179,35 @@ export default function Header() {
             </Link>
           ))}
 
-          {/* Login/Sign Up */}
-          <Link href="/login" className="ml-4">
-            <button className="px-5 py-2 rounded-full text-[#007BFF] bg-white border border-[#007BFF] font-semibold shadow-sm hover:bg-[#F2F9FF] hover:text-[#005FCC] transition text-base focus:outline-none focus:ring-2 focus:ring-[#E6F0FF]">
-              Login
-            </button>
-          </Link>
-          <Link href="/signup" className="ml-2">
-            <button className="px-5 py-2 rounded-full text-white bg-[#007BFF] border-2 border-[#007BFF] font-bold shadow hover:bg-[#005FCC] transition text-base focus:outline-none focus:ring-2 focus:ring-[#E6F0FF]">
-              Sign Up
-            </button>
-          </Link>
+          {/* AUTH BUTTONS */}
+          {!user ? (
+            <>
+              <Link href="/login" className="ml-4">
+                <button className="px-5 py-2 rounded-full text-[#007BFF] bg-white border border-[#007BFF] font-semibold shadow-sm hover:bg-[#F2F9FF] hover:text-[#005FCC] transition text-base focus:outline-none focus:ring-2 focus:ring-[#E6F0FF]">
+                  Login
+                </button>
+              </Link>
+              <Link href="/signup" className="ml-2">
+                <button className="px-5 py-2 rounded-full text-white bg-[#007BFF] border-2 border-[#007BFF] font-bold shadow hover:bg-[#005FCC] transition text-base focus:outline-none focus:ring-2 focus:ring-[#E6F0FF]">
+                  Sign Up
+                </button>
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link href="/dashboard" className="ml-4">
+                <button className="px-5 py-2 rounded-full text-white bg-[#007BFF] border-2 border-[#007BFF] font-bold shadow hover:bg-[#005FCC] transition text-base focus:outline-none focus:ring-2 focus:ring-[#E6F0FF]">
+                  Dashboard
+                </button>
+              </Link>
+              <button
+                className="ml-2 flex items-center gap-1 px-5 py-2 rounded-full text-[#007BFF] bg-white border border-[#007BFF] font-semibold shadow-sm hover:bg-[#F2F9FF] hover:text-[#005FCC] transition text-base focus:outline-none focus:ring-2 focus:ring-[#E6F0FF]"
+                onClick={handleSignOut}
+              >
+                <LogOut size={18} className="mr-1" /> Sign Out
+              </button>
+            </>
+          )}
         </nav>
 
         {/* Mobile Hamburger */}
@@ -200,7 +223,6 @@ export default function Header() {
       {/* Mobile Nav */}
       {isOpen && (
         <div className="md:hidden px-4 pb-4 space-y-3 bg-white border-t border-[#CFE4FF] shadow-inner">
-          {/* MegaMenus as collapsibles */}
           {megaTabs.map(tab => (
             <details key={tab.key} className="group">
               <summary className="flex items-center gap-2 px-2 py-2 text-[#007BFF] font-semibold cursor-pointer select-none">
@@ -236,18 +258,35 @@ export default function Header() {
               {link.name}
             </Link>
           ))}
-          <div className="flex gap-2 mt-3">
-            <Link href="/login" className="flex-1">
-              <button className="w-full px-4 py-2 rounded-full text-[#007BFF] bg-white border border-[#007BFF] font-semibold shadow-sm hover:bg-[#F2F9FF] hover:text-[#005FCC] transition text-base">
-                Login
+          {/* Mobile auth */}
+          {!user ? (
+            <div className="flex gap-2 mt-3">
+              <Link href="/login" className="flex-1">
+                <button className="w-full px-4 py-2 rounded-full text-[#007BFF] bg-white border border-[#007BFF] font-semibold shadow-sm hover:bg-[#F2F9FF] hover:text-[#005FCC] transition text-base">
+                  Login
+                </button>
+              </Link>
+              <Link href="/signup" className="flex-1">
+                <button className="w-full px-4 py-2 rounded-full text-white bg-[#007BFF] border-2 border-[#007BFF] font-bold shadow hover:bg-[#005FCC] transition text-base">
+                  Sign Up
+                </button>
+              </Link>
+            </div>
+          ) : (
+            <div className="flex gap-2 mt-3">
+              <Link href="/dashboard" className="flex-1">
+                <button className="w-full px-4 py-2 rounded-full text-white bg-[#007BFF] border-2 border-[#007BFF] font-bold shadow hover:bg-[#005FCC] transition text-base">
+                  Dashboard
+                </button>
+              </Link>
+              <button
+                className="flex-1 flex items-center justify-center gap-1 px-4 py-2 rounded-full text-[#007BFF] bg-white border border-[#007BFF] font-semibold shadow-sm hover:bg-[#F2F9FF] hover:text-[#005FCC] transition text-base"
+                onClick={handleSignOut}
+              >
+                <LogOut size={18} /> Sign Out
               </button>
-            </Link>
-            <Link href="/signup" className="flex-1">
-              <button className="w-full px-4 py-2 rounded-full text-white bg-[#007BFF] border-2 border-[#007BFF] font-bold shadow hover:bg-[#005FCC] transition text-base">
-                Sign Up
-              </button>
-            </Link>
-          </div>
+            </div>
+          )}
         </div>
       )}
 
