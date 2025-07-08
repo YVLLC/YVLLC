@@ -36,8 +36,8 @@ export default function LoginPage() {
         <div className="flex flex-col items-center mb-6">
           <Image src="/logo.png" alt="YesViral Logo" width={48} height={48} />
           <h1 className="text-3xl font-bold text-[#007BFF] mt-3">Welcome Back</h1>
-          <p className="text-sm text-[#666]">The #1 New Growth Service for Premium Followers, Likes & Views.
-Trusted by thousands of creators. Fast, Secure, and High Quality. </p>
+          <p className="text-sm text-[#666]">Over 100,000 creators, brands, and influencers trust us to power their growth — because results matter.
+</p>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-5">
