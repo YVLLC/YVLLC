@@ -25,6 +25,12 @@ export default function Home() {
     }
   ];
 
+  const services = [
+    { name: "Instagram Followers", price: "$0.09 / 100", description: "Boost your IG presence with real followers." },
+    { name: "TikTok Likes", price: "$0.08 / 100", description: "Get instant likes on your videos." },
+    { name: "YouTube Views", price: "$0.05 / 1000", description: "Skyrocket your video reach and impressions." },
+  ];
+
   return (
     <>
       <Head>
@@ -46,9 +52,9 @@ export default function Home() {
               Get real followers, likes, and views in minutes. Trusted by over 100,000 creators and brands worldwide.
             </p>
             <div className="flex flex-col sm:flex-row justify-center md:justify-start gap-4">
-              <Link href="/checkout">
+              <Link href="#order">
                 <button className="bg-[#007BFF] text-white font-semibold px-8 py-3 rounded-xl shadow-lg hover:bg-[#005FCC] transition text-lg">
-                  View Services
+                  Order Now
                 </button>
               </Link>
               <Link href="/track-order">
@@ -59,17 +65,44 @@ export default function Home() {
             </div>
           </div>
           <div className="hidden md:flex justify-center">
-            <div className="pointer-events-none">
-              <Image
-                src="/hero-illustration.png"
-                alt="Social Media Growth"
-                width={500}
-                height={400}
-                className="w-full max-w-[400px] h-auto object-contain"
-                draggable={false}
-                unselectable="on"
-              />
-            </div>
+            <Image
+              src="/hero-illustration.png"
+              alt="Social Media Growth"
+              width={500}
+              height={400}
+              className="w-full max-w-[400px] h-auto object-contain"
+              draggable={false}
+              unselectable="on"
+            />
+          </div>
+        </section>
+
+        {/* Instant Order Section */}
+        <section id="order" className="space-y-10">
+          <h2 className="text-center text-3xl sm:text-4xl font-bold">Place Your Order Instantly</h2>
+          <p className="text-[#444] text-center max-w-2xl mx-auto">
+            Choose your service and get started without logging in.
+          </p>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {services.map((service, idx) => (
+              <div
+                key={idx}
+                className="bg-white border border-[#CFE4FF] rounded-xl p-6 shadow-md hover:shadow-lg transition flex flex-col justify-between"
+              >
+                <div>
+                  <h3 className="text-xl font-semibold text-[#111] mb-2">{service.name}</h3>
+                  <p className="text-sm text-[#444] mb-4">{service.description}</p>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium text-[#007BFF]">{service.price}</span>
+                  <Link href="/checkout">
+                    <button className="bg-[#007BFF] text-white text-sm px-4 py-2 rounded-lg hover:bg-[#005FCC]">
+                      Order
+                    </button>
+                  </Link>
+                </div>
+              </div>
+            ))}
           </div>
         </section>
 
@@ -77,7 +110,7 @@ export default function Home() {
         <section id="about" className="bg-[#F9FAFB] p-10 rounded-2xl text-center shadow-sm space-y-5">
           <h2 className="text-3xl sm:text-4xl font-bold text-[#111]">Why Choose YesViral?</h2>
           <p className="text-[#444] max-w-3xl mx-auto text-base sm:text-lg">
-            We’re not just another reseller. We’re a full-scale growth engine. Lightning-fast delivery, 24/7 support, and real engagement.
+            We’re not just another reseller. We’re a full-scale growth engine. Lightning-fast delivery, 24/7 support, and real engagement from real users.
           </p>
         </section>
 
@@ -128,9 +161,7 @@ export default function Home() {
               <div key={index} className="border border-gray-200 rounded-xl p-4 cursor-pointer" onClick={() => toggleFaq(index)}>
                 <div className="flex justify-between items-center">
                   <p className="font-medium text-[#111]">{q}</p>
-                  <ChevronDown
-                    className={`w-5 h-5 transition-transform ${openFaq === index ? "rotate-180" : "rotate-0"}`}
-                  />
+                  <ChevronDown className={`w-5 h-5 transition-transform ${openFaq === index ? "rotate-180" : "rotate-0"}`} />
                 </div>
                 {openFaq === index && (
                   <p className="mt-3 text-sm text-[#444]">{a}</p>
