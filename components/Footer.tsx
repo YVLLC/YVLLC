@@ -18,7 +18,7 @@ export default function Footer() {
             <h3 className="text-2xl font-extrabold text-[#007BFF]">YesViral</h3>
           </div>
           <p className="text-sm text-[#444] leading-relaxed">
-            The #1 source for premium social media growth. Trusted by thousands of creators and businesses worldwide.
+            The #1 source for high-quality social media growth, trusted by thousands. We offer a comprehensive selection of high-quality services designed to help you increase followers, engagement, and visibility across major platforms. Backed by top-tier customer support, YesViral makes it easy to elevate your online presence with speed, reliability, and confidence.
           </p>
         </div>
 
