@@ -1,50 +1,46 @@
+// signup.tsx — Premium Signup UI
 import { useState } from "react";
 import { useRouter } from "next/router";
-import { supabase } from "@/lib/supabase"; // ✅ must exist
+import { supabase } from "@/lib/supabase";
+import { Toaster, toast } from "react-hot-toast";
+import Image from "next/image";
 
 export default function SignupPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
-    setSuccess(false);
+    setLoading(true);
 
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-    });
+    const { error } = await supabase.auth.signUp({ email, password });
 
     if (error) {
-      console.error("Signup error:", error.message);
-      setError(error.message || "Signup failed.");
+      toast.error(error.message || "Signup failed");
+      setLoading(false);
       return;
     }
 
-    setSuccess(true);
+    toast.success("Account created! Redirecting...");
     setTimeout(() => router.push("/login"), 1500);
   };
 
   return (
-    <main className="flex items-center justify-center min-h-screen bg-[#F9FAFB] px-4">
-      <div className="w-full max-w-md bg-white p-8 rounded-xl shadow">
-        <h1 className="text-2xl font-bold text-center mb-4">Create an Account</h1>
+    <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#E6F0FF] to-white px-4">
+      <Toaster position="top-center" />
+      <div className="w-full max-w-md bg-white p-8 rounded-3xl shadow-xl border border-[#CFE4FF]">
+        <div className="flex flex-col items-center mb-6">
+          <Image src="/logo.png" alt="YesViral Logo" width={48} height={48} />
+          <h1 className="text-3xl font-bold text-[#007BFF] mt-3">Join YesViral</h1>
+          <p className="text-sm text-[#666]">Create your account to get started</p>
+        </div>
 
-        {error && <p className="text-red-500 mb-3 text-sm">{error}</p>}
-        {success && (
-          <p className="text-green-600 mb-3 text-sm">
-            Account created! Redirecting to login...
-          </p>
-        )}
-
-        <form onSubmit={handleSignup} className="space-y-4">
+        <form onSubmit={handleSignup} className="space-y-5">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-[#111]">
-              Email
+            <label htmlFor="email" className="block text-sm font-semibold text-[#111]">
+              Email Address
             </label>
             <input
               type="email"
@@ -52,12 +48,12 @@ export default function SignupPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full px-4 py-2 border border-[#CFE4FF] rounded-lg mt-1"
+              className="w-full px-4 py-2.5 mt-1 border border-[#CFE4FF] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#007BFF] text-sm"
             />
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-[#111]">
+            <label htmlFor="password" className="block text-sm font-semibold text-[#111]">
               Password
             </label>
             <input
@@ -66,17 +62,22 @@ export default function SignupPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full px-4 py-2 border border-[#CFE4FF] rounded-lg mt-1"
+              className="w-full px-4 py-2.5 mt-1 border border-[#CFE4FF] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#007BFF] text-sm"
             />
           </div>
 
           <button
             type="submit"
-            className="w-full bg-[#007BFF] text-white py-2 rounded-lg hover:bg-[#005FCC]"
+            disabled={loading}
+            className="w-full bg-[#007BFF] text-white py-3 rounded-xl text-sm font-semibold shadow hover:bg-[#005FCC] transition"
           >
-            Sign Up
+            {loading ? "Creating account..." : "Sign Up"}
           </button>
         </form>
+
+        <p className="text-center text-xs text-[#888] mt-6">
+          Already have an account? <a href="/login" className="text-[#007BFF] hover:underline">Log in</a>
+        </p>
       </div>
     </main>
   );
