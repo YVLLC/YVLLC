@@ -4,6 +4,7 @@ import {
   Instagram, Youtube, Music2, UserPlus, ThumbsUp, Eye, X, Loader2, CheckCircle, Lock
 } from "lucide-react";
 
+// Stripe promise
 const stripePromise = loadStripe("pk_test_51RgpcCRfq6GJQepR3xUT0RkiGdN8ZSRu3OR15DfKhpMNj5QgmysYrmGQ8rGCXiI6Vi3B2L5Czmf7cRvIdtKRrSOw00SaVptcQt");
 
 const PLATFORMS = [
@@ -46,6 +47,12 @@ interface OrderModalProps {
   open: boolean;
   onClose: () => void;
 }
+
+const steps = [
+  { label: "Platform" },
+  { label: "Service" },
+  { label: "Details" },
+];
 
 export default function OrderModal({ open, onClose }: OrderModalProps) {
   const [step, setStep] = useState<0 | 1 | 2>(0);
@@ -90,7 +97,7 @@ export default function OrderModal({ open, onClose }: OrderModalProps) {
     onClose();
   };
 
-  // Checkout
+  // Stripe checkout
   const handleCheckout = async () => {
     if (!target || quantity < 10) {
       setError("Paste your profile link or username, and enter a quantity.");
@@ -125,36 +132,29 @@ export default function OrderModal({ open, onClose }: OrderModalProps) {
     }
   };
 
-  // Stepper UI
-  const steps = [
-    { label: "Platform" },
-    { label: "Service" },
-    { label: "Details" },
-  ];
-
   return (
     <div className="fixed z-[9999] inset-0 flex items-center justify-center bg-black/60 backdrop-blur-[2px]">
       {/* Modal */}
-      <div className="relative max-w-md w-[96vw] mx-auto bg-white/90 backdrop-blur-xl rounded-3xl shadow-[0_10px_48px_8px_rgba(0,34,64,0.13)] border border-[#e3edfc] overflow-hidden animate-fadeInPop">
-        {/* X button sits alone, floating above */}
-        <button
-          className="absolute top-[-16px] right-[-16px] z-20 bg-white/95 border border-[#e3edfc] shadow-xl rounded-full p-2 hover:bg-[#eaf4ff] transition"
-          onClick={closeAndReset}
-          aria-label="Close"
-          style={{ boxShadow: "0 2px 14px 0 #0086ff18" }}
-        >
-          <X size={22} className="text-[#007BFF]" />
-        </button>
-
-        {/* Header: platform, and stepper below */}
-        <div className="w-full px-7 pt-7 pb-3 bg-gradient-to-r from-[#f7fbff] via-[#ecf4ff] to-[#f8fbff] border-b border-[#e3edfc]">
-          <div className="flex items-center gap-2">
+      <div className="relative max-w-md w-[96vw] mx-auto bg-white/90 backdrop-blur-xl rounded-3xl shadow-[0_10px_48px_8px_rgba(0,34,64,0.14)] border border-[#e3edfc] p-0 overflow-visible animate-fadeInPop">
+        
+        {/* Header + Close */}
+        <div className="w-full px-7 pt-7 pb-3 bg-gradient-to-r from-[#f7fbff] via-[#ecf4ff] to-[#f8fbff] border-b border-[#e3edfc] rounded-t-3xl relative">
+          {/* Close Button: always visible, never clipped */}
+          <button
+            className="absolute top-4 right-5 z-20 bg-white/95 border border-[#e3edfc] shadow-lg rounded-full p-2 hover:bg-[#eaf4ff] transition"
+            onClick={closeAndReset}
+            aria-label="Close"
+            style={{ boxShadow: "0 2px 14px 0 #0086ff18" }}
+          >
+            <X size={22} className="text-[#007BFF]" />
+          </button>
+          <div className="flex items-center gap-2 pr-9"> {/* Space for X */}
             {platform.icon}
             <span className="font-extrabold text-lg" style={{ color: platform.color }}>
               {platform.name}
             </span>
           </div>
-          {/* STEPPER - visible and clear, always below header */}
+          {/* Stepper */}
           <div className="flex items-center justify-center gap-4 mt-5 mb-[-6px]">
             {steps.map((s, i) => (
               <div key={s.label} className="flex items-center gap-2">
@@ -175,7 +175,7 @@ export default function OrderModal({ open, onClose }: OrderModalProps) {
           </div>
         </div>
 
-        {/* Main Content */}
+        {/* Content */}
         <div className="px-7 py-7">
           {/* Step 0: Platform */}
           {step === 0 && (
