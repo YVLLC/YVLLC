@@ -1,9 +1,84 @@
 import Link from "next/link";
 import Image from "next/image";
+import { Instagram, Youtube, Music2, Mail, Lock, CreditCard, ShieldCheck, MessageCircle } from "lucide-react";
+
+// SVG payment icons - blue theme, inline for speed
+const PaymentIcons = () => (
+  <div className="flex gap-2 mt-2">
+    {/* Visa */}
+    <span title="Visa">
+      <svg width="32" height="20" viewBox="0 0 36 24" fill="none">
+        <rect width="36" height="24" rx="4" fill="#fff" />
+        <text x="8" y="16" fill="#007BFF" fontWeight="bold" fontSize="13" fontFamily="sans-serif">VISA</text>
+      </svg>
+    </span>
+    {/* Mastercard */}
+    <span title="Mastercard">
+      <svg width="32" height="20" viewBox="0 0 36 24" fill="none">
+        <rect width="36" height="24" rx="4" fill="#fff" />
+        <circle cx="14" cy="12" r="7" fill="#007BFF" fillOpacity="0.6" />
+        <circle cx="22" cy="12" r="7" fill="#007BFF" fillOpacity="0.9" />
+      </svg>
+    </span>
+    {/* Apple Pay */}
+    <span title="Apple Pay">
+      <svg width="32" height="20" viewBox="0 0 36 24" fill="none">
+        <rect width="36" height="24" rx="4" fill="#fff" />
+        <circle cx="11" cy="12" r="5" fill="#007BFF" />
+        <rect x="19" y="7" width="10" height="10" rx="2" fill="#005FCC" />
+        <text x="19" y="21" fill="#fff" fontWeight="bold" fontSize="7" fontFamily="sans-serif">Pay</text>
+      </svg>
+    </span>
+    {/* Bitcoin */}
+    <span title="Bitcoin">
+      <svg width="32" height="20" viewBox="0 0 36 24" fill="none">
+        <rect width="36" height="24" rx="4" fill="#fff" />
+        <circle cx="18" cy="12" r="7" fill="#007BFF" />
+        <text x="13" y="17" fill="#fff" fontWeight="bold" fontSize="12" fontFamily="monospace">₿</text>
+      </svg>
+    </span>
+  </div>
+);
+
+// Socials
+const SocialLinks = () => (
+  <div className="flex gap-3 mt-5">
+    <a href="https://instagram.com" target="_blank" rel="noopener" aria-label="Instagram" className="hover:scale-110 transition">
+      <Instagram size={22} className="text-[#E1306C]" />
+    </a>
+    <a href="https://tiktok.com" target="_blank" rel="noopener" aria-label="TikTok" className="hover:scale-110 transition">
+      <Music2 size={22} className="text-[#00F2EA]" />
+    </a>
+    <a href="https://youtube.com" target="_blank" rel="noopener" aria-label="YouTube" className="hover:scale-110 transition">
+      <Youtube size={22} className="text-[#FF0000]" />
+    </a>
+    <a href="mailto:support@yesviral.com" aria-label="Email" className="hover:scale-110 transition">
+      <Mail size={22} className="text-[#007BFF]" />
+    </a>
+  </div>
+);
 
 export default function Footer() {
   return (
-    <footer className="bg-[#E6F0FF] text-[#111] pt-16 pb-10 px-4 border-t border-[#CFE4FF]">
+    <footer className="bg-gradient-to-t from-[#E6F0FF] via-[#F5FAFF] to-[#fff] text-[#111] pt-16 pb-10 px-4 border-t border-[#CFE4FF]">
+      {/* Trust Bar */}
+      <div className="max-w-7xl mx-auto mb-10 grid md:grid-cols-4 grid-cols-2 gap-4 py-6 px-4 bg-white rounded-2xl shadow-lg border border-[#CFE4FF]">
+        <div className="flex items-center gap-2 text-[#007BFF] font-semibold text-sm">
+          <ShieldCheck size={20} className="text-[#007BFF]" /> 100% Safe & Secure
+        </div>
+        <div className="flex items-center gap-2 text-[#007BFF] font-semibold text-sm">
+          <Lock size={20} className="text-[#007BFF]" /> SSL Encrypted Checkout
+        </div>
+        <div className="flex items-center gap-2 text-[#007BFF] font-semibold text-sm">
+          <MessageCircle size={20} className="text-[#007BFF]" /> 24/7 Live Support
+        </div>
+        <div className="flex flex-col items-start">
+          <span className="text-xs font-bold text-[#888] mb-1">Accepted Payments</span>
+          <PaymentIcons />
+        </div>
+      </div>
+
+      {/* Main Footer */}
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-10">
         {/* Column 1 – Logo + About */}
         <div>
@@ -11,61 +86,73 @@ export default function Footer() {
             <Image
               src="/logo.png"
               alt="YesViral Logo"
-              width={36}
-              height={36}
-              className="rounded-xl shadow-md"
+              width={42}
+              height={42}
+              className="rounded-xl shadow-lg"
             />
-            <h3 className="text-2xl font-extrabold text-[#007BFF]">YesViral</h3>
+            <span className="text-2xl font-extrabold text-[#007BFF] tracking-tight drop-shadow">YesViral</span>
           </div>
-          <p className="text-sm text-[#444] leading-relaxed">
-            The #1 source for high-quality social media growth, trusted by thousands. We offer a comprehensive selection of high-quality services designed to help you increase followers, engagement, and visibility across major platforms. Backed by top-tier customer support, YesViral makes it easy to elevate your online presence with speed, reliability, and confidence.
+          <p className="text-sm text-[#444] leading-relaxed mb-3">
+            Trusted by 100,000+ creators & businesses. YesViral helps you get real followers, views & engagement on Instagram, TikTok & YouTube—fast, safe, and guaranteed.
           </p>
+          <div className="flex items-center gap-2 mt-4">
+            <Link href="/tools/free-likes">
+              <button className="bg-[#007BFF] text-white text-xs px-4 py-2 rounded-lg shadow hover:bg-[#005FCC] font-semibold transition">Try Free Likes</button>
+            </Link>
+            <Link href="/support">
+              <button className="bg-white border border-[#007BFF] text-[#007BFF] text-xs px-4 py-2 rounded-lg shadow hover:bg-[#E6F0FF] font-semibold transition">24/7 Support</button>
+            </Link>
+          </div>
+          <SocialLinks />
         </div>
 
         {/* Column 2 – Quick Links */}
         <div>
-          <h4 className="text-lg font-semibold text-[#111] mb-3">Quick Links</h4>
+          <h4 className="text-lg font-bold text-[#111] mb-3">Quick Links</h4>
           <ul className="space-y-2 text-sm text-[#444]">
             <li><Link className="hover:text-[#005FCC]" href="/">Home</Link></li>
-            <li><Link className="hover:text-[#005FCC]" href="/faq">FAQ</Link></li>
+            <li><Link className="hover:text-[#005FCC]" href="/#faq">FAQ</Link></li>
             <li><Link className="hover:text-[#005FCC]" href="/track-order">Track Order</Link></li>
             <li><Link className="hover:text-[#005FCC]" href="/login">Login</Link></li>
-            <li><Link className="hover:text-[#005FCC]" href="/admin">Admin</Link></li>
+            <li><Link className="hover:text-[#005FCC]" href="/signup">Sign Up</Link></li>
           </ul>
         </div>
 
-        {/* Column 3 – Free Tools */}
+        {/* Column 3 – Services */}
         <div>
-          <h4 className="text-lg font-semibold text-[#111] mb-3">Free Tools</h4>
+          <h4 className="text-lg font-bold text-[#111] mb-3">Top Services</h4>
           <ul className="space-y-2 text-sm text-[#444]">
-            <li><Link className="hover:text-[#005FCC]" href="/tools/instagram-video-downloader">Instagram Video Downloader</Link></li>
-            <li><Link className="hover:text-[#005FCC]" href="/tools/profile-picture-viewer">IG Profile Picture Viewer</Link></li>
-            <li><Link className="hover:text-[#005FCC]" href="/tools/story-downloader">Instagram Story Downloader</Link></li>
-            <li><Link className="hover:text-[#005FCC]" href="/tools/followers-counter">IG Followers Counter</Link></li>
-            <li><Link className="hover:text-[#005FCC]" href="/tools/free-likes">Free Likes Trial</Link></li>
-            <li><Link className="hover:text-[#005FCC]" href="/tools/free-followers">Free Followers Trial</Link></li>
-            <li><Link className="hover:text-[#005FCC]" href="/tools/story-viewer">Instagram Story Viewer</Link></li>
-            <li><Link className="hover:text-[#005FCC]" href="/tools/twitter-video">Twitter Video Downloader</Link></li>
-            <li><Link className="hover:text-[#005FCC]" href="/tools/twitter-gif">Twitter GIF Downloader</Link></li>
-            <li><Link className="hover:text-[#005FCC]" href="/tools/tiktok-video">TikTok Video Downloader</Link></li>
-            <li><Link className="hover:text-[#005FCC]" href="/tools/facebook-video">Facebook Video Downloader</Link></li>
-            <li><Link className="hover:text-[#005FCC]" href="/tools/facebook-reels">Facebook Reels Downloader</Link></li>
+            <li><Link href="/checkout?service=instagram-followers" className="hover:text-[#005FCC]">Instagram Followers</Link></li>
+            <li><Link href="/checkout?service=instagram-likes" className="hover:text-[#005FCC]">Instagram Likes</Link></li>
+            <li><Link href="/checkout?service=tiktok-followers" className="hover:text-[#005FCC]">TikTok Followers</Link></li>
+            <li><Link href="/checkout?service=tiktok-likes" className="hover:text-[#005FCC]">TikTok Likes</Link></li>
+            <li><Link href="/checkout?service=youtube-views" className="hover:text-[#005FCC]">YouTube Views</Link></li>
+            <li><Link href="/checkout?service=youtube-subscribers" className="hover:text-[#005FCC]">YouTube Subscribers</Link></li>
           </ul>
         </div>
 
-        {/* Column 4 – Legal */}
+        {/* Column 4 – Legal & Free Tools */}
         <div>
-          <h4 className="text-lg font-semibold text-[#111] mb-3">Legal</h4>
+          <h4 className="text-lg font-bold text-[#111] mb-3">Legal & Free Tools</h4>
           <ul className="space-y-2 text-sm text-[#444]">
             <li><Link className="hover:text-[#005FCC]" href="/terms">Terms & Conditions</Link></li>
             <li><Link className="hover:text-[#005FCC]" href="/privacy">Privacy Policy</Link></li>
             <li><Link className="hover:text-[#005FCC]" href="/contact">Contact Us</Link></li>
+            <li><Link className="hover:text-[#005FCC]" href="/tools/instagram-video-downloader">IG Video Downloader</Link></li>
+            <li><Link className="hover:text-[#005FCC]" href="/tools/free-likes">Free Likes Trial</Link></li>
+            <li><Link className="hover:text-[#005FCC]" href="/tools/free-followers">Free Followers Trial</Link></li>
           </ul>
         </div>
       </div>
 
-      <div className="text-center text-xs text-[#888] mt-12">
-        &copy; {new Date().getFullYear()} YesViral. All rights reserved.
+      {/* Copyright & Powered */}
+      <div className="text-center text-xs text-[#888] mt-12 flex flex-col items-center gap-2">
+        <span>
+          &copy; {new Date().getFullYear()} YesViral. All rights reserved.
+        </span>
+        <span className="flex items-center gap-1">
+          Powered by <span className="font-bold text-[#007BFF]">YesViral</span> · <Link href="/privacy" className="hover:underline hover:text-[#005FCC]">Privacy</Link> · <Link href="/terms" className="hover:underline hover:text-[#005FCC]">Terms</Link>
+        </span>
       </div>
     </footer>
   );
