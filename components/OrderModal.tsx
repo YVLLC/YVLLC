@@ -125,32 +125,57 @@ export default function OrderModal({ open, onClose }: OrderModalProps) {
     }
   };
 
+  // Stepper UI
+  const steps = [
+    { label: "Platform" },
+    { label: "Service" },
+    { label: "Details" },
+  ];
+
   return (
     <div className="fixed z-[9999] inset-0 flex items-center justify-center bg-black/60 backdrop-blur-[2px]">
       {/* Modal */}
-      <div className="relative max-w-md w-[96vw] mx-auto bg-white/80 backdrop-blur-xl rounded-2xl shadow-[0_10px_48px_8px_rgba(0,34,64,0.14)] border border-[#e3edfc] p-0 sm:p-0 overflow-hidden animate-fadeInPop">
-        {/* Close Button */}
-        <button className="absolute right-3 top-3 z-10 p-1.5 bg-[#f8fbff] hover:bg-[#E8F1FF] rounded-full border border-[#e3edfc] shadow"
+      <div className="relative max-w-md w-[96vw] mx-auto bg-white/90 backdrop-blur-xl rounded-3xl shadow-[0_10px_48px_8px_rgba(0,34,64,0.13)] border border-[#e3edfc] overflow-hidden animate-fadeInPop">
+        {/* X button sits alone, floating above */}
+        <button
+          className="absolute top-[-16px] right-[-16px] z-20 bg-white/95 border border-[#e3edfc] shadow-xl rounded-full p-2 hover:bg-[#eaf4ff] transition"
           onClick={closeAndReset}
           aria-label="Close"
+          style={{ boxShadow: "0 2px 14px 0 #0086ff18" }}
         >
-          <X size={20} className="text-[#007BFF]" />
+          <X size={22} className="text-[#007BFF]" />
         </button>
 
-        {/* Header */}
-        <div className="w-full px-7 pt-7 pb-3 bg-gradient-to-r from-[#f5faff] via-[#ecf4ff] to-[#f8fbff] border-b border-[#e3edfc]">
+        {/* Header: platform, and stepper below */}
+        <div className="w-full px-7 pt-7 pb-3 bg-gradient-to-r from-[#f7fbff] via-[#ecf4ff] to-[#f8fbff] border-b border-[#e3edfc]">
           <div className="flex items-center gap-2">
             {platform.icon}
             <span className="font-extrabold text-lg" style={{ color: platform.color }}>
               {platform.name}
             </span>
-            <span className="text-[#007BFF] font-bold ml-auto text-xs tracking-wide uppercase">
-              Step {step + 1}/3
-            </span>
+          </div>
+          {/* STEPPER - visible and clear, always below header */}
+          <div className="flex items-center justify-center gap-4 mt-5 mb-[-6px]">
+            {steps.map((s, i) => (
+              <div key={s.label} className="flex items-center gap-2">
+                <div className={`
+                  rounded-full w-7 h-7 flex items-center justify-center font-bold
+                  ${step === i ? "bg-[#007BFF] text-white shadow" :
+                    step > i ? "bg-[#95e1fc] text-[#0d88c7]" :
+                      "bg-[#e6f4ff] text-[#A0B3C7]"}
+                  border-2 border-white
+                  transition
+                `}>
+                  {i + 1}
+                </div>
+                <span className={`text-xs font-semibold ${step === i ? "text-[#007BFF]" : "text-[#A0B3C7]"}`}>{s.label}</span>
+                {i < steps.length - 1 && <div className="w-6 h-1 bg-[#e3edfc] rounded-full" />}
+              </div>
+            ))}
           </div>
         </div>
 
-        {/* Content */}
+        {/* Main Content */}
         <div className="px-7 py-7">
           {/* Step 0: Platform */}
           {step === 0 && (

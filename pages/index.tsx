@@ -393,18 +393,6 @@ export default function Home() {
             </button>
           </div>
         </section>
-
-        {/* Footer */}
-        <footer className="mt-14 py-8 text-center text-sm text-[#444]">
-          <div>
-            © {new Date().getFullYear()} YesViral. All rights reserved.
-          </div>
-          <div className="flex gap-4 justify-center mt-2">
-            <Link href="/privacy" className="hover:underline hover:text-[#007BFF]">Privacy</Link>
-            <Link href="/terms" className="hover:underline hover:text-[#007BFF]">Terms</Link>
-            <Link href="/support" className="hover:underline hover:text-[#007BFF]">Support</Link>
-          </div>
-        </footer>
       </main>
     </>
   );

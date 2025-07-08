@@ -9,11 +9,10 @@ export default function Contact() {
         <title>Contact Us | YesViral</title>
         <meta name="description" content="Need help? Contact YesViral's support team and get fast assistance with your orders or questions." />
       </Head>
-
-      <main className="bg-[#F9FAFB] min-h-screen py-12 px-2 sm:px-4">
-        <div className="max-w-3xl mx-auto bg-white rounded-3xl shadow-2xl p-6 sm:p-10 md:p-14 animate-fadeInFast">
+      <main className="bg-[#F9FAFB] min-h-screen py-12 px-2">
+        <div className="max-w-3xl mx-auto bg-white rounded-3xl shadow-2xl p-6 sm:p-10 md:p-14 animate-fadeInFast flex flex-col items-center">
           {/* Logo & Heading */}
-          <div className="flex flex-col items-center gap-2 mb-8">
+          <div className="flex flex-col items-center gap-2 mb-8 w-full">
             <Image
               src="/logo.png"
               alt="YesViral Logo"
@@ -31,21 +30,21 @@ export default function Contact() {
             </div>
           </div>
 
-          {/* Trust/Info Bar */}
-          <div className="flex flex-col md:flex-row md:justify-center gap-4 sm:gap-6 mb-10 w-full">
-            <div className="flex items-center gap-2 bg-[#F5FAFF] rounded-xl px-3 py-2 sm:px-4 sm:py-2 text-[#007BFF] text-[15px] font-semibold shadow min-w-0 flex-1 justify-center">
+          {/* Info Bar - always matches form width */}
+          <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 w-full mb-8">
+            <div className="flex items-center gap-2 bg-[#F5FAFF] rounded-xl px-3 py-2 sm:px-4 sm:py-2 text-[#007BFF] text-[15px] font-semibold shadow flex-1 justify-center min-w-0">
               <MessageCircle size={18} /> Live Support, 7 Days a Week
             </div>
-            <div className="flex items-center gap-2 bg-[#F5FAFF] rounded-xl px-3 py-2 sm:px-4 sm:py-2 text-[#007BFF] text-[15px] font-semibold shadow min-w-0 flex-1 justify-center">
+            <div className="flex items-center gap-2 bg-[#F5FAFF] rounded-xl px-3 py-2 sm:px-4 sm:py-2 text-[#007BFF] text-[15px] font-semibold shadow flex-1 justify-center min-w-0">
               <Mail size={18} /> <a href="mailto:support@yesviral.com" className="underline break-all">support@yesviral.com</a>
             </div>
-            <div className="flex items-center gap-2 bg-[#F5FAFF] rounded-xl px-3 py-2 sm:px-4 sm:py-2 text-[#007BFF] text-[15px] font-semibold shadow min-w-0 flex-1 justify-center">
+            <div className="flex items-center gap-2 bg-[#F5FAFF] rounded-xl px-3 py-2 sm:px-4 sm:py-2 text-[#007BFF] text-[15px] font-semibold shadow flex-1 justify-center min-w-0">
               <Clock size={18} /> Replies <span className="font-bold ml-1">in under 24h</span>
             </div>
           </div>
 
-          {/* Contact Form */}
-          <form className="space-y-7">
+          {/* Contact Form - always full width */}
+          <form className="w-full space-y-7">
             <div>
               <label className="block text-[15px] font-semibold text-[#111] mb-1">Your Name</label>
               <input
@@ -82,7 +81,7 @@ export default function Contact() {
           </form>
 
           {/* Extra Support Info */}
-          <div className="text-center mt-10 space-y-2">
+          <div className="text-center mt-10 space-y-2 w-full">
             <div className="text-[#222] text-sm font-semibold flex items-center justify-center gap-2">
               <Clock size={16} className="text-[#007BFF]" />
               Fastest responses: <span className="font-medium text-[#005FCC]">10am – 10pm (GMT+4)</span>
@@ -93,8 +92,6 @@ export default function Contact() {
           </div>
         </div>
       </main>
-
-      {/* Animations */}
       <style jsx global>{`
         @keyframes fadeInFast {
           from { opacity: 0; transform: translateY(30px);}
