@@ -3,8 +3,17 @@ import type { AppProps } from "next/app";
 import Head from "next/head";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { useRouter } from "next/router";
 
 export default function App({ Component, pageProps }: AppProps) {
+  const router = useRouter();
+
+  // Add more routes here if you want to hide header/footer elsewhere!
+  const hideHeaderFooter = ["/dashboard"];
+  const shouldHide = hideHeaderFooter.some((route) =>
+    router.pathname.startsWith(route)
+  );
+
   return (
     <>
       <Head>
@@ -16,11 +25,11 @@ export default function App({ Component, pageProps }: AppProps) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Header />
+      {!shouldHide && <Header />}
       <main className="min-h-screen bg-white">
         <Component {...pageProps} />
       </main>
-      <Footer />
+      {!shouldHide && <Footer />}
     </>
   );
 }
