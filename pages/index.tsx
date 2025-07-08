@@ -4,33 +4,53 @@ import Image from "next/image";
 import { ChevronDown, ShieldCheck, Clock, UserCheck, Zap, Star, ThumbsUp, MessageCircle } from "lucide-react";
 import { useState } from "react";
 
-const BRAND = {
-  blue: "#007BFF",
-  blueDark: "#005FCC",
-  bgLight: "#F5FAFF",
-  border: "#CFE4FF",
-  text: "#222",
-  textMuted: "#444"
-};
-
-const FAQS = [
-  {
-    question: "Are these real followers and likes?",
-    answer: "Yes — we use tested promotion systems that provide real and lasting engagement."
-  },
-  {
-    question: "Do you need my password?",
-    answer: "Never. Just your username or post URL is enough."
-  },
-  {
-    question: "How fast is delivery?",
-    answer: "Most orders start processing within 0–30 minutes after payment."
-  },
-  {
-    question: "What payment methods do you accept?",
-    answer: "All major cards, Apple Pay, Google Pay, and secure crypto payments."
-  }
-];
+// Payment SVGs as a component (copy/paste anywhere)
+const PaymentIcons = () => (
+  <div className="flex gap-2">
+    {/* Visa */}
+    <span title="Visa" className="flex items-center">
+      <svg width="34" height="20" viewBox="0 0 36 24" fill="none">
+        <rect width="36" height="24" rx="4" fill="#fff" />
+        <text x="7" y="16" fill="#007BFF" fontWeight="bold" fontSize="14" fontFamily="sans-serif">VISA</text>
+      </svg>
+    </span>
+    {/* Mastercard */}
+    <span title="Mastercard" className="flex items-center">
+      <svg width="34" height="20" viewBox="0 0 36 24" fill="none">
+        <rect width="36" height="24" rx="4" fill="#fff" />
+        <circle cx="14" cy="12" r="7" fill="#007BFF" fillOpacity="0.6" />
+        <circle cx="22" cy="12" r="7" fill="#007BFF" fillOpacity="0.9" />
+      </svg>
+    </span>
+    {/* Apple Pay */}
+    <span title="Apple Pay" className="flex items-center">
+      <svg width="34" height="20" viewBox="0 0 36 24" fill="none">
+        <rect width="36" height="24" rx="4" fill="#fff" />
+        <circle cx="11" cy="12" r="5" fill="#007BFF" />
+        <rect x="19" y="7" width="10" height="10" rx="2" fill="#005FCC" />
+        <text x="19" y="21" fill="#fff" fontWeight="bold" fontSize="8" fontFamily="sans-serif">Pay</text>
+      </svg>
+    </span>
+    {/* Google Pay */}
+    <span title="Google Pay" className="flex items-center">
+      <svg width="34" height="20" viewBox="0 0 36 24" fill="none">
+        <rect width="36" height="24" rx="4" fill="#fff" />
+        <rect x="7" y="7" width="10" height="10" rx="2" fill="#007BFF" />
+        <rect x="19" y="7" width="10" height="10" rx="2" fill="#005FCC" />
+        <text x="11" y="21" fill="#fff" fontWeight="bold" fontSize="8" fontFamily="sans-serif">G</text>
+        <text x="24" y="21" fill="#fff" fontWeight="bold" fontSize="8" fontFamily="sans-serif">Pay</text>
+      </svg>
+    </span>
+    {/* Bitcoin */}
+    <span title="Bitcoin" className="flex items-center">
+      <svg width="34" height="20" viewBox="0 0 36 24" fill="none">
+        <rect width="36" height="24" rx="4" fill="#fff" />
+        <circle cx="18" cy="12" r="7" fill="#007BFF" />
+        <text x="13" y="17" fill="#fff" fontWeight="bold" fontSize="13" fontFamily="monospace">₿</text>
+      </svg>
+    </span>
+  </div>
+);
 
 const SERVICES = [
   {
@@ -82,6 +102,33 @@ const SERVICES = [
     ),
     tag: "",
     count: "950+ bought this week"
+  }
+];
+
+const FAQS = [
+  {
+    question: "Why choose us?",
+    answer: "We combine unbeatable prices, real results, and blazing-fast delivery to help you grow on social media with confidence. Every order is backed by our satisfaction guarantee and refill policy, so you can grow your presence safely, quickly, and with real users. Trusted by over 100,000 creators and businesses."
+  },
+  {
+    question: "What services do you offer?",
+    answer: "Our Social Media Marketing services help individuals, influencers, and brands grow their online presence with targeted engagement. Whether you want more followers, subscribers, video views, or music plays, we offer a wide range of services across platforms like Instagram, YouTube, Spotify, TikTok, and more."
+  },
+  {
+    question: "Do I need to share my account password?",
+    answer: "No, never. We do not require your password for any of our services. Everything is delivered securely without accessing your account. If you ever receive a message asking for your password claiming to be from us, do not share it—please report it to us immediately."
+  },
+  {
+    question: "Are the followers, likes, and subscribers real?",
+    answer: "Yes. We don’t use bots or fake accounts. All engagement comes from real users, helping your account grow through authentic, organic activity that boosts your reach and credibility."
+  },
+  {
+    question: "Is your service safe and legal?",
+    answer: "Absolutely. We use safe, secure, and compliant methods to deliver likes, followers, and more. Your account stays 100% protected, and everything we do follows platform guidelines to keep your profile secure."
+  },
+  {
+    question: "What is your refill guarantee?",
+    answer: "Our 30-day refill guarantee means that if any followers, likes, views, or engagement drop within 30 days of your purchase, we’ll replace them free of charge. This keeps your results strong and consistent. Just reach out through our contact form—no hassle, no extra cost."
   }
 ];
 
@@ -150,63 +197,6 @@ const TESTIMONIALS = [
   }
 ];
 
-// Inline SVGs, blue themed, no external images
-const TRUST_ICONS = [
-  {
-    label: "Visa",
-    svg: (
-      <svg width="36" height="24" viewBox="0 0 36 24" fill="none">
-        <rect width="36" height="24" rx="4" fill="#fff" />
-        <text x="8" y="16" fill={BRAND.blue} fontWeight="bold" fontSize="13" fontFamily="sans-serif">VISA</text>
-      </svg>
-    )
-  },
-  {
-    label: "Mastercard",
-    svg: (
-      <svg width="36" height="24" viewBox="0 0 36 24" fill="none">
-        <rect width="36" height="24" rx="4" fill="#fff" />
-        <circle cx="14" cy="12" r="7" fill={BRAND.blue} fillOpacity="0.6" />
-        <circle cx="22" cy="12" r="7" fill={BRAND.blue} fillOpacity="0.9" />
-        <text x="8" y="21" fill={BRAND.blueDark} fontWeight="bold" fontSize="7" fontFamily="sans-serif">Mastercard</text>
-      </svg>
-    )
-  },
-  {
-    label: "Apple Pay",
-    svg: (
-      <svg width="36" height="24" viewBox="0 0 36 24" fill="none">
-        <rect width="36" height="24" rx="4" fill="#fff" />
-        <circle cx="11" cy="12" r="5" fill={BRAND.blue} />
-        <rect x="19" y="7" width="10" height="10" rx="2" fill={BRAND.blueDark} />
-        <text x="19" y="21" fill="#fff" fontWeight="bold" fontSize="7" fontFamily="sans-serif">Pay</text>
-      </svg>
-    )
-  },
-  {
-    label: "Google Pay",
-    svg: (
-      <svg width="36" height="24" viewBox="0 0 36 24" fill="none">
-        <rect width="36" height="24" rx="4" fill="#fff" />
-        <rect x="7" y="7" width="10" height="10" rx="2" fill={BRAND.blue} />
-        <rect x="19" y="7" width="10" height="10" rx="2" fill={BRAND.blueDark} />
-        <text x="11" y="21" fill="#fff" fontWeight="bold" fontSize="7" fontFamily="sans-serif">G</text>
-        <text x="24" y="21" fill="#fff" fontWeight="bold" fontSize="7" fontFamily="sans-serif">Pay</text>
-      </svg>
-    )
-  },
-  {
-    label: "Bitcoin",
-    svg: (
-      <svg width="36" height="24" viewBox="0 0 36 24" fill="none">
-        <rect width="36" height="24" rx="4" fill="#fff" />
-        <circle cx="18" cy="12" r="7" fill={BRAND.blue} />
-        <text x="13" y="17" fill="#fff" fontWeight="bold" fontSize="12" fontFamily="monospace">₿</text>
-      </svg>
-    )
-  }
-];
-
 export default function Home() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const toggleFaq = (index: number) => setOpenFaq(openFaq === index ? null : index);
@@ -254,11 +244,9 @@ export default function Home() {
                 </button>
               </Link>
             </div>
-            {/* Trust icons */}
+            {/* Payment Icons in hero */}
             <div className="flex flex-wrap gap-3 mt-6 justify-center md:justify-start items-center">
-              {TRUST_ICONS.map(({ label, svg }, i) => (
-                <span key={i} title={label}>{svg}</span>
-              ))}
+              <PaymentIcons />
               <span className="ml-2 text-xs text-[#555] font-medium mt-2 hidden sm:inline">
                 100% Secure Payments
               </span>
@@ -387,7 +375,8 @@ export default function Home() {
 
         {/* FAQs */}
         <section id="faq" className="space-y-7">
-          <h2 className="text-center text-4xl font-extrabold">FAQs</h2>
+          <h2 className="text-center text-4xl font-extrabold">Frequently Asked Questions</h2>
+          <p className="text-center text-[#444] mb-4">Everything you need to know about our services, safety, and support.</p>
           <div className="max-w-3xl mx-auto space-y-4">
             {FAQS.map(({ question, answer }, index) => (
               <div
