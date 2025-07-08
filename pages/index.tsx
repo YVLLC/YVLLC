@@ -1,8 +1,18 @@
 import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, ShieldCheck, Clock, UserCheck, Zap, Star, ThumbsUp, MessageCircle } from "lucide-react";
 import { useState } from "react";
+
+// Quick color way reference
+const BRAND = {
+  blue: "#007BFF",
+  blueDark: "#005FCC",
+  bgLight: "#F5FAFF",
+  border: "#CFE4FF",
+  text: "#222",
+  textMuted: "#444"
+};
 
 const FAQS = [
   {
@@ -16,6 +26,10 @@ const FAQS = [
   {
     question: "How fast is delivery?",
     answer: "Most orders start processing within 0–30 minutes after payment."
+  },
+  {
+    question: "What payment methods do you accept?",
+    answer: "All major cards, Apple Pay, Google Pay, and secure crypto payments."
   }
 ];
 
@@ -23,30 +37,42 @@ const SERVICES = [
   {
     name: "Instagram Followers",
     price: "$0.09 / 100",
-    description: "Boost your IG presence with real followers."
+    description: "Boost your IG presence with real followers.",
+    icon: <UserCheck size={28} className="text-pink-500" />,
+    tag: "Bestseller",
+    count: "2,000+ bought this week"
   },
   {
     name: "TikTok Likes",
     price: "$0.08 / 100",
-    description: "Get instant likes on your videos."
+    description: "Get instant likes on your videos.",
+    icon: <ThumbsUp size={28} className="text-fuchsia-500" />,
+    tag: "🔥 Hot",
+    count: "1,400+ bought this week"
   },
   {
     name: "YouTube Views",
     price: "$0.05 / 1000",
-    description: "Skyrocket your video reach and impressions."
+    description: "Skyrocket your video reach and impressions.",
+    icon: <Zap size={28} className="text-yellow-400" />,
+    tag: "",
+    count: "950+ bought this week"
   }
 ];
 
 const HOW_IT_WORKS = [
   {
+    icon: <Zap size={32} className="mx-auto text-blue-400" />,
     title: "Choose a Service",
     description: "Pick your platform and what you need — followers, likes, or views."
   },
   {
+    icon: <UserCheck size={32} className="mx-auto text-blue-400" />,
     title: "Enter Info",
     description: "Just your username or post URL. No password ever required."
   },
   {
+    icon: <Clock size={32} className="mx-auto text-blue-400" />,
     title: "Get Results",
     description: "See growth begin in minutes — smooth, secure, and fast."
   }
@@ -55,12 +81,30 @@ const HOW_IT_WORKS = [
 const TESTIMONIALS = [
   {
     quote: "I gained real followers in under an hour — and they didn’t drop!",
-    name: "Taylor M."
+    name: "Taylor M.",
+    img: "https://randomuser.me/api/portraits/women/12.jpg",
+    platform: "Instagram"
   },
   {
     quote: "Great support, great pricing, real growth. Worth every cent.",
-    name: "Jake B."
+    name: "Jake B.",
+    img: "https://randomuser.me/api/portraits/men/22.jpg",
+    platform: "TikTok"
+  },
+  {
+    quote: "The only site I trust. Super fast and my YouTube blew up.",
+    name: "Lina S.",
+    img: "https://randomuser.me/api/portraits/women/32.jpg",
+    platform: "YouTube"
   }
+];
+
+const TRUST_ICONS = [
+  { src: "/visa.svg", alt: "Visa" },
+  { src: "/mastercard.svg", alt: "Mastercard" },
+  { src: "/applepay.svg", alt: "Apple Pay" },
+  { src: "/googlepay.svg", alt: "Google Pay" },
+  { src: "/btc.svg", alt: "Bitcoin" }
 ];
 
 export default function Home() {
@@ -76,16 +120,27 @@ export default function Home() {
           content="Grow your social media with YesViral. Buy real followers, likes, views, and more across Instagram, TikTok, YouTube & beyond — fast, secure, and trusted."
         />
       </Head>
+      {/* Sticky Chat/Support CTA */}
+      <Link href="/support" className="fixed bottom-6 right-6 z-50">
+        <button className="flex items-center gap-2 bg-white shadow-lg px-5 py-3 rounded-full border border-[#CFE4FF] hover:bg-[#F2F9FF] transition group">
+          <MessageCircle className="text-[#007BFF] group-hover:scale-110 transition" size={20} />
+          <span className="font-semibold text-[#007BFF] text-sm">Live Support</span>
+        </button>
+      </Link>
 
-      <main className="px-4 sm:px-6 max-w-7xl mx-auto py-16 space-y-28 select-none">
+      <main className="px-4 sm:px-6 max-w-7xl mx-auto py-14 space-y-28 select-none">
         {/* Hero Section */}
         <section className="grid md:grid-cols-2 gap-12 items-center">
-          <div className="space-y-6 text-center md:text-left">
-            <h1 className="text-4xl sm:text-5xl font-extrabold text-[#007BFF] leading-tight">
-              Supercharge Your Social Growth Instantly
+          <div className="space-y-7 text-center md:text-left">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#E8F1FF] rounded-full mb-2 text-xs font-bold text-[#007BFF] tracking-wide shadow-sm">
+              <Star size={16} className="text-yellow-400" />
+              Trusted by 100,000+ Creators
+            </div>
+            <h1 className="text-5xl sm:text-6xl font-extrabold text-[#007BFF] leading-tight drop-shadow-sm">
+              Blow Up Your Socials. <br /> Real Growth. No Waiting.
             </h1>
-            <p className="text-[#444] text-base sm:text-lg max-w-xl mx-auto md:mx-0">
-              Get real followers, likes, and views in minutes. Trusted by over 100,000 creators and brands worldwide.
+            <p className="text-[#444] text-lg max-w-xl mx-auto md:mx-0 font-medium">
+              Get real followers, likes, and views in minutes. No logins, no risk. Start your viral growth journey with YesViral.
             </p>
             <div className="flex flex-col sm:flex-row justify-center md:justify-start gap-4">
               <Link href="#order">
@@ -99,65 +154,117 @@ export default function Home() {
                 </button>
               </Link>
             </div>
+            {/* Trust icons */}
+            <div className="flex flex-wrap gap-3 mt-6 justify-center md:justify-start">
+              {TRUST_ICONS.map(({ src, alt }, i) => (
+                <Image
+                  key={i}
+                  src={src}
+                  alt={alt}
+                  width={36}
+                  height={36}
+                  className="object-contain opacity-80"
+                  unselectable="on"
+                  draggable={false}
+                />
+              ))}
+              <span className="ml-2 text-xs text-[#555] font-medium mt-2 hidden sm:inline">
+                100% Secure Payments
+              </span>
+            </div>
           </div>
-          <div className="hidden md:flex justify-center">
+          <div className="hidden md:flex justify-center animate-fadeIn">
             <Image
               src="/hero-illustration.png"
               alt="Social Media Growth"
-              width={500}
+              width={480}
               height={400}
-              className="w-full max-w-[400px] h-auto object-contain"
+              className="w-full max-w-[420px] h-auto object-contain drop-shadow-2xl"
               draggable={false}
               unselectable="on"
+              priority
             />
           </div>
         </section>
 
         {/* Instant Order */}
         <section id="order" className="space-y-10">
-          <h2 className="text-center text-3xl sm:text-4xl font-bold">Place Your Order Instantly</h2>
+          <h2 className="text-center text-4xl font-extrabold">Place Your Order Instantly</h2>
           <p className="text-[#444] text-center max-w-2xl mx-auto">
-            Choose your service and get started without logging in.
+            Choose your service — no logins, no commitment. <span className="font-semibold text-[#007BFF]">Instant delivery starts within minutes.</span>
           </p>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {SERVICES.map(({ name, price, description }, idx) => (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {SERVICES.map(({ name, price, description, icon, tag, count }, idx) => (
               <div
                 key={idx}
-                className="bg-white border border-[#CFE4FF] rounded-xl p-6 shadow-md hover:shadow-lg transition flex flex-col justify-between"
+                className="bg-white border-2 border-[#CFE4FF] rounded-2xl p-7 shadow-md hover:shadow-2xl transition group flex flex-col gap-3 relative"
               >
-                <div>
-                  <h3 className="text-xl font-semibold text-[#111] mb-2">{name}</h3>
-                  <p className="text-sm text-[#444] mb-4">{description}</p>
+                {tag && (
+                  <span className="absolute top-4 right-5 bg-[#E8F1FF] text-[#007BFF] text-xs font-bold px-3 py-1 rounded-full shadow">{tag}</span>
+                )}
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="bg-[#F5FAFF] p-2 rounded-full">{icon}</div>
+                  <h3 className="text-xl font-bold text-[#111]">{name}</h3>
                 </div>
-                <div className="flex items-center justify-between">
+                <p className="text-sm text-[#444]">{description}</p>
+                <div className="flex items-center gap-2 mt-2">
                   <span className="text-sm font-medium text-[#007BFF]">{price}</span>
-                  <Link href="/checkout">
-                    <button className="bg-[#007BFF] text-white text-sm px-4 py-2 rounded-lg hover:bg-[#005FCC]">
-                      Order
-                    </button>
-                  </Link>
+                  <span className="text-xs text-[#111] bg-[#E8F1FF] px-2 py-0.5 rounded">{count}</span>
                 </div>
+                <Link href="/checkout" className="mt-4">
+                  <button className="w-full bg-[#007BFF] text-white text-sm px-4 py-2 rounded-lg font-bold hover:bg-[#005FCC] shadow transition transform hover:scale-[1.03] active:scale-95">
+                    Order
+                  </button>
+                </Link>
               </div>
             ))}
           </div>
         </section>
 
         {/* Why Choose Us */}
-        <section id="about" className="bg-[#F9FAFB] p-10 rounded-2xl text-center shadow-sm space-y-5">
-          <h2 className="text-3xl sm:text-4xl font-bold text-[#111]">Why Choose YesViral?</h2>
-          <p className="text-[#444] max-w-3xl mx-auto text-base sm:text-lg">
-            We’re not just another reseller. We’re a full-scale growth engine. Lightning-fast delivery, 24/7 support, and real engagement from real users.
-          </p>
+        <section id="about" className="bg-[#F5FAFF] p-12 rounded-2xl text-center shadow-sm space-y-8">
+          <h2 className="text-4xl font-extrabold text-[#111]">Why Choose YesViral?</h2>
+          <div className="flex flex-wrap gap-7 justify-center mt-6">
+            <div className="flex flex-col items-center max-w-[170px]">
+              <Zap className="text-[#007BFF]" size={32} />
+              <span className="font-semibold mt-2">Instant Start</span>
+              <span className="text-sm text-[#444]">Growth begins in 1–10 min</span>
+            </div>
+            <div className="flex flex-col items-center max-w-[170px]">
+              <UserCheck className="text-[#007BFF]" size={32} />
+              <span className="font-semibold mt-2">Real Users</span>
+              <span className="text-sm text-[#444]">100% authentic, lasting</span>
+            </div>
+            <div className="flex flex-col items-center max-w-[170px]">
+              <ShieldCheck className="text-[#007BFF]" size={32} />
+              <span className="font-semibold mt-2">Safe & Secure</span>
+              <span className="text-sm text-[#444]">No passwords, 256-bit SSL</span>
+            </div>
+            <div className="flex flex-col items-center max-w-[170px]">
+              <Clock className="text-[#007BFF]" size={32} />
+              <span className="font-semibold mt-2">24/7 Support</span>
+              <span className="text-sm text-[#444]">Chat any time, any day</span>
+            </div>
+            <div className="flex flex-col items-center max-w-[170px]">
+              <Star className="text-[#007BFF]" size={32} />
+              <span className="font-semibold mt-2">Money-back</span>
+              <span className="text-sm text-[#444]">If not delivered as promised</span>
+            </div>
+          </div>
+          <div className="flex justify-center gap-8 mt-7 text-[#007BFF] font-bold text-lg">
+            <span>19M+ followers delivered</span>
+            <span className="hidden sm:inline">Rated 4.8/5 by 10,000+ clients</span>
+          </div>
         </section>
 
         {/* How It Works */}
         <section id="how-it-works" className="space-y-10">
-          <h2 className="text-center text-3xl sm:text-4xl font-bold">How It Works</h2>
-          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 text-center">
-            {HOW_IT_WORKS.map(({ title, description }, i) => (
-              <div key={i} className="bg-white border border-[#CFE4FF] rounded-xl p-6 shadow-md hover:shadow-xl transition">
-                <div className="text-4xl font-bold text-[#007BFF] mb-3">{i + 1}</div>
-                <h3 className="text-lg font-semibold mb-1">{title}</h3>
+          <h2 className="text-center text-4xl font-extrabold">How It Works</h2>
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-8 text-center">
+            {HOW_IT_WORKS.map(({ title, description, icon }, i) => (
+              <div key={i} className="bg-white border border-[#CFE4FF] rounded-2xl p-7 shadow hover:shadow-lg transition">
+                <div className="mb-2">{icon}</div>
+                <h3 className="text-lg font-bold mb-1">{title}</h3>
                 <p className="text-sm text-[#444]">{description}</p>
               </div>
             ))}
@@ -165,49 +272,98 @@ export default function Home() {
         </section>
 
         {/* Testimonials */}
-        <section id="testimonials" className="space-y-6">
-          <h2 className="text-center text-3xl sm:text-4xl font-bold">Customer Reviews</h2>
-          <div className="grid md:grid-cols-2 gap-6">
-            {TESTIMONIALS.map(({ quote, name }, i) => (
-              <div key={i} className="bg-white border border-gray-200 p-6 rounded-xl shadow">
-                <p className="italic text-[#111]">“{quote}”</p>
-                <p className="mt-3 text-sm text-[#444] font-semibold">– {name}</p>
+        <section id="testimonials" className="space-y-7">
+          <h2 className="text-center text-4xl font-extrabold">Customer Reviews</h2>
+          <div className="grid md:grid-cols-3 gap-7">
+            {TESTIMONIALS.map(({ quote, name, img, platform }, i) => (
+              <div key={i} className="bg-white border border-gray-200 p-7 rounded-2xl shadow flex flex-col items-center text-center">
+                <Image
+                  src={img}
+                  alt={name}
+                  width={54}
+                  height={54}
+                  className="rounded-full border-2 border-[#CFE4FF] mb-2"
+                />
+                <div className="flex items-center gap-1 mb-1">
+                  <Star size={16} className="text-yellow-400" />
+                  <Star size={16} className="text-yellow-400" />
+                  <Star size={16} className="text-yellow-400" />
+                  <Star size={16} className="text-yellow-400" />
+                  <Star size={16} className="text-yellow-400" />
+                </div>
+                <p className="italic text-[#222] text-base font-medium mb-2">“{quote}”</p>
+                <p className="mt-1 text-sm text-[#007BFF] font-semibold">{name} <span className="text-[#444] font-normal">· {platform}</span></p>
               </div>
             ))}
           </div>
         </section>
 
         {/* FAQs */}
-        <section id="faq" className="space-y-6">
-          <h2 className="text-center text-3xl sm:text-4xl font-bold">FAQs</h2>
+        <section id="faq" className="space-y-7">
+          <h2 className="text-center text-4xl font-extrabold">FAQs</h2>
           <div className="max-w-3xl mx-auto space-y-4">
             {FAQS.map(({ question, answer }, index) => (
-              <div key={index} className="border border-gray-200 rounded-xl p-4 cursor-pointer" onClick={() => toggleFaq(index)}>
-                <div className="flex justify-between items-center">
-                  <p className="font-medium text-[#111]">{question}</p>
-                  <ChevronDown className={`w-5 h-5 transition-transform ${openFaq === index ? "rotate-180" : "rotate-0"}`} />
+              <div
+                key={index}
+                className={`border border-gray-200 rounded-2xl px-5 py-4 cursor-pointer transition-all duration-200 ${
+                  openFaq === index ? "bg-[#F5FAFF] shadow-lg" : "bg-white"
+                }`}
+                onClick={() => toggleFaq(index)}
+                tabIndex={0}
+                onKeyDown={e => { if (e.key === "Enter") toggleFaq(index); }}
+              >
+                <div className="flex justify-between items-center select-none">
+                  <p className="font-semibold text-[#111] text-base">{question}</p>
+                  <ChevronDown
+                    className={`w-6 h-6 transition-transform ${openFaq === index ? "rotate-180" : "rotate-0"}`}
+                  />
                 </div>
-                {openFaq === index && (
-                  <p className="mt-3 text-sm text-[#444]">{answer}</p>
-                )}
+                <div
+                  style={{
+                    maxHeight: openFaq === index ? 200 : 0,
+                    overflow: "hidden",
+                    transition: "max-height 0.3s"
+                  }}
+                >
+                  {openFaq === index && (
+                    <p className="mt-3 text-sm text-[#444]">{answer}</p>
+                  )}
+                </div>
               </div>
             ))}
+            <div className="text-center mt-4">
+              <Link href="/support" className="text-[#007BFF] underline font-semibold hover:text-[#005FCC] text-sm">
+                Didn’t find your answer? Chat with us!
+              </Link>
+            </div>
           </div>
         </section>
 
         {/* Call To Action */}
-        <section className="text-center space-y-4 mt-20">
-          <h2 className="text-3xl sm:text-4xl font-bold">Ready to Go Viral?</h2>
-          <p className="text-[#444] text-base sm:text-lg">
+        <section className="text-center space-y-5 mt-24">
+          <h2 className="text-4xl font-extrabold">Ready to Go Viral?</h2>
+          <p className="text-[#444] text-lg">
             Start growing now — choose your package and watch your stats climb.
           </p>
           <Link href="/checkout">
-            <button className="bg-[#007BFF] text-white px-8 py-3 text-lg rounded-xl hover:bg-[#005FCC] transition">
+            <button className="bg-[#007BFF] text-white px-8 py-3 text-lg rounded-xl hover:bg-[#005FCC] font-bold shadow transition">
               View Services
             </button>
           </Link>
         </section>
       </main>
+
+      {/* Soft Footer */}
+      <footer className="mt-14 py-8 text-center text-sm text-[#444]">
+        <div>
+          © {new Date().getFullYear()} YesViral. All rights reserved.
+        </div>
+        <div className="flex gap-4 justify-center mt-2">
+          <Link href="/privacy" className="hover:underline hover:text-[#007BFF]">Privacy</Link>
+          <Link href="/terms" className="hover:underline hover:text-[#007BFF]">Terms</Link>
+          <Link href="/support" className="hover:underline hover:text-[#007BFF]">Support</Link>
+        </div>
+      </footer>
     </>
   );
 }
