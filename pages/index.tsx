@@ -4,32 +4,68 @@ import Image from "next/image";
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 
+const FAQS = [
+  {
+    question: "Are these real followers and likes?",
+    answer: "Yes — we use tested promotion systems that provide real and lasting engagement."
+  },
+  {
+    question: "Do you need my password?",
+    answer: "Never. Just your username or post URL is enough."
+  },
+  {
+    question: "How fast is delivery?",
+    answer: "Most orders start processing within 0–30 minutes after payment."
+  }
+];
+
+const SERVICES = [
+  {
+    name: "Instagram Followers",
+    price: "$0.09 / 100",
+    description: "Boost your IG presence with real followers."
+  },
+  {
+    name: "TikTok Likes",
+    price: "$0.08 / 100",
+    description: "Get instant likes on your videos."
+  },
+  {
+    name: "YouTube Views",
+    price: "$0.05 / 1000",
+    description: "Skyrocket your video reach and impressions."
+  }
+];
+
+const HOW_IT_WORKS = [
+  {
+    title: "Choose a Service",
+    description: "Pick your platform and what you need — followers, likes, or views."
+  },
+  {
+    title: "Enter Info",
+    description: "Just your username or post URL. No password ever required."
+  },
+  {
+    title: "Get Results",
+    description: "See growth begin in minutes — smooth, secure, and fast."
+  }
+];
+
+const TESTIMONIALS = [
+  {
+    quote: "I gained real followers in under an hour — and they didn’t drop!",
+    name: "Taylor M."
+  },
+  {
+    quote: "Great support, great pricing, real growth. Worth every cent.",
+    name: "Jake B."
+  }
+];
+
 export default function Home() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
-  const toggleFaq = (index: number) => {
-    setOpenFaq(openFaq === index ? null : index);
-  };
-
-  const faqs = [
-    {
-      q: "Are these real followers and likes?",
-      a: "Yes — we use tested promotion systems that provide real and lasting engagement."
-    },
-    {
-      q: "Do you need my password?",
-      a: "Never. Just your username or post URL is enough."
-    },
-    {
-      q: "How fast is delivery?",
-      a: "Most orders start processing within 0–30 minutes after payment."
-    }
-  ];
-
-  const services = [
-    { name: "Instagram Followers", price: "$0.09 / 100", description: "Boost your IG presence with real followers." },
-    { name: "TikTok Likes", price: "$0.08 / 100", description: "Get instant likes on your videos." },
-    { name: "YouTube Views", price: "$0.05 / 1000", description: "Skyrocket your video reach and impressions." },
-  ];
+  const toggleFaq = (index: number) => setOpenFaq(openFaq === index ? null : index);
 
   return (
     <>
@@ -42,7 +78,7 @@ export default function Home() {
       </Head>
 
       <main className="px-4 sm:px-6 max-w-7xl mx-auto py-16 space-y-28 select-none">
-        {/* Hero */}
+        {/* Hero Section */}
         <section className="grid md:grid-cols-2 gap-12 items-center">
           <div className="space-y-6 text-center md:text-left">
             <h1 className="text-4xl sm:text-5xl font-extrabold text-[#007BFF] leading-tight">
@@ -77,24 +113,24 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Instant Order Section */}
+        {/* Instant Order */}
         <section id="order" className="space-y-10">
           <h2 className="text-center text-3xl sm:text-4xl font-bold">Place Your Order Instantly</h2>
           <p className="text-[#444] text-center max-w-2xl mx-auto">
             Choose your service and get started without logging in.
           </p>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {services.map((service, idx) => (
+            {SERVICES.map(({ name, price, description }, idx) => (
               <div
                 key={idx}
                 className="bg-white border border-[#CFE4FF] rounded-xl p-6 shadow-md hover:shadow-lg transition flex flex-col justify-between"
               >
                 <div>
-                  <h3 className="text-xl font-semibold text-[#111] mb-2">{service.name}</h3>
-                  <p className="text-sm text-[#444] mb-4">{service.description}</p>
+                  <h3 className="text-xl font-semibold text-[#111] mb-2">{name}</h3>
+                  <p className="text-sm text-[#444] mb-4">{description}</p>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium text-[#007BFF]">{service.price}</span>
+                  <span className="text-sm font-medium text-[#007BFF]">{price}</span>
                   <Link href="/checkout">
                     <button className="bg-[#007BFF] text-white text-sm px-4 py-2 rounded-lg hover:bg-[#005FCC]">
                       Order
@@ -106,7 +142,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Why YesViral */}
+        {/* Why Choose Us */}
         <section id="about" className="bg-[#F9FAFB] p-10 rounded-2xl text-center shadow-sm space-y-5">
           <h2 className="text-3xl sm:text-4xl font-bold text-[#111]">Why Choose YesViral?</h2>
           <p className="text-[#444] max-w-3xl mx-auto text-base sm:text-lg">
@@ -118,17 +154,11 @@ export default function Home() {
         <section id="how-it-works" className="space-y-10">
           <h2 className="text-center text-3xl sm:text-4xl font-bold">How It Works</h2>
           <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 text-center">
-            {["Choose a Service", "Enter Info", "Get Results"].map((title, i) => (
+            {HOW_IT_WORKS.map(({ title, description }, i) => (
               <div key={i} className="bg-white border border-[#CFE4FF] rounded-xl p-6 shadow-md hover:shadow-xl transition">
                 <div className="text-4xl font-bold text-[#007BFF] mb-3">{i + 1}</div>
                 <h3 className="text-lg font-semibold mb-1">{title}</h3>
-                <p className="text-sm text-[#444]">
-                  {i === 0
-                    ? "Pick your platform and what you need — followers, likes, or views."
-                    : i === 1
-                    ? "Just your username or post URL. No password ever required."
-                    : "See growth begin in minutes — smooth, secure, and fast."}
-                </p>
+                <p className="text-sm text-[#444]">{description}</p>
               </div>
             ))}
           </div>
@@ -138,14 +168,8 @@ export default function Home() {
         <section id="testimonials" className="space-y-6">
           <h2 className="text-center text-3xl sm:text-4xl font-bold">Customer Reviews</h2>
           <div className="grid md:grid-cols-2 gap-6">
-            {[{
-              quote: "I gained real followers in under an hour — and they didn’t drop!",
-              name: "Taylor M."
-            }, {
-              quote: "Great support, great pricing, real growth. Worth every cent.",
-              name: "Jake B."
-            }].map(({ quote, name }) => (
-              <div key={name} className="bg-white border border-gray-200 p-6 rounded-xl shadow">
+            {TESTIMONIALS.map(({ quote, name }, i) => (
+              <div key={i} className="bg-white border border-gray-200 p-6 rounded-xl shadow">
                 <p className="italic text-[#111]">“{quote}”</p>
                 <p className="mt-3 text-sm text-[#444] font-semibold">– {name}</p>
               </div>
@@ -153,25 +177,25 @@ export default function Home() {
           </div>
         </section>
 
-        {/* FAQ */}
+        {/* FAQs */}
         <section id="faq" className="space-y-6">
           <h2 className="text-center text-3xl sm:text-4xl font-bold">FAQs</h2>
           <div className="max-w-3xl mx-auto space-y-4">
-            {faqs.map(({ q, a }, index) => (
+            {FAQS.map(({ question, answer }, index) => (
               <div key={index} className="border border-gray-200 rounded-xl p-4 cursor-pointer" onClick={() => toggleFaq(index)}>
                 <div className="flex justify-between items-center">
-                  <p className="font-medium text-[#111]">{q}</p>
+                  <p className="font-medium text-[#111]">{question}</p>
                   <ChevronDown className={`w-5 h-5 transition-transform ${openFaq === index ? "rotate-180" : "rotate-0"}`} />
                 </div>
                 {openFaq === index && (
-                  <p className="mt-3 text-sm text-[#444]">{a}</p>
+                  <p className="mt-3 text-sm text-[#444]">{answer}</p>
                 )}
               </div>
             ))}
           </div>
         </section>
 
-        {/* CTA */}
+        {/* Call To Action */}
         <section className="text-center space-y-4 mt-20">
           <h2 className="text-3xl sm:text-4xl font-bold">Ready to Go Viral?</h2>
           <p className="text-[#444] text-base sm:text-lg">
