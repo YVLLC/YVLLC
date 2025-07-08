@@ -127,42 +127,7 @@ export default function DashboardPage() {
           </div>
         </div>
       );
-        <div>
-          <h3 className="text-xl font-semibold mb-4">Order Social Media Services</h3>
-          <div className="space-y-4">
-            <label className="block text-sm font-medium">Choose Service:</label>
-            <select
-              value={selectedService}
-              onChange={(e) => setSelectedService(e.target.value)}
-              className="w-full p-2 border border-[#CFE4FF] rounded"
-            >
-              {availableServices.map((service) => (
-                <option key={service.name} value={service.name}>
-                  {service.name} — ${service.price.toFixed(2)} per unit
-                </option>
-              ))}
-            </select>
-
-            <label className="block text-sm font-medium">Quantity:</label>
-            <input
-              type="number"
-              value={quantity}
-              onChange={(e) => setQuantity(parseInt(e.target.value))}
-              className="w-full p-2 border border-[#CFE4FF] rounded"
-              min={10}
-            />
-
-            <div className="mt-4">
-              <button
-                onClick={placeOrder}
-                className="bg-[#007BFF] text-white px-6 py-3 rounded font-semibold hover:bg-[#005FCC]"
-              >
-                Checkout
-              </button>
-            </div>
-          </div>
-        </div>
-      );
+        );
     }
 
     return null; // Other tab content is unchanged for brevity
