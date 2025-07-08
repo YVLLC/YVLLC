@@ -4,6 +4,9 @@ import { useRouter } from "next/router";
 import { supabase } from "@/lib/supabase";
 import Image from "next/image";
 import { Toaster, toast } from "react-hot-toast";
+import { loadStripe } from "@stripe/stripe-js";
+
+const stripePromise = loadStripe("pk_test_51RgpcCRfq6GJQepR3xUT0RkiGdN8ZSRu3OR15DfKhpMNj5QgmysYrmGQ8rGCXiI6Vi3B2L5Czmf7cRvIdtKRrSOw00SaVptcQt");
 
 interface Order {
   id: string;
@@ -26,12 +29,14 @@ const availableServices = [
 export default function DashboardPage() {
   const router = useRouter();
   const [userEmail, setUserEmail] = useState("");
-  const [activeTab, setActiveTab] = useState("orders");
+  const [userId, setUserId] = useState("");
+  const [activeTab, setActiveTab] = useState("services");
   const [orders, setOrders] = useState<Order[]>([]);
   const [completedOrders, setCompletedOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
-  const [profileName, setProfileName] = useState("");
-  const [editingProfile, setEditingProfile] = useState(false);
+  const [profileEmail, setProfileEmail] = useState("");
+  const [newEmail, setNewEmail] = useState("");
+  const [passwordData, setPasswordData] = useState({ current: "", new: "" });
   const [analytics, setAnalytics] = useState({ total: 0, completed: 0 });
   const [selectedService, setSelectedService] = useState(availableServices[0].name);
   const [quantity, setQuantity] = useState(100);
@@ -40,6 +45,7 @@ export default function DashboardPage() {
     const fetchUserAndOrders = async () => {
       const {
         data: { session },
+        error
       } = await supabase.auth.getSession();
 
       if (!session || !session.user) {
@@ -48,15 +54,18 @@ export default function DashboardPage() {
       }
 
       const email = session.user.email || "";
+      const id = session.user.id;
       setUserEmail(email);
+      setUserId(id);
+      setProfileEmail(email);
 
-      const { data: allOrders, error } = await supabase
+      const { data: allOrders } = await supabase
         .from("orders")
         .select("id, service, quantity, status, created_at")
         .eq("email", email)
         .order("created_at", { ascending: false });
 
-      if (!error && allOrders) {
+      if (allOrders) {
         const completed = allOrders.filter((o) => o.status === "Completed");
         setOrders(allOrders.filter((o) => o.status !== "Completed"));
         setCompletedOrders(completed);
@@ -76,7 +85,41 @@ export default function DashboardPage() {
     const selected = availableServices.find((s) => s.name === selectedService);
     const amount = (selected?.price || 0) * quantity;
 
-    toast.success(`Checkout Ready for $${amount.toFixed(2)}`);
+    const stripe = await stripePromise;
+    const res = await fetch("/api/checkout", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        line_items: [{
+          price_data: {
+            currency: "usd",
+            product_data: { name: selectedService },
+            unit_amount: Math.round((selected?.price || 0) * 100),
+          },
+          quantity,
+        }],
+        metadata: { email: userEmail, service: selectedService, quantity }
+      })
+    });
+
+    const session = await res.json();
+    if (session.id) {
+      await stripe?.redirectToCheckout({ sessionId: session.id });
+    } else {
+      toast.error("Stripe session creation failed");
+    }
+  };
+
+  const handleEmailChange = async () => {
+    const { error } = await supabase.auth.updateUser({ email: newEmail });
+    if (error) toast.error("Email update failed");
+    else toast.success("Email updated successfully");
+  };
+
+  const handlePasswordChange = async () => {
+    const { error } = await supabase.auth.updateUser({ password: passwordData.new });
+    if (error) toast.error("Password update failed");
+    else toast.success("Password changed successfully");
   };
 
   const TabContent = () => {
@@ -128,91 +171,41 @@ export default function DashboardPage() {
       );
     }
 
-    if (activeTab === "orders") {
-      return (
-        <div>
-          <h2 className="text-xl font-bold mb-4">Active Orders</h2>
-          <ul className="space-y-4">
-            {orders.map((order) => (
-              <li key={order.id} className="border p-4 rounded-xl">
-                <p><strong>Service:</strong> {order.service}</p>
-                <p><strong>Quantity:</strong> {order.quantity}</p>
-                <p><strong>Status:</strong> {order.status}</p>
-                <p className="text-sm text-[#666]">Placed: {new Date(order.created_at).toLocaleString()}</p>
-              </li>
-            ))}
-          </ul>
-        </div>
-      );
-    }
-
-    if (activeTab === "completed") {
-      return (
-        <div>
-          <h2 className="text-xl font-bold mb-4">Completed Orders</h2>
-          <ul className="space-y-4">
-            {completedOrders.map((order) => (
-              <li key={order.id} className="border p-4 rounded-xl bg-green-50">
-                <p><strong>Service:</strong> {order.service}</p>
-                <p><strong>Quantity:</strong> {order.quantity}</p>
-                <p><strong>Status:</strong> {order.status}</p>
-                <p className="text-sm text-[#666]">Completed: {new Date(order.created_at).toLocaleString()}</p>
-              </li>
-            ))}
-          </ul>
-        </div>
-      );
-    }
-
-    if (activeTab === "analytics") {
-      return (
-        <div>
-          <h2 className="text-xl font-bold mb-4">Analytics</h2>
-          <p>Total Orders: {analytics.total}</p>
-          <p>Completed Orders: {analytics.completed}</p>
-        </div>
-      );
-    }
-
     if (activeTab === "profile") {
       return (
-        <div className="space-y-4">
-          <h2 className="text-xl font-bold">Profile</h2>
-          {editingProfile ? (
-            <div className="flex gap-2">
-              <input
-                type="text"
-                value={profileName}
-                onChange={(e) => setProfileName(e.target.value)}
-                className="border px-3 py-2 rounded-md"
-              />
-              <button
-                onClick={() => setEditingProfile(false)}
-                className="bg-[#007BFF] text-white px-4 py-2 rounded hover:bg-[#005FCC]"
-              >
-                Save
-              </button>
-            </div>
-          ) : (
-            <div className="flex justify-between items-center">
-              <p><strong>Email:</strong> {userEmail}</p>
-              <button
-                onClick={() => setEditingProfile(true)}
-                className="text-sm text-[#007BFF] hover:underline"
-              >
-                Edit
-              </button>
-            </div>
-          )}
+        <div className="space-y-6">
+          <div>
+            <h3 className="text-lg font-bold mb-2">Change Email</h3>
+            <input
+              type="email"
+              placeholder="New Email"
+              value={newEmail}
+              onChange={(e) => setNewEmail(e.target.value)}
+              className="border px-3 py-2 rounded-md mr-2"
+            />
+            <button onClick={handleEmailChange} className="bg-[#007BFF] text-white px-4 py-2 rounded">
+              Update Email
+            </button>
+          </div>
+
+          <div>
+            <h3 className="text-lg font-bold mb-2">Change Password</h3>
+            <input
+              type="password"
+              placeholder="New Password"
+              value={passwordData.new}
+              onChange={(e) => setPasswordData({ ...passwordData, new: e.target.value })}
+              className="border px-3 py-2 rounded-md mr-2"
+            />
+            <button onClick={handlePasswordChange} className="bg-[#007BFF] text-white px-4 py-2 rounded">
+              Update Password
+            </button>
+          </div>
         </div>
       );
     }
 
-    if (activeTab === "security") {
-      return <p className="text-sm">Security settings coming soon.</p>;
-    }
-
-    return null;
+    return <p className="text-sm">Select a tab</p>;
   };
 
   return (
@@ -235,7 +228,7 @@ export default function DashboardPage() {
         <div className="flex flex-col md:flex-row gap-6">
           <div className="w-full md:w-1/4 bg-white p-4 rounded-xl border border-[#CFE4FF] shadow-sm">
             <div className="flex flex-col space-y-2">
-              {["orders", "completed", "services", "analytics", "profile", "security"].map((key) => (
+              {["services", "orders", "completed", "analytics", "profile", "security"].map((key) => (
                 <button
                   key={key}
                   onClick={() => setActiveTab(key)}
