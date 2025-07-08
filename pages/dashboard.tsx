@@ -127,7 +127,11 @@ export default function DashboardPage() {
           </div>
         </div>
       );
-        );
+            })}
+          </div>
+        </div>
+      
+      );
     }
 
     return null; // Other tab content is unchanged for brevity
