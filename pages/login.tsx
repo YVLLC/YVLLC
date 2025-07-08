@@ -1,4 +1,3 @@
-// login.tsx — Premium Login UI
 import { useState, FormEvent } from "react";
 import { useRouter } from "next/router";
 import { supabase } from "@/lib/supabase";
@@ -36,9 +35,9 @@ export default function LoginPage() {
         <div className="flex flex-col items-center mb-6">
           <Image src="/logo.png" alt="YesViral Logo" width={48} height={48} />
           <h1 className="text-3xl font-bold text-[#007BFF] mt-3">Welcome Back</h1>
-          <p className="text-sm text-[#666]">Trusted by thousands. Secure, fast, and effective growth services for Instagram, TikTok, and YouTube.
-
-</p>
+          <p className="text-sm text-[#666] text-center leading-snug max-w-sm mt-2">
+            Trusted by thousands. Secure, fast, and effective growth services for Instagram, TikTok, and YouTube.
+          </p>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-5">
@@ -80,7 +79,10 @@ export default function LoginPage() {
         </form>
 
         <p className="text-center text-xs text-[#888] mt-6">
-          Forgot your password? <a href="#" className="text-[#007BFF] hover:underline">Reset it</a>
+          Forgot your password?{" "}
+          <a href="#" className="text-[#007BFF] hover:underline">
+            Reset it
+          </a>
         </p>
       </div>
     </main>
