@@ -150,12 +150,61 @@ const TESTIMONIALS = [
   }
 ];
 
+// Inline SVGs, blue themed, no external images
 const TRUST_ICONS = [
-  { src: "/visa.svg", alt: "Visa" },
-  { src: "/mastercard.svg", alt: "Mastercard" },
-  { src: "/applepay.svg", alt: "Apple Pay" },
-  { src: "/googlepay.svg", alt: "Google Pay" },
-  { src: "/btc.svg", alt: "Bitcoin" }
+  {
+    label: "Visa",
+    svg: (
+      <svg width="36" height="24" viewBox="0 0 36 24" fill="none">
+        <rect width="36" height="24" rx="4" fill="#fff" />
+        <text x="8" y="16" fill={BRAND.blue} fontWeight="bold" fontSize="13" fontFamily="sans-serif">VISA</text>
+      </svg>
+    )
+  },
+  {
+    label: "Mastercard",
+    svg: (
+      <svg width="36" height="24" viewBox="0 0 36 24" fill="none">
+        <rect width="36" height="24" rx="4" fill="#fff" />
+        <circle cx="14" cy="12" r="7" fill={BRAND.blue} fillOpacity="0.6" />
+        <circle cx="22" cy="12" r="7" fill={BRAND.blue} fillOpacity="0.9" />
+        <text x="8" y="21" fill={BRAND.blueDark} fontWeight="bold" fontSize="7" fontFamily="sans-serif">Mastercard</text>
+      </svg>
+    )
+  },
+  {
+    label: "Apple Pay",
+    svg: (
+      <svg width="36" height="24" viewBox="0 0 36 24" fill="none">
+        <rect width="36" height="24" rx="4" fill="#fff" />
+        <circle cx="11" cy="12" r="5" fill={BRAND.blue} />
+        <rect x="19" y="7" width="10" height="10" rx="2" fill={BRAND.blueDark} />
+        <text x="19" y="21" fill="#fff" fontWeight="bold" fontSize="7" fontFamily="sans-serif">Pay</text>
+      </svg>
+    )
+  },
+  {
+    label: "Google Pay",
+    svg: (
+      <svg width="36" height="24" viewBox="0 0 36 24" fill="none">
+        <rect width="36" height="24" rx="4" fill="#fff" />
+        <rect x="7" y="7" width="10" height="10" rx="2" fill={BRAND.blue} />
+        <rect x="19" y="7" width="10" height="10" rx="2" fill={BRAND.blueDark} />
+        <text x="11" y="21" fill="#fff" fontWeight="bold" fontSize="7" fontFamily="sans-serif">G</text>
+        <text x="24" y="21" fill="#fff" fontWeight="bold" fontSize="7" fontFamily="sans-serif">Pay</text>
+      </svg>
+    )
+  },
+  {
+    label: "Bitcoin",
+    svg: (
+      <svg width="36" height="24" viewBox="0 0 36 24" fill="none">
+        <rect width="36" height="24" rx="4" fill="#fff" />
+        <circle cx="18" cy="12" r="7" fill={BRAND.blue} />
+        <text x="13" y="17" fill="#fff" fontWeight="bold" fontSize="12" fontFamily="monospace">₿</text>
+      </svg>
+    )
+  }
 ];
 
 export default function Home() {
@@ -206,18 +255,9 @@ export default function Home() {
               </Link>
             </div>
             {/* Trust icons */}
-            <div className="flex flex-wrap gap-3 mt-6 justify-center md:justify-start">
-              {TRUST_ICONS.map(({ src, alt }, i) => (
-                <Image
-                  key={i}
-                  src={src}
-                  alt={alt}
-                  width={36}
-                  height={36}
-                  className="object-contain opacity-80"
-                  unselectable="on"
-                  draggable={false}
-                />
+            <div className="flex flex-wrap gap-3 mt-6 justify-center md:justify-start items-center">
+              {TRUST_ICONS.map(({ label, svg }, i) => (
+                <span key={i} title={label}>{svg}</span>
               ))}
               <span className="ml-2 text-xs text-[#555] font-medium mt-2 hidden sm:inline">
                 100% Secure Payments
@@ -388,15 +428,17 @@ export default function Home() {
 
         {/* Call To Action */}
         <section className="text-center space-y-5 mt-24">
-          <h2 className="text-4xl font-extrabold">Ready to Go Viral?</h2>
-          <p className="text-[#444] text-lg">
+          <h2 className="text-4xl font-extrabold mb-3">Ready to Go Viral?</h2>
+          <p className="text-[#444] text-lg mb-8">
             Start growing now — choose your package and watch your stats climb.
           </p>
-          <Link href="/checkout">
-            <button className="bg-[#007BFF] text-white px-8 py-3 text-lg rounded-xl hover:bg-[#005FCC] font-bold shadow transition">
-              View Services
-            </button>
-          </Link>
+          <div className="mt-8">
+            <Link href="/checkout">
+              <button className="bg-[#007BFF] text-white px-8 py-3 text-lg rounded-xl hover:bg-[#005FCC] font-bold shadow transition">
+                View Services
+              </button>
+            </Link>
+          </div>
         </section>
       </main>
 
