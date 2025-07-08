@@ -85,6 +85,48 @@ export default function DashboardPage() {
 
     if (activeTab === "services") {
       return (
+        <div className="space-y-6">
+          <h2 className="text-2xl font-bold text-[#111]">Buy Followers, Likes & Views</h2>
+          <p className="text-[#555] text-sm">Choose your platform, customize your order, and checkout instantly. Trusted delivery.</p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+            {availableServices.map((service) => {
+              const isSelected = selectedService === service.name;
+              return (
+                <div
+                  key={service.name}
+                  onClick={() => setSelectedService(service.name)}
+                  className={`cursor-pointer border rounded-2xl p-4 shadow-sm transition hover:shadow-md ${
+                    isSelected ? "border-[#007BFF] bg-[#E6F0FF]" : "border-[#CFE4FF] bg-white"
+                  }`}
+                >
+                  <h4 className="text-lg font-semibold mb-1">{service.name}</h4>
+                  <p className="text-sm text-[#666] mb-2">${service.price.toFixed(2)} per unit</p>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="number"
+                      min={10}
+                      value={isSelected ? quantity : 100}
+                      onChange={(e) => isSelected && setQuantity(parseInt(e.target.value))}
+                      className="w-full px-3 py-2 border border-[#CFE4FF] rounded-md text-sm"
+                    />
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedService(service.name);
+                        placeOrder();
+                      }}
+                      className="bg-[#007BFF] text-white text-sm px-4 py-2 rounded hover:bg-[#005FCC]"
+                    >
+                      Buy Now
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      );
         <div>
           <h3 className="text-xl font-semibold mb-4">Order Social Media Services</h3>
           <div className="space-y-4">
