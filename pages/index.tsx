@@ -4,7 +4,6 @@ import Image from "next/image";
 import { ChevronDown, ShieldCheck, Clock, UserCheck, Zap, Star, ThumbsUp, MessageCircle } from "lucide-react";
 import { useState } from "react";
 
-// Quick color way reference
 const BRAND = {
   blue: "#007BFF",
   blueDark: "#005FCC",
@@ -35,26 +34,52 @@ const FAQS = [
 
 const SERVICES = [
   {
-    name: "Instagram Followers",
+    name: "Instagram Service",
     price: "$0.09 / 100",
     description: "Boost your IG presence with real followers.",
-    icon: <UserCheck size={28} className="text-pink-500" />,
+    icon: (
+      <svg width={28} height={28} viewBox="0 0 48 48" fill="none">
+        <rect width="48" height="48" rx="16" fill="#F9E5F6"/>
+        <g>
+          <circle cx="24" cy="24" r="14" fill="#fff"/>
+          <path d="M24 16a8 8 0 100 16 8 8 0 000-16zm0 13a5 5 0 110-10 5 5 0 010 10zm6.25-12.5a1.25 1.25 0 112.5 0 1.25 1.25 0 01-2.5 0z" fill="#E1306C"/>
+        </g>
+      </svg>
+    ),
     tag: "Bestseller",
     count: "2,000+ bought this week"
   },
   {
-    name: "TikTok Likes",
+    name: "TikTok Service",
     price: "$0.08 / 100",
     description: "Get instant likes on your videos.",
-    icon: <ThumbsUp size={28} className="text-fuchsia-500" />,
+    icon: (
+      <svg width={28} height={28} viewBox="0 0 48 48" fill="none">
+        <rect width="48" height="48" rx="16" fill="#E3F4FE"/>
+        <g>
+          <circle cx="24" cy="24" r="14" fill="#fff"/>
+          <path d="M32 20.19a4.09 4.09 0 01-2.13-.61 4.09 4.09 0 01-1.44-1.71V30.5a6.5 6.5 0 11-6.5-6.5" stroke="#000" strokeWidth="2" strokeLinecap="round"/>
+          <path d="M29 13v4.41a4.09 4.09 0 002.13.61" stroke="#00F2EA" strokeWidth="2" strokeLinecap="round"/>
+          <path d="M27.5 17.4V29.4a4.9 4.9 0 11-4.9-4.9" stroke="#FE2C55" strokeWidth="2" strokeLinecap="round"/>
+        </g>
+      </svg>
+    ),
     tag: "🔥 Hot",
     count: "1,400+ bought this week"
   },
   {
-    name: "YouTube Views",
+    name: "YouTube Service",
     price: "$0.05 / 1000",
     description: "Skyrocket your video reach and impressions.",
-    icon: <Zap size={28} className="text-yellow-400" />,
+    icon: (
+      <svg width={28} height={28} viewBox="0 0 48 48" fill="none">
+        <rect width="48" height="48" rx="16" fill="#FEECE3"/>
+        <g>
+          <circle cx="24" cy="24" r="14" fill="#fff"/>
+          <path d="M30 24l-8 5V19l8 5z" fill="#FF0000"/>
+        </g>
+      </svg>
+    ),
     tag: "",
     count: "950+ bought this week"
   }
@@ -82,20 +107,46 @@ const TESTIMONIALS = [
   {
     quote: "I gained real followers in under an hour — and they didn’t drop!",
     name: "Taylor M.",
-    img: "https://randomuser.me/api/portraits/women/12.jpg",
-    platform: "Instagram"
+    platform: "Instagram",
+    icon: (
+      <svg width={48} height={48} viewBox="0 0 48 48" fill="none">
+        <rect width="48" height="48" rx="16" fill="#F9E5F6"/>
+        <g>
+          <circle cx="24" cy="24" r="14" fill="#fff"/>
+          <path d="M24 16a8 8 0 100 16 8 8 0 000-16zm0 13a5 5 0 110-10 5 5 0 010 10zm6.25-12.5a1.25 1.25 0 112.5 0 1.25 1.25 0 01-2.5 0z" fill="#E1306C"/>
+        </g>
+      </svg>
+    )
   },
   {
     quote: "Great support, great pricing, real growth. Worth every cent.",
     name: "Jake B.",
-    img: "https://randomuser.me/api/portraits/men/22.jpg",
-    platform: "TikTok"
+    platform: "TikTok",
+    icon: (
+      <svg width={48} height={48} viewBox="0 0 48 48" fill="none">
+        <rect width="48" height="48" rx="16" fill="#E3F4FE"/>
+        <g>
+          <circle cx="24" cy="24" r="14" fill="#fff"/>
+          <path d="M32 20.19a4.09 4.09 0 01-2.13-.61 4.09 4.09 0 01-1.44-1.71V30.5a6.5 6.5 0 11-6.5-6.5" stroke="#000" strokeWidth="2" strokeLinecap="round"/>
+          <path d="M29 13v4.41a4.09 4.09 0 002.13.61" stroke="#00F2EA" strokeWidth="2" strokeLinecap="round"/>
+          <path d="M27.5 17.4V29.4a4.9 4.9 0 11-4.9-4.9" stroke="#FE2C55" strokeWidth="2" strokeLinecap="round"/>
+        </g>
+      </svg>
+    )
   },
   {
     quote: "The only site I trust. Super fast and my YouTube blew up.",
     name: "Lina S.",
-    img: "https://randomuser.me/api/portraits/women/32.jpg",
-    platform: "YouTube"
+    platform: "YouTube",
+    icon: (
+      <svg width={48} height={48} viewBox="0 0 48 48" fill="none">
+        <rect width="48" height="48" rx="16" fill="#FEECE3"/>
+        <g>
+          <circle cx="24" cy="24" r="14" fill="#fff"/>
+          <path d="M30 24l-8 5V19l8 5z" fill="#FF0000"/>
+        </g>
+      </svg>
+    )
   }
 ];
 
@@ -275,24 +326,20 @@ export default function Home() {
         <section id="testimonials" className="space-y-7">
           <h2 className="text-center text-4xl font-extrabold">Customer Reviews</h2>
           <div className="grid md:grid-cols-3 gap-7">
-            {TESTIMONIALS.map(({ quote, name, img, platform }, i) => (
+            {TESTIMONIALS.map(({ quote, name, platform, icon }, i) => (
               <div key={i} className="bg-white border border-gray-200 p-7 rounded-2xl shadow flex flex-col items-center text-center">
-                <Image
-                  src={img}
-                  alt={name}
-                  width={54}
-                  height={54}
-                  className="rounded-full border-2 border-[#CFE4FF] mb-2"
-                />
+                <div className="mb-2">{icon}</div>
                 <div className="flex items-center gap-1 mb-1">
-                  <Star size={16} className="text-yellow-400" />
-                  <Star size={16} className="text-yellow-400" />
-                  <Star size={16} className="text-yellow-400" />
-                  <Star size={16} className="text-yellow-400" />
-                  <Star size={16} className="text-yellow-400" />
+                  {Array(5)
+                    .fill(0)
+                    .map((_, j) => (
+                      <Star key={j} size={16} className="text-yellow-400" />
+                    ))}
                 </div>
                 <p className="italic text-[#222] text-base font-medium mb-2">“{quote}”</p>
-                <p className="mt-1 text-sm text-[#007BFF] font-semibold">{name} <span className="text-[#444] font-normal">· {platform}</span></p>
+                <p className="mt-1 text-sm text-[#007BFF] font-semibold">
+                  {name} <span className="text-[#444] font-normal">· {platform}</span>
+                </p>
               </div>
             ))}
           </div>
