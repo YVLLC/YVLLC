@@ -33,7 +33,7 @@ export default function SignupPage() {
       <div className="w-full max-w-md bg-white p-8 rounded-3xl shadow-xl border border-[#CFE4FF]">
         <div className="flex flex-col items-center mb-6">
           <Image src="/logo.png" alt="YesViral Logo" width={48} height={48} />
-          <h1 className="text-3xl font-bold text-[#007BFF] mt-3">Join YesViral</h1>
+          <h1 className="text-3xl font-bold text-[#007BFF] mt-3">Sign Up</h1>
           <p className="text-sm text-[#666]">Create your account to get started</p>
         </div>
 
