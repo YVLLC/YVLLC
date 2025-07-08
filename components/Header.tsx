@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import { Menu, X, ChevronDown, Instagram, Youtube, Music2, UserPlus, ThumbsUp, Eye, LogOut } from "lucide-react";
-import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
+import { supabase } from "../lib/supabaseClient";
 
 const MEGA_MENUS = {
   instagram: [
@@ -71,9 +71,20 @@ const MEGA_MENUS = {
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [hoverTab, setHoverTab] = useState<string | null>(null);
+  const [user, setUser] = useState<any>(null);
   const router = useRouter();
-  const user = useUser();
-  const supabase = useSupabaseClient();
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      setUser(data.session?.user ?? null);
+    });
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+    return () => {
+      listener?.subscription.unsubscribe();
+    };
+  }, []);
 
   const navLinks = [
     { name: "FAQ", href: "/#faq" },
@@ -98,10 +109,9 @@ export default function Header() {
     }
   ];
 
-  // SIGN OUT logic
   const handleSignOut = async () => {
     await supabase.auth.signOut();
-    router.push("/"); // redirect home or wherever
+    router.push("/");
   };
 
   return (
@@ -179,7 +189,6 @@ export default function Header() {
             </Link>
           ))}
 
-          {/* AUTH BUTTONS */}
           {!user ? (
             <>
               <Link href="/login" className="ml-4">
@@ -258,7 +267,6 @@ export default function Header() {
               {link.name}
             </Link>
           ))}
-          {/* Mobile auth */}
           {!user ? (
             <div className="flex gap-2 mt-3">
               <Link href="/login" className="flex-1">
