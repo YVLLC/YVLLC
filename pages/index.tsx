@@ -395,11 +395,6 @@ export default function Home() {
           </div>
         </section>
       </main>
-        <div className="flex gap-4 justify-center mt-2">
-          <Link href="/privacy" className="hover:underline hover:text-[#007BFF]">Privacy</Link>
-          <Link href="/terms" className="hover:underline hover:text-[#007BFF]">Terms</Link>
-          <Link href="/support" className="hover:underline hover:text-[#007BFF]">Support</Link>
-        </div>
       </footer>
     </>
   );
