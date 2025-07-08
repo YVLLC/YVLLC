@@ -10,8 +10,8 @@ export default function Contact() {
         <meta name="description" content="Need help? Contact YesViral's support team and get fast assistance with your orders or questions." />
       </Head>
 
-      <main className="bg-[#F9FAFB] min-h-screen py-16 px-4">
-        <div className="max-w-3xl mx-auto bg-white rounded-3xl shadow-2xl p-8 md:p-14 animate-fadeInFast">
+      <main className="bg-[#F9FAFB] min-h-screen py-12 px-2 sm:px-4">
+        <div className="max-w-3xl mx-auto bg-white rounded-3xl shadow-2xl p-6 sm:p-10 md:p-14 animate-fadeInFast">
           {/* Logo & Heading */}
           <div className="flex flex-col items-center gap-2 mb-8">
             <Image
@@ -22,7 +22,7 @@ export default function Contact() {
               className="rounded-full shadow"
               priority
             />
-            <h1 className="text-4xl font-extrabold text-center text-[#007BFF] drop-shadow mb-1">
+            <h1 className="text-3xl sm:text-4xl font-extrabold text-center text-[#007BFF] drop-shadow mb-1">
               Contact YesViral Support
             </h1>
             <div className="flex items-center gap-2 text-[#444] text-base font-medium">
@@ -32,15 +32,15 @@ export default function Contact() {
           </div>
 
           {/* Trust/Info Bar */}
-          <div className="flex flex-col md:flex-row justify-center gap-6 mb-8">
-            <div className="flex items-center gap-2 bg-[#F5FAFF] rounded-xl px-4 py-2 text-[#007BFF] text-sm font-semibold shadow">
+          <div className="flex flex-col md:flex-row md:justify-center gap-4 sm:gap-6 mb-10 w-full">
+            <div className="flex items-center gap-2 bg-[#F5FAFF] rounded-xl px-3 py-2 sm:px-4 sm:py-2 text-[#007BFF] text-[15px] font-semibold shadow min-w-0 flex-1 justify-center">
               <MessageCircle size={18} /> Live Support, 7 Days a Week
             </div>
-            <div className="flex items-center gap-2 bg-[#F5FAFF] rounded-xl px-4 py-2 text-[#007BFF] text-sm font-semibold shadow">
-              <Mail size={18} /> <a href="mailto:support@yesviral.com" className="underline">support@yesviral.com</a>
+            <div className="flex items-center gap-2 bg-[#F5FAFF] rounded-xl px-3 py-2 sm:px-4 sm:py-2 text-[#007BFF] text-[15px] font-semibold shadow min-w-0 flex-1 justify-center">
+              <Mail size={18} /> <a href="mailto:support@yesviral.com" className="underline break-all">support@yesviral.com</a>
             </div>
-            <div className="flex items-center gap-2 bg-[#F5FAFF] rounded-xl px-4 py-2 text-[#007BFF] text-sm font-semibold shadow">
-              <Clock size={18} /> Replies <span className="font-bold">in under 24h</span>
+            <div className="flex items-center gap-2 bg-[#F5FAFF] rounded-xl px-3 py-2 sm:px-4 sm:py-2 text-[#007BFF] text-[15px] font-semibold shadow min-w-0 flex-1 justify-center">
+              <Clock size={18} /> Replies <span className="font-bold ml-1">in under 24h</span>
             </div>
           </div>
 

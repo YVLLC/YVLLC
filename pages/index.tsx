@@ -5,7 +5,7 @@ import { ChevronDown, ShieldCheck, Clock, UserCheck, Zap, RefreshCcw, Star, Mess
 import { useState } from "react";
 import OrderModal from "@/components/OrderModal";
 
-// Payment Icons (unchanged)
+// Payment Icons
 const PaymentIcons = () => (
   <div className="flex gap-2">
     <span title="Visa"><svg width="34" height="20" viewBox="0 0 36 24"><rect width="36" height="24" rx="4" fill="#fff" /><text x="7" y="16" fill="#007BFF" fontWeight="bold" fontSize="14" fontFamily="sans-serif">VISA</text></svg></span>
@@ -69,16 +69,96 @@ const SERVICES = [
   }
 ];
 
-// ... your FAQS, HOW_IT_WORKS, TESTIMONIALS as before ...
-
 const FAQS = [
-  // ... unchanged ...
+  {
+    question: "Why choose us?",
+    answer: "We combine unbeatable prices, real results, and blazing-fast delivery to help you grow on social media with confidence. Every order is backed by our satisfaction guarantee and refill policy, so you can grow your presence safely, quickly, and with real users. Trusted by over 100,000 creators and businesses."
+  },
+  {
+    question: "What services do you offer?",
+    answer: "Our Social Media Marketing services help individuals, influencers, and brands grow their online presence with targeted engagement. Whether you want more followers, subscribers, video views, or music plays, we offer a wide range of services across platforms like Instagram, YouTube, Spotify, TikTok, and more."
+  },
+  {
+    question: "Do I need to share my account password?",
+    answer: "No, never. We do not require your password for any of our services. Everything is delivered securely without accessing your account. If you ever receive a message asking for your password claiming to be from us, do not share it—please report it to us immediately."
+  },
+  {
+    question: "Are the followers, likes, and subscribers real?",
+    answer: "Yes. We don’t use bots or fake accounts. All engagement comes from real users, helping your account grow through authentic, organic activity that boosts your reach and credibility."
+  },
+  {
+    question: "Is your service safe and legal?",
+    answer: "Absolutely. We use safe, secure, and compliant methods to deliver likes, followers, and more. Your account stays 100% protected, and everything we do follows platform guidelines to keep your profile secure."
+  },
+  {
+    question: "What is your refill guarantee?",
+    answer: "Our 30-day refill guarantee means that if any followers, likes, views, or engagement drop within 30 days of your purchase, we’ll replace them free of charge. This keeps your results strong and consistent. Just reach out through our contact form—no hassle, no extra cost."
+  }
 ];
+
 const HOW_IT_WORKS = [
-  // ... unchanged ...
+  {
+    icon: <Zap size={32} className="mx-auto text-blue-400" />,
+    title: "Choose a Service",
+    description: "Pick your platform and what you need — followers, likes, or views."
+  },
+  {
+    icon: <UserCheck size={32} className="mx-auto text-blue-400" />,
+    title: "Enter Info",
+    description: "Just your username or post URL. No password ever required."
+  },
+  {
+    icon: <Clock size={32} className="mx-auto text-blue-400" />,
+    title: "Get Results",
+    description: "See growth begin in minutes — smooth, secure, and fast."
+  }
 ];
+
 const TESTIMONIALS = [
-  // ... unchanged ...
+  {
+    quote: "I gained real followers in under an hour — and they didn’t drop!",
+    name: "Taylor M.",
+    platform: "Instagram",
+    icon: (
+      <svg width={48} height={48} viewBox="0 0 48 48" fill="none">
+        <rect width="48" height="48" rx="16" fill="#F9E5F6"/>
+        <g>
+          <circle cx="24" cy="24" r="14" fill="#fff"/>
+          <path d="M24 16a8 8 0 100 16 8 8 0 000-16zm0 13a5 5 0 110-10 5 5 0 010 10zm6.25-12.5a1.25 1.25 0 112.5 0 1.25 1.25 0 01-2.5 0z" fill="#E1306C"/>
+        </g>
+      </svg>
+    )
+  },
+  {
+    quote: "Great support, great pricing, real growth. Worth every cent.",
+    name: "Jake B.",
+    platform: "TikTok",
+    icon: (
+      <svg width={48} height={48} viewBox="0 0 48 48" fill="none">
+        <rect width="48" height="48" rx="16" fill="#E3F4FE"/>
+        <g>
+          <circle cx="24" cy="24" r="14" fill="#fff"/>
+          <path d="M32 20.19a4.09 4.09 0 01-2.13-.61 4.09 4.09 0 01-1.44-1.71V30.5a6.5 6.5 0 11-6.5-6.5" stroke="#000" strokeWidth="2" strokeLinecap="round"/>
+          <path d="M29 13v4.41a4.09 4.09 0 002.13.61" stroke="#00F2EA" strokeWidth="2" strokeLinecap="round"/>
+          <path d="M27.5 17.4V29.4a4.9 4.9 0 11-4.9-4.9" stroke="#FE2C55" strokeWidth="2" strokeLinecap="round"/>
+        </g>
+      </svg>
+    )
+  },
+  {
+    quote: "The only site I trust. Super fast and my YouTube blew up.",
+    name: "Lina S.",
+    platform: "YouTube",
+    icon: (
+      <svg width={48} height={48} viewBox="0 0 48 48" fill="none">
+        <rect width="48" height="48" rx="16" fill="#FEECE3"/>
+        <g>
+          <circle cx="24" cy="24" r="14" fill="#fff"/>
+          <path d="M30 24l-8 5V19l8 5z" fill="#FF0000"/>
+        </g>
+      </svg>
+    )
+  }
 ];
 
 export default function Home() {
@@ -103,7 +183,7 @@ export default function Home() {
         {/* Hero Section */}
         <section className="grid md:grid-cols-2 gap-12 items-center">
           <div className="space-y-7 text-center md:text-left">
-            {/* STAR and TRUSTED TEXT - UNCHANGED */}
+            {/* Trusted badge (unchanged) */}
             <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#E8F1FF] rounded-full mb-2 text-xs font-bold text-[#007BFF] tracking-wide shadow-sm">
               <Star size={16} className="text-yellow-400" />
               Trusted by 100,000+ Creators
@@ -207,7 +287,6 @@ export default function Home() {
               <span className="font-semibold mt-2">24/7 Support</span>
               <span className="text-sm text-[#444]">Chat any time, any day</span>
             </div>
-            {/* FINAL CARD: 30 DAY REFILL GUARANTEE */}
             <div className="flex flex-col items-center max-w-[170px]">
               <RefreshCcw className="text-[#007BFF]" size={32} />
               <span className="font-semibold mt-2">30 Day Refill</span>
@@ -220,8 +299,112 @@ export default function Home() {
           </div>
         </section>
 
-        {/* How It Works, Testimonials, FAQs, CTA - UNCHANGED ... */}
-        {/* ... your sections ... */}
+        {/* How It Works */}
+        <section id="how-it-works" className="space-y-10">
+          <h2 className="text-center text-4xl font-extrabold">How It Works</h2>
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-8 text-center">
+            {HOW_IT_WORKS.map(({ title, description, icon }, i) => (
+              <div key={i} className="bg-white border border-[#CFE4FF] rounded-2xl p-7 shadow hover:shadow-lg transition">
+                <div className="mb-2">{icon}</div>
+                <h3 className="text-lg font-bold mb-1">{title}</h3>
+                <p className="text-sm text-[#444]">{description}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Testimonials */}
+        <section id="testimonials" className="space-y-7">
+          <h2 className="text-center text-4xl font-extrabold">Customer Reviews</h2>
+          <div className="grid md:grid-cols-3 gap-7">
+            {TESTIMONIALS.map(({ quote, name, platform, icon }, i) => (
+              <div key={i} className="bg-white border border-gray-200 p-7 rounded-2xl shadow flex flex-col items-center text-center">
+                <div className="mb-2">{icon}</div>
+                <div className="flex items-center gap-1 mb-1">
+                  {Array(5)
+                    .fill(0)
+                    .map((_, j) => (
+                      <Star key={j} size={16} className="text-yellow-400" />
+                    ))}
+                </div>
+                <p className="italic text-[#222] text-base font-medium mb-2">“{quote}”</p>
+                <p className="mt-1 text-sm text-[#007BFF] font-semibold">
+                  {name} <span className="text-[#444] font-normal">· {platform}</span>
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* FAQs */}
+        <section id="faq" className="space-y-7">
+          <h2 className="text-center text-4xl font-extrabold">Frequently Asked Questions</h2>
+          <p className="text-center text-[#444] mb-4">Everything you need to know about our services, safety, and support.</p>
+          <div className="max-w-3xl mx-auto space-y-4">
+            {FAQS.map(({ question, answer }, index) => (
+              <div
+                key={index}
+                className={`border border-gray-200 rounded-2xl px-5 py-4 cursor-pointer transition-all duration-200 ${
+                  openFaq === index ? "bg-[#F5FAFF] shadow-lg" : "bg-white"
+                }`}
+                onClick={() => toggleFaq(index)}
+                tabIndex={0}
+                onKeyDown={e => { if (e.key === "Enter") toggleFaq(index); }}
+              >
+                <div className="flex justify-between items-center select-none">
+                  <p className="font-semibold text-[#111] text-base">{question}</p>
+                  <ChevronDown
+                    className={`w-6 h-6 transition-transform ${openFaq === index ? "rotate-180" : "rotate-0"}`}
+                  />
+                </div>
+                <div
+                  style={{
+                    maxHeight: openFaq === index ? 200 : 0,
+                    overflow: "hidden",
+                    transition: "max-height 0.3s"
+                  }}
+                >
+                  {openFaq === index && (
+                    <p className="mt-3 text-sm text-[#444]">{answer}</p>
+                  )}
+                </div>
+              </div>
+            ))}
+            <div className="text-center mt-4">
+              <Link href="/support" className="text-[#007BFF] underline font-semibold hover:text-[#005FCC] text-sm">
+                Didn’t find your answer? Chat with us!
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* Call To Action */}
+        <section className="text-center space-y-5 mt-24">
+          <h2 className="text-4xl font-extrabold mb-3">Ready to Go Viral?</h2>
+          <p className="text-[#444] text-lg mb-8">
+            Start growing now — choose your package and watch your stats climb.
+          </p>
+          <div className="mt-8">
+            <button
+              className="bg-[#007BFF] text-white px-8 py-3 text-lg rounded-xl hover:bg-[#005FCC] font-bold shadow transition"
+              onClick={() => setOrderModalOpen(true)}
+            >
+              View Services
+            </button>
+          </div>
+        </section>
+
+        {/* Footer */}
+        <footer className="mt-14 py-8 text-center text-sm text-[#444]">
+          <div>
+            © {new Date().getFullYear()} YesViral. All rights reserved.
+          </div>
+          <div className="flex gap-4 justify-center mt-2">
+            <Link href="/privacy" className="hover:underline hover:text-[#007BFF]">Privacy</Link>
+            <Link href="/terms" className="hover:underline hover:text-[#007BFF]">Terms</Link>
+            <Link href="/support" className="hover:underline hover:text-[#007BFF]">Support</Link>
+          </div>
+        </footer>
       </main>
     </>
   );
