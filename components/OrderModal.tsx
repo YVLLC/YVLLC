@@ -51,7 +51,12 @@ const FAQS = [
   { q: "Is this safe & real?", a: "100%. We use safe, tested methods and only real engagement. Money-back if not delivered." }
 ];
 
-export default function OrderModal({ open, onClose }) {
+interface OrderModalProps {
+  open: boolean;
+  onClose: () => void;
+}
+
+export default function OrderModal({ open, onClose }: OrderModalProps) {
   const [platform, setPlatform] = useState(PLATFORMS[0]);
   const [service, setService] = useState(PLATFORMS[0].services[0]);
   const [quantity, setQuantity] = useState(100);
@@ -62,7 +67,7 @@ export default function OrderModal({ open, onClose }) {
 
   if (!open) return null;
 
-  const handlePlatform = (p) => {
+  const handlePlatform = (p: typeof platform) => {
     setPlatform(p);
     setService(p.services[0]);
     setQuantity(100);
@@ -70,7 +75,7 @@ export default function OrderModal({ open, onClose }) {
     setError("");
   };
 
-  const handleService = (s) => {
+  const handleService = (s: typeof service) => {
     setService(s);
     setQuantity(100);
     setError("");
