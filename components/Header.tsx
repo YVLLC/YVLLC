@@ -189,33 +189,34 @@ export default function Header() {
             </Link>
           ))}
 
+          {/* Auth Buttons */}
           {!user ? (
             <>
               <Link href="/login" className="ml-4">
-                <button className="px-5 py-2 rounded-full text-[#007BFF] bg-white border border-[#007BFF] font-semibold shadow-sm hover:bg-[#F2F9FF] hover:text-[#005FCC] transition text-base focus:outline-none focus:ring-2 focus:ring-[#E6F0FF]">
+                <button className="px-5 py-2 rounded-full text-[#007BFF] bg-white border border-[#007BFF] font-semibold shadow-sm hover:bg-[#F2F9FF] hover:text-[#005FCC] transition text-base focus:outline-none">
                   Login
                 </button>
               </Link>
               <Link href="/signup" className="ml-2">
-                <button className="px-5 py-2 rounded-full text-white bg-[#007BFF] border-2 border-[#007BFF] font-bold shadow hover:bg-[#005FCC] transition text-base focus:outline-none focus:ring-2 focus:ring-[#E6F0FF]">
+                <button className="px-5 py-2 rounded-full text-white bg-[#007BFF] border-2 border-[#007BFF] font-bold shadow hover:bg-[#005FCC] transition text-base focus:outline-none">
                   Sign Up
                 </button>
               </Link>
             </>
           ) : (
-            <>
-              <Link href="/dashboard" className="ml-4">
-                <button className="px-5 py-2 rounded-full text-white bg-[#007BFF] border-2 border-[#007BFF] font-bold shadow hover:bg-[#005FCC] transition text-base focus:outline-none focus:ring-2 focus:ring-[#E6F0FF]">
+            <div className="flex items-center gap-2 ml-5">
+              <Link href="/dashboard">
+                <button className="px-4 py-2 rounded-lg text-[#007BFF] bg-[#F5FAFF] border border-[#E7ECF3] font-semibold hover:bg-[#E6F0FF] hover:text-[#005FCC] text-base shadow-none transition-all focus:outline-none">
                   Dashboard
                 </button>
               </Link>
               <button
-                className="ml-2 flex items-center gap-1 px-5 py-2 rounded-full text-[#007BFF] bg-white border border-[#007BFF] font-semibold shadow-sm hover:bg-[#F2F9FF] hover:text-[#005FCC] transition text-base focus:outline-none focus:ring-2 focus:ring-[#E6F0FF]"
+                className="flex items-center gap-1 px-4 py-2 rounded-lg text-[#007BFF] bg-white border border-[#007BFF] font-semibold shadow-sm hover:bg-[#F2F9FF] hover:text-[#005FCC] transition-all text-base focus:outline-none"
                 onClick={handleSignOut}
               >
-                <LogOut size={18} className="mr-1" /> Sign Out
+                <LogOut size={18} /> Sign Out
               </button>
-            </>
+            </div>
           )}
         </nav>
 
@@ -283,12 +284,12 @@ export default function Header() {
           ) : (
             <div className="flex gap-2 mt-3">
               <Link href="/dashboard" className="flex-1">
-                <button className="w-full px-4 py-2 rounded-full text-white bg-[#007BFF] border-2 border-[#007BFF] font-bold shadow hover:bg-[#005FCC] transition text-base">
+                <button className="w-full px-4 py-2 rounded-lg text-[#007BFF] bg-[#F5FAFF] border border-[#E7ECF3] font-semibold hover:bg-[#E6F0FF] hover:text-[#005FCC] text-base shadow-none transition-all focus:outline-none">
                   Dashboard
                 </button>
               </Link>
               <button
-                className="flex-1 flex items-center justify-center gap-1 px-4 py-2 rounded-full text-[#007BFF] bg-white border border-[#007BFF] font-semibold shadow-sm hover:bg-[#F2F9FF] hover:text-[#005FCC] transition text-base"
+                className="flex-1 flex items-center justify-center gap-1 px-4 py-2 rounded-lg text-[#007BFF] bg-white border border-[#007BFF] font-semibold shadow-sm hover:bg-[#F2F9FF] hover:text-[#005FCC] transition-all text-base"
                 onClick={handleSignOut}
               >
                 <LogOut size={18} /> Sign Out

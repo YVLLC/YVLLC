@@ -61,22 +61,6 @@ const SocialLinks = () => (
 export default function Footer() {
   return (
     <footer className="bg-gradient-to-t from-[#E6F0FF] via-[#F5FAFF] to-[#fff] text-[#111] pt-16 pb-10 px-4 border-t border-[#CFE4FF]">
-      {/* Trust Bar */}
-      <div className="max-w-7xl mx-auto mb-10 grid md:grid-cols-4 grid-cols-2 gap-4 py-6 px-4 bg-white rounded-2xl shadow-lg border border-[#CFE4FF]">
-        <div className="flex items-center gap-2 text-[#007BFF] font-semibold text-sm">
-          <ShieldCheck size={20} className="text-[#007BFF]" /> 100% Safe & Secure
-        </div>
-        <div className="flex items-center gap-2 text-[#007BFF] font-semibold text-sm">
-          <Lock size={20} className="text-[#007BFF]" /> SSL Encrypted Checkout
-        </div>
-        <div className="flex items-center gap-2 text-[#007BFF] font-semibold text-sm">
-          <MessageCircle size={20} className="text-[#007BFF]" /> 24/7 Live Support
-        </div>
-        <div className="flex flex-col items-start">
-          <span className="text-xs font-bold text-[#888] mb-1">Accepted Payments</span>
-          <PaymentIcons />
-        </div>
-      </div>
 
       {/* Main Footer */}
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-10">
@@ -145,8 +129,25 @@ export default function Footer() {
         </div>
       </div>
 
+      {/* Trust Bar AT THE BOTTOM */}
+      <div className="max-w-7xl mx-auto my-10 grid md:grid-cols-4 grid-cols-2 gap-4 py-6 px-4 bg-white rounded-2xl shadow-lg border border-[#CFE4FF]">
+        <div className="flex items-center gap-2 text-[#007BFF] font-semibold text-sm">
+          <ShieldCheck size={20} className="text-[#007BFF]" /> 100% Safe & Secure
+        </div>
+        <div className="flex items-center gap-2 text-[#007BFF] font-semibold text-sm">
+          <Lock size={20} className="text-[#007BFF]" /> SSL Encrypted Checkout
+        </div>
+        <div className="flex items-center gap-2 text-[#007BFF] font-semibold text-sm">
+          <MessageCircle size={20} className="text-[#007BFF]" /> 24/7 Live Support
+        </div>
+        <div className="flex flex-col items-start">
+          <span className="text-xs font-bold text-[#888] mb-1">Accepted Payments</span>
+          <PaymentIcons />
+        </div>
+      </div>
+
       {/* Copyright & Powered */}
-      <div className="text-center text-xs text-[#888] mt-12 flex flex-col items-center gap-2">
+      <div className="text-center text-xs text-[#888] mt-6 flex flex-col items-center gap-2">
         <span>
           &copy; {new Date().getFullYear()} YesViral. All rights reserved.
         </span>
