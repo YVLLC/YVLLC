@@ -2,28 +2,88 @@ import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
 import {
-  ChevronDown, ShieldCheck, Clock, UserCheck, Zap,
-  RefreshCcw, Star, MessageCircle
+  ChevronDown,
+  ShieldCheck,
+  Clock,
+  UserCheck,
+  Zap,
+  RefreshCcw,
+  Star,
+  MessageCircle,
 } from "lucide-react";
 import { useState } from "react";
 import OrderModal from "@/components/OrderModal";
 import Footer from "@/components/Footer";
 
+export default function Home() {
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [orderModalOpen, setOrderModalOpen] = useState(false);
   const [modalPlatform, setModalPlatform] = useState<string | null>(null);
   const [modalService, setModalService] = useState<string | null>(null);
-  
+
+  const handleServiceOrder = (platform: string, service: string) => {
+    setModalPlatform(platform);
+    setModalService(service);
+    setOrderModalOpen(true);
+  };
+
+  const toggleFaq = (index: number) =>
+    setOpenFaq(openFaq === index ? null : index);
+
   return (
     <>
+      <Head>
+        <title>YesViral – Buy Real Followers, Likes & Views</title>
+        <meta
+          name="description"
+          content="Grow your social media with YesViral. Buy real followers, likes, views, and more across Instagram, TikTok, YouTube & beyond — fast, secure, and trusted."
+        />
+      </Head>
+
       <OrderModal
         open={orderModalOpen}
         onClose={() => setOrderModalOpen(false)}
         initialPlatform={modalPlatform}
         initialService={modalService}
       />
+
+      <Link href="/support" className="fixed bottom-6 right-6 z-50">
+        <button className="flex items-center gap-2 bg-white shadow-lg px-5 py-3 rounded-full border border-[#CFE4FF] hover:bg-[#F2F9FF] transition group">
+          <MessageCircle
+            className="text-[#007BFF] group-hover:scale-110 transition"
+            size={20}
+          />
+          <span className="font-semibold text-[#007BFF] text-sm">
+            Live Support
+          </span>
+        </button>
+      </Link>
+
+      <main className="px-4 sm:px-6 max-w-7xl mx-auto py-14 space-y-28 select-none">
+        {/* Add your HERO section, SERVICES, WHY US, HOW IT WORKS, TESTIMONIALS, FAQ, etc. here */}
+
+        <section className="text-center space-y-5 mt-24">
+          <h2 className="text-4xl font-extrabold mb-3">Ready to Go Viral?</h2>
+          <p className="text-[#444] text-lg mb-8">
+            Start growing now — choose your package and watch your stats climb.
+          </p>
+          <div className="mt-8">
+            <button
+              className="bg-[#007BFF] text-white px-8 py-3 text-lg rounded-xl hover:bg-[#005FCC] font-bold shadow transition"
+              onClick={() => setOrderModalOpen(true)}
+            >
+              View Services
+            </button>
+          </div>
+        </section>
+      </main>
+
       <Footer onServiceOrder={handleServiceOrder} />
     </>
+  );
+}
 const SERVICES = [
+}:
     name: "Instagram Services",
     key: "instagram",
     price: "$0.09 / 100",
