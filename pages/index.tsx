@@ -29,16 +29,14 @@ export default function Home() {
         initialPlatform={modalPlatform}
         initialService={modalService}
       />
-      {/* ...your page content here... */}
       <Footer onServiceOrder={handleServiceOrder} />
     </>
 const SERVICES = [
-  {
     name: "Instagram Services",
     key: "instagram",
     price: "$0.09 / 100",
     description: "Boost your IG presence with real followers.",
-    icon: (
+    icon:
       <svg width={28} height={28} viewBox="0 0 48 48" fill="none">
         <rect width="48" height="48" rx="16" fill="#F9E5F6"/>
         <g>
@@ -46,7 +44,7 @@ const SERVICES = [
           <path d="M24 16a8 8 0 100 16 8 8 0 000-16zm0 13a5 5 0 110-10 5 5 0 010 10zm6.25-12.5a1.25 1.25 0 112.5 0 1.25 1.25 0 01-2.5 0z" fill="#E1306C"/>
         </g>
       </svg>
-    ),
+    ,
     tag: "Bestseller",
     count: "2,000+ bought this week"
   },
