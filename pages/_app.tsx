@@ -2,7 +2,6 @@ import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import { useRouter } from "next/router";
 import OrderModal from "@/components/OrderModal";
 import { OrderModalProvider, useOrderModal } from "@/context/OrderModalContext";
