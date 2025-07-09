@@ -40,7 +40,6 @@ const PaymentIcons = () => (
   </div>
 );
 
-// Socials
 const SocialLinks = () => (
   <div className="flex gap-3 mt-5">
     <a href="https://instagram.com" target="_blank" rel="noopener" aria-label="Instagram" className="hover:scale-110 transition">
@@ -58,7 +57,12 @@ const SocialLinks = () => (
   </div>
 );
 
-export default function Footer({ onServiceOrder }) {
+// **** ADD THIS TYPE!!! ****
+type FooterProps = {
+  onServiceOrder: (platform: string, service: string) => void;
+};
+
+export default function Footer({ onServiceOrder }: FooterProps) {
   return (
     <footer className="bg-gradient-to-t from-[#E6F0FF] via-[#F5FAFF] to-[#fff] text-[#111] pt-16 pb-10 px-4 border-t border-[#CFE4FF]">
       {/* Main Footer */}
