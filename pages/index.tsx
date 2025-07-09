@@ -1,11 +1,14 @@
 import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
-import { ChevronDown, ShieldCheck, Clock, UserCheck, Zap, RefreshCcw, Star, MessageCircle } from "lucide-react";
+import {
+  ChevronDown, ShieldCheck, Clock, UserCheck, Zap,
+  RefreshCcw, Star, MessageCircle
+} from "lucide-react";
 import { useState } from "react";
 import OrderModal from "@/components/OrderModal";
 
-// Payment Icons
+// --- Payment Icons ---
 const PaymentIcons = () => (
   <div className="flex gap-2">
     <span title="Visa"><svg width="34" height="20" viewBox="0 0 36 24"><rect width="36" height="24" rx="4" fill="#fff" /><text x="7" y="16" fill="#007BFF" fontWeight="bold" fontSize="14" fontFamily="sans-serif">VISA</text></svg></span>
@@ -16,9 +19,12 @@ const PaymentIcons = () => (
   </div>
 );
 
+// --- Instant Order Card Data ---
 const SERVICES = [
   {
     name: "Instagram Services",
+    key: "instagram",
+    serviceType: "Followers",
     price: "$0.09 / 100",
     description: "Boost your IG presence with real followers.",
     icon: (
@@ -35,6 +41,8 @@ const SERVICES = [
   },
   {
     name: "TikTok Services",
+    key: "tiktok",
+    serviceType: "Followers",
     price: "$0.08 / 100",
     description: "Get instant likes on your videos.",
     icon: (
@@ -53,6 +61,8 @@ const SERVICES = [
   },
   {
     name: "YouTube Services",
+    key: "youtube",
+    serviceType: "Subscribers",
     price: "$0.05 / 1000",
     description: "Skyrocket your video reach and impressions.",
     icon: (
@@ -69,6 +79,7 @@ const SERVICES = [
   }
 ];
 
+// --- FAQs ---
 const FAQS = [
   {
     question: "Why choose us?",
@@ -96,6 +107,7 @@ const FAQS = [
   }
 ];
 
+// --- How it Works ---
 const HOW_IT_WORKS = [
   {
     icon: <Zap size={32} className="mx-auto text-blue-400" />,
@@ -114,6 +126,7 @@ const HOW_IT_WORKS = [
   }
 ];
 
+// --- Testimonials ---
 const TESTIMONIALS = [
   {
     quote: "I gained real followers in under an hour — and they didn’t drop!",
@@ -163,8 +176,20 @@ const TESTIMONIALS = [
 
 export default function Home() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+
+  // --- Modal state and service targeting
   const [orderModalOpen, setOrderModalOpen] = useState(false);
+  const [modalPlatform, setModalPlatform] = useState<string | null>(null);
+  const [modalService, setModalService] = useState<string | null>(null);
+
   const toggleFaq = (index: number) => setOpenFaq(openFaq === index ? null : index);
+
+  // Handler to open modal with correct service
+  const openOrderModal = (platformKey: string, serviceType: string) => {
+    setModalPlatform(platformKey);
+    setModalService(serviceType);
+    setOrderModalOpen(true);
+  };
 
   return (
     <>
@@ -172,7 +197,12 @@ export default function Home() {
         <title>YesViral – Buy Real Followers, Likes & Views</title>
         <meta name="description" content="Grow your social media with YesViral. Buy real followers, likes, views, and more across Instagram, TikTok, YouTube & beyond — fast, secure, and trusted." />
       </Head>
-      <OrderModal open={orderModalOpen} onClose={() => setOrderModalOpen(false)} />
+      <OrderModal
+        open={orderModalOpen}
+        onClose={() => setOrderModalOpen(false)}
+        initialPlatform={modalPlatform}
+        initialService={modalService}
+      />
       <Link href="/support" className="fixed bottom-6 right-6 z-50">
         <button className="flex items-center gap-2 bg-white shadow-lg px-5 py-3 rounded-full border border-[#CFE4FF] hover:bg-[#F2F9FF] transition group">
           <MessageCircle className="text-[#007BFF] group-hover:scale-110 transition" size={20} />
@@ -183,7 +213,6 @@ export default function Home() {
         {/* Hero Section */}
         <section className="grid md:grid-cols-2 gap-12 items-center">
           <div className="space-y-7 text-center md:text-left">
-            {/* Trusted badge (unchanged) */}
             <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#E8F1FF] rounded-full mb-2 text-xs font-bold text-[#007BFF] tracking-wide shadow-sm">
               <Star size={16} className="text-yellow-400" />
               Trusted by 100,000+ Creators
@@ -197,7 +226,7 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row justify-center md:justify-start gap-4">
               <button
                 className="bg-[#007BFF] text-white font-semibold px-8 py-3 rounded-xl shadow-lg hover:bg-[#005FCC] transition text-lg"
-                onClick={() => setOrderModalOpen(true)}
+                onClick={() => openOrderModal("instagram", "Followers")}
               >
                 Order Now
               </button>
@@ -235,7 +264,7 @@ export default function Home() {
             Choose your service — no logins, no commitment. <span className="font-semibold text-[#007BFF]">Instant delivery starts within minutes.</span>
           </p>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {SERVICES.map(({ name, price, description, icon, tag, count }, idx) => (
+            {SERVICES.map(({ name, price, description, icon, tag, count, key, serviceType }, idx) => (
               <div
                 key={idx}
                 className="bg-white border-2 border-[#CFE4FF] rounded-2xl p-7 shadow-md hover:shadow-2xl transition group flex flex-col gap-3 relative"
@@ -254,7 +283,7 @@ export default function Home() {
                 </div>
                 <button
                   className="mt-4 w-full bg-[#007BFF] text-white text-sm px-4 py-2 rounded-lg font-bold hover:bg-[#005FCC] shadow transition transform hover:scale-[1.03] active:scale-95"
-                  onClick={() => setOrderModalOpen(true)}
+                  onClick={() => openOrderModal(key, serviceType)}
                 >
                   Order
                 </button>
@@ -387,7 +416,7 @@ export default function Home() {
           <div className="mt-8">
             <button
               className="bg-[#007BFF] text-white px-8 py-3 text-lg rounded-xl hover:bg-[#005FCC] font-bold shadow transition"
-              onClick={() => setOrderModalOpen(true)}
+              onClick={() => openOrderModal("instagram", "Followers")}
             >
               View Services
             </button>
