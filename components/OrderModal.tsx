@@ -61,8 +61,8 @@ export default function OrderModal({
   initialPlatform,
   initialService
 }: OrderModalProps) {
-  // Default: Instagram/Follower
-  const [step, setStep] = useState<0 | 1 | 2>(0);
+  // STEP FIX: use 'number' for step so any valid int is safe
+  const [step, setStep] = useState<number>(0);
   const [platform, setPlatform] = useState(PLATFORMS[0]);
   const [service, setService] = useState(PLATFORMS[0].services[0]);
   const [quantity, setQuantity] = useState(100);
@@ -70,7 +70,6 @@ export default function OrderModal({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // --- NEW: Handle pre-selection when modal is opened from context/header ---
   useEffect(() => {
     if (!open) return;
     let selectedPlatform = PLATFORMS[0];
@@ -78,20 +77,20 @@ export default function OrderModal({
     let stepToSet = 0;
 
     if (initialPlatform) {
-      const foundPlat = PLATFORMS.find(p =>
-        p.key === initialPlatform.toLowerCase() ||
-        p.name.toLowerCase() === initialPlatform.toLowerCase()
+      const foundPlat = PLATFORMS.find(
+        p =>
+          p.key === initialPlatform.toLowerCase() ||
+          p.name.toLowerCase() === initialPlatform.toLowerCase()
       );
       if (foundPlat) {
         selectedPlatform = foundPlat;
-        // If service is specified, try to find it
         if (initialService) {
-          const foundServ = foundPlat.services.find(s =>
-            s.type.toLowerCase() === initialService.toLowerCase()
+          const foundServ = foundPlat.services.find(
+            s => s.type.toLowerCase() === initialService.toLowerCase()
           );
           if (foundServ) {
             selectedService = foundServ;
-            stepToSet = 2; // jump to final step!
+            stepToSet = 2;
           } else {
             selectedService = foundPlat.services[0];
             stepToSet = 1;
@@ -109,13 +108,12 @@ export default function OrderModal({
     setTarget("");
     setError("");
     setLoading(false);
-    setStep(stepToSet);
+    setStep(stepToSet); // Now always a number—no error
     // eslint-disable-next-line
   }, [open, initialPlatform, initialService]);
 
   if (!open) return null;
 
-  // Step change resets lower steps:
   const choosePlatform = (p: typeof platform) => {
     setPlatform(p);
     setService(p.services[0]);
@@ -147,7 +145,6 @@ export default function OrderModal({
     onClose();
   };
 
-  // Stripe checkout
   const handleCheckout = async () => {
     if (!target || quantity < 10) {
       setError("Paste your profile link or username, and enter a quantity.");
@@ -186,10 +183,8 @@ export default function OrderModal({
     <div className="fixed z-[9999] inset-0 flex items-center justify-center bg-black/60 backdrop-blur-[2px]">
       {/* Modal */}
       <div className="relative max-w-md w-[96vw] mx-auto bg-white/90 backdrop-blur-xl rounded-3xl shadow-[0_10px_48px_8px_rgba(0,34,64,0.14)] border border-[#e3edfc] p-0 overflow-visible animate-fadeInPop">
-        
         {/* Header + Close */}
         <div className="w-full px-7 pt-7 pb-3 bg-gradient-to-r from-[#f7fbff] via-[#ecf4ff] to-[#f8fbff] border-b border-[#e3edfc] rounded-t-3xl relative">
-          {/* Close Button: always visible, never clipped */}
           <button
             className="absolute top-4 right-5 z-20 bg-white/95 border border-[#e3edfc] shadow-lg rounded-full p-2 hover:bg-[#eaf4ff] transition"
             onClick={closeAndReset}
@@ -204,7 +199,6 @@ export default function OrderModal({
               {platform.name}
             </span>
           </div>
-          {/* Stepper */}
           <div className="flex items-center justify-center gap-4 mt-5 mb-[-6px]">
             {steps.map((s, i) => (
               <div key={s.label} className="flex items-center gap-2">
