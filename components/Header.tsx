@@ -2,26 +2,30 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
-import { Menu, X, ChevronDown, Instagram, Youtube, Music2, UserPlus, ThumbsUp, Eye, LogOut } from "lucide-react";
+import {
+  Menu, X, ChevronDown, Instagram, Youtube, Music2,
+  UserPlus, ThumbsUp, Eye, LogOut
+} from "lucide-react";
 import { supabase } from "../lib/supabaseClient";
+import { useOrderModal } from "@/context/OrderModalContext"; // <<<<<< ADD THIS
 
 const MEGA_MENUS = {
   instagram: [
     {
       name: "Buy Instagram Followers",
-      href: "/checkout?service=instagram-followers",
+      service: { platform: "instagram", type: "Followers" },
       icon: <UserPlus size={18} className="text-[#E1306C]" />,
       desc: "Real, lasting followers. Instant start."
     },
     {
       name: "Buy Instagram Likes",
-      href: "/checkout?service=instagram-likes",
+      service: { platform: "instagram", type: "Likes" },
       icon: <ThumbsUp size={18} className="text-[#E1306C]" />,
       desc: "Boost post engagement. Organic style."
     },
     {
       name: "Buy Instagram Views",
-      href: "/checkout?service=instagram-views",
+      service: { platform: "instagram", type: "Views" },
       icon: <Eye size={18} className="text-[#E1306C]" />,
       desc: "Go viral on Stories & Reels."
     }
@@ -29,19 +33,19 @@ const MEGA_MENUS = {
   tiktok: [
     {
       name: "Buy TikTok Followers",
-      href: "/checkout?service=tiktok-followers",
+      service: { platform: "tiktok", type: "Followers" },
       icon: <UserPlus size={18} className="text-[#00F2EA]" />,
       desc: "Jumpstart your audience. Fast delivery."
     },
     {
       name: "Buy TikTok Likes",
-      href: "/checkout?service=tiktok-likes",
+      service: { platform: "tiktok", type: "Likes" },
       icon: <ThumbsUp size={18} className="text-[#00F2EA]" />,
       desc: "Get videos trending with real likes."
     },
     {
       name: "Buy TikTok Views",
-      href: "/checkout?service=tiktok-views",
+      service: { platform: "tiktok", type: "Views" },
       icon: <Eye size={18} className="text-[#00F2EA]" />,
       desc: "Push your content to FYP."
     }
@@ -49,19 +53,19 @@ const MEGA_MENUS = {
   youtube: [
     {
       name: "Buy YouTube Subscribers",
-      href: "/checkout?service=youtube-subscribers",
+      service: { platform: "youtube", type: "Subscribers" },
       icon: <UserPlus size={18} className="text-[#FF0000]" />,
       desc: "Grow your channel authentically."
     },
     {
       name: "Buy YouTube Likes",
-      href: "/checkout?service=youtube-likes",
+      service: { platform: "youtube", type: "Likes" },
       icon: <ThumbsUp size={18} className="text-[#FF0000]" />,
       desc: "Like boosts for every video."
     },
     {
       name: "Buy YouTube Views",
-      href: "/checkout?service=youtube-views",
+      service: { platform: "youtube", type: "Views" },
       icon: <Eye size={18} className="text-[#FF0000]" />,
       desc: "Skyrocket your views. Real users."
     }
@@ -73,6 +77,8 @@ export default function Header() {
   const [hoverTab, setHoverTab] = useState<string | null>(null);
   const [user, setUser] = useState<any>(null);
   const router = useRouter();
+
+  const { openOrderModal } = useOrderModal(); // <<<<<<<< INJECT CONTEXT
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -157,17 +163,21 @@ export default function Header() {
                 <div className="absolute left-0 top-[110%] w-80 bg-white rounded-xl border border-[#CFE4FF] shadow-2xl z-50 py-3 animate-fadeInFast">
                   <div className="flex flex-col gap-1">
                     {MEGA_MENUS[tab.key as keyof typeof MEGA_MENUS].map(item => (
-                      <Link
-                        href={item.href}
+                      <button
+                        type="button"
                         key={item.name}
-                        className="flex items-center gap-3 px-5 py-3 rounded-lg hover:bg-[#F5FAFF] transition group"
+                        className="flex items-center gap-3 px-5 py-3 rounded-lg hover:bg-[#F5FAFF] transition group w-full text-left"
+                        onClick={() => {
+                          openOrderModal(item.service.platform, item.service.type);
+                          setHoverTab(null);
+                        }}
                       >
                         <span>{item.icon}</span>
                         <span>
                           <span className="font-semibold text-[#007BFF] group-hover:underline">{item.name}</span>
                           <div className="text-xs text-[#444]">{item.desc}</div>
                         </span>
-                      </Link>
+                      </button>
                     ))}
                   </div>
                 </div>
@@ -242,15 +252,18 @@ export default function Header() {
               </summary>
               <div className="ml-6 my-1 flex flex-col gap-1">
                 {MEGA_MENUS[tab.key as keyof typeof MEGA_MENUS].map(item => (
-                  <Link
-                    href={item.href}
+                  <button
+                    type="button"
                     key={item.name}
-                    className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-[#F5FAFF] transition"
-                    onClick={() => setIsOpen(false)}
+                    className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-[#F5FAFF] transition w-full text-left"
+                    onClick={() => {
+                      openOrderModal(item.service.platform, item.service.type);
+                      setIsOpen(false);
+                    }}
                   >
                     <span>{item.icon}</span>
                     <span className="font-semibold text-[#007BFF]">{item.name}</span>
-                  </Link>
+                  </button>
                 ))}
               </div>
             </details>

@@ -1,10 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import {
   Instagram, Youtube, Music2, UserPlus, ThumbsUp, Eye, X, Loader2, CheckCircle, Lock
 } from "lucide-react";
 
-// Stripe promise
 const stripePromise = loadStripe("pk_test_51RgpcCRfq6GJQepR3xUT0RkiGdN8ZSRu3OR15DfKhpMNj5QgmysYrmGQ8rGCXiI6Vi3B2L5Czmf7cRvIdtKRrSOw00SaVptcQt");
 
 const PLATFORMS = [
@@ -46,6 +45,8 @@ const PLATFORMS = [
 interface OrderModalProps {
   open: boolean;
   onClose: () => void;
+  initialPlatform?: string | null;
+  initialService?: string | null;
 }
 
 const steps = [
@@ -54,7 +55,13 @@ const steps = [
   { label: "Details" },
 ];
 
-export default function OrderModal({ open, onClose }: OrderModalProps) {
+export default function OrderModal({
+  open,
+  onClose,
+  initialPlatform,
+  initialService
+}: OrderModalProps) {
+  // Default: Instagram/Follower
   const [step, setStep] = useState<0 | 1 | 2>(0);
   const [platform, setPlatform] = useState(PLATFORMS[0]);
   const [service, setService] = useState(PLATFORMS[0].services[0]);
@@ -62,6 +69,49 @@ export default function OrderModal({ open, onClose }: OrderModalProps) {
   const [target, setTarget] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  // --- NEW: Handle pre-selection when modal is opened from context/header ---
+  useEffect(() => {
+    if (!open) return;
+    let selectedPlatform = PLATFORMS[0];
+    let selectedService = PLATFORMS[0].services[0];
+    let stepToSet = 0;
+
+    if (initialPlatform) {
+      const foundPlat = PLATFORMS.find(p =>
+        p.key === initialPlatform.toLowerCase() ||
+        p.name.toLowerCase() === initialPlatform.toLowerCase()
+      );
+      if (foundPlat) {
+        selectedPlatform = foundPlat;
+        // If service is specified, try to find it
+        if (initialService) {
+          const foundServ = foundPlat.services.find(s =>
+            s.type.toLowerCase() === initialService.toLowerCase()
+          );
+          if (foundServ) {
+            selectedService = foundServ;
+            stepToSet = 2; // jump to final step!
+          } else {
+            selectedService = foundPlat.services[0];
+            stepToSet = 1;
+          }
+        } else {
+          selectedService = foundPlat.services[0];
+          stepToSet = 1;
+        }
+      }
+    }
+
+    setPlatform(selectedPlatform);
+    setService(selectedService);
+    setQuantity(100);
+    setTarget("");
+    setError("");
+    setLoading(false);
+    setStep(stepToSet);
+    // eslint-disable-next-line
+  }, [open, initialPlatform, initialService]);
 
   if (!open) return null;
 
@@ -148,7 +198,7 @@ export default function OrderModal({ open, onClose }: OrderModalProps) {
           >
             <X size={22} className="text-[#007BFF]" />
           </button>
-          <div className="flex items-center gap-2 pr-9"> {/* Space for X */}
+          <div className="flex items-center gap-2 pr-9">
             {platform.icon}
             <span className="font-extrabold text-lg" style={{ color: platform.color }}>
               {platform.name}
@@ -272,6 +322,7 @@ export default function OrderModal({ open, onClose }: OrderModalProps) {
                 <Lock size={16} /> SSL Secured · Safe Payments
               </div>
               <div className="flex justify-center gap-1 mt-2 opacity-70">
+                {/* Payment icons */}
                 <svg width="30" height="18" viewBox="0 0 36 24"><rect width="36" height="24" rx="4" fill="#fff" /><text x="7" y="16" fill="#007BFF" fontWeight="bold" fontSize="12" fontFamily="sans-serif">VISA</text></svg>
                 <svg width="30" height="18" viewBox="0 0 36 24"><rect width="36" height="24" rx="4" fill="#fff" /><circle cx="14" cy="12" r="7" fill="#007BFF" fillOpacity="0.6" /><circle cx="22" cy="12" r="7" fill="#007BFF" fillOpacity="0.9" /></svg>
                 <svg width="30" height="18" viewBox="0 0 36 24"><rect width="36" height="24" rx="4" fill="#fff" /><circle cx="11" cy="12" r="5" fill="#007BFF" /><rect x="19" y="7" width="10" height="10" rx="2" fill="#005FCC" /><text x="19" y="21" fill="#fff" fontWeight="bold" fontSize="7" fontFamily="sans-serif">Pay</text></svg>
