@@ -36,8 +36,6 @@ const SERVICES = [
   },
   // ...add other service items here
 ];
-
-export default function Home() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [orderModalOpen, setOrderModalOpen] = useState(false);
   const [modalPlatform, setModalPlatform] = useState<string | null>(null);
