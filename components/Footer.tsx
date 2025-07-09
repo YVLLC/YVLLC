@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Instagram, Youtube, Music2, Mail, Lock, CreditCard, ShieldCheck, MessageCircle } from "lucide-react";
+import { Instagram, Youtube, Music2, Mail, Lock, ShieldCheck, MessageCircle } from "lucide-react";
 
 // SVG payment icons - blue theme, inline for speed
 const PaymentIcons = () => (
@@ -58,10 +58,9 @@ const SocialLinks = () => (
   </div>
 );
 
-export default function Footer() {
+export default function Footer({ onServiceOrder }) {
   return (
     <footer className="bg-gradient-to-t from-[#E6F0FF] via-[#F5FAFF] to-[#fff] text-[#111] pt-16 pb-10 px-4 border-t border-[#CFE4FF]">
-
       {/* Main Footer */}
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-10">
         {/* Column 1 – Logo + About */}
@@ -102,16 +101,64 @@ export default function Footer() {
           </ul>
         </div>
 
-        {/* Column 3 – Services */}
+        {/* Column 3 – Services (calls the modal) */}
         <div>
           <h4 className="text-lg font-bold text-[#111] mb-3">Top Services</h4>
           <ul className="space-y-2 text-sm text-[#444]">
-            <li><Link href="/checkout?service=instagram-followers" className="hover:text-[#005FCC]">Instagram Followers</Link></li>
-            <li><Link href="/checkout?service=instagram-likes" className="hover:text-[#005FCC]">Instagram Likes</Link></li>
-            <li><Link href="/checkout?service=tiktok-followers" className="hover:text-[#005FCC]">TikTok Followers</Link></li>
-            <li><Link href="/checkout?service=tiktok-likes" className="hover:text-[#005FCC]">TikTok Likes</Link></li>
-            <li><Link href="/checkout?service=youtube-views" className="hover:text-[#005FCC]">YouTube Views</Link></li>
-            <li><Link href="/checkout?service=youtube-subscribers" className="hover:text-[#005FCC]">YouTube Subscribers</Link></li>
+            <li>
+              <button
+                type="button"
+                className="hover:text-[#005FCC] underline"
+                onClick={() => onServiceOrder("instagram", "Followers")}
+              >
+                Instagram Followers
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                className="hover:text-[#005FCC] underline"
+                onClick={() => onServiceOrder("instagram", "Likes")}
+              >
+                Instagram Likes
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                className="hover:text-[#005FCC] underline"
+                onClick={() => onServiceOrder("tiktok", "Followers")}
+              >
+                TikTok Followers
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                className="hover:text-[#005FCC] underline"
+                onClick={() => onServiceOrder("tiktok", "Likes")}
+              >
+                TikTok Likes
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                className="hover:text-[#005FCC] underline"
+                onClick={() => onServiceOrder("youtube", "Views")}
+              >
+                YouTube Views
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                className="hover:text-[#005FCC] underline"
+                onClick={() => onServiceOrder("youtube", "Subscribers")}
+              >
+                YouTube Subscribers
+              </button>
+            </li>
           </ul>
         </div>
 
@@ -123,8 +170,8 @@ export default function Footer() {
             <li><Link className="hover:text-[#005FCC]" href="/privacy">Privacy Policy</Link></li>
             <li><Link className="hover:text-[#005FCC]" href="/contact">Contact Us</Link></li>
             <li><Link className="hover:text-[#005FCC]" href="/ig-downloader">IG Video Downloader</Link></li>
-            <li><Link className="hover:text-[#005FCC]" href="/ig-downloader">Free Likes Trial</Link></li>
-            <li><Link className="hover:text-[#005FCC]" href="/ig-downloader">Free Followers Trial</Link></li>
+            <li><Link className="hover:text-[#005FCC]" href="/tools/free-likes">Free Likes Trial</Link></li>
+            <li><Link className="hover:text-[#005FCC]" href="/tools/free-followers">Free Followers Trial</Link></li>
           </ul>
         </div>
       </div>
