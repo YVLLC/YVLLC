@@ -9,12 +9,10 @@ import { useState } from "react";
 import OrderModal from "@/components/OrderModal";
 import Footer from "@/components/Footer";
 
-export default function Home() {
   const [orderModalOpen, setOrderModalOpen] = useState(false);
   const [modalPlatform, setModalPlatform] = useState<string | null>(null);
   const [modalService, setModalService] = useState<string | null>(null);
 
-  // FIXED: Accepts undefined (for type compatibility)
   const handleServiceOrder = (platform?: string, service?: string) => {
     setModalPlatform(platform ?? null);
     setModalService(service ?? null);
