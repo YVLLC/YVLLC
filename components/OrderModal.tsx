@@ -5,7 +5,7 @@ import {
 import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 
-const stripePromise = loadStripe("pk_live_YOUR_PUBLIC_KEY_HERE"); // CHANGE THIS!
+const stripePromise = loadStripe("pk_live_YOUR_PUBLIC_KEY_HERE"); // <-- Change to your key
 
 const PLATFORMS = [
   {
@@ -145,6 +145,9 @@ export default function OrderModal({
   initialPlatform?: string | null,
   initialService?: string | null
 }) {
+  // Default to step 2 if both initialPlatform and initialService
+  // Default to step 1 if only initialPlatform
+  // Default to step 0 if nothing
   const [step, setStep] = useState<number>(0);
   const [platform, setPlatform] = useState(PLATFORMS[0]);
   const [service, setService] = useState(PLATFORMS[0].services[0]);
@@ -159,6 +162,7 @@ export default function OrderModal({
     let selectedService = PLATFORMS[0].services[0];
     let stepToSet = 0;
 
+    // Step logic: If both provided, go to Details step
     if (initialPlatform) {
       const foundPlat = PLATFORMS.find(
         p =>
@@ -238,8 +242,8 @@ export default function OrderModal({
 
   return (
     <div className="fixed z-[9999] inset-0 flex items-center justify-center bg-black/60 backdrop-blur-[2px]">
-      <div className="relative max-w-md w-full mx-auto bg-white/95 rounded-3xl shadow-2xl border border-[#e3edfc] overflow-visible">
-        {/* Header + Close */}
+      <div className="relative max-w-md w-full mx-auto bg-white/95 rounded-3xl shadow-2xl border border-[#e3edfc] overflow-visible animate-fadeInPop">
+        {/* Header + Steps (INSIDE modal!) */}
         <div className="w-full px-7 pt-7 pb-3 rounded-t-3xl relative bg-gradient-to-r from-[#f7fbff] via-[#ecf4ff] to-[#f8fbff] border-b border-[#e3edfc]">
           <button
             className="absolute top-4 right-5 z-20 bg-white/95 border border-[#e3edfc] shadow-lg rounded-full p-2 hover:bg-[#eaf4ff] transition"
@@ -255,7 +259,7 @@ export default function OrderModal({
               {platform.name}
             </span>
           </div>
-          {/* STEPS - Always inside the modal! */}
+          {/* STEPS */}
           <div className="flex items-center justify-center gap-4 mt-5 mb-[-6px]">
             {steps.map((s, i) => (
               <div key={s.label} className="flex items-center gap-2">
