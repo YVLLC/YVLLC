@@ -169,9 +169,10 @@ export default function Home() {
   const [modalPlatform, setModalPlatform] = useState<string | null>(null);
   const [modalService, setModalService] = useState<string | null>(null);
 
-  const handleServiceOrder = (platform: string, service: string) => {
-    setModalPlatform(platform);
-    setModalService(service);
+  // Accepts optional string or undefined for Footer compatibility
+  const handleServiceOrder = (platform?: string, service?: string) => {
+    setModalPlatform(platform ?? null);
+    setModalService(service ?? null);
     setOrderModalOpen(true);
   };
 
