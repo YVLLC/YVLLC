@@ -23,7 +23,12 @@ export default function App({ Component, pageProps }: AppProps) {
           content="YesViral is your #1 source to grow on Instagram, TikTok, YouTube & more. Fast delivery, real results, and premium support."
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        {/* Favicons */}
         <link rel="icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+        {/* You can add more meta here if needed */}
       </Head>
       {!shouldHide && <Header />}
       <main className="min-h-screen bg-white">
