@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Toaster, toast } from "react-hot-toast";
 import { loadStripe } from "@stripe/stripe-js";
 import {
-  UserCircle, LogOut, Instagram, Youtube, Music2, UserPlus, ThumbsUp, Eye, BarChart, List, CheckCircle, Lock, Mail, Loader2, BadgePercent
+  UserCircle, LogOut, Instagram, Youtube, Music2, UserPlus, ThumbsUp, Eye, BarChart, List, CheckCircle, Lock, Mail, Loader2, BadgePercent, Menu
 } from "lucide-react";
 
 const stripePromise = loadStripe("pk_test_51RgpcCRfq6GJQepR3xUT0RkiGdN8ZSRu3OR15DfKhpMNj5QgmysYrmGQ8rGCXiI6Vi3B2L5Czmf7cRvIdtKRrSOw00SaVptcQt");
@@ -61,7 +61,6 @@ interface Order {
   created_at: string;
 }
 
-// --- Main Dashboard ---
 export default function DashboardPage() {
   const router = useRouter();
   const [userEmail, setUserEmail] = useState("");
@@ -77,6 +76,7 @@ export default function DashboardPage() {
   const [serviceType, setServiceType] = useState("Followers");
   const [quantity, setQuantity] = useState(100);
   const [orderLoading, setOrderLoading] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Fetch user/orders
   useEffect(() => {
@@ -233,7 +233,6 @@ export default function DashboardPage() {
                 </button>
               </div>
             </div>
-
             {/* INFO/SECURITY/REFILL */}
             <div className="flex flex-col gap-5 justify-center">
               <div className="bg-white border border-[#CFE4FF] rounded-xl p-5 flex items-center gap-4 shadow-sm">
@@ -272,7 +271,7 @@ export default function DashboardPage() {
           {inProgress.length === 0 ? (
             <div className="text-[#888] py-16 text-center">No current orders. Place your first order above!</div>
           ) : (
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto" style={{ WebkitOverflowScrolling: "touch" }}>
               <table className="min-w-full text-sm">
                 <thead>
                   <tr className="bg-[#F5FAFF]">
@@ -312,7 +311,7 @@ export default function DashboardPage() {
           {completed.length === 0 ? (
             <div className="text-[#888] py-16 text-center">No completed orders yet.</div>
           ) : (
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto" style={{ WebkitOverflowScrolling: "touch" }}>
               <table className="min-w-full text-sm">
                 <thead>
                   <tr className="bg-[#F5FAFF]">
@@ -348,7 +347,7 @@ export default function DashboardPage() {
       return (
         <div>
           <h2 className="text-2xl font-extrabold mb-4 flex items-center gap-2"><BarChart size={22} /> Analytics</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
+          <div className="grid grid-cols-2 gap-5 sm:grid-cols-4 mb-10">
             <DashboardStat label="Orders" value={analytics.total} color="blue" />
             <DashboardStat label="Completed" value={analytics.completed} color="green" />
             <DashboardStat label="Spent" value={`$${orders.reduce((sum, o) => sum + o.quantity * (PLATFORMS.find(p => p.name === o.platform)?.services.find(s => s.type === o.service)?.price || 0), 0).toFixed(2)}`} color="blue" />
@@ -395,31 +394,49 @@ export default function DashboardPage() {
     return <div>Pick a tab…</div>;
   };
 
+  // --- Responsive Layout ---
   return (
     <main className="min-h-screen bg-[#F9FAFB]">
       <Toaster position="top-right" />
-      <div className="max-w-7xl mx-auto px-4 py-10">
+      <div className="max-w-7xl mx-auto px-2 sm:px-4 py-6">
         {/* HEADER */}
-        <div className="flex flex-col sm:flex-row items-center justify-between mb-10 gap-3">
-          <div className="flex items-center gap-3">
-            <Image src="/logo.png" alt="YesViral Logo" width={42} height={42} />
-            <span className="text-3xl font-extrabold text-[#007BFF] tracking-tight">Dashboard</span>
+        <div className="flex flex-wrap sm:flex-nowrap items-center justify-between mb-6 gap-3">
+          <div className="flex items-center gap-2">
+            <button
+              className="block md:hidden p-2"
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              aria-label="Open Navigation"
+            >
+              <Menu size={28} className="text-[#007BFF]" />
+            </button>
+            <Image src="/logo.png" alt="YesViral Logo" width={38} height={38} />
+            <span className="text-2xl font-extrabold text-[#007BFF] tracking-tight">Dashboard</span>
           </div>
           <button
             onClick={handleLogout}
-            className="flex items-center gap-2 bg-[#EF4444] hover:bg-red-600 text-white px-5 py-2 rounded-xl font-bold shadow"
+            className="flex items-center gap-2 bg-[#EF4444] hover:bg-red-600 text-white px-4 py-2 rounded-xl font-bold shadow"
           >
             <LogOut size={18} /> Log Out
           </button>
         </div>
-        {/* SIDEBAR + MAIN */}
-        <div className="flex flex-col md:flex-row gap-8">
-          {/* SIDEBAR */}
-          <aside className="w-full md:w-60 bg-white border border-[#CFE4FF] rounded-2xl shadow-sm p-4 flex md:flex-col gap-2 md:gap-1 mb-6 md:mb-0">
+        {/* LAYOUT */}
+        <div className="flex flex-col md:flex-row gap-5 relative">
+          {/* SIDEBAR - Responsive Drawer */}
+          <aside className={`
+            fixed top-0 left-0 z-30 bg-white border-r border-[#CFE4FF] shadow-md h-full w-60 transform md:static md:translate-x-0 transition-transform duration-200
+            rounded-none md:rounded-2xl p-5 md:w-60 md:block
+            ${sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
+          `}>
+            <div className="flex justify-between items-center mb-8 md:hidden">
+              <span className="font-extrabold text-lg text-[#007BFF]">Menu</span>
+              <button onClick={() => setSidebarOpen(false)} className="p-2 rounded hover:bg-[#F5FAFF]">
+                <LogOut size={22} className="text-[#007BFF]" />
+              </button>
+            </div>
             {NAV_TABS.map(tab => (
               <button
                 key={tab.key}
-                onClick={() => setActiveTab(tab.key)}
+                onClick={() => { setActiveTab(tab.key); setSidebarOpen(false); }}
                 className={`flex items-center gap-3 px-4 py-3 rounded-lg font-semibold transition text-base w-full
                   ${activeTab === tab.key ? "bg-[#007BFF] text-white shadow" : "hover:bg-[#F5FAFF] text-[#111]"}
                 `}
@@ -429,35 +446,44 @@ export default function DashboardPage() {
               </button>
             ))}
           </aside>
+          {/* Overlay for mobile nav */}
+          {sidebarOpen && <div className="fixed inset-0 bg-black/40 z-20 md:hidden" onClick={() => setSidebarOpen(false)}></div>}
           {/* MAIN CONTENT */}
-          <section className="flex-1 bg-white border border-[#CFE4FF] rounded-2xl shadow-sm p-8 min-h-[440px]">
+          <section className="flex-1 bg-white border border-[#CFE4FF] rounded-2xl shadow-sm p-4 sm:p-8 min-h-[440px]">
             <TabContent />
           </section>
         </div>
       </div>
-      {/* Responsive Animation */}
+      {/* -- Mobile optimization -- */}
       <style jsx global>{`
-        @media (max-width: 600px) {
-          .max-w-7xl { padding: 0 2vw; }
-          section, aside { padding: 1rem !important; }
+        @media (max-width: 900px) {
+          .max-w-7xl { padding: 0 0vw; }
         }
+        @media (max-width: 600px) {
+          .max-w-7xl { padding: 0 1vw; }
+          aside, section { padding: 12px !important; }
+          h2 { font-size: 1.1rem !important; }
+          th, td { font-size: 0.98rem; }
+          .text-2xl { font-size: 1.3rem !important; }
+        }
+        table { width: 100%; }
+        th, td { white-space: nowrap; }
       `}</style>
     </main>
   );
 }
 
-// --- Helper Dashboard Card ---
+// --- Dashboard Stat Box ---
 function DashboardStat({ label, value, color }: { label: string, value: any, color: string }) {
   const textColor = color === "blue" ? "text-[#007BFF]" : color === "green" ? "text-green-500" : color === "yellow" ? "text-yellow-500" : "";
   return (
-    <div className={`p-5 rounded-xl bg-[#F5FAFF] border border-[#CFE4FF] text-center shadow`}>
+    <div className={`p-4 rounded-xl bg-[#F5FAFF] border border-[#CFE4FF] text-center shadow`}>
       <span className={`block text-sm font-semibold mb-1 ${textColor}`}>{label}</span>
       <span className="text-2xl font-extrabold">{value}</span>
     </div>
   );
 }
 
-// --- Custom Shield Icon ---
 function ShieldIcon() {
   return (
     <svg width={28} height={28} viewBox="0 0 28 28" fill="none">
