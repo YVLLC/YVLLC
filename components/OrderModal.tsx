@@ -9,6 +9,7 @@ import { loadStripe } from "@stripe/stripe-js";
 const stripePromise = loadStripe("pk_live_YOUR_PUBLIC_KEY_HERE");
 
 const PLATFORMS = [
+  // ... same as before ...
   {
     key: "instagram",
     name: "Instagram",
@@ -239,9 +240,9 @@ export default function OrderModal({
 
   return (
     <div className="fixed z-[9999] inset-0 flex items-center justify-center bg-black/60 backdrop-blur-[2px]">
-      <div className="relative max-w-md w-full mx-auto bg-white/95 rounded-3xl shadow-2xl border border-[#e3edfc] overflow-hidden">
+      <div className="relative max-w-md w-[96vw] mx-auto bg-white/95 rounded-3xl shadow-2xl border border-[#e3edfc] overflow-hidden">
         {/* Modal HEADER (includes steps, always inside modal) */}
-        <div className="w-full px-7 pt-7 pb-3 rounded-t-3xl relative bg-gradient-to-r from-[#f7fbff] via-[#ecf4ff] to-[#f8fbff] border-b border-[#e3edfc]">
+        <div className="w-full px-4 pt-7 pb-3 rounded-t-3xl relative bg-gradient-to-r from-[#f7fbff] via-[#ecf4ff] to-[#f8fbff] border-b border-[#e3edfc]">
           <button
             className="absolute top-4 right-5 z-20 bg-white/95 border border-[#e3edfc] shadow-lg rounded-full p-2 hover:bg-[#eaf4ff] transition"
             onClick={closeAndReset}
@@ -256,10 +257,10 @@ export default function OrderModal({
               {platform.name}
             </span>
           </div>
-          {/* Steps (always INSIDE header, never outside modal) */}
-          <div className="flex items-center justify-center gap-4 mt-5 mb-[-6px]">
+          {/* Steps - wraps to 2 lines on mobile if needed */}
+          <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-2 mt-5 mb-[-6px] min-h-[42px]">
             {steps.map((s, i) => (
-              <div key={s.label} className="flex items-center gap-2">
+              <div key={s.label} className="flex items-center gap-2 flex-shrink-0">
                 <div className={`
                   rounded-full w-7 h-7 flex items-center justify-center font-bold
                   ${step === i || (done && i === 4) ? "bg-[#007BFF] text-white shadow" :
@@ -270,18 +271,18 @@ export default function OrderModal({
                 `}>
                   {i + 1}
                 </div>
-                <span className={`text-xs font-semibold ${step === i || (done && i === 4) ? "text-[#007BFF]" : "text-[#A0B3C7]"}`}>{s.label}</span>
-                {i < steps.length - 1 && <div className="w-6 h-1 bg-[#e3edfc] rounded-full" />}
+                <span className={`text-xs font-semibold whitespace-nowrap ${step === i || (done && i === 4) ? "text-[#007BFF]" : "text-[#A0B3C7]"}`}>{s.label}</span>
+                {i < steps.length - 1 && <div className="w-6 h-1 bg-[#e3edfc] rounded-full flex-shrink-0" />}
               </div>
             ))}
           </div>
         </div>
         {/* Modal CONTENT */}
-        <div className="px-7 py-7 max-h-[80vh] overflow-y-auto">
+        <div className="px-5 py-7 max-h-[75vh] overflow-y-auto">
           {step === 0 && (
             <>
               <h3 className="font-bold text-xl mb-3 text-[#222] text-center">Pick a Platform</h3>
-              <div className="flex justify-center gap-3">
+              <div className="flex justify-center gap-3 flex-wrap">
                 {PLATFORMS.map((p) => (
                   <button
                     key={p.key}
