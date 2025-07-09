@@ -2,6 +2,11 @@ import { useState, useEffect } from "react";
 import {
   Instagram, Youtube, Music2, UserPlus, ThumbsUp, Eye, X, Loader2, CheckCircle, Lock
 } from "lucide-react";
+import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+
+// Use your real Stripe public key here
+const stripePromise = loadStripe("pk_live_YOUR_PUBLIC_KEY_HERE");
 
 const PLATFORMS = [
   {
@@ -51,7 +56,73 @@ const steps = [
   { label: "Platform" },
   { label: "Service" },
   { label: "Details" },
+  { label: "Payment" },
+  { label: "Done" }
 ];
+
+function PaymentForm({ amount, orderDetails, onPaymentSuccess, onError }) {
+  const stripe = useStripe();
+  const elements = useElements();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handlePayment = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+    try {
+      // 1. Create payment intent on backend
+      const res = await fetch("/api/payment_intent", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount }),
+      });
+      const { clientSecret, error: serverError } = await res.json();
+      if (serverError || !clientSecret) throw new Error(serverError || "Payment failed.");
+
+      // 2. Confirm card payment
+      const { error: stripeError, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+          card: elements.getElement(CardElement),
+        }
+      });
+      if (stripeError) throw new Error(stripeError.message);
+
+      // 3. Trigger JAP order via backend (after payment succeeded)
+      const jap = await fetch("/api/jap_order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...orderDetails, paymentId: paymentIntent.id }),
+      });
+      const japResult = await jap.json();
+      if (!jap.ok || japResult.error) throw new Error(japResult.error || "JAP order failed.");
+      onPaymentSuccess();
+    } catch (e) {
+      setError(e.message || "An error occurred.");
+      onError?.(e.message || "Payment error");
+    }
+    setLoading(false);
+  };
+
+  return (
+    <form onSubmit={handlePayment} className="space-y-5">
+      <CardElement options={{ style: { base: { fontSize: "16px" } } }} />
+      {error && <div className="text-red-500 text-center">{error}</div>}
+      <button
+        type="submit"
+        disabled={loading}
+        className="w-full py-3 rounded-xl font-extrabold text-lg flex justify-center items-center gap-2
+        bg-gradient-to-br from-[#007BFF] to-[#35c4ff] hover:from-[#005FCC] hover:to-[#28a3e6] text-white shadow-lg transition"
+      >
+        {loading ? <Loader2 className="animate-spin mr-1" size={20} /> : <CheckCircle size={20} />}
+        {loading ? "Processing…" : "Pay & Order"}
+      </button>
+      <div className="flex items-center gap-2 justify-center text-[#007BFF] text-sm font-semibold mt-2">
+        <Lock size={16} /> 100% Secure Card Payment
+      </div>
+    </form>
+  );
+}
 
 export default function OrderModal({
   open,
@@ -64,8 +135,8 @@ export default function OrderModal({
   const [service, setService] = useState(PLATFORMS[0].services[0]);
   const [quantity, setQuantity] = useState(100);
   const [target, setTarget] = useState("");
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [done, setDone] = useState(false);
 
   useEffect(() => {
     if (!open) return;
@@ -104,7 +175,7 @@ export default function OrderModal({
     setQuantity(100);
     setTarget("");
     setError("");
-    setLoading(false);
+    setDone(false);
     setStep(stepToSet);
   }, [open, initialPlatform, initialService]);
 
@@ -133,7 +204,7 @@ export default function OrderModal({
     setQuantity(100);
     setTarget("");
     setError("");
-    setLoading(false);
+    setDone(false);
   };
 
   const closeAndReset = () => {
@@ -141,41 +212,19 @@ export default function OrderModal({
     onClose();
   };
 
-  // THIS IS THE ONLY FUNCTION YOU NEED TO UPDATE!
-  const handleCheckout = async () => {
-    if (!target || quantity < 10) {
-      setError("Paste your profile link or username, and enter a quantity.");
-      return;
-    }
-    setLoading(true);
-    setError("");
-    try {
-      const res = await fetch("/api/create-checkout-session", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          platform: platform.key,
-          service: service.type,
-          quantity,
-          target,
-          price: (service.price * quantity),
-        }),
-      });
-      const data = await res.json();
-      setLoading(false);
-      if (data.url) window.location = data.url;
-      else setError("Unable to start checkout. Please try again.");
-    } catch (err) {
-      setLoading(false);
-      setError("Checkout failed. Try again.");
-    }
+  // For Buzzoid-style, all payment in the modal, no redirect
+  const orderDetails = {
+    platform: platform.key,
+    service: service.type,
+    quantity,
+    target,
+    price: service.price * quantity,
   };
+  const amountCents = Math.round(service.price * quantity * 100);
 
   return (
     <div className="fixed z-[9999] inset-0 flex items-center justify-center bg-black/60 backdrop-blur-[2px]">
-      {/* Modal */}
       <div className="relative max-w-md w-[96vw] mx-auto bg-white/90 backdrop-blur-xl rounded-3xl shadow-[0_10px_48px_8px_rgba(0,34,64,0.14)] border border-[#e3edfc] p-0 overflow-visible animate-fadeInPop">
-        {/* Header + Close */}
         <div className="w-full px-7 pt-7 pb-3 bg-gradient-to-r from-[#f7fbff] via-[#ecf4ff] to-[#f8fbff] border-b border-[#e3edfc] rounded-t-3xl relative">
           <button
             className="absolute top-4 right-5 z-20 bg-white/95 border border-[#e3edfc] shadow-lg rounded-full p-2 hover:bg-[#eaf4ff] transition"
@@ -196,7 +245,7 @@ export default function OrderModal({
               <div key={s.label} className="flex items-center gap-2">
                 <div className={`
                   rounded-full w-7 h-7 flex items-center justify-center font-bold
-                  ${step === i ? "bg-[#007BFF] text-white shadow" :
+                  ${step === i || (done && i === 4) ? "bg-[#007BFF] text-white shadow" :
                     step > i ? "bg-[#95e1fc] text-[#0d88c7]" :
                       "bg-[#e6f4ff] text-[#A0B3C7]"}
                   border-2 border-white
@@ -204,16 +253,14 @@ export default function OrderModal({
                 `}>
                   {i + 1}
                 </div>
-                <span className={`text-xs font-semibold ${step === i ? "text-[#007BFF]" : "text-[#A0B3C7]"}`}>{s.label}</span>
+                <span className={`text-xs font-semibold ${step === i || (done && i === 4) ? "text-[#007BFF]" : "text-[#A0B3C7]"}`}>{s.label}</span>
                 {i < steps.length - 1 && <div className="w-6 h-1 bg-[#e3edfc] rounded-full" />}
               </div>
             ))}
           </div>
         </div>
 
-        {/* Content */}
         <div className="px-7 py-7">
-          {/* Step 0: Platform */}
           {step === 0 && (
             <>
               <h3 className="font-bold text-xl mb-3 text-[#222] text-center">Pick a Platform</h3>
@@ -233,7 +280,6 @@ export default function OrderModal({
             </>
           )}
 
-          {/* Step 1: Service */}
           {step === 1 && (
             <>
               <h3 className="font-bold text-xl mb-3 text-[#222] text-center">
@@ -259,13 +305,20 @@ export default function OrderModal({
             </>
           )}
 
-          {/* Step 2: Info/Checkout */}
           {step === 2 && (
             <>
               <h3 className="font-bold text-xl mb-4 text-[#222] text-center">Your {service.type} Order</h3>
               <form
                 className="space-y-5"
-                onSubmit={e => { e.preventDefault(); handleCheckout(); }}
+                onSubmit={e => {
+                  e.preventDefault();
+                  if (!target || quantity < 10) {
+                    setError("Paste your profile link or username, and enter a quantity.");
+                    return;
+                  }
+                  setError("");
+                  setStep(3);
+                }}
               >
                 <div>
                   <label className="block font-semibold text-[#007BFF] mb-1">Profile or Post Link</label>
@@ -295,28 +348,45 @@ export default function OrderModal({
                 </div>
                 <button
                   type="submit"
-                  disabled={loading}
                   className="w-full py-3 rounded-xl font-extrabold text-lg flex justify-center items-center gap-2
                   bg-gradient-to-br from-[#007BFF] to-[#35c4ff] hover:from-[#005FCC] hover:to-[#28a3e6] text-white shadow-lg transition"
                 >
-                  {loading ? <Loader2 className="animate-spin mr-1" size={20} /> : <CheckCircle size={20} />}
-                  {loading ? "Processing…" : "Order & Checkout"}
+                  <CheckCircle size={20} /> Continue to Payment
                 </button>
                 {error && <div className="mt-2 text-red-500 text-center">{error}</div>}
               </form>
-              <div className="mt-6 flex items-center gap-2 justify-center text-[#007BFF] text-sm font-semibold">
-                <Lock size={16} /> SSL Secured · Safe Payments
-              </div>
-              <div className="flex justify-center gap-1 mt-2 opacity-70">
-                {/* Payment icons */}
-                <svg width="30" height="18" viewBox="0 0 36 24"><rect width="36" height="24" rx="4" fill="#fff" /><text x="7" y="16" fill="#007BFF" fontWeight="bold" fontSize="12" fontFamily="sans-serif">VISA</text></svg>
-                <svg width="30" height="18" viewBox="0 0 36 24"><rect width="36" height="24" rx="4" fill="#fff" /><circle cx="14" cy="12" r="7" fill="#007BFF" fillOpacity="0.6" /><circle cx="22" cy="12" r="7" fill="#007BFF" fillOpacity="0.9" /></svg>
-                <svg width="30" height="18" viewBox="0 0 36 24"><rect width="36" height="24" rx="4" fill="#fff" /><circle cx="11" cy="12" r="5" fill="#007BFF" /><rect x="19" y="7" width="10" height="10" rx="2" fill="#005FCC" /><text x="19" y="21" fill="#fff" fontWeight="bold" fontSize="7" fontFamily="sans-serif">Pay</text></svg>
-                <svg width="30" height="18" viewBox="0 0 36 24"><rect width="36" height="24" rx="4" fill="#fff" /><rect x="7" y="7" width="10" height="10" rx="2" fill="#007BFF" /><rect x="19" y="7" width="10" height="10" rx="2" fill="#005FCC" /><text x="11" y="21" fill="#fff" fontWeight="bold" fontSize="7" fontFamily="sans-serif">G</text><text x="24" y="21" fill="#fff" fontWeight="bold" fontSize="7" fontFamily="sans-serif">Pay</text></svg>
-                <svg width="30" height="18" viewBox="0 0 36 24"><rect width="36" height="24" rx="4" fill="#fff" /><circle cx="18" cy="12" r="7" fill="#007BFF" /><text x="13" y="17" fill="#fff" fontWeight="bold" fontSize="11" fontFamily="monospace">₿</text></svg>
-              </div>
               <button className="block mx-auto mt-7 text-[#007BFF] underline text-sm" onClick={() => setStep(1)}>← Back</button>
             </>
+          )}
+
+          {step === 3 && (
+            <>
+              <h3 className="font-bold text-xl mb-4 text-[#222] text-center">Pay & Complete Your Order</h3>
+              <Elements stripe={stripePromise}>
+                <PaymentForm
+                  amount={amountCents}
+                  orderDetails={orderDetails}
+                  onPaymentSuccess={() => { setStep(4); setDone(true); }}
+                  onError={setError}
+                />
+              </Elements>
+              {error && <div className="mt-2 text-red-500 text-center">{error}</div>}
+              <button className="block mx-auto mt-7 text-[#007BFF] underline text-sm" onClick={() => setStep(2)}>← Back</button>
+            </>
+          )}
+
+          {step === 4 && done && (
+            <div className="text-center space-y-4">
+              <CheckCircle className="mx-auto text-green-500" size={48} />
+              <h3 className="text-2xl font-bold text-[#222]">Thank You! 🎉</h3>
+              <p className="text-[#444] text-base">
+                Your order was received and is being processed.<br />
+                You’ll receive updates shortly.
+              </p>
+              <button className="mt-5 bg-[#007BFF] text-white px-6 py-2 rounded-xl font-bold" onClick={closeAndReset}>
+                Done
+              </button>
+            </div>
           )}
         </div>
       </div>
