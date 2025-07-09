@@ -1,52 +1,36 @@
-// pages/api/ig-proxy.ts
+// /pages/api/ig-proxy.ts
 import type { NextApiRequest, NextApiResponse } from "next";
+import axios from "axios";
+import cheerio from "cheerio";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { url } = req.query;
-  if (!url || typeof url !== "string") {
-    return res.status(400).json({ error: "Missing Instagram post URL." });
-  }
-  if (!/^https:\/\/(www\.)?instagram\.com\//.test(url)) {
-    return res.status(400).json({ error: "Invalid Instagram URL." });
-  }
+  if (!url || typeof url !== "string") return res.status(400).json({ error: "Missing IG URL" });
 
   try {
-    // Fetch the IG page HTML (public posts only)
-    const igRes = await fetch(url, {
+    // Instagram video pages require a user agent
+    const { data } = await axios.get(url, {
       headers: {
         "User-Agent":
-          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0.0.0 Safari/537.36",
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36",
       },
     });
 
-    if (!igRes.ok) throw new Error("Failed to fetch Instagram post.");
+    // Use cheerio to parse and extract video URL from meta property
+    const $ = cheerio.load(data);
+    const videoUrl =
+      $('meta[property="og:video"]').attr("content") ||
+      $('meta[property="og:video:secure_url"]').attr("content");
 
-    const html = await igRes.text();
-    // Look for video_url in the sharedData JSON
-    const sharedDataMatch = html.match(/<script type="application\/ld\+json">(.+?)<\/script>/);
-    if (sharedDataMatch) {
-      const data = JSON.parse(sharedDataMatch[1]);
-      if (data && data.video && data.video.contentUrl) {
-        return res.status(200).json({ videoUrl: data.video.contentUrl });
-      }
+    if (!videoUrl) {
+      return res.status(404).json({ error: "No video found at this URL (maybe private, story, or IGTV not supported)" });
     }
 
-    // fallback: try another way (meta property="og:video")
-    const metaMatch = html.match(/<meta property="og:video" content="([^"]+)"\/?>/);
-    if (metaMatch && metaMatch[1]) {
-      return res.status(200).json({ videoUrl: metaMatch[1] });
-    }
+    // Get cover image for preview
+    const cover = $('meta[property="og:image"]').attr("content") || "";
 
-    // fallback: look for "video_url":"https...
-    const vidUrlMatch = html.match(/"video_url":"([^"]+)"/);
-    if (vidUrlMatch && vidUrlMatch[1]) {
-      // unescape url
-      const videoUrl = vidUrlMatch[1].replace(/\\u0026/g, "&").replace(/\\/g, "");
-      return res.status(200).json({ videoUrl });
-    }
-
-    return res.status(404).json({ error: "Could not extract video. Make sure it's a public Instagram video post." });
+    return res.status(200).json({ videoUrl, cover });
   } catch (err) {
-    return res.status(500).json({ error: "Instagram download failed." });
+    return res.status(500).json({ error: "Failed to fetch or parse Instagram video." });
   }
 }

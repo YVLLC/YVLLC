@@ -1,160 +1,95 @@
+import { useState } from "react";
 import Head from "next/head";
-import { useState, useRef } from "react";
-import { Download, Instagram, Loader2, CheckCircle, AlertTriangle } from "lucide-react";
+import Image from "next/image";
+import { Loader2, Download, Instagram } from "lucide-react";
 
 export default function IGDownloader() {
-  const [url, setUrl] = useState("");
-  const [status, setStatus] = useState<"idle"|"loading"|"error"|"success">("idle");
-  const [error, setError] = useState<string>("");
-  const [videoUrl, setVideoUrl] = useState<string>("");
-  const inputRef = useRef<HTMLInputElement>(null);
+  const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [videoUrl, setVideoUrl] = useState<string | null>(null);
+  const [cover, setCover] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleDownload = async (e?: React.FormEvent) => {
-    if (e) e.preventDefault();
-    setError("");
-    setStatus("loading");
-    setVideoUrl("");
-    // Simple check for IG url
-    if (!/^https:\/\/(www\.)?instagram\.com\//.test(url)) {
-      setError("Please enter a valid Instagram post URL.");
-      setStatus("error");
-      return;
-    }
-    try {
-      const res = await fetch(`/api/ig-proxy?url=${encodeURIComponent(url)}`);
-      const data = await res.json();
-      if (data.videoUrl) {
-        setVideoUrl(data.videoUrl);
-        setStatus("success");
-      } else {
-        setError(data.error || "Could not find video.");
-        setStatus("error");
-      }
-    } catch {
-      setError("Something went wrong.");
-      setStatus("error");
-    }
-  };
-
-  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
-    const pasted = e.clipboardData.getData("Text");
-    if (pasted.includes("instagram.com")) setUrl(pasted);
-  };
-
-  const handleDrop = (e: React.DragEvent<HTMLInputElement>) => {
+  async function handleDownload(e: React.FormEvent) {
     e.preventDefault();
-    const text = e.dataTransfer.getData("text");
-    if (text.includes("instagram.com")) setUrl(text);
-  };
+    setVideoUrl(null);
+    setCover(null);
+    setError(null);
+    setLoading(true);
 
-  const handleReset = () => {
-    setUrl("");
-    setVideoUrl("");
-    setError("");
-    setStatus("idle");
-    inputRef.current?.focus();
-  };
+    try {
+      const res = await fetch(`/api/igdownloader?url=${encodeURIComponent(input)}`);
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || "Failed to fetch video.");
+      setVideoUrl(json.videoUrl);
+      setCover(json.cover);
+    } catch (err: any) {
+      setError(err.message || "Failed to fetch video.");
+    }
+    setLoading(false);
+  }
 
   return (
     <>
       <Head>
         <title>Instagram Video Downloader – YesViral</title>
-        <meta name="description" content="Download Instagram videos fast, free and easy. YesViral – trusted by 100,000+ creators." />
+        <meta name="description" content="Download Instagram Reels, Posts, and Videos easily for free." />
       </Head>
-      <div className="min-h-screen bg-gradient-to-br from-[#f5faff] via-[#e8f3ff] to-[#fff] py-16 px-2">
-        <div className="max-w-xl mx-auto bg-white/90 border border-[#CFE4FF] rounded-3xl shadow-2xl p-8 md:p-12 flex flex-col items-center mt-8">
-          <div className="flex items-center gap-2 mb-3">
-            <Instagram size={34} className="text-[#E1306C]" />
-            <span className="text-2xl sm:text-3xl font-extrabold text-[#007BFF] tracking-tight">
-              Instagram Video Downloader
+      <main className="min-h-screen py-16 px-4 bg-gradient-to-t from-[#E6F0FF] via-[#F5FAFF] to-[#fff]">
+        <div className="max-w-xl mx-auto bg-white rounded-2xl shadow-lg border border-[#CFE4FF] p-8 text-center">
+          <div className="flex justify-center mb-5">
+            <span className="inline-flex items-center justify-center bg-[#E1306C]/10 rounded-full w-16 h-16 mb-2">
+              <Instagram size={38} className="text-[#E1306C]" />
             </span>
           </div>
-          <p className="mb-5 text-[#444] text-center">
-            Download Instagram videos instantly. Paste the post URL below – 100% free, no watermarks. Works for public posts/reels.
-          </p>
-          <form className="w-full" onSubmit={handleDownload}>
-            <div
-              className={`
-                flex items-center gap-2 rounded-xl bg-white border-2 px-4 py-3 transition
-                ${status === "error" ? "border-red-400" : "border-[#CFE4FF] focus-within:border-[#007BFF]"}
-              `}
-              onDrop={handleDrop}
-              onDragOver={e => e.preventDefault()}
-            >
-              <input
-                ref={inputRef}
-                type="text"
-                className="flex-1 bg-transparent border-none outline-none text-base font-medium"
-                placeholder="Paste Instagram video/post link..."
-                value={url}
-                onChange={e => setUrl(e.target.value)}
-                onPaste={handlePaste}
-                disabled={status === "loading"}
-                autoFocus
-              />
-              {url && (
-                <button type="button" className="text-[#007BFF] font-bold text-sm px-2" onClick={handleReset} tabIndex={-1}>
-                  ×
-                </button>
-              )}
-            </div>
+          <h1 className="text-3xl font-bold text-[#007BFF] mb-3">Instagram Video Downloader</h1>
+          <p className="mb-7 text-[#444]">Download Reels, Videos, or Posts. Paste the public Instagram link below:</p>
+          <form onSubmit={handleDownload} className="flex gap-2 mb-4">
+            <input
+              required
+              type="url"
+              placeholder="Paste Instagram video/reel/post URL"
+              className="flex-1 px-4 py-3 rounded-lg border border-[#CFE4FF] bg-white text-base focus:outline-[#007BFF]"
+              value={input}
+              onChange={e => setInput(e.target.value)}
+              disabled={loading}
+            />
             <button
               type="submit"
-              className={`
-                mt-5 w-full py-3 rounded-xl font-bold text-lg flex justify-center items-center gap-2
-                bg-gradient-to-br from-[#007BFF] to-[#35c4ff] hover:from-[#005FCC] hover:to-[#28a3e6] text-white shadow-lg transition
-                ${status === "loading" ? "opacity-70 cursor-wait" : ""}
-              `}
-              disabled={status === "loading"}
+              className="px-6 py-3 rounded-lg bg-[#007BFF] text-white font-bold hover:bg-[#005FCC] transition flex items-center gap-1"
+              disabled={loading}
             >
-              {status === "loading" ? (
-                <>
-                  <Loader2 size={22} className="animate-spin" /> Fetching video...
-                </>
-              ) : (
-                <>
-                  <Download size={22} /> Download Video
-                </>
-              )}
+              {loading ? <Loader2 className="animate-spin" size={20} /> : <Download size={20} />} Download
             </button>
           </form>
-          {/* Error */}
-          {status === "error" && error && (
-            <div className="w-full mt-5 text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-3 flex items-center gap-2">
-              <AlertTriangle size={18} /> {error}
-            </div>
-          )}
-          {/* Success */}
-          {status === "success" && videoUrl && (
-            <div className="w-full mt-7 flex flex-col items-center">
-              <video
-                src={videoUrl}
-                controls
-                autoPlay
-                loop
-                className="w-full max-w-[360px] rounded-xl shadow mb-4 border border-[#CFE4FF]"
-              />
+          {error && <div className="text-red-600 text-sm mb-4">{error}</div>}
+          {videoUrl && (
+            <div className="mt-7">
+              {cover && (
+                <Image
+                  src={cover}
+                  alt="IG Video Cover"
+                  width={420}
+                  height={420}
+                  className="rounded-lg mx-auto mb-3"
+                  style={{ maxWidth: "100%", height: "auto" }}
+                />
+              )}
+              <video src={videoUrl} controls autoPlay loop className="rounded-xl w-full max-w-lg mx-auto mb-4 mt-2 shadow" />
               <a
                 href={videoUrl}
                 download
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-[#007BFF] text-white font-bold px-7 py-3 rounded-xl shadow hover:bg-[#005FCC] text-base transition"
+                className="inline-flex items-center gap-2 bg-[#007BFF] text-white font-bold px-6 py-3 rounded-xl hover:bg-[#005FCC] transition mt-4"
               >
-                <CheckCircle size={20} /> Download Video
+                <Download size={20} /> Download Video
               </a>
-              <button className="mt-4 text-[#007BFF] text-sm underline" onClick={handleReset}>
-                Download another
-              </button>
             </div>
           )}
-          <div className="text-xs text-[#888] mt-8 text-center">
-            * Works only for public Instagram videos/reels. <br />
-            Not affiliated with Instagram. No login required. <br />
-            <span className="font-semibold">YesViral.com</span>
+          <div className="mt-10 text-xs text-[#888]">
+            For public videos/reels only. Not affiliated with Instagram.
           </div>
         </div>
-      </div>
+      </main>
     </>
   );
 }
