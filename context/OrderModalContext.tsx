@@ -4,7 +4,7 @@ interface OrderModalContextType {
   open: boolean;
   platform: string | null;
   service: string | null;
-  openOrderModal: (platform: string, service: string) => void;
+  openOrderModal: (platform?: string, service?: string) => void;
   closeOrderModal: () => void;
 }
 
@@ -21,9 +21,10 @@ export function OrderModalProvider({ children }: { children: ReactNode }) {
   const [platform, setPlatform] = useState<string | null>(null);
   const [service, setService] = useState<string | null>(null);
 
-  const openOrderModal = (platform: string, service: string) => {
-    setPlatform(platform);
-    setService(service);
+  // Params optional here too!
+  const openOrderModal = (platform?: string, service?: string) => {
+    setPlatform(platform ?? null);
+    setService(service ?? null);
     setOpen(true);
   };
 
