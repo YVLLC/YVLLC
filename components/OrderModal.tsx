@@ -5,7 +5,7 @@ import {
 import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 
-const stripePromise = loadStripe("pk_live_YOUR_PUBLIC_KEY_HERE"); // <-- set your real key here!
+const stripePromise = loadStripe("pk_live_YOUR_PUBLIC_KEY_HERE"); // CHANGE THIS!
 
 const PLATFORMS = [
   {
@@ -44,13 +44,6 @@ const PLATFORMS = [
   }
 ];
 
-interface OrderModalProps {
-  open: boolean;
-  onClose: () => void;
-  initialPlatform?: string | null;
-  initialService?: string | null;
-}
-
 const steps = [
   { label: "Platform" },
   { label: "Service" },
@@ -88,7 +81,6 @@ function PaymentForm({
     setLoading(true);
     setError(null);
     try {
-      // 1. Create payment intent on backend
       const res = await fetch("/api/payment_intent", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -97,7 +89,6 @@ function PaymentForm({
       const { clientSecret, error: serverError } = await res.json();
       if (serverError || !clientSecret) throw new Error(serverError || "Payment failed.");
 
-      // 2. Confirm card payment
       if (!stripe || !elements) throw new Error("Stripe not loaded");
       const { error: stripeError, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
         payment_method: {
@@ -106,7 +97,6 @@ function PaymentForm({
       });
       if (stripeError) throw new Error(stripeError.message);
 
-      // 3. Trigger JAP order via backend (after payment succeeded)
       const jap = await fetch("/api/jap_order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -149,7 +139,12 @@ export default function OrderModal({
   onClose,
   initialPlatform,
   initialService
-}: OrderModalProps) {
+}: {
+  open: boolean,
+  onClose: () => void,
+  initialPlatform?: string | null,
+  initialService?: string | null
+}) {
   const [step, setStep] = useState<number>(0);
   const [platform, setPlatform] = useState(PLATFORMS[0]);
   const [service, setService] = useState(PLATFORMS[0].services[0]);
@@ -243,8 +238,9 @@ export default function OrderModal({
 
   return (
     <div className="fixed z-[9999] inset-0 flex items-center justify-center bg-black/60 backdrop-blur-[2px]">
-      <div className="relative max-w-md w-[96vw] mx-auto bg-white/90 backdrop-blur-xl rounded-3xl shadow-[0_10px_48px_8px_rgba(0,34,64,0.14)] border border-[#e3edfc] p-0 overflow-visible animate-fadeInPop">
-        <div className="w-full px-7 pt-7 pb-3 bg-gradient-to-r from-[#f7fbff] via-[#ecf4ff] to-[#f8fbff] border-b border-[#e3edfc] rounded-t-3xl relative">
+      <div className="relative max-w-md w-full mx-auto bg-white/95 rounded-3xl shadow-2xl border border-[#e3edfc] overflow-visible">
+        {/* Header + Close */}
+        <div className="w-full px-7 pt-7 pb-3 rounded-t-3xl relative bg-gradient-to-r from-[#f7fbff] via-[#ecf4ff] to-[#f8fbff] border-b border-[#e3edfc]">
           <button
             className="absolute top-4 right-5 z-20 bg-white/95 border border-[#e3edfc] shadow-lg rounded-full p-2 hover:bg-[#eaf4ff] transition"
             onClick={closeAndReset}
@@ -259,6 +255,7 @@ export default function OrderModal({
               {platform.name}
             </span>
           </div>
+          {/* STEPS - Always inside the modal! */}
           <div className="flex items-center justify-center gap-4 mt-5 mb-[-6px]">
             {steps.map((s, i) => (
               <div key={s.label} className="flex items-center gap-2">
@@ -279,6 +276,7 @@ export default function OrderModal({
           </div>
         </div>
 
+        {/* Content */}
         <div className="px-7 py-7">
           {step === 0 && (
             <>
