@@ -1,5 +1,3 @@
-// pages/dashboard.tsx
-
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { supabase } from "@/lib/supabase";
@@ -7,26 +5,12 @@ import Image from "next/image";
 import { Toaster, toast } from "react-hot-toast";
 import { loadStripe } from "@stripe/stripe-js";
 import {
-  UserCircle,
-  LogOut,
-  Instagram,
-  Youtube,
-  Music2,
-  UserPlus,
-  ThumbsUp,
-  Eye,
-  BarChart,
-  List,
-  CheckCircle,
-  Lock,
-  Mail,
-  Loader2,
-  BadgePercent
+  UserCircle, LogOut, Instagram, Youtube, Music2, UserPlus, ThumbsUp, Eye, BarChart, List, CheckCircle, Lock, Mail, Loader2, BadgePercent
 } from "lucide-react";
 
 const stripePromise = loadStripe("pk_test_51RgpcCRfq6GJQepR3xUT0RkiGdN8ZSRu3OR15DfKhpMNj5QgmysYrmGQ8rGCXiI6Vi3B2L5Czmf7cRvIdtKRrSOw00SaVptcQt");
 
-// Platform/Service Configs
+// --- Data ---
 const PLATFORMS = [
   {
     key: "instagram",
@@ -61,8 +45,8 @@ const PLATFORMS = [
 ];
 
 const NAV_TABS = [
-  { key: "order", label: "Order Services", icon: <BadgePercent size={19} /> },
-  { key: "orders", label: "Current Orders", icon: <List size={19} /> },
+  { key: "order", label: "Order", icon: <BadgePercent size={19} /> },
+  { key: "orders", label: "Current", icon: <List size={19} /> },
   { key: "completed", label: "Completed", icon: <CheckCircle size={19} /> },
   { key: "analytics", label: "Analytics", icon: <BarChart size={19} /> },
   { key: "profile", label: "Account", icon: <UserCircle size={19} /> },
@@ -77,6 +61,7 @@ interface Order {
   created_at: string;
 }
 
+// --- Main Dashboard ---
 export default function DashboardPage() {
   const router = useRouter();
   const [userEmail, setUserEmail] = useState("");
@@ -97,18 +82,15 @@ export default function DashboardPage() {
   useEffect(() => {
     const fetchUserAndOrders = async () => {
       const { data: { session } } = await supabase.auth.getSession();
-
       if (!session || !session.user) {
         router.push("/login");
         return;
       }
-
       const email = session.user.email || "";
       setUserEmail(email);
       setUserId(session.user.id);
       setProfileEmail(email);
 
-      // Orders
       const { data: allOrders } = await supabase
         .from("orders")
         .select("id, platform, service, quantity, status, created_at")
@@ -138,9 +120,6 @@ export default function DashboardPage() {
   const placeOrder = async () => {
     setOrderLoading(true);
     const stripe = await stripePromise;
-    const amount = (currentService?.price || 0) * quantity;
-
-    // Real world: Create order in DB first!
     const res = await fetch("/api/checkout", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -179,17 +158,17 @@ export default function DashboardPage() {
     else toast.success("Password changed successfully");
   };
 
-  // Main Tab Content
+  // --- Main Tab Content ---
   const TabContent = () => {
     if (loading)
       return <div className="flex justify-center items-center py-24"><Loader2 className="animate-spin mr-2" /> Loading...</div>;
 
-    // 1. Order services tab
+    // --- Order Tab ---
     if (activeTab === "order") {
       return (
         <div>
-          <h2 className="text-2xl font-extrabold mb-3 flex items-center gap-2">Choose Your Platform <span className="ml-2 text-base font-light text-[#888]">(pick one):</span></h2>
-          <div className="flex gap-3 mb-5">
+          <h2 className="text-2xl font-extrabold mb-3 flex items-center gap-2">Start New Order</h2>
+          <div className="flex flex-wrap gap-3 mb-6">
             {PLATFORMS.map(platform => (
               <button
                 key={platform.key}
@@ -210,10 +189,10 @@ export default function DashboardPage() {
             ))}
           </div>
 
-          <div className="grid md:grid-cols-2 gap-10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div>
-              <h3 className="text-xl font-bold mb-2">Select Service:</h3>
-              <div className="flex gap-4 mb-5">
+              <h3 className="text-lg font-bold mb-2">Select Service</h3>
+              <div className="flex gap-3 mb-5 flex-wrap">
                 {selectedPlatform?.services.map(service => (
                   <button
                     key={service.type}
@@ -255,24 +234,27 @@ export default function DashboardPage() {
               </div>
             </div>
 
-            {/* Featured: Fast, secure, refill, support */}
-            <div className="flex flex-col gap-5">
+            {/* INFO/SECURITY/REFILL */}
+            <div className="flex flex-col gap-5 justify-center">
               <div className="bg-white border border-[#CFE4FF] rounded-xl p-5 flex items-center gap-4 shadow-sm">
-                <ShieldIcon /> <div>
-                  <span className="font-semibold">Safe & Secure:</span>
-                  <span className="block text-[#666] text-sm">SSL Checkout, no logins, no risk.</span>
+                <ShieldIcon />
+                <div>
+                  <span className="font-semibold">Safe & Secure</span>
+                  <span className="block text-[#666] text-sm">SSL Checkout, no logins required.</span>
                 </div>
               </div>
               <div className="bg-white border border-[#CFE4FF] rounded-xl p-5 flex items-center gap-4 shadow-sm">
-                <BadgePercent className="text-[#007BFF]" size={26} /> <div>
-                  <span className="font-semibold">Refill Guarantee:</span>
-                  <span className="block text-[#666] text-sm">30-day free refill on all orders.</span>
+                <BadgePercent className="text-[#007BFF]" size={26} />
+                <div>
+                  <span className="font-semibold">30 Day Refill</span>
+                  <span className="block text-[#666] text-sm">If you drop, we refill. No extra cost.</span>
                 </div>
               </div>
               <div className="bg-white border border-[#CFE4FF] rounded-xl p-5 flex items-center gap-4 shadow-sm">
-                <Mail className="text-[#007BFF]" size={26} /> <div>
-                  <span className="font-semibold">24/7 Live Support:</span>
-                  <span className="block text-[#666] text-sm">We’re always here if you need us.</span>
+                <Mail className="text-[#007BFF]" size={26} />
+                <div>
+                  <span className="font-semibold">24/7 Live Support</span>
+                  <span className="block text-[#666] text-sm">Chat with us any time, any device.</span>
                 </div>
               </div>
             </div>
@@ -281,7 +263,7 @@ export default function DashboardPage() {
       );
     }
 
-    // 2. Orders tab (in-progress)
+    // --- Current Orders Tab ---
     if (activeTab === "orders") {
       const inProgress = orders.filter(o => o.status !== "Completed");
       return (
@@ -321,14 +303,14 @@ export default function DashboardPage() {
       );
     }
 
-    // 3. Completed Orders tab
+    // --- Completed Orders Tab ---
     if (activeTab === "completed") {
       const completed = orders.filter(o => o.status === "Completed");
       return (
         <div>
           <h2 className="text-2xl font-extrabold mb-4 flex items-center gap-2"><CheckCircle size={22} /> Completed Orders</h2>
           {completed.length === 0 ? (
-            <div className="text-[#888] py-16 text-center">No completed orders yet. Orders will appear here after delivery.</div>
+            <div className="text-[#888] py-16 text-center">No completed orders yet.</div>
           ) : (
             <div className="overflow-x-auto">
               <table className="min-w-full text-sm">
@@ -361,38 +343,26 @@ export default function DashboardPage() {
       );
     }
 
-    // 4. Analytics tab
+    // --- Analytics Tab ---
     if (activeTab === "analytics") {
       return (
         <div>
-          <h2 className="text-2xl font-extrabold mb-4 flex items-center gap-2"><BarChart size={22} /> Your Analytics</h2>
+          <h2 className="text-2xl font-extrabold mb-4 flex items-center gap-2"><BarChart size={22} /> Analytics</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
-            <div className="p-5 rounded-xl bg-[#F5FAFF] border border-[#CFE4FF] text-center shadow">
-              <span className="block text-sm text-[#007BFF] font-semibold mb-1">Orders</span>
-              <span className="text-2xl font-extrabold">{analytics.total}</span>
-            </div>
-            <div className="p-5 rounded-xl bg-[#F5FAFF] border border-[#CFE4FF] text-center shadow">
-              <span className="block text-sm text-green-500 font-semibold mb-1">Completed</span>
-              <span className="text-2xl font-extrabold">{analytics.completed}</span>
-            </div>
-            <div className="p-5 rounded-xl bg-[#F5FAFF] border border-[#CFE4FF] text-center shadow">
-              <span className="block text-sm text-[#007BFF] font-semibold mb-1">Spent</span>
-              <span className="text-2xl font-extrabold">${orders.reduce((sum, o) => sum + o.quantity * (PLATFORMS.find(p => p.name === o.platform)?.services.find(s => s.type === o.service)?.price || 0), 0).toFixed(2)}</span>
-            </div>
-            <div className="p-5 rounded-xl bg-[#F5FAFF] border border-[#CFE4FF] text-center shadow">
-              <span className="block text-sm text-yellow-500 font-semibold mb-1">Refill Eligible</span>
-              <span className="text-2xl font-extrabold">{orders.filter(o => o.status === "Completed").length}</span>
-            </div>
+            <DashboardStat label="Orders" value={analytics.total} color="blue" />
+            <DashboardStat label="Completed" value={analytics.completed} color="green" />
+            <DashboardStat label="Spent" value={`$${orders.reduce((sum, o) => sum + o.quantity * (PLATFORMS.find(p => p.name === o.platform)?.services.find(s => s.type === o.service)?.price || 0), 0).toFixed(2)}`} color="blue" />
+            <DashboardStat label="Refill Eligible" value={orders.filter(o => o.status === "Completed").length} color="yellow" />
           </div>
         </div>
       );
     }
 
-    // 5. Profile/settings tab
+    // --- Profile Tab ---
     if (activeTab === "profile") {
       return (
         <div className="space-y-7">
-          <h2 className="text-2xl font-extrabold mb-2 flex items-center gap-2"><UserCircle size={22} /> Account Settings</h2>
+          <h2 className="text-2xl font-extrabold mb-2 flex items-center gap-2"><UserCircle size={22} /> Account</h2>
           <div>
             <label className="block text-[#111] font-bold mb-1">Email</label>
             <input
@@ -430,14 +400,14 @@ export default function DashboardPage() {
       <Toaster position="top-right" />
       <div className="max-w-7xl mx-auto px-4 py-10">
         {/* HEADER */}
-        <div className="flex items-center justify-between mb-10">
+        <div className="flex flex-col sm:flex-row items-center justify-between mb-10 gap-3">
           <div className="flex items-center gap-3">
-            <Image src="/logo.png" alt="YesViral Logo" width={40} height={40} />
+            <Image src="/logo.png" alt="YesViral Logo" width={42} height={42} />
             <span className="text-3xl font-extrabold text-[#007BFF] tracking-tight">Dashboard</span>
           </div>
           <button
             onClick={handleLogout}
-            className="flex items-center gap-1 bg-[#EF4444] hover:bg-red-600 text-white px-5 py-2 rounded-xl font-bold shadow"
+            className="flex items-center gap-2 bg-[#EF4444] hover:bg-red-600 text-white px-5 py-2 rounded-xl font-bold shadow"
           >
             <LogOut size={18} /> Log Out
           </button>
@@ -445,7 +415,7 @@ export default function DashboardPage() {
         {/* SIDEBAR + MAIN */}
         <div className="flex flex-col md:flex-row gap-8">
           {/* SIDEBAR */}
-          <aside className="w-full md:w-64 bg-white border border-[#CFE4FF] rounded-2xl shadow-sm p-6 flex md:flex-col gap-3 md:gap-1 justify-between mb-6 md:mb-0">
+          <aside className="w-full md:w-60 bg-white border border-[#CFE4FF] rounded-2xl shadow-sm p-4 flex md:flex-col gap-2 md:gap-1 mb-6 md:mb-0">
             {NAV_TABS.map(tab => (
               <button
                 key={tab.key}
@@ -465,11 +435,29 @@ export default function DashboardPage() {
           </section>
         </div>
       </div>
+      {/* Responsive Animation */}
+      <style jsx global>{`
+        @media (max-width: 600px) {
+          .max-w-7xl { padding: 0 2vw; }
+          section, aside { padding: 1rem !important; }
+        }
+      `}</style>
     </main>
   );
 }
 
-// Extra little SVG icon
+// --- Helper Dashboard Card ---
+function DashboardStat({ label, value, color }: { label: string, value: any, color: string }) {
+  const textColor = color === "blue" ? "text-[#007BFF]" : color === "green" ? "text-green-500" : color === "yellow" ? "text-yellow-500" : "";
+  return (
+    <div className={`p-5 rounded-xl bg-[#F5FAFF] border border-[#CFE4FF] text-center shadow`}>
+      <span className={`block text-sm font-semibold mb-1 ${textColor}`}>{label}</span>
+      <span className="text-2xl font-extrabold">{value}</span>
+    </div>
+  );
+}
+
+// --- Custom Shield Icon ---
 function ShieldIcon() {
   return (
     <svg width={28} height={28} viewBox="0 0 28 28" fill="none">
