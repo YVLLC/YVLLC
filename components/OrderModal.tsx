@@ -1,10 +1,7 @@
 import { useState, useEffect } from "react";
-import { loadStripe } from "@stripe/stripe-js";
 import {
   Instagram, Youtube, Music2, UserPlus, ThumbsUp, Eye, X, Loader2, CheckCircle, Lock
 } from "lucide-react";
-
-const stripePromise = loadStripe("pk_test_51RgpcCRfq6GJQepR3xUT0RkiGdN8ZSRu3OR15DfKhpMNj5QgmysYrmGQ8rGCXiI6Vi3B2L5Czmf7cRvIdtKRrSOw00SaVptcQt");
 
 const PLATFORMS = [
   {
@@ -15,7 +12,8 @@ const PLATFORMS = [
     services: [
       { type: "Followers", price: 0.09, icon: <UserPlus size={17} className="text-[#E1306C]" /> },
       { type: "Likes", price: 0.07, icon: <ThumbsUp size={17} className="text-[#E1306C]" /> },
-      { type: "Views", price: 0.04, icon: <Eye size={17} className="text-[#E1306C]" /> }
+      { type: "Views", price: 0.04, icon: <Eye size={17} className="text-[#E1306C]" /> },
+      { type: "Comments", price: 0.20, icon: <X size={17} className="text-[#E1306C]" /> }
     ]
   },
   {
@@ -61,7 +59,6 @@ export default function OrderModal({
   initialPlatform,
   initialService
 }: OrderModalProps) {
-  // STEP FIX: use 'number' for step so any valid int is safe
   const [step, setStep] = useState<number>(0);
   const [platform, setPlatform] = useState(PLATFORMS[0]);
   const [service, setService] = useState(PLATFORMS[0].services[0]);
@@ -108,8 +105,7 @@ export default function OrderModal({
     setTarget("");
     setError("");
     setLoading(false);
-    setStep(stepToSet); // Now always a number—no error
-    // eslint-disable-next-line
+    setStep(stepToSet);
   }, [open, initialPlatform, initialService]);
 
   if (!open) return null;
@@ -145,6 +141,7 @@ export default function OrderModal({
     onClose();
   };
 
+  // THIS IS THE ONLY FUNCTION YOU NEED TO UPDATE!
   const handleCheckout = async () => {
     if (!target || quantity < 10) {
       setError("Paste your profile link or username, and enter a quantity.");
@@ -153,27 +150,22 @@ export default function OrderModal({
     setLoading(true);
     setError("");
     try {
-      const stripe = await stripePromise;
-      const res = await fetch("/api/checkout", {
+      const res = await fetch("/api/create-checkout-session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          line_items: [{
-            price_data: {
-              currency: "usd",
-              product_data: { name: `${platform.name} ${service.type}` },
-              unit_amount: Math.round(service.price * 100),
-            },
-            quantity,
-          }],
-          metadata: { platform: platform.name, service: service.type, quantity, target }
-        })
+          platform: platform.key,
+          service: service.type,
+          quantity,
+          target,
+          price: (service.price * quantity),
+        }),
       });
-      const session = await res.json();
+      const data = await res.json();
       setLoading(false);
-      if (session.id) await stripe?.redirectToCheckout({ sessionId: session.id });
+      if (data.url) window.location = data.url;
       else setError("Unable to start checkout. Please try again.");
-    } catch {
+    } catch (err) {
       setLoading(false);
       setError("Checkout failed. Try again.");
     }
