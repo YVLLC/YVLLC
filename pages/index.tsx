@@ -9,40 +9,7 @@ import { useState } from "react";
 import OrderModal from "@/components/OrderModal";
 import Footer from "@/components/Footer";
 
-export default function Home() {
-  const [orderModalOpen, setOrderModalOpen] = useState(false);
-  const [modalPlatform, setModalPlatform] = useState<string | null>(null);
-  const [modalService, setModalService] = useState<string | null>(null);
-
-  const handleServiceOrder = (platform: string, service: string) => {
-    setModalPlatform(platform);
-    setModalService(service);
-    setOrderModalOpen(true);
-  };
-  return (
-    <>
-      <OrderModal
-        open={orderModalOpen}
-        onClose={() => setOrderModalOpen(false)}
-        initialPlatform={modalPlatform}
-        initialService={modalService}
-      />
-      {/* Footer goes at the bottom, pass handleServiceOrder */}
-      <Footer onServiceOrder={handleServiceOrder} />
-    </>
-  );
-}
-
-// Payment Icons
-const PaymentIcons = () => (
-  <div className="flex gap-2">
-    <span title="Visa"><svg width="34" height="20" viewBox="0 0 36 24"><rect width="36" height="24" rx="4" fill="#fff" /><text x="7" y="16" fill="#007BFF" fontWeight="bold" fontSize="14" fontFamily="sans-serif">VISA</text></svg></span>
-    <span title="Mastercard"><svg width="34" height="20" viewBox="0 0 36 24"><rect width="36" height="24" rx="4" fill="#fff" /><circle cx="14" cy="12" r="7" fill="#007BFF" fillOpacity="0.6" /><circle cx="22" cy="12" r="7" fill="#007BFF" fillOpacity="0.9" /></svg></span>
-    <span title="Apple Pay"><svg width="34" height="20" viewBox="0 0 36 24"><rect width="36" height="24" rx="4" fill="#fff" /><circle cx="11" cy="12" r="5" fill="#007BFF" /><rect x="19" y="7" width="10" height="10" rx="2" fill="#005FCC" /><text x="19" y="21" fill="#fff" fontWeight="bold" fontSize="8" fontFamily="sans-serif">Pay</text></svg></span>
-    <span title="Google Pay"><svg width="34" height="20" viewBox="0 0 36 24"><rect width="36" height="24" rx="4" fill="#fff" /><rect x="7" y="7" width="10" height="10" rx="2" fill="#007BFF" /><rect x="19" y="7" width="10" height="10" rx="2" fill="#005FCC" /><text x="11" y="21" fill="#fff" fontWeight="bold" fontSize="8" fontFamily="sans-serif">G</text><text x="24" y="21" fill="#fff" fontWeight="bold" fontSize="8" fontFamily="sans-serif">Pay</text></svg></span>
-    <span title="Bitcoin"><svg width="34" height="20" viewBox="0 0 36 24"><rect width="36" height="24" rx="4" fill="#fff" /><circle cx="18" cy="12" r="7" fill="#007BFF" /><text x="13" y="17" fill="#fff" fontWeight="bold" fontSize="13" fontFamily="monospace">₿</text></svg></span>
-  </div>
-);
+// -------- DATA ---------
 
 const SERVICES = [
   {
@@ -192,18 +159,23 @@ const TESTIMONIALS = [
   }
 ];
 
+// --------- PAGE ---------
+
 export default function Home() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+
+  // MODAL: state for Footer + service/section order button
   const [orderModalOpen, setOrderModalOpen] = useState(false);
   const [modalPlatform, setModalPlatform] = useState<string | null>(null);
+  const [modalService, setModalService] = useState<string | null>(null);
 
-  const toggleFaq = (index: number) => setOpenFaq(openFaq === index ? null : index);
-
-  // Handles opening modal with preselected platform ONLY
-  const handleOpenOrder = (platform?: string) => {
-    setModalPlatform(platform ?? null);
+  const handleServiceOrder = (platform: string, service: string) => {
+    setModalPlatform(platform);
+    setModalService(service);
     setOrderModalOpen(true);
   };
+
+  const toggleFaq = (index: number) => setOpenFaq(openFaq === index ? null : index);
 
   return (
     <>
@@ -215,6 +187,7 @@ export default function Home() {
         open={orderModalOpen}
         onClose={() => setOrderModalOpen(false)}
         initialPlatform={modalPlatform}
+        initialService={modalService}
       />
       <Link href="/support" className="fixed bottom-6 right-6 z-50">
         <button className="flex items-center gap-2 bg-white shadow-lg px-5 py-3 rounded-full border border-[#CFE4FF] hover:bg-[#F2F9FF] transition group">
@@ -223,11 +196,12 @@ export default function Home() {
         </button>
       </Link>
       <main className="px-4 sm:px-6 max-w-7xl mx-auto py-14 space-y-28 select-none">
-        {/* Hero Section */}
+
+        {/* --- HERO Section --- */}
         <section className="grid md:grid-cols-2 gap-12 items-center">
           <div className="space-y-7 text-center md:text-left">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#E8F1FF] rounded-full mb-2 text-xs font-bold text-[#007BFF] tracking-wide shadow-sm">
-              <Star size={16} className="text-yellow-400" />
+              <Star size={16} className="text-yellow-400 animate-spin-slow" />
               Trusted by 100,000+ Creators
             </div>
             <h1 className="text-5xl sm:text-6xl font-extrabold text-[#007BFF] leading-tight drop-shadow-sm">
@@ -239,7 +213,7 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row justify-center md:justify-start gap-4">
               <button
                 className="bg-[#007BFF] text-white font-semibold px-8 py-3 rounded-xl shadow-lg hover:bg-[#005FCC] transition text-lg"
-                onClick={() => handleOpenOrder()}
+                onClick={() => setOrderModalOpen(true)}
               >
                 Order Now
               </button>
@@ -250,7 +224,7 @@ export default function Home() {
               </Link>
             </div>
             <div className="flex flex-wrap gap-3 mt-6 justify-center md:justify-start items-center">
-              <PaymentIcons />
+              {/* You can add your PaymentIcons here */}
               <span className="ml-2 text-xs text-[#555] font-medium mt-2 hidden sm:inline">
                 100% Secure Payments
               </span>
@@ -270,7 +244,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Instant Order */}
+        {/* --- SERVICES ORDER Section --- */}
         <section id="order" className="space-y-10">
           <h2 className="text-center text-4xl font-extrabold">Place Your Order Instantly</h2>
           <p className="text-[#444] text-center max-w-2xl mx-auto">
@@ -296,7 +270,7 @@ export default function Home() {
                 </div>
                 <button
                   className="mt-4 w-full bg-[#007BFF] text-white text-sm px-4 py-2 rounded-lg font-bold hover:bg-[#005FCC] shadow transition transform hover:scale-[1.03] active:scale-95"
-                  onClick={() => handleOpenOrder(key)}
+                  onClick={() => handleServiceOrder(key, "Followers")}
                 >
                   Order
                 </button>
@@ -305,7 +279,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Why Choose Us */}
+        {/* --- WHY US Section --- */}
         <section id="about" className="bg-[#F5FAFF] p-12 rounded-2xl text-center shadow-sm space-y-8">
           <h2 className="text-4xl font-extrabold text-[#111]">Why Choose YesViral?</h2>
           <div className="flex flex-wrap gap-7 justify-center mt-6">
@@ -341,7 +315,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* How It Works */}
+        {/* --- HOW IT WORKS --- */}
         <section id="how-it-works" className="space-y-10">
           <h2 className="text-center text-4xl font-extrabold">How It Works</h2>
           <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-8 text-center">
@@ -355,7 +329,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Testimonials */}
+        {/* --- TESTIMONIALS --- */}
         <section id="testimonials" className="space-y-7">
           <h2 className="text-center text-4xl font-extrabold">Customer Reviews</h2>
           <div className="grid md:grid-cols-3 gap-7">
@@ -378,7 +352,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* FAQs */}
+        {/* --- FAQ --- */}
         <section id="faq" className="space-y-7">
           <h2 className="text-center text-4xl font-extrabold">Frequently Asked Questions</h2>
           <p className="text-center text-[#444] mb-4">Everything you need to know about our services, safety, and support.</p>
@@ -420,7 +394,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Call To Action */}
+        {/* --- CALL TO ACTION --- */}
         <section className="text-center space-y-5 mt-24">
           <h2 className="text-4xl font-extrabold mb-3">Ready to Go Viral?</h2>
           <p className="text-[#444] text-lg mb-8">
@@ -429,13 +403,15 @@ export default function Home() {
           <div className="mt-8">
             <button
               className="bg-[#007BFF] text-white px-8 py-3 text-lg rounded-xl hover:bg-[#005FCC] font-bold shadow transition"
-              onClick={() => handleOpenOrder()}
+              onClick={() => setOrderModalOpen(true)}
             >
               View Services
             </button>
           </div>
         </section>
       </main>
+      {/* This Footer will always work! */}
+      <Footer onServiceOrder={handleServiceOrder} />
     </>
   );
 }
