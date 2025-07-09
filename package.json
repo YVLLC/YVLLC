@@ -19,7 +19,9 @@
     "@supabase/supabase-js": "^2.39.3",
     "lucide-react": "^0.264.0",
     "react-hot-toast": "^2.4.0",
-    "@stripe/stripe-js": "^2.3.1"
+    "@stripe/stripe-js": "^2.3.1",
+    "cheerio": "^1.0.0-rc.12"
+
   },
   "devDependencies": {
     "@types/jsonwebtoken": "^9.0.2",
@@ -32,6 +34,8 @@
     "postcss": "^8.4.24",
     "tailwindcss": "^3.3.2",
     "typescript": "5.1.6",
-    "@types/qs": "^6.9.7"
+    "@types/qs": "^6.9.7",
+    "@types/cheerio": "^0.22.37"
+
   }
 }
