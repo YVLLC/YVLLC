@@ -5,8 +5,7 @@ import {
 import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 
-// Use your real Stripe public key here
-const stripePromise = loadStripe("pk_live_YOUR_PUBLIC_KEY_HERE");
+const stripePromise = loadStripe("pk_live_YOUR_PUBLIC_KEY_HERE"); // <-- set your real key here!
 
 const PLATFORMS = [
   {
@@ -125,7 +124,9 @@ function PaymentForm({
 
   return (
     <form onSubmit={handlePayment} className="space-y-5">
-      <CardElement options={{ style: { base: { fontSize: "16px" } } }} />
+      <div className="border rounded-lg px-3 py-2 bg-white">
+        <CardElement options={{ style: { base: { fontSize: "16px" } } }} />
+      </div>
       {error && <div className="text-red-500 text-center">{error}</div>}
       <button
         type="submit"
