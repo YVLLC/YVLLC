@@ -60,16 +60,34 @@ const steps = [
   { label: "Done" }
 ];
 
-function PaymentForm({ amount, orderDetails, onPaymentSuccess, onError }) {
+type PaymentFormProps = {
+  amount: number;
+  orderDetails: {
+    platform: string;
+    service: string;
+    quantity: number;
+    target: string;
+    price: number;
+  };
+  onPaymentSuccess: () => void;
+  onError?: (err: string) => void;
+};
+
+function PaymentForm({
+  amount,
+  orderDetails,
+  onPaymentSuccess,
+  onError
+}: PaymentFormProps) {
   const stripe = useStripe();
   const elements = useElements();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState<string | null>(null);
 
-  const handlePayment = async (e) => {
+  const handlePayment = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
+    setError(null);
     try {
       // 1. Create payment intent on backend
       const res = await fetch("/api/payment_intent", {
@@ -81,9 +99,10 @@ function PaymentForm({ amount, orderDetails, onPaymentSuccess, onError }) {
       if (serverError || !clientSecret) throw new Error(serverError || "Payment failed.");
 
       // 2. Confirm card payment
+      if (!stripe || !elements) throw new Error("Stripe not loaded");
       const { error: stripeError, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
         payment_method: {
-          card: elements.getElement(CardElement),
+          card: elements.getElement(CardElement)!,
         }
       });
       if (stripeError) throw new Error(stripeError.message);
@@ -95,9 +114,9 @@ function PaymentForm({ amount, orderDetails, onPaymentSuccess, onError }) {
         body: JSON.stringify({ ...orderDetails, paymentId: paymentIntent.id }),
       });
       const japResult = await jap.json();
-      if (!jap.ok || japResult.error) throw new Error(japResult.error || "JAP order failed.");
+      if (!jap.ok && japResult?.error) throw new Error(japResult.error || "JAP order failed.");
       onPaymentSuccess();
-    } catch (e) {
+    } catch (e: any) {
       setError(e.message || "An error occurred.");
       onError?.(e.message || "Payment error");
     }
@@ -212,7 +231,6 @@ export default function OrderModal({
     onClose();
   };
 
-  // For Buzzoid-style, all payment in the modal, no redirect
   const orderDetails = {
     platform: platform.key,
     service: service.type,
