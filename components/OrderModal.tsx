@@ -5,6 +5,7 @@ import {
 import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 
+// Use your real Stripe public key here!
 const stripePromise = loadStripe("pk_live_YOUR_PUBLIC_KEY_HERE");
 
 const PLATFORMS = [
@@ -52,13 +53,19 @@ const steps = [
   { label: "Done" }
 ];
 
-// --- PaymentForm ---
 type PaymentFormProps = {
   amount: number;
-  orderDetails: any;
+  orderDetails: {
+    platform: string;
+    service: string;
+    quantity: number;
+    target: string;
+    price: number;
+  };
   onPaymentSuccess: () => void;
   onError?: (err: string) => void;
 };
+
 function PaymentForm({
   amount,
   orderDetails,
@@ -91,7 +98,6 @@ function PaymentForm({
       });
       if (stripeError) throw new Error(stripeError.message);
 
-      // Your JAP order API
       const jap = await fetch("/api/jap_order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -129,7 +135,6 @@ function PaymentForm({
   );
 }
 
-// --- Main Modal ---
 export default function OrderModal({
   open,
   onClose,
@@ -149,7 +154,6 @@ export default function OrderModal({
   const [error, setError] = useState("");
   const [done, setDone] = useState(false);
 
-  // --- Only open at step 0, not step 2 ---
   useEffect(() => {
     if (!open) return;
     let selectedPlatform = PLATFORMS[0];
@@ -164,16 +168,20 @@ export default function OrderModal({
       );
       if (foundPlat) {
         selectedPlatform = foundPlat;
-        selectedService = foundPlat.services[0];
-        stepToSet = 1;
         if (initialService) {
           const foundServ = foundPlat.services.find(
             s => s.type.toLowerCase() === initialService.toLowerCase()
           );
           if (foundServ) {
             selectedService = foundServ;
-            stepToSet = 2; // ONLY IF YOU WANT THIS
+            stepToSet = 2;
+          } else {
+            selectedService = foundPlat.services[0];
+            stepToSet = 1;
           }
+        } else {
+          selectedService = foundPlat.services[0];
+          stepToSet = 1;
         }
       }
     }
@@ -184,8 +192,7 @@ export default function OrderModal({
     setTarget("");
     setError("");
     setDone(false);
-    // >>>> REMOVE this line if you **never** want to open at step 2
-    setStep(stepToSet); // comment this line to **always** start at 0
+    setStep(stepToSet);
   }, [open, initialPlatform, initialService]);
 
   if (!open) return null;
@@ -231,42 +238,46 @@ export default function OrderModal({
   const amountCents = Math.round(service.price * quantity * 100);
 
   return (
-    <div className="fixed z-[9999] inset-0 flex items-center justify-center bg-black/60">
-      <div className="relative bg-white rounded-3xl shadow-2xl border border-[#e3edfc] w-full max-w-md mx-auto animate-fadeInPop">
-        {/* HEADER: Includes stepper, always inside modal */}
-        <div className="px-6 pt-6 pb-3 border-b border-[#e3edfc] rounded-t-3xl bg-gradient-to-r from-[#f7fbff] via-[#ecf4ff] to-[#f8fbff]">
+    <div className="fixed z-[9999] inset-0 flex items-center justify-center bg-black/60 backdrop-blur-[2px]">
+      <div className="relative max-w-md w-full mx-auto bg-white/95 rounded-3xl shadow-2xl border border-[#e3edfc] overflow-visible">
+        {/* Header + Close */}
+        <div className="w-full px-7 pt-7 pb-3 rounded-t-3xl relative bg-gradient-to-r from-[#f7fbff] via-[#ecf4ff] to-[#f8fbff] border-b border-[#e3edfc]">
           <button
-            className="absolute top-4 right-5 z-20 bg-white border border-[#e3edfc] shadow-lg rounded-full p-2 hover:bg-[#eaf4ff] transition"
+            className="absolute top-4 right-5 z-20 bg-white/95 border border-[#e3edfc] shadow-lg rounded-full p-2 hover:bg-[#eaf4ff] transition"
             onClick={closeAndReset}
             aria-label="Close"
+            style={{ boxShadow: "0 2px 14px 0 #0086ff18" }}
           >
             <X size={22} className="text-[#007BFF]" />
           </button>
-          <div className="flex items-center gap-2 mb-5 font-extrabold text-lg">
+          <div className="flex items-center gap-2 pr-9">
             {platform.icon}
-            <span style={{ color: platform.color }}>{platform.name}</span>
+            <span className="font-extrabold text-lg" style={{ color: platform.color }}>
+              {platform.name}
+            </span>
           </div>
-          {/* --- STEPS --- */}
-          <div className="flex items-center justify-center gap-2 flex-wrap">
+          {/* STEPS - Always inside the modal! */}
+          <div className="flex items-center justify-center gap-4 mt-5 mb-[-6px]">
             {steps.map((s, i) => (
-              <div key={s.label} className="flex items-center gap-1">
+              <div key={s.label} className="flex items-center gap-2">
                 <div className={`
                   rounded-full w-7 h-7 flex items-center justify-center font-bold
                   ${step === i || (done && i === 4) ? "bg-[#007BFF] text-white shadow" :
                     step > i ? "bg-[#95e1fc] text-[#0d88c7]" :
                       "bg-[#e6f4ff] text-[#A0B3C7]"}
-                  border-2 border-white transition
+                  border-2 border-white
+                  transition
                 `}>
                   {i + 1}
                 </div>
                 <span className={`text-xs font-semibold ${step === i || (done && i === 4) ? "text-[#007BFF]" : "text-[#A0B3C7]"}`}>{s.label}</span>
-                {i < steps.length - 1 && <div className="w-5 h-1 bg-[#e3edfc] rounded-full" />}
+                {i < steps.length - 1 && <div className="w-6 h-1 bg-[#e3edfc] rounded-full" />}
               </div>
             ))}
           </div>
         </div>
 
-        {/* CONTENT */}
+        {/* Content */}
         <div className="px-7 py-7">
           {step === 0 && (
             <>
@@ -286,6 +297,7 @@ export default function OrderModal({
               </div>
             </>
           )}
+
           {step === 1 && (
             <>
               <h3 className="font-bold text-xl mb-3 text-[#222] text-center">
@@ -310,6 +322,7 @@ export default function OrderModal({
               <button className="block mx-auto mt-7 text-[#007BFF] underline text-sm" onClick={() => setStep(0)}>← Back</button>
             </>
           )}
+
           {step === 2 && (
             <>
               <h3 className="font-bold text-xl mb-4 text-[#222] text-center">Your {service.type} Order</h3>
@@ -363,6 +376,7 @@ export default function OrderModal({
               <button className="block mx-auto mt-7 text-[#007BFF] underline text-sm" onClick={() => setStep(1)}>← Back</button>
             </>
           )}
+
           {step === 3 && (
             <>
               <h3 className="font-bold text-xl mb-4 text-[#222] text-center">Pay & Complete Your Order</h3>
@@ -378,6 +392,7 @@ export default function OrderModal({
               <button className="block mx-auto mt-7 text-[#007BFF] underline text-sm" onClick={() => setStep(2)}>← Back</button>
             </>
           )}
+
           {step === 4 && done && (
             <div className="text-center space-y-4">
               <CheckCircle className="mx-auto text-green-500" size={48} />

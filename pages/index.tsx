@@ -169,10 +169,17 @@ export default function Home() {
   const [modalPlatform, setModalPlatform] = useState<string | null>(null);
   const [modalService, setModalService] = useState<string | null>(null);
 
-  // Accepts optional string or undefined for Footer compatibility
-  const handleServiceOrder = (platform?: string, service?: string) => {
-    setModalPlatform(platform ?? null);
-    setModalService(service ?? null);
+  // Open modal at platform picker (step 0)
+  const openOrderModalPlatform = () => {
+    setModalPlatform(null);
+    setModalService(null);
+    setOrderModalOpen(true);
+  };
+
+  // Open modal at service picker (step 1)
+  const openOrderModalService = (platformKey: string) => {
+    setModalPlatform(platformKey);
+    setModalService(null);
     setOrderModalOpen(true);
   };
 
@@ -212,7 +219,7 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row justify-center md:justify-start gap-4">
               <button
                 className="bg-[#007BFF] text-white font-semibold px-8 py-3 rounded-xl shadow-lg hover:bg-[#005FCC] transition text-lg"
-                onClick={() => setOrderModalOpen(true)}
+                onClick={openOrderModalPlatform}
               >
                 Order Now
               </button>
@@ -266,7 +273,7 @@ export default function Home() {
                 </div>
                 <button
                   className="mt-4 w-full bg-[#007BFF] text-white text-sm px-4 py-2 rounded-lg font-bold hover:bg-[#005FCC] shadow transition transform hover:scale-[1.03] active:scale-95"
-                  onClick={() => handleServiceOrder(key, "Followers")}
+                  onClick={() => openOrderModalService(key)}
                 >
                   Order
                 </button>
@@ -389,14 +396,24 @@ export default function Home() {
           <div className="mt-8">
             <button
               className="bg-[#007BFF] text-white px-8 py-3 text-lg rounded-xl hover:bg-[#005FCC] font-bold shadow transition"
-              onClick={() => setOrderModalOpen(true)}
+              onClick={openOrderModalPlatform}
             >
               View Services
             </button>
           </div>
         </section>
       </main>
-      <Footer onServiceOrder={handleServiceOrder} />
+      <Footer
+        onServiceOrder={(platform, service) => {
+          if (platform && !service) {
+            openOrderModalService(platform);
+          } else {
+            setModalPlatform(platform ?? null);
+            setModalService(service ?? null);
+            setOrderModalOpen(true);
+          }
+        }}
+      />
     </>
   );
 }
