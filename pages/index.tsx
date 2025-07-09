@@ -8,7 +8,7 @@ import {
 import { useState } from "react";
 import OrderModal from "@/components/OrderModal";
 
-// --- Payment Icons ---
+// Payment Icons
 const PaymentIcons = () => (
   <div className="flex gap-2">
     <span title="Visa"><svg width="34" height="20" viewBox="0 0 36 24"><rect width="36" height="24" rx="4" fill="#fff" /><text x="7" y="16" fill="#007BFF" fontWeight="bold" fontSize="14" fontFamily="sans-serif">VISA</text></svg></span>
@@ -19,7 +19,6 @@ const PaymentIcons = () => (
   </div>
 );
 
-// --- Instant Order Card Data ---
 const SERVICES = [
   {
     name: "Instagram Services",
@@ -79,7 +78,6 @@ const SERVICES = [
   }
 ];
 
-// --- FAQs ---
 const FAQS = [
   {
     question: "Why choose us?",
@@ -107,7 +105,6 @@ const FAQS = [
   }
 ];
 
-// --- How it Works ---
 const HOW_IT_WORKS = [
   {
     icon: <Zap size={32} className="mx-auto text-blue-400" />,
@@ -126,7 +123,6 @@ const HOW_IT_WORKS = [
   }
 ];
 
-// --- Testimonials ---
 const TESTIMONIALS = [
   {
     quote: "I gained real followers in under an hour — and they didn’t drop!",
@@ -176,18 +172,16 @@ const TESTIMONIALS = [
 
 export default function Home() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
-
-  // --- Modal state and service targeting
   const [orderModalOpen, setOrderModalOpen] = useState(false);
   const [modalPlatform, setModalPlatform] = useState<string | null>(null);
   const [modalService, setModalService] = useState<string | null>(null);
 
   const toggleFaq = (index: number) => setOpenFaq(openFaq === index ? null : index);
 
-  // Handler to open modal with correct service
-  const openOrderModal = (platformKey: string, serviceType: string) => {
-    setModalPlatform(platformKey);
-    setModalService(serviceType);
+  // Handles opening modal with preselected platform/service
+  const handleOpenOrder = (platform?: string, service?: string) => {
+    setModalPlatform(platform ?? null);
+    setModalService(service ?? null);
     setOrderModalOpen(true);
   };
 
@@ -213,6 +207,7 @@ export default function Home() {
         {/* Hero Section */}
         <section className="grid md:grid-cols-2 gap-12 items-center">
           <div className="space-y-7 text-center md:text-left">
+            {/* Trusted badge */}
             <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#E8F1FF] rounded-full mb-2 text-xs font-bold text-[#007BFF] tracking-wide shadow-sm">
               <Star size={16} className="text-yellow-400" />
               Trusted by 100,000+ Creators
@@ -226,7 +221,7 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row justify-center md:justify-start gap-4">
               <button
                 className="bg-[#007BFF] text-white font-semibold px-8 py-3 rounded-xl shadow-lg hover:bg-[#005FCC] transition text-lg"
-                onClick={() => openOrderModal("instagram", "Followers")}
+                onClick={() => handleOpenOrder()}
               >
                 Order Now
               </button>
@@ -283,7 +278,7 @@ export default function Home() {
                 </div>
                 <button
                   className="mt-4 w-full bg-[#007BFF] text-white text-sm px-4 py-2 rounded-lg font-bold hover:bg-[#005FCC] shadow transition transform hover:scale-[1.03] active:scale-95"
-                  onClick={() => openOrderModal(key, serviceType)}
+                  onClick={() => handleOpenOrder(key, serviceType)}
                 >
                   Order
                 </button>
@@ -416,7 +411,7 @@ export default function Home() {
           <div className="mt-8">
             <button
               className="bg-[#007BFF] text-white px-8 py-3 text-lg rounded-xl hover:bg-[#005FCC] font-bold shadow transition"
-              onClick={() => openOrderModal("instagram", "Followers")}
+              onClick={() => handleOpenOrder()}
             >
               View Services
             </button>

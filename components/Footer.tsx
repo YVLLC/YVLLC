@@ -122,9 +122,9 @@ export default function Footer() {
             <li><Link className="hover:text-[#005FCC]" href="/terms">Terms & Conditions</Link></li>
             <li><Link className="hover:text-[#005FCC]" href="/privacy">Privacy Policy</Link></li>
             <li><Link className="hover:text-[#005FCC]" href="/contact">Contact Us</Link></li>
-            <li><Link className="hover:text-[#005FCC]" href="/tools/instagram-video-downloader">IG Video Downloader</Link></li>
-            <li><Link className="hover:text-[#005FCC]" href="/tools/free-likes">Free Likes Trial</Link></li>
-            <li><Link className="hover:text-[#005FCC]" href="/tools/free-followers">Free Followers Trial</Link></li>
+            <li><Link className="hover:text-[#005FCC]" href="/pages/ig-downloader">IG Video Downloader</Link></li>
+            <li><Link className="hover:text-[#005FCC]" href="/pages/ig-downloader">Free Likes Trial</Link></li>
+            <li><Link className="hover:text-[#005FCC]" href="/pages/ig-downloader">Free Followers Trial</Link></li>
           </ul>
         </div>
       </div>
