@@ -1,5 +1,3 @@
-// pages/index.tsx
-
 import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
@@ -10,9 +8,9 @@ import {
 import { useState } from "react";
 import OrderModal from "@/components/OrderModal";
 
-// Luxe Payment Icons
+// Payment Icons
 const PaymentIcons = () => (
-  <div className="flex gap-2 mt-1">
+  <div className="flex gap-2">
     <span title="Visa"><svg width="34" height="20" viewBox="0 0 36 24"><rect width="36" height="24" rx="4" fill="#fff" /><text x="7" y="16" fill="#007BFF" fontWeight="bold" fontSize="14" fontFamily="sans-serif">VISA</text></svg></span>
     <span title="Mastercard"><svg width="34" height="20" viewBox="0 0 36 24"><rect width="36" height="24" rx="4" fill="#fff" /><circle cx="14" cy="12" r="7" fill="#007BFF" fillOpacity="0.6" /><circle cx="22" cy="12" r="7" fill="#007BFF" fillOpacity="0.9" /></svg></span>
     <span title="Apple Pay"><svg width="34" height="20" viewBox="0 0 36 24"><rect width="36" height="24" rx="4" fill="#fff" /><circle cx="11" cy="12" r="5" fill="#007BFF" /><rect x="19" y="7" width="10" height="10" rx="2" fill="#005FCC" /><text x="19" y="21" fill="#fff" fontWeight="bold" fontSize="8" fontFamily="sans-serif">Pay</text></svg></span>
@@ -175,6 +173,8 @@ export default function Home() {
   const [modalPlatform, setModalPlatform] = useState<string | null>(null);
 
   const toggleFaq = (index: number) => setOpenFaq(openFaq === index ? null : index);
+
+  // Handles opening modal with preselected platform ONLY
   const handleOpenOrder = (platform?: string) => {
     setModalPlatform(platform ?? null);
     setOrderModalOpen(true);
@@ -199,102 +199,50 @@ export default function Home() {
       </Link>
       <main className="px-4 sm:px-6 max-w-7xl mx-auto py-14 space-y-28 select-none">
         {/* Hero Section */}
-        <section className="relative grid md:grid-cols-2 gap-12 items-center">
-          {/* Shimmer Sparkles */}
-          <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
-            <div className="absolute w-56 h-56 left-[-70px] top-[-60px] bg-gradient-to-br from-[#c7f5ff55] to-[#9bbcff77] rounded-full blur-3xl opacity-50 animate-float-glow"></div>
-            <div className="absolute w-36 h-36 right-[-40px] top-20 bg-gradient-to-t from-[#f1e8fd44] to-[#f9e5f688] rounded-full blur-2xl opacity-50 animate-float-glow2"></div>
-            <div className="absolute w-24 h-24 left-36 bottom-[-30px] bg-gradient-to-tr from-[#fff2e477] to-[#c6e6ffbb] rounded-full blur-2xl opacity-30 animate-float-glow3"></div>
-          </div>
-          <div className="space-y-7 text-center md:text-left relative z-10">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/90 shadow-lg rounded-full mb-2 text-xs font-bold text-[#007BFF] tracking-wide animate-shimmer-badge">
-              <span className="relative">
-                <Star
-                  size={18}
-                  className="text-yellow-400 animate-star-glow"
-                  style={{ filter: "drop-shadow(0 0 10px #ffe56799)" }}
-                />
-              </span>
-              <span className="font-extrabold tracking-tight drop-shadow text-transparent bg-clip-text bg-gradient-to-r from-[#007BFF] via-[#2EC8F8] to-[#e8bc1a]">Trusted by 100,000+ Creators</span>
+        <section className="grid md:grid-cols-2 gap-12 items-center">
+          <div className="space-y-7 text-center md:text-left">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#E8F1FF] rounded-full mb-2 text-xs font-bold text-[#007BFF] tracking-wide shadow-sm">
+              <Star size={16} className="text-yellow-400" />
+              Trusted by 100,000+ Creators
             </div>
-            <h1 className="text-5xl sm:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-[#007BFF] via-[#2EC8F8] to-[#e8bc1a] leading-tight drop-shadow-sm">
+            <h1 className="text-5xl sm:text-6xl font-extrabold text-[#007BFF] leading-tight drop-shadow-sm">
               Blow Up Your Socials. <br /> Real Growth. No Waiting.
             </h1>
             <p className="text-[#444] text-lg max-w-xl mx-auto md:mx-0 font-medium">
-              Get real followers, likes, and views in minutes. No logins, no risk. Start your viral growth journey with <span className="font-extrabold text-[#007BFF]">YesViral</span>.
+              Get real followers, likes, and views in minutes. No logins, no risk. Start your viral growth journey with YesViral.
             </p>
             <div className="flex flex-col sm:flex-row justify-center md:justify-start gap-4">
               <button
-                className="bg-gradient-to-r from-[#007BFF] via-[#38d4fc] to-[#e8bc1a] text-white font-semibold px-10 py-4 rounded-2xl shadow-2xl hover:from-[#005FCC] hover:to-[#f7cc36] hover:scale-105 transition-all text-xl border-2 border-[#d0ebff] outline-none ring-0"
-                style={{
-                  boxShadow: "0 4px 32px 0 #007bff22, 0 2px 24px #e8bc1a11",
-                  textShadow: "0 2px 8px #fff, 0 1px 2px #2EC8F822"
-                }}
+                className="bg-[#007BFF] text-white font-semibold px-8 py-3 rounded-xl shadow-lg hover:bg-[#005FCC] transition text-lg"
                 onClick={() => handleOpenOrder()}
               >
                 Order Now
               </button>
               <Link href="/track-order">
-                <button className="bg-white/90 text-[#007BFF] border-2 border-[#007BFF] font-semibold px-10 py-4 rounded-2xl shadow-lg hover:bg-[#E6F0FF] hover:scale-105 transition-all text-xl">
+                <button className="bg-white text-[#007BFF] border border-[#007BFF] font-semibold px-8 py-3 rounded-xl hover:bg-[#E6F0FF] transition text-lg">
                   Try Free Likes
                 </button>
               </Link>
             </div>
-            <div className="flex flex-wrap gap-3 mt-8 justify-center md:justify-start items-center">
+            <div className="flex flex-wrap gap-3 mt-6 justify-center md:justify-start items-center">
               <PaymentIcons />
               <span className="ml-2 text-xs text-[#555] font-medium mt-2 hidden sm:inline">
                 100% Secure Payments
               </span>
             </div>
           </div>
-          <div className="hidden md:flex justify-center animate-fadeIn relative z-10">
-            <div className="rounded-3xl shadow-[0_10px_48px_8px_rgba(0,34,64,0.11)] overflow-hidden border-4 border-[#eaf5ff] bg-gradient-to-tr from-[#e3f1ff] via-[#f4f8ff] to-[#fdf6e3]">
-              <Image
-                src="/hero-illustration.png"
-                alt="Social Media Growth"
-                width={480}
-                height={400}
-                className="w-full max-w-[420px] h-auto object-contain drop-shadow-2xl"
-                draggable={false}
-                unselectable="on"
-                priority
-              />
-            </div>
+          <div className="hidden md:flex justify-center animate-fadeIn">
+            <Image
+              src="/hero-illustration.png"
+              alt="Social Media Growth"
+              width={480}
+              height={400}
+              className="w-full max-w-[420px] h-auto object-contain drop-shadow-2xl"
+              draggable={false}
+              unselectable="on"
+              priority
+            />
           </div>
-          {/* Keyframes for all anims */}
-          <style jsx>{`
-            @keyframes shimmer-badge {
-              0% { box-shadow: 0 2px 18px #ffe56722; }
-              50% { box-shadow: 0 4px 28px #ffe56799; }
-              100% { box-shadow: 0 2px 18px #ffe56722; }
-            }
-            .animate-shimmer-badge {
-              animation: shimmer-badge 1.4s ease-in-out infinite;
-            }
-            @keyframes star-glow {
-              0%,100% { filter: drop-shadow(0 0 10px #ffe56799); transform: scale(1);}
-              35% { filter: drop-shadow(0 0 18px #ffe567cc); transform: scale(1.14);}
-              60% { filter: drop-shadow(0 0 38px #ffd70099); transform: scale(1);}
-            }
-            .animate-star-glow {
-              animation: star-glow 1.2s cubic-bezier(.43,.5,.61,1.11) infinite;
-            }
-            @keyframes float-glow {
-              0%,100% { transform: translateY(0px) scale(1);}
-              60% { transform: translateY(-18px) scale(1.08);}
-            }
-            .animate-float-glow { animation: float-glow 8s ease-in-out infinite;}
-            @keyframes float-glow2 {
-              0%,100% { transform: translateY(0px) scale(1);}
-              50% { transform: translateY(-10px) scale(1.13);}
-            }
-            .animate-float-glow2 { animation: float-glow2 7s ease-in-out infinite;}
-            @keyframes float-glow3 {
-              0%,100% { transform: translateY(0px) scale(1);}
-              50% { transform: translateY(10px) scale(0.98);}
-            }
-            .animate-float-glow3 { animation: float-glow3 9s ease-in-out infinite;}
-          `}</style>
         </section>
 
         {/* Instant Order */}
@@ -307,8 +255,7 @@ export default function Home() {
             {SERVICES.map(({ name, price, description, icon, tag, count, key }, idx) => (
               <div
                 key={idx}
-                className="bg-white/80 border-2 border-[#CFE4FF] rounded-2xl p-7 shadow-md hover:shadow-2xl transition group flex flex-col gap-3 relative"
-                style={{backdropFilter:"blur(6px)", WebkitBackdropFilter:"blur(6px)"}}
+                className="bg-white border-2 border-[#CFE4FF] rounded-2xl p-7 shadow-md hover:shadow-2xl transition group flex flex-col gap-3 relative"
               >
                 {tag && (
                   <span className="absolute top-4 right-5 bg-[#E8F1FF] text-[#007BFF] text-xs font-bold px-3 py-1 rounded-full shadow">{tag}</span>
