@@ -20,6 +20,12 @@ function OrderModalWrapper() {
   );
 }
 
+// NEW: Wrap Footer to connect to modal context
+function FooterWithOrderModal() {
+  const { openOrderModal } = useOrderModal();
+  return <Footer onServiceOrder={openOrderModal} />;
+}
+
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
   const hideHeaderFooter = ["/dashboard"];
@@ -47,7 +53,8 @@ export default function App({ Component, pageProps }: AppProps) {
         <Component {...pageProps} />
         <OrderModalWrapper />
       </main>
-      {!shouldHide && <Footer />}
+      {/* CHANGED: pass modal to Footer */}
+      {!shouldHide && <FooterWithOrderModal />}
     </OrderModalProvider>
   );
 }
