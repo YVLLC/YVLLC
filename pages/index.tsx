@@ -23,7 +23,6 @@ const SERVICES = [
   {
     name: "Instagram Services",
     key: "instagram",
-    serviceType: "Followers",
     price: "$0.09 / 100",
     description: "Boost your IG presence with real followers.",
     icon: (
@@ -41,7 +40,6 @@ const SERVICES = [
   {
     name: "TikTok Services",
     key: "tiktok",
-    serviceType: "Followers",
     price: "$0.08 / 100",
     description: "Get instant likes on your videos.",
     icon: (
@@ -61,7 +59,6 @@ const SERVICES = [
   {
     name: "YouTube Services",
     key: "youtube",
-    serviceType: "Subscribers",
     price: "$0.05 / 1000",
     description: "Skyrocket your video reach and impressions.",
     icon: (
@@ -174,14 +171,12 @@ export default function Home() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [orderModalOpen, setOrderModalOpen] = useState(false);
   const [modalPlatform, setModalPlatform] = useState<string | null>(null);
-  const [modalService, setModalService] = useState<string | null>(null);
 
   const toggleFaq = (index: number) => setOpenFaq(openFaq === index ? null : index);
 
-  // Handles opening modal with preselected platform/service
-  const handleOpenOrder = (platform?: string, service?: string) => {
+  // Handles opening modal with preselected platform ONLY
+  const handleOpenOrder = (platform?: string) => {
     setModalPlatform(platform ?? null);
-    setModalService(service ?? null);
     setOrderModalOpen(true);
   };
 
@@ -195,7 +190,6 @@ export default function Home() {
         open={orderModalOpen}
         onClose={() => setOrderModalOpen(false)}
         initialPlatform={modalPlatform}
-        initialService={modalService}
       />
       <Link href="/support" className="fixed bottom-6 right-6 z-50">
         <button className="flex items-center gap-2 bg-white shadow-lg px-5 py-3 rounded-full border border-[#CFE4FF] hover:bg-[#F2F9FF] transition group">
@@ -207,7 +201,6 @@ export default function Home() {
         {/* Hero Section */}
         <section className="grid md:grid-cols-2 gap-12 items-center">
           <div className="space-y-7 text-center md:text-left">
-            {/* Trusted badge */}
             <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#E8F1FF] rounded-full mb-2 text-xs font-bold text-[#007BFF] tracking-wide shadow-sm">
               <Star size={16} className="text-yellow-400" />
               Trusted by 100,000+ Creators
@@ -259,7 +252,7 @@ export default function Home() {
             Choose your service — no logins, no commitment. <span className="font-semibold text-[#007BFF]">Instant delivery starts within minutes.</span>
           </p>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {SERVICES.map(({ name, price, description, icon, tag, count, key, serviceType }, idx) => (
+            {SERVICES.map(({ name, price, description, icon, tag, count, key }, idx) => (
               <div
                 key={idx}
                 className="bg-white border-2 border-[#CFE4FF] rounded-2xl p-7 shadow-md hover:shadow-2xl transition group flex flex-col gap-3 relative"
@@ -278,7 +271,7 @@ export default function Home() {
                 </div>
                 <button
                   className="mt-4 w-full bg-[#007BFF] text-white text-sm px-4 py-2 rounded-lg font-bold hover:bg-[#005FCC] shadow transition transform hover:scale-[1.03] active:scale-95"
-                  onClick={() => handleOpenOrder(key, serviceType)}
+                  onClick={() => handleOpenOrder(key)}
                 >
                   Order
                 </button>
