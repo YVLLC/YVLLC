@@ -6,7 +6,7 @@ import { Elements, CardElement, useStripe, useElements } from "@stripe/react-str
 import { loadStripe } from "@stripe/stripe-js";
 
 // Use your real Stripe public key here!
-const stripePromise = loadStripe("pk_live_YOUR_PUBLIC_KEY_HERE");
+const stripePromise = loadStripe("pk_live_51Rgpc4Dzq312KvGPUkyCKLxH4ZdPWeJlmBAnMrSlAl5BHF8Wu8qFW6hqxKlo3l7F87X3qmvVnmDrZYcP3FSSTPVN00fygC8Pfl");
 
 const PLATFORMS = [
   // ... same as before ...
