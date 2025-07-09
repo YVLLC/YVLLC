@@ -15,6 +15,29 @@ import { useState } from "react";
 import OrderModal from "@/components/OrderModal";
 import Footer from "@/components/Footer";
 
+// --- Sample services array (add your items as needed) ---
+const SERVICES = [
+  {
+    name: "Instagram Services",
+    key: "instagram",
+    price: "$0.09 / 100",
+    description: "Boost your IG presence with real followers.",
+    icon: (
+      <svg width={28} height={28} viewBox="0 0 48 48" fill="none">
+        <rect width="48" height="48" rx="16" fill="#F9E5F6"/>
+        <g>
+          <circle cx="24" cy="24" r="14" fill="#fff"/>
+          <path d="M24 16a8 8 0 100 16 8 8 0 000-16zm0 13a5 5 0 110-10 5 5 0 010 10zm6.25-12.5a1.25 1.25 0 112.5 0 1.25 1.25 0 01-2.5 0z" fill="#E1306C"/>
+        </g>
+      </svg>
+    ),
+    tag: "Bestseller",
+    count: "2,000+ bought this week"
+  },
+  // ...add other service items here
+];
+
+export default function Home() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [orderModalOpen, setOrderModalOpen] = useState(false);
   const [modalPlatform, setModalPlatform] = useState<string | null>(null);
@@ -59,8 +82,9 @@ import Footer from "@/components/Footer";
       </Link>
 
       <main className="px-4 sm:px-6 max-w-7xl mx-auto py-14 space-y-28 select-none">
-        {/* Add your HERO section, SERVICES, WHY US, HOW IT WORKS, TESTIMONIALS, FAQ, etc. here */}
+        {/* HERO, SERVICES, WHY US, HOW IT WORKS, TESTIMONIALS, FAQ, etc. */}
 
+        {/* Example CTA Section */}
         <section className="text-center space-y-5 mt-24">
           <h2 className="text-4xl font-extrabold mb-3">Ready to Go Viral?</h2>
           <p className="text-[#444] text-lg mb-8">
@@ -81,8 +105,6 @@ import Footer from "@/components/Footer";
     </>
   );
 }
-const SERVICES = [
-}:
     name: "Instagram Services",
     key: "instagram",
     price: "$0.09 / 100",
