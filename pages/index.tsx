@@ -7,6 +7,33 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import OrderModal from "@/components/OrderModal";
+import { useState } from "react";
+import OrderModal from "@/components/OrderModal";
+import Footer from "@/components/Footer";
+
+export default function Home() {
+  const [orderModalOpen, setOrderModalOpen] = useState(false);
+  const [modalPlatform, setModalPlatform] = useState<string | null>(null);
+  const [modalService, setModalService] = useState<string | null>(null);
+
+  const handleServiceOrder = (platform: string, service: string) => {
+    setModalPlatform(platform);
+    setModalService(service);
+    setOrderModalOpen(true);
+  };
+  return (
+    <>
+      <OrderModal
+        open={orderModalOpen}
+        onClose={() => setOrderModalOpen(false)}
+        initialPlatform={modalPlatform}
+        initialService={modalService}
+      />
+      {/* Footer goes at the bottom, pass handleServiceOrder */}
+      <Footer onServiceOrder={handleServiceOrder} />
+    </>
+  );
+}
 
 // Payment Icons
 const PaymentIcons = () => (
