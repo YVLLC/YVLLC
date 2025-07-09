@@ -15,7 +15,6 @@ import { useState } from "react";
 import OrderModal from "@/components/OrderModal";
 import Footer from "@/components/Footer";
 
-export default function Home() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [orderModalOpen, setOrderModalOpen] = useState(false);
   const [modalPlatform, setModalPlatform] = useState<string | null>(null);
