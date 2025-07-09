@@ -9,8 +9,29 @@ import { useState } from "react";
 import OrderModal from "@/components/OrderModal";
 import Footer from "@/components/Footer";
 
-// -------- DATA ---------
+export default function Home() {
+  const [orderModalOpen, setOrderModalOpen] = useState(false);
+  const [modalPlatform, setModalPlatform] = useState<string | null>(null);
+  const [modalService, setModalService] = useState<string | null>(null);
 
+  // FIXED: Accepts undefined (for type compatibility)
+  const handleServiceOrder = (platform?: string, service?: string) => {
+    setModalPlatform(platform ?? null);
+    setModalService(service ?? null);
+    setOrderModalOpen(true);
+  };
+
+  return (
+    <>
+      <OrderModal
+        open={orderModalOpen}
+        onClose={() => setOrderModalOpen(false)}
+        initialPlatform={modalPlatform}
+        initialService={modalService}
+      />
+      {/* ...your page content here... */}
+      <Footer onServiceOrder={handleServiceOrder} />
+    </>
 const SERVICES = [
   {
     name: "Instagram Services",
