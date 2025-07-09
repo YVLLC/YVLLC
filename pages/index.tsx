@@ -13,7 +13,6 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import OrderModal from "@/components/OrderModal";
-import Footer from "@/components/Footer";
 
 const SERVICES = [
   {
