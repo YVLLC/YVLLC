@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import OrderModal from "@/components/OrderModal";
-import Footer from "@/components/Footer";
+// Footer removed entirely!
 
 const SERVICES = [
   {
@@ -403,17 +403,6 @@ export default function Home() {
           </div>
         </section>
       </main>
-      <Footer
-        onServiceOrder={(platform, service) => {
-          if (platform && !service) {
-            openOrderModalService(platform);
-          } else {
-            setModalPlatform(platform ?? null);
-            setModalService(service ?? null);
-            setOrderModalOpen(true);
-          }
-        }}
-      />
     </>
   );
 }

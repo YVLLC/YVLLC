@@ -3,6 +3,7 @@ import type { AppProps } from "next/app";
 import Head from "next/head";
 import Header from "@/components/Header";
 import { useRouter } from "next/router";
+import Footer from "@/components/Footer";
 import OrderModal from "@/components/OrderModal";
 import { OrderModalProvider, useOrderModal } from "@/context/OrderModalContext";
 

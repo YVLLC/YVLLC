@@ -239,8 +239,8 @@ export default function OrderModal({
 
   return (
     <div className="fixed z-[9999] inset-0 flex items-center justify-center bg-black/60 backdrop-blur-[2px]">
-      <div className="relative max-w-md w-full mx-auto bg-white/95 rounded-3xl shadow-2xl border border-[#e3edfc] overflow-visible">
-        {/* Header + Close */}
+      <div className="relative max-w-md w-full mx-auto bg-white/95 rounded-3xl shadow-2xl border border-[#e3edfc] overflow-hidden">
+        {/* Modal HEADER (includes steps, always inside modal) */}
         <div className="w-full px-7 pt-7 pb-3 rounded-t-3xl relative bg-gradient-to-r from-[#f7fbff] via-[#ecf4ff] to-[#f8fbff] border-b border-[#e3edfc]">
           <button
             className="absolute top-4 right-5 z-20 bg-white/95 border border-[#e3edfc] shadow-lg rounded-full p-2 hover:bg-[#eaf4ff] transition"
@@ -256,7 +256,7 @@ export default function OrderModal({
               {platform.name}
             </span>
           </div>
-          {/* STEPS - Always inside the modal! */}
+          {/* Steps (always INSIDE header, never outside modal) */}
           <div className="flex items-center justify-center gap-4 mt-5 mb-[-6px]">
             {steps.map((s, i) => (
               <div key={s.label} className="flex items-center gap-2">
@@ -276,9 +276,8 @@ export default function OrderModal({
             ))}
           </div>
         </div>
-
-        {/* Content */}
-        <div className="px-7 py-7">
+        {/* Modal CONTENT */}
+        <div className="px-7 py-7 max-h-[80vh] overflow-y-auto">
           {step === 0 && (
             <>
               <h3 className="font-bold text-xl mb-3 text-[#222] text-center">Pick a Platform</h3>
@@ -297,7 +296,6 @@ export default function OrderModal({
               </div>
             </>
           )}
-
           {step === 1 && (
             <>
               <h3 className="font-bold text-xl mb-3 text-[#222] text-center">
@@ -322,7 +320,6 @@ export default function OrderModal({
               <button className="block mx-auto mt-7 text-[#007BFF] underline text-sm" onClick={() => setStep(0)}>← Back</button>
             </>
           )}
-
           {step === 2 && (
             <>
               <h3 className="font-bold text-xl mb-4 text-[#222] text-center">Your {service.type} Order</h3>
@@ -376,7 +373,6 @@ export default function OrderModal({
               <button className="block mx-auto mt-7 text-[#007BFF] underline text-sm" onClick={() => setStep(1)}>← Back</button>
             </>
           )}
-
           {step === 3 && (
             <>
               <h3 className="font-bold text-xl mb-4 text-[#222] text-center">Pay & Complete Your Order</h3>
@@ -392,7 +388,6 @@ export default function OrderModal({
               <button className="block mx-auto mt-7 text-[#007BFF] underline text-sm" onClick={() => setStep(2)}>← Back</button>
             </>
           )}
-
           {step === 4 && done && (
             <div className="text-center space-y-4">
               <CheckCircle className="mx-auto text-green-500" size={48} />
