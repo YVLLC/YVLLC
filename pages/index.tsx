@@ -35,7 +35,6 @@ const SERVICES = [
     count: "2,000+ bought this week"
   },
   // ...add other service items here
-];
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [orderModalOpen, setOrderModalOpen] = useState(false);
   const [modalPlatform, setModalPlatform] = useState<string | null>(null);
