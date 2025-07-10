@@ -13,7 +13,7 @@ export default function AiBot() {
     { sender: "bot", text: "Hey! 👋 I’m your support bot. Ask about delivery, safety, payment, refills, refunds, or anything else!" }
   ]);
   const [loading, setLoading] = useState(false);
-  async function handleSend(e) {
+  async function handleSend(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!input.trim()) return;
     setMessages(msgs => [...msgs, { sender: "user", text: input }]);
