@@ -5,7 +5,6 @@ import Image from "next/image";
 import { Toaster, toast } from "react-hot-toast";
 import { loadStripe } from "@stripe/stripe-js";
 import AiBot from "../components/AiBot";
-import Confetti from "react-confetti";
 import {
   Instagram, Youtube, Music2, UserPlus, ThumbsUp, Eye, LogOut, BadgePercent, List, CheckCircle, BarChart, UserCircle, Menu, Sun, Moon, Loader2
 } from "lucide-react";
