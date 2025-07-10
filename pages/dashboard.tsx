@@ -6,12 +6,22 @@ import { Toaster, toast } from "react-hot-toast";
 import { loadStripe } from "@stripe/stripe-js";
 import AiBot from "../components/AiBot";
 import {
-  Instagram, Youtube, Music2, UserPlus, ThumbsUp, Eye, LogOut, BadgePercent, List, CheckCircle, BarChart, UserCircle, Menu, Sun, Moon, Loader2
+  Instagram, Youtube, Music2, UserPlus, ThumbsUp, Eye, LogOut, BadgePercent, List, UserCircle, Sun, Moon, Loader2,
 } from "lucide-react";
 
+// ---------- TYPES ----------
+interface Order {
+  id: string;
+  platform: string;
+  service: string;
+  quantity: number;
+  status: string;
+  created_at: string;
+}
+
+// ---------- CONFIG DATA ----------
 const stripePromise = loadStripe("pk_test_51RgpcCRfq6GJQepR3xUT0RkiGdN8ZSRu3OR15DfKhpMNj5QgmysYrmGQ8rGCXiI6Vi3B2L5Czmf7cRvIdtKRrSOw00SaVptcQt");
 
-// ---- DATA ----
 const PLATFORMS = [
   {
     key: "instagram",
@@ -48,29 +58,43 @@ const PLATFORMS = [
   }
 ];
 
+// ---------- CONFETTI ----------
+function fireConfettiVanilla() {
+  for (let i = 0; i < 120; i++) {
+    const conf = document.createElement("div");
+    conf.className = "vanilla-confetti";
+    conf.style.left = Math.random() * 100 + "vw";
+    conf.style.background = `hsl(${Math.random()*360},90%,60%)`;
+    document.body.appendChild(conf);
+    setTimeout(() => conf.remove(), 2200);
+  }
+}
+
+// ---------- DASHBOARD ----------
 export default function DashboardPage() {
   const router = useRouter();
-  const [theme, setTheme] = useState("light");
-  const [userEmail, setUserEmail] = useState("");
-  const [userId, setUserId] = useState("");
-  const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [profileEmail, setProfileEmail] = useState("");
-  const [newEmail, setNewEmail] = useState("");
-  const [passwordData, setPasswordData] = useState({ current: "", new: "" });
-  const [platformKey, setPlatformKey] = useState("instagram");
-  const [serviceType, setServiceType] = useState("Followers");
-  const [quantity, setQuantity] = useState(100);
-  const [orderLoading, setOrderLoading] = useState(false);
-  const [confetti, setConfetti] = useState(false);
 
-  // ---- DARK MODE ----
+  // -- THEME --
+  const [theme, setTheme] = useState<"light" | "dark">("light");
   useEffect(() => {
     document.documentElement.classList.toggle("dark", theme === "dark");
   }, [theme]);
   function toggleTheme() { setTheme(t => t === "dark" ? "light" : "dark"); }
 
-  // ---- FETCH USER/ORDERS ----
+  // -- AUTH, ORDERS, FORM STATE --
+  const [userEmail, setUserEmail] = useState("");
+  const [userId, setUserId] = useState("");
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [profileEmail, setProfileEmail] = useState("");
+  const [newEmail, setNewEmail] = useState("");
+  const [passwordData, setPasswordData] = useState({ new: "" });
+  const [platformKey, setPlatformKey] = useState("instagram");
+  const [serviceType, setServiceType] = useState("Followers");
+  const [quantity, setQuantity] = useState(100);
+  const [orderLoading, setOrderLoading] = useState(false);
+
+  // -- FETCH USER/ORDERS --
   useEffect(() => {
     const fetchUserAndOrders = async () => {
       const { data: { session } } = await supabase.auth.getSession();
@@ -94,9 +118,11 @@ export default function DashboardPage() {
     fetchUserAndOrders();
   }, [router]);
 
-  // ---- ORDER PLACE ----
-  const selectedPlatform = PLATFORMS.find(p => p.key === platformKey);
-  const currentService = selectedPlatform?.services.find(s => s.type === serviceType);
+  // -- ORDER FORM --
+  const selectedPlatform = PLATFORMS.find(p => p.key === platformKey)!;
+  const currentService = selectedPlatform.services.find(s => s.type === serviceType)!;
+
+  // -- ORDER PLACEMENT --
   const placeOrder = async () => {
     setOrderLoading(true);
     const stripe = await stripePromise;
@@ -118,15 +144,14 @@ export default function DashboardPage() {
     const session = await res.json();
     setOrderLoading(false);
     if (session.id) {
-      setConfetti(true);
-      setTimeout(() => setConfetti(false), 3200);
+      fireConfettiVanilla();
       await stripe?.redirectToCheckout({ sessionId: session.id });
     } else {
       toast.error("Could not start checkout.");
     }
   };
 
-  // ---- PROFILE ACTIONS ----
+  // -- PROFILE ACTIONS --
   const handleEmailChange = async () => {
     const { error } = await supabase.auth.updateUser({ email: newEmail });
     if (error) toast.error("Email update failed");
@@ -142,11 +167,11 @@ export default function DashboardPage() {
     router.push("/login");
   };
 
-  // ---- MAIN RETURN ----
+  // ---------- RENDER ----------
   return (
     <main className="min-h-screen font-sans bg-gradient-to-tr from-[#d5e7ff] via-white to-[#e4e2ff] dark:from-[#10151d] dark:to-[#181d26]">
-      {confetti && <Confetti width={window.innerWidth} height={window.innerHeight} recycle={false} />}
       <Toaster position="top-right" />
+
       {/* HEADER */}
       <header className="flex justify-between items-center px-6 py-5 bg-white/70 dark:bg-[#181d29]/80 shadow-2xl rounded-b-3xl">
         <div className="flex items-center gap-3">
@@ -316,14 +341,30 @@ export default function DashboardPage() {
       {/* AI Bot */}
       <AiBot />
 
-      {/* GLOBAL STYLES */}
+      {/* VANILLA CONFETTI CSS */}
       <style jsx global>{`
+        .vanilla-confetti {
+          position: fixed;
+          top: -24px;
+          width: 10px;
+          height: 22px;
+          border-radius: 4px;
+          opacity: 0.8;
+          z-index: 9999;
+          animation: confetti-fall 2s cubic-bezier(.45,.3,.68,1) forwards;
+        }
+        @keyframes confetti-fall {
+          to {
+            top: 100vh;
+            transform: rotate(360deg);
+            opacity: 0;
+          }
+        }
         body { font-family: 'Inter', sans-serif; }
         .dark body { background: #10151d !important; color: #eee !important; }
         ::selection { background: #99e4ff; }
         .animate-pulse { animation: pulse 2s infinite; }
         @keyframes pulse { 0%,100% { opacity:.6; } 50% { opacity:1; } }
-        /* Hide number input arrows */
         input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button {
           -webkit-appearance: none; margin: 0;
         }
