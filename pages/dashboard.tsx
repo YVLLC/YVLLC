@@ -98,8 +98,8 @@ export default function DashboardPage() {
         .order("created_at", { ascending: false });
 
       if (allOrders) {
-        setOrders(allOrders);
-        const completed = allOrders.filter((o) => o.status === "Completed");
+        setOrders(allOrders as Order[]);
+        const completed = allOrders.filter((o: Order) => o.status === "Completed");
         setAnalytics({ total: allOrders.length, completed: completed.length });
       }
       setLoading(false);
@@ -127,7 +127,7 @@ export default function DashboardPage() {
         line_items: [{
           price_data: {
             currency: "usd",
-            product_data: { name: ${selectedPlatform?.name} ${serviceType} },
+            product_data: { name: `${selectedPlatform?.name} ${serviceType}` },
             unit_amount: Math.round((currentService?.price || 0) * 100),
           },
           quantity,
@@ -177,11 +177,11 @@ export default function DashboardPage() {
                   setServiceType(platform.services[0].type);
                   setQuantity(100);
                 }}
-                className={flex items-center gap-2 px-5 py-3 rounded-xl text-lg font-semibold border-2 transition shadow-sm
+                className={`flex items-center gap-2 px-5 py-3 rounded-xl text-lg font-semibold border-2 transition shadow-sm
                 ${platformKey === platform.key
                     ? "bg-[#F5FAFF] border-[#007BFF] text-[#007BFF] scale-[1.03]"
                     : "bg-white border-[#CFE4FF] text-[#333] hover:bg-[#F2F9FF]"
-                  }}
+                  }`}
               >
                 {platform.icon}
                 {platform.name}
@@ -197,11 +197,11 @@ export default function DashboardPage() {
                   <button
                     key={service.type}
                     onClick={() => setServiceType(service.type)}
-                    className={flex flex-col items-center gap-1 px-4 py-3 rounded-xl border-2 text-base font-medium transition
+                    className={`flex flex-col items-center gap-1 px-4 py-3 rounded-xl border-2 text-base font-medium transition
                     ${serviceType === service.type
                         ? "bg-[#E8F1FF] border-[#007BFF] text-[#007BFF]"
                         : "bg-white border-[#CFE4FF] text-[#333] hover:bg-[#F2F9FF]"
-                      }}
+                      }`}
                   >
                     {service.icon}
                     {service.type}
@@ -350,7 +350,22 @@ export default function DashboardPage() {
           <div className="grid grid-cols-2 gap-5 sm:grid-cols-4 mb-10">
             <DashboardStat label="Orders" value={analytics.total} color="blue" />
             <DashboardStat label="Completed" value={analytics.completed} color="green" />
-            <DashboardStat label="Spent" value={$${orders.reduce((sum, o) => sum + o.quantity * (PLATFORMS.find(p => p.name === o.platform)?.services.find(s => s.type === o.service)?.price || 0), 0).toFixed(2)}} color="blue" />
+            <DashboardStat
+              label="Spent"
+              value={
+                "$" +
+                orders
+                  .reduce(
+                    (sum, o) =>
+                      sum +
+                      o.quantity *
+                        (PLATFORMS.find((p) => p.name === o.platform)?.services.find((s) => s.type === o.service)?.price || 0),
+                    0
+                  )
+                  .toFixed(2)
+              }
+              color="blue"
+            />
             <DashboardStat label="Refill Eligible" value={orders.filter(o => o.status === "Completed").length} color="yellow" />
           </div>
         </div>
@@ -422,11 +437,9 @@ export default function DashboardPage() {
         {/* LAYOUT */}
         <div className="flex flex-col md:flex-row gap-5 relative">
           {/* SIDEBAR - Responsive Drawer */}
-          <aside className={
-            fixed top-0 left-0 z-30 bg-white border-r border-[#CFE4FF] shadow-md h-full w-60 transform md:static md:translate-x-0 transition-transform duration-200
+          <aside className={`fixed top-0 left-0 z-30 bg-white border-r border-[#CFE4FF] shadow-md h-full w-60 transform md:static md:translate-x-0 transition-transform duration-200
             rounded-none md:rounded-2xl p-5 md:w-60 md:block
-            ${sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
-          }>
+            ${sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}>
             <div className="flex justify-between items-center mb-8 md:hidden">
               <span className="font-extrabold text-lg text-[#007BFF]">Menu</span>
               <button onClick={() => setSidebarOpen(false)} className="p-2 rounded hover:bg-[#F5FAFF]">
@@ -437,9 +450,9 @@ export default function DashboardPage() {
               <button
                 key={tab.key}
                 onClick={() => { setActiveTab(tab.key); setSidebarOpen(false); }}
-                className={flex items-center gap-3 px-4 py-3 rounded-lg font-semibold transition text-base w-full
+                className={`flex items-center gap-3 px-4 py-3 rounded-lg font-semibold transition text-base w-full
                   ${activeTab === tab.key ? "bg-[#007BFF] text-white shadow" : "hover:bg-[#F5FAFF] text-[#111]"}
-                }
+                `}
               >
                 {tab.icon}
                 {tab.label}
@@ -455,7 +468,7 @@ export default function DashboardPage() {
         </div>
       </div>
       {/* -- Mobile optimization -- */}
-      <style jsx global>{
+      <style jsx global>{`
         @media (max-width: 900px) {
           .max-w-7xl { padding: 0 0vw; }
         }
@@ -468,7 +481,7 @@ export default function DashboardPage() {
         }
         table { width: 100%; }
         th, td { white-space: nowrap; }
-      }</style>
+      `}</style>
     </main>
   );
 }
@@ -477,8 +490,8 @@ export default function DashboardPage() {
 function DashboardStat({ label, value, color }: { label: string, value: any, color: string }) {
   const textColor = color === "blue" ? "text-[#007BFF]" : color === "green" ? "text-green-500" : color === "yellow" ? "text-yellow-500" : "";
   return (
-    <div className={p-4 rounded-xl bg-[#F5FAFF] border border-[#CFE4FF] text-center shadow}>
-      <span className={block text-sm font-semibold mb-1 ${textColor}}>{label}</span>
+    <div className={`p-4 rounded-xl bg-[#F5FAFF] border border-[#CFE4FF] text-center shadow`}>
+      <span className={`block text-sm font-semibold mb-1 ${textColor}`}>{label}</span>
       <span className="text-2xl font-extrabold">{value}</span>
     </div>
   );
