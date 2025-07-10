@@ -1,32 +1,20 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { supabase } from "@/lib/supabase";
 import Image from "next/image";
 import { Toaster, toast } from "react-hot-toast";
 import { loadStripe } from "@stripe/stripe-js";
-import AiBot from "../components/AiBot";
 import {
-  Instagram, Youtube, Music2, UserPlus, ThumbsUp, Eye, LogOut, BadgePercent, List, UserCircle, Sun, Moon, Loader2,
+  UserCircle, LogOut, Instagram, Youtube, Music2, UserPlus, ThumbsUp, Eye, BarChart, List, CheckCircle, Lock, Mail, Loader2, BadgePercent, Menu
 } from "lucide-react";
 
-// ---------- TYPES ----------
-interface Order {
-  id: string;
-  platform: string;
-  service: string;
-  quantity: number;
-  status: string;
-  created_at: string;
-}
-
-// ---------- CONFIG DATA ----------
 const stripePromise = loadStripe("pk_test_51RgpcCRfq6GJQepR3xUT0RkiGdN8ZSRu3OR15DfKhpMNj5QgmysYrmGQ8rGCXiI6Vi3B2L5Czmf7cRvIdtKRrSOw00SaVptcQt");
 
+// --- Data ---
 const PLATFORMS = [
   {
     key: "instagram",
     name: "Instagram",
-    color: "#E1306C",
     icon: <Instagram className="text-[#E1306C]" size={22} />,
     services: [
       { type: "Followers", price: 0.09, icon: <UserPlus size={18} className="text-[#E1306C]" /> },
@@ -37,7 +25,6 @@ const PLATFORMS = [
   {
     key: "tiktok",
     name: "TikTok",
-    color: "#00F2EA",
     icon: <Music2 className="text-[#00F2EA]" size={22} />,
     services: [
       { type: "Followers", price: 0.10, icon: <UserPlus size={18} className="text-[#00F2EA]" /> },
@@ -48,7 +35,6 @@ const PLATFORMS = [
   {
     key: "youtube",
     name: "YouTube",
-    color: "#FF0000",
     icon: <Youtube className="text-[#FF0000]" size={22} />,
     services: [
       { type: "Subscribers", price: 0.12, icon: <UserPlus size={18} className="text-[#FF0000]" /> },
@@ -58,43 +44,41 @@ const PLATFORMS = [
   }
 ];
 
-// ---------- CONFETTI ----------
-function fireConfettiVanilla() {
-  for (let i = 0; i < 120; i++) {
-    const conf = document.createElement("div");
-    conf.className = "vanilla-confetti";
-    conf.style.left = Math.random() * 100 + "vw";
-    conf.style.background = `hsl(${Math.random()*360},90%,60%)`;
-    document.body.appendChild(conf);
-    setTimeout(() => conf.remove(), 2200);
-  }
+const NAV_TABS = [
+  { key: "order", label: "Order", icon: <BadgePercent size={19} /> },
+  { key: "orders", label: "Current", icon: <List size={19} /> },
+  { key: "completed", label: "Completed", icon: <CheckCircle size={19} /> },
+  { key: "analytics", label: "Analytics", icon: <BarChart size={19} /> },
+  { key: "profile", label: "Account", icon: <UserCircle size={19} /> },
+];
+
+interface Order {
+  id: string;
+  platform: string;
+  service: string;
+  quantity: number;
+  status: string;
+  created_at: string;
 }
 
-// ---------- DASHBOARD ----------
 export default function DashboardPage() {
   const router = useRouter();
-
-  // -- THEME --
-  const [theme, setTheme] = useState<"light" | "dark">("light");
-  useEffect(() => {
-    document.documentElement.classList.toggle("dark", theme === "dark");
-  }, [theme]);
-  function toggleTheme() { setTheme(t => t === "dark" ? "light" : "dark"); }
-
-  // -- AUTH, ORDERS, FORM STATE --
   const [userEmail, setUserEmail] = useState("");
   const [userId, setUserId] = useState("");
+  const [activeTab, setActiveTab] = useState("order");
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [profileEmail, setProfileEmail] = useState("");
   const [newEmail, setNewEmail] = useState("");
-  const [passwordData, setPasswordData] = useState({ new: "" });
+  const [passwordData, setPasswordData] = useState({ current: "", new: "" });
+  const [analytics, setAnalytics] = useState({ total: 0, completed: 0 });
   const [platformKey, setPlatformKey] = useState("instagram");
   const [serviceType, setServiceType] = useState("Followers");
   const [quantity, setQuantity] = useState(100);
   const [orderLoading, setOrderLoading] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  // -- FETCH USER/ORDERS --
+  // Fetch user/orders
   useEffect(() => {
     const fetchUserAndOrders = async () => {
       const { data: { session } } = await supabase.auth.getSession();
@@ -112,17 +96,27 @@ export default function DashboardPage() {
         .select("id, platform, service, quantity, status, created_at")
         .eq("email", email)
         .order("created_at", { ascending: false });
-      setOrders(allOrders || []);
+
+      if (allOrders) {
+        setOrders(allOrders);
+        const completed = allOrders.filter((o) => o.status === "Completed");
+        setAnalytics({ total: allOrders.length, completed: completed.length });
+      }
       setLoading(false);
     };
     fetchUserAndOrders();
   }, [router]);
 
-  // -- ORDER FORM --
-  const selectedPlatform = PLATFORMS.find(p => p.key === platformKey)!;
-  const currentService = selectedPlatform.services.find(s => s.type === serviceType)!;
+  // Services for chosen platform
+  const selectedPlatform = PLATFORMS.find(p => p.key === platformKey);
+  const currentService = selectedPlatform?.services.find(s => s.type === serviceType);
 
-  // -- ORDER PLACEMENT --
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    router.push("/login");
+  };
+
+  // Order Placement
   const placeOrder = async () => {
     setOrderLoading(true);
     const stripe = await stripePromise;
@@ -133,7 +127,7 @@ export default function DashboardPage() {
         line_items: [{
           price_data: {
             currency: "usd",
-            product_data: { name: `${selectedPlatform?.name} ${serviceType}` },
+            product_data: { name: ${selectedPlatform?.name} ${serviceType} },
             unit_amount: Math.round((currentService?.price || 0) * 100),
           },
           quantity,
@@ -141,61 +135,40 @@ export default function DashboardPage() {
         metadata: { email: userEmail, platform: selectedPlatform?.name, service: serviceType, quantity }
       })
     });
+
     const session = await res.json();
     setOrderLoading(false);
     if (session.id) {
-      fireConfettiVanilla();
       await stripe?.redirectToCheckout({ sessionId: session.id });
     } else {
       toast.error("Could not start checkout.");
     }
   };
 
-  // -- PROFILE ACTIONS --
+  // Profile changes
   const handleEmailChange = async () => {
     const { error } = await supabase.auth.updateUser({ email: newEmail });
     if (error) toast.error("Email update failed");
     else toast.success("Email updated successfully");
   };
+
   const handlePasswordChange = async () => {
     const { error } = await supabase.auth.updateUser({ password: passwordData.new });
     if (error) toast.error("Password update failed");
     else toast.success("Password changed successfully");
   };
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    router.push("/login");
-  };
 
-  // ---------- RENDER ----------
-  return (
-    <main className="min-h-screen font-sans bg-gradient-to-tr from-[#d5e7ff] via-white to-[#e4e2ff] dark:from-[#10151d] dark:to-[#181d26]">
-      <Toaster position="top-right" />
+  // --- Main Tab Content ---
+  const TabContent = () => {
+    if (loading)
+      return <div className="flex justify-center items-center py-24"><Loader2 className="animate-spin mr-2" /> Loading...</div>;
 
-      {/* HEADER */}
-      <header className="flex justify-between items-center px-6 py-5 bg-white/70 dark:bg-[#181d29]/80 shadow-2xl rounded-b-3xl">
-        <div className="flex items-center gap-3">
-          <Image src="/logo.png" alt="Logo" width={44} height={44} className="rounded-2xl" />
-          <span className="font-extrabold text-3xl text-[#0061ff] dark:text-blue-200 tracking-tight drop-shadow-lg">NUTTYBOARD</span>
-          <span className="ml-3 bg-gradient-to-r from-yellow-300 to-pink-400 text-white px-4 py-2 rounded-2xl font-extrabold text-xs shadow-lg animate-pulse">ULTRA PREMIUM</span>
-        </div>
-        <div className="flex items-center gap-4">
-          <button onClick={toggleTheme} className="rounded-xl p-2 bg-blue-50 dark:bg-[#232e3a] text-blue-700 dark:text-blue-200 shadow" title="Toggle dark mode">
-            {theme === "dark" ? <Sun size={23} /> : <Moon size={23} />}
-          </button>
-          <button onClick={handleLogout} className="flex items-center gap-2 bg-[#EF4444] hover:bg-red-600 text-white px-4 py-2 rounded-2xl font-extrabold shadow-md">
-            <LogOut size={20} /> Log Out
-          </button>
-        </div>
-      </header>
-
-      {/* MAIN CONTENT */}
-      <div className="max-w-5xl mx-auto mt-10 p-4 grid grid-cols-1 md:grid-cols-2 gap-10 items-start">
-        {/* ---- ORDER CARD ---- */}
-        <section className="rounded-3xl bg-white/90 dark:bg-[#181d29]/95 shadow-2xl p-8 border-2 border-blue-100 dark:border-[#232a36] relative overflow-hidden">
-          <div className="absolute -top-10 -right-10 bg-gradient-to-br from-blue-200/40 to-pink-200/40 w-52 h-52 rounded-full blur-2xl opacity-60" />
-          <h2 className="text-3xl font-extrabold mb-2 flex items-center gap-2 tracking-tight drop-shadow">Place Order <BadgePercent className="text-[#007BFF]" size={27} /></h2>
-          <div className="flex gap-2 mb-6">
+    // --- Order Tab ---
+    if (activeTab === "order") {
+      return (
+        <div>
+          <h2 className="text-2xl font-extrabold mb-3 flex items-center gap-2">Start New Order</h2>
+          <div className="flex flex-wrap gap-3 mb-6">
             {PLATFORMS.map(platform => (
               <button
                 key={platform.key}
@@ -204,172 +177,319 @@ export default function DashboardPage() {
                   setServiceType(platform.services[0].type);
                   setQuantity(100);
                 }}
-                className={`flex items-center gap-2 px-5 py-3 rounded-xl font-bold border-2 transition shadow
+                className={flex items-center gap-2 px-5 py-3 rounded-xl text-lg font-semibold border-2 transition shadow-sm
                 ${platformKey === platform.key
-                  ? "bg-[#F0F6FF] border-[#007BFF] text-[#007BFF] scale-[1.04]"
-                  : "bg-white/70 border-[#CFE4FF] text-[#333] hover:bg-[#F2F9FF]"
-                }`}
+                    ? "bg-[#F5FAFF] border-[#007BFF] text-[#007BFF] scale-[1.03]"
+                    : "bg-white border-[#CFE4FF] text-[#333] hover:bg-[#F2F9FF]"
+                  }}
               >
-                {platform.icon} {platform.name}
+                {platform.icon}
+                {platform.name}
               </button>
             ))}
           </div>
-          <div className="flex gap-2 mb-4">
-            {selectedPlatform?.services.map(service => (
-              <button
-                key={service.type}
-                onClick={() => setServiceType(service.type)}
-                className={`flex flex-col items-center gap-1 px-4 py-3 rounded-xl border-2 text-base font-medium transition
-                ${serviceType === service.type
-                  ? "bg-[#E8F1FF] border-[#007BFF] text-[#007BFF]"
-                  : "bg-white border-[#CFE4FF] text-[#333] hover:bg-[#F2F9FF]"
-                }`}
-              >
-                {service.icon}
-                {service.type}
-                <span className="text-xs text-[#888]">${service.price}/ea</span>
-              </button>
-            ))}
-          </div>
-          <div className="bg-[#F6FAFF] dark:bg-[#222d3c] border border-[#CFE4FF] dark:border-[#232a36] p-5 rounded-xl flex flex-col gap-3 shadow-lg">
-            <label className="font-semibold mb-1">Quantity:</label>
-            <input
-              type="number"
-              min={10}
-              max={100000}
-              step={10}
-              value={quantity}
-              onChange={e => setQuantity(Number(e.target.value))}
-              className="border border-[#CFE4FF] dark:border-[#232a36] rounded-lg px-4 py-2 w-full text-lg font-medium bg-white/60 dark:bg-[#202736]"
-            />
-            <div className="flex justify-between items-center mt-2">
-              <span className="text-sm text-[#888]">Total:</span>
-              <span className="font-extrabold text-[#007BFF] text-lg">${((currentService?.price || 0) * quantity).toFixed(2)}</span>
-            </div>
-            <button
-              className="mt-3 w-full bg-gradient-to-r from-[#007bff] to-[#36c9f6] hover:from-[#005FCC] hover:to-[#6B99F7] text-white py-4 rounded-xl font-extrabold shadow-2xl transition text-lg tracking-wider"
-              onClick={placeOrder}
-              disabled={orderLoading}
-            >
-              {orderLoading ? <Loader2 className="animate-spin mr-2 inline" /> : "Place Order"}
-            </button>
-          </div>
-          <div className="flex flex-col gap-3 mt-6">
-            <div className="bg-white/90 dark:bg-[#20263a] border border-[#CFE4FF] dark:border-[#232a36] rounded-xl p-5 flex items-center gap-4 shadow-sm">
-              <svg width={28} height={28} viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="8" fill="#E6F0FF" /><path d="M14 7l7 2v4.5c0 4.13-2.95 7.77-7 8.5-4.05-.73-7-4.37-7-8.5V9l7-2z" stroke="#007BFF" strokeWidth="2" /><path d="M11 14l2 2 4-4" stroke="#007BFF" strokeWidth="2" strokeLinecap="round" /></svg>
-              <div>
-                <span className="font-semibold">Safe & Secure</span>
-                <span className="block text-[#666] text-sm">SSL Checkout, no logins required.</span>
-              </div>
-            </div>
-            <div className="bg-white/90 dark:bg-[#20263a] border border-[#CFE4FF] dark:border-[#232a36] rounded-xl p-5 flex items-center gap-4 shadow-sm">
-              <BadgePercent className="text-[#007BFF]" size={26} />
-              <div>
-                <span className="font-semibold">30 Day Refill</span>
-                <span className="block text-[#666] text-sm">If you drop, we refill. No extra cost.</span>
-              </div>
-            </div>
-            <div className="bg-white/90 dark:bg-[#20263a] border border-[#CFE4FF] dark:border-[#232a36] rounded-xl p-5 flex items-center gap-4 shadow-sm">
-              <UserCircle className="text-[#007BFF]" size={26} />
-              <div>
-                <span className="font-semibold">24/7 Live Support</span>
-                <span className="block text-[#666] text-sm">Chat with us any time, any device.</span>
-              </div>
-            </div>
-          </div>
-        </section>
 
-        {/* ---- ORDER HISTORY & ACCOUNT ---- */}
-        <section className="rounded-3xl bg-white/95 dark:bg-[#181d29]/95 shadow-2xl p-8 border-2 border-pink-100 dark:border-[#232a36] relative overflow-hidden">
-          <div className="absolute -top-12 -left-10 bg-gradient-to-br from-pink-200/50 to-blue-200/40 w-52 h-52 rounded-full blur-2xl opacity-60" />
-          <h2 className="text-3xl font-extrabold mb-4 flex items-center gap-2 tracking-tight drop-shadow">Your Orders <List className="text-[#e64eb7]" size={27} /></h2>
-          {loading ? (
-            <div className="flex justify-center items-center py-12"><Loader2 className="animate-spin mr-2" /> Loading…</div>
-          ) : (
-            <div className="flex flex-col gap-4">
-              {orders.length === 0 && (
-                <div className="text-blue-400 text-center py-10 text-xl">No orders yet.<br />Place your first order!</div>
-              )}
-              {orders.map(order => (
-                <div key={order.id} className="rounded-2xl p-5 bg-gradient-to-r from-blue-50 to-blue-100 dark:from-[#222a38] dark:to-[#232b3a] shadow-xl flex flex-col sm:flex-row items-center justify-between gap-2 border border-blue-100 dark:border-[#232a36]">
-                  <div>
-                    <div className="font-bold text-[#0061ff] dark:text-blue-200 flex items-center gap-2">
-                      {PLATFORMS.find(p => p.name === order.platform)?.icon || <UserCircle size={19} />}
-                      {order.platform}
-                      <span className="font-normal text-base text-blue-400 ml-2">{order.service}</span>
-                    </div>
-                    <div className="text-xs text-blue-400">Qty: {order.quantity} • {new Date(order.created_at).toLocaleString()}</div>
-                  </div>
-                  <div className="font-extrabold text-[#e64eb7] dark:text-pink-300 text-xl">${(PLATFORMS.find(p => p.name === order.platform)?.services.find(s => s.type === order.service)?.price * order.quantity).toFixed(2)}</div>
-                  <div className={`rounded-full px-4 py-1 text-xs font-extrabold ${order.status === "Completed"
-                    ? "bg-green-200 text-green-800"
-                    : "bg-yellow-100 text-yellow-700"
-                  }`}>
-                    {order.status}
-                  </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div>
+              <h3 className="text-lg font-bold mb-2">Select Service</h3>
+              <div className="flex gap-3 mb-5 flex-wrap">
+                {selectedPlatform?.services.map(service => (
+                  <button
+                    key={service.type}
+                    onClick={() => setServiceType(service.type)}
+                    className={flex flex-col items-center gap-1 px-4 py-3 rounded-xl border-2 text-base font-medium transition
+                    ${serviceType === service.type
+                        ? "bg-[#E8F1FF] border-[#007BFF] text-[#007BFF]"
+                        : "bg-white border-[#CFE4FF] text-[#333] hover:bg-[#F2F9FF]"
+                      }}
+                  >
+                    {service.icon}
+                    {service.type}
+                    <span className="text-xs text-[#888]">${service.price}/ea</span>
+                  </button>
+                ))}
+              </div>
+              <div className="bg-[#F5FAFF] border border-[#CFE4FF] p-5 rounded-xl flex flex-col gap-3">
+                <label className="font-semibold mb-1">Quantity:</label>
+                <input
+                  type="number"
+                  min={10}
+                  max={100000}
+                  step={10}
+                  value={quantity}
+                  onChange={e => setQuantity(Number(e.target.value))}
+                  className="border border-[#CFE4FF] rounded-lg px-4 py-2 w-full text-lg font-medium"
+                />
+                <div className="flex justify-between items-center mt-2">
+                  <span className="text-sm text-[#888]">Total:</span>
+                  <span className="font-bold text-[#007BFF] text-lg">${((currentService?.price || 0) * quantity).toFixed(2)}</span>
                 </div>
-              ))}
+                <button
+                  className="mt-3 w-full bg-[#007BFF] hover:bg-[#005FCC] text-white py-3 rounded-xl font-bold shadow transition text-lg"
+                  onClick={placeOrder}
+                  disabled={orderLoading}
+                >
+                  {orderLoading ? <Loader2 className="animate-spin mr-2 inline" /> : "Place Order"}
+                </button>
+              </div>
+            </div>
+            {/* INFO/SECURITY/REFILL */}
+            <div className="flex flex-col gap-5 justify-center">
+              <div className="bg-white border border-[#CFE4FF] rounded-xl p-5 flex items-center gap-4 shadow-sm">
+                <ShieldIcon />
+                <div>
+                  <span className="font-semibold">Safe & Secure</span>
+                  <span className="block text-[#666] text-sm">SSL Checkout, no logins required.</span>
+                </div>
+              </div>
+              <div className="bg-white border border-[#CFE4FF] rounded-xl p-5 flex items-center gap-4 shadow-sm">
+                <BadgePercent className="text-[#007BFF]" size={26} />
+                <div>
+                  <span className="font-semibold">30 Day Refill</span>
+                  <span className="block text-[#666] text-sm">If you drop, we refill. No extra cost.</span>
+                </div>
+              </div>
+              <div className="bg-white border border-[#CFE4FF] rounded-xl p-5 flex items-center gap-4 shadow-sm">
+                <Mail className="text-[#007BFF]" size={26} />
+                <div>
+                  <span className="font-semibold">24/7 Live Support</span>
+                  <span className="block text-[#666] text-sm">Chat with us any time, any device.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // --- Current Orders Tab ---
+    if (activeTab === "orders") {
+      const inProgress = orders.filter(o => o.status !== "Completed");
+      return (
+        <div>
+          <h2 className="text-2xl font-extrabold mb-4 flex items-center gap-2"><List size={22} /> Current Orders</h2>
+          {inProgress.length === 0 ? (
+            <div className="text-[#888] py-16 text-center">No current orders. Place your first order above!</div>
+          ) : (
+            <div className="overflow-x-auto" style={{ WebkitOverflowScrolling: "touch" }}>
+              <table className="min-w-full text-sm">
+                <thead>
+                  <tr className="bg-[#F5FAFF]">
+                    <th className="p-3 text-left">Order ID</th>
+                    <th className="p-3 text-left">Platform</th>
+                    <th className="p-3 text-left">Service</th>
+                    <th className="p-3 text-left">Quantity</th>
+                    <th className="p-3 text-left">Status</th>
+                    <th className="p-3 text-left">Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {inProgress.map(order => (
+                    <tr key={order.id} className="border-t">
+                      <td className="p-3">{order.id.slice(0, 6)}...</td>
+                      <td className="p-3">{order.platform}</td>
+                      <td className="p-3">{order.service}</td>
+                      <td className="p-3">{order.quantity}</td>
+                      <td className="p-3 font-bold text-[#007BFF]">{order.status}</td>
+                      <td className="p-3">{new Date(order.created_at).toLocaleString()}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           )}
+        </div>
+      );
+    }
 
-          {/* ---- PROFILE/ACCOUNT ---- */}
-          <div className="mt-12 mb-2">
-            <h3 className="text-2xl font-bold mb-4 flex items-center gap-2"><UserCircle className="text-[#0061ff]" /> Account</h3>
+    // --- Completed Orders Tab ---
+    if (activeTab === "completed") {
+      const completed = orders.filter(o => o.status === "Completed");
+      return (
+        <div>
+          <h2 className="text-2xl font-extrabold mb-4 flex items-center gap-2"><CheckCircle size={22} /> Completed Orders</h2>
+          {completed.length === 0 ? (
+            <div className="text-[#888] py-16 text-center">No completed orders yet.</div>
+          ) : (
+            <div className="overflow-x-auto" style={{ WebkitOverflowScrolling: "touch" }}>
+              <table className="min-w-full text-sm">
+                <thead>
+                  <tr className="bg-[#F5FAFF]">
+                    <th className="p-3 text-left">Order ID</th>
+                    <th className="p-3 text-left">Platform</th>
+                    <th className="p-3 text-left">Service</th>
+                    <th className="p-3 text-left">Quantity</th>
+                    <th className="p-3 text-left">Status</th>
+                    <th className="p-3 text-left">Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {completed.map(order => (
+                    <tr key={order.id} className="border-t">
+                      <td className="p-3">{order.id.slice(0, 6)}...</td>
+                      <td className="p-3">{order.platform}</td>
+                      <td className="p-3">{order.service}</td>
+                      <td className="p-3">{order.quantity}</td>
+                      <td className="p-3 font-bold text-green-600">{order.status}</td>
+                      <td className="p-3">{new Date(order.created_at).toLocaleString()}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    // --- Analytics Tab ---
+    if (activeTab === "analytics") {
+      return (
+        <div>
+          <h2 className="text-2xl font-extrabold mb-4 flex items-center gap-2"><BarChart size={22} /> Analytics</h2>
+          <div className="grid grid-cols-2 gap-5 sm:grid-cols-4 mb-10">
+            <DashboardStat label="Orders" value={analytics.total} color="blue" />
+            <DashboardStat label="Completed" value={analytics.completed} color="green" />
+            <DashboardStat label="Spent" value={$${orders.reduce((sum, o) => sum + o.quantity * (PLATFORMS.find(p => p.name === o.platform)?.services.find(s => s.type === o.service)?.price || 0), 0).toFixed(2)}} color="blue" />
+            <DashboardStat label="Refill Eligible" value={orders.filter(o => o.status === "Completed").length} color="yellow" />
+          </div>
+        </div>
+      );
+    }
+
+    // --- Profile Tab ---
+    if (activeTab === "profile") {
+      return (
+        <div className="space-y-7">
+          <h2 className="text-2xl font-extrabold mb-2 flex items-center gap-2"><UserCircle size={22} /> Account</h2>
+          <div>
+            <label className="block text-[#111] font-bold mb-1">Email</label>
             <input
               type="email"
-              className="border-2 border-blue-100 dark:border-[#232a36] px-3 py-2 rounded-xl mb-2 w-full bg-white dark:bg-[#232b36] text-lg font-medium"
+              className="border px-3 py-2 rounded-md mr-2 w-full max-w-xs"
               value={newEmail || profileEmail}
               onChange={e => setNewEmail(e.target.value)}
             />
-            <button onClick={handleEmailChange} className="bg-gradient-to-r from-[#007bff] to-[#36c9f6] text-white px-4 py-2 rounded-lg font-extrabold shadow mt-2">
+            <button onClick={handleEmailChange} className="bg-[#007BFF] text-white px-4 py-2 rounded mt-2">
               Update Email
             </button>
+          </div>
+          <div>
+            <label className="block text-[#111] font-bold mb-1">Change Password</label>
             <input
               type="password"
               placeholder="New Password"
               value={passwordData.new}
               onChange={e => setPasswordData({ ...passwordData, new: e.target.value })}
-              className="border-2 border-blue-100 dark:border-[#232a36] px-3 py-2 rounded-xl mt-5 w-full bg-white dark:bg-[#232b36] text-lg font-medium"
+              className="border px-3 py-2 rounded-md mr-2 w-full max-w-xs"
             />
-            <button onClick={handlePasswordChange} className="bg-gradient-to-r from-[#e64eb7] to-[#ffb2fc] text-white px-4 py-2 rounded-lg font-extrabold shadow mt-2">
+            <button onClick={handlePasswordChange} className="bg-[#007BFF] text-white px-4 py-2 rounded mt-2">
               Update Password
             </button>
           </div>
-        </section>
+        </div>
+      );
+    }
+
+    return <div>Pick a tab…</div>;
+  };
+
+  // --- Responsive Layout ---
+  return (
+    <main className="min-h-screen bg-[#F9FAFB]">
+      <Toaster position="top-right" />
+      <div className="max-w-7xl mx-auto px-2 sm:px-4 py-6">
+        {/* HEADER */}
+        <div className="flex flex-wrap sm:flex-nowrap items-center justify-between mb-6 gap-3">
+          <div className="flex items-center gap-2">
+            <button
+              className="block md:hidden p-2"
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              aria-label="Open Navigation"
+            >
+              <Menu size={28} className="text-[#007BFF]" />
+            </button>
+            <Image src="/logo.png" alt="YesViral Logo" width={38} height={38} />
+            <span className="text-2xl font-extrabold text-[#007BFF] tracking-tight">Dashboard</span>
+          </div>
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-2 bg-[#EF4444] hover:bg-red-600 text-white px-4 py-2 rounded-xl font-bold shadow"
+          >
+            <LogOut size={18} /> Log Out
+          </button>
+        </div>
+        {/* LAYOUT */}
+        <div className="flex flex-col md:flex-row gap-5 relative">
+          {/* SIDEBAR - Responsive Drawer */}
+          <aside className={
+            fixed top-0 left-0 z-30 bg-white border-r border-[#CFE4FF] shadow-md h-full w-60 transform md:static md:translate-x-0 transition-transform duration-200
+            rounded-none md:rounded-2xl p-5 md:w-60 md:block
+            ${sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
+          }>
+            <div className="flex justify-between items-center mb-8 md:hidden">
+              <span className="font-extrabold text-lg text-[#007BFF]">Menu</span>
+              <button onClick={() => setSidebarOpen(false)} className="p-2 rounded hover:bg-[#F5FAFF]">
+                <LogOut size={22} className="text-[#007BFF]" />
+              </button>
+            </div>
+            {NAV_TABS.map(tab => (
+              <button
+                key={tab.key}
+                onClick={() => { setActiveTab(tab.key); setSidebarOpen(false); }}
+                className={flex items-center gap-3 px-4 py-3 rounded-lg font-semibold transition text-base w-full
+                  ${activeTab === tab.key ? "bg-[#007BFF] text-white shadow" : "hover:bg-[#F5FAFF] text-[#111]"}
+                }
+              >
+                {tab.icon}
+                {tab.label}
+              </button>
+            ))}
+          </aside>
+          {/* Overlay for mobile nav */}
+          {sidebarOpen && <div className="fixed inset-0 bg-black/40 z-20 md:hidden" onClick={() => setSidebarOpen(false)}></div>}
+          {/* MAIN CONTENT */}
+          <section className="flex-1 bg-white border border-[#CFE4FF] rounded-2xl shadow-sm p-4 sm:p-8 min-h-[440px]">
+            <TabContent />
+          </section>
+        </div>
       </div>
-
-      {/* AI Bot */}
-      <AiBot />
-
-      {/* VANILLA CONFETTI CSS */}
-      <style jsx global>{`
-        .vanilla-confetti {
-          position: fixed;
-          top: -24px;
-          width: 10px;
-          height: 22px;
-          border-radius: 4px;
-          opacity: 0.8;
-          z-index: 9999;
-          animation: confetti-fall 2s cubic-bezier(.45,.3,.68,1) forwards;
+      {/* -- Mobile optimization -- */}
+      <style jsx global>{
+        @media (max-width: 900px) {
+          .max-w-7xl { padding: 0 0vw; }
         }
-        @keyframes confetti-fall {
-          to {
-            top: 100vh;
-            transform: rotate(360deg);
-            opacity: 0;
-          }
+        @media (max-width: 600px) {
+          .max-w-7xl { padding: 0 1vw; }
+          aside, section { padding: 12px !important; }
+          h2 { font-size: 1.1rem !important; }
+          th, td { font-size: 0.98rem; }
+          .text-2xl { font-size: 1.3rem !important; }
         }
-        body { font-family: 'Inter', sans-serif; }
-        .dark body { background: #10151d !important; color: #eee !important; }
-        ::selection { background: #99e4ff; }
-        .animate-pulse { animation: pulse 2s infinite; }
-        @keyframes pulse { 0%,100% { opacity:.6; } 50% { opacity:1; } }
-        input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button {
-          -webkit-appearance: none; margin: 0;
-        }
-        input[type=number] { -moz-appearance: textfield; }
-      `}</style>
+        table { width: 100%; }
+        th, td { white-space: nowrap; }
+      }</style>
     </main>
+  );
+}
+
+// --- Dashboard Stat Box ---
+function DashboardStat({ label, value, color }: { label: string, value: any, color: string }) {
+  const textColor = color === "blue" ? "text-[#007BFF]" : color === "green" ? "text-green-500" : color === "yellow" ? "text-yellow-500" : "";
+  return (
+    <div className={p-4 rounded-xl bg-[#F5FAFF] border border-[#CFE4FF] text-center shadow}>
+      <span className={block text-sm font-semibold mb-1 ${textColor}}>{label}</span>
+      <span className="text-2xl font-extrabold">{value}</span>
+    </div>
+  );
+}
+
+function ShieldIcon() {
+  return (
+    <svg width={28} height={28} viewBox="0 0 28 28" fill="none">
+      <rect width="28" height="28" rx="8" fill="#E6F0FF" />
+      <path d="M14 7l7 2v4.5c0 4.13-2.95 7.77-7 8.5-4.05-.73-7-4.37-7-8.5V9l7-2z" stroke="#007BFF" strokeWidth="2" />
+      <path d="M11 14l2 2 4-4" stroke="#007BFF" strokeWidth="2" strokeLinecap="round" />
+    </svg>
   );
 }
