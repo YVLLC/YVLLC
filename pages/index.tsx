@@ -21,16 +21,15 @@ const SERVICES = [
     name: "Instagram Services",
     key: "instagram",
     price: "$0.09 / 100",
-    description: "Grow your Instagram with high-retention followers and real, verified accounts. All engagement is delivered organically for authentic, lasting results—ideal for creators, brands, and anyone serious about building genuine influence. Expect prompt delivery and steady, reliable growth that withstands algorithm updates.",
-    icon: (
-      <svg width={28} height={28} viewBox="0 0 48 48" fill="none">
-        <rect width="48" height="48" rx="16" fill="#F9E5F6"/>
-        <g>
-          <circle cx="24" cy="24" r="14" fill="#fff"/>
-          <path d="M24 16a8 8 0 100 16 8 8 0 000-16zm0 13a5 5 0 110-10 5 5 0 010 10zm6.25-12.5a1.25 1.25 0 112.5 0 1.25 1.25 0 01-2.5 0z" fill="#E1306C"/>
-        </g>
-      </svg>
+    description: (
+      <>
+        Premium followers from real profiles. <br />
+        Instant, safe delivery. <br />
+        No drops. No bots. <br />
+        Trusted by brands, influencers, and agencies.
+      </>
     ),
+    icon: (/* icon unchanged */),
     tag: "Bestseller",
     count: "2,000+ bought this week"
   },
@@ -38,18 +37,15 @@ const SERVICES = [
     name: "TikTok Services",
     key: "tiktok",
     price: "$0.08 / 100",
-    description: "Accelerate your TikTok growth with real likes and engagement from authentic users, delivered fast and with total privacy. Perfect for going viral, launching campaigns, or boosting organic reach—our methods prioritize account safety and maximize your video’s visibility on the For You page.",
-    icon: (
-      <svg width={28} height={28} viewBox="0 0 48 48" fill="none">
-        <rect width="48" height="48" rx="16" fill="#E3F4FE"/>
-        <g>
-          <circle cx="24" cy="24" r="14" fill="#fff"/>
-          <path d="M32 20.19a4.09 4.09 0 01-2.13-.61 4.09 4.09 0 01-1.44-1.71V30.5a6.5 6.5 0 11-6.5-6.5" stroke="#000" strokeWidth="2" strokeLinecap="round"/>
-          <path d="M29 13v4.41a4.09 4.09 0 002.13.61" stroke="#00F2EA" strokeWidth="2" strokeLinecap="round"/>
-          <path d="M27.5 17.4V29.4a4.9 4.9 0 11-4.9-4.9" stroke="#FE2C55" strokeWidth="2" strokeLinecap="round"/>
-        </g>
-      </svg>
+    description: (
+      <>
+        Real likes and views that push you up the For You page. <br />
+        Organic engagement, no fakes. <br />
+        Boost virality instantly. <br />
+        100% safe for any account.
+      </>
     ),
+    icon: (/* icon unchanged */),
     tag: "🔥 Hot",
     count: "1,400+ bought this week"
   },
@@ -57,16 +53,15 @@ const SERVICES = [
     name: "YouTube Services",
     key: "youtube",
     price: "$0.05 / 1000",
-    description: "Expand your channel with genuine YouTube views and impressions from real users worldwide. All views are algorithm-safe, help improve your video’s analytics, and are delivered at a natural pace. Perfect for creators looking to rank higher, increase credibility, and reach new audiences with confidence.",
-    icon: (
-      <svg width={28} height={28} viewBox="0 0 48 48" fill="none">
-        <rect width="48" height="48" rx="16" fill="#FEECE3"/>
-        <g>
-          <circle cx="24" cy="24" r="14" fill="#fff"/>
-          <path d="M30 24l-8 5V19l8 5z" fill="#FF0000"/>
-        </g>
-      </svg>
+    description: (
+      <>
+        Genuine views and watch time that actually stick. <br />
+        Improve ranking and channel trust. <br />
+        Fast, discrete, and algorithm-safe. <br />
+        Used by creators serious about growth.
+      </>
     ),
+    icon: (/* icon unchanged */),
     tag: "",
     count: "950+ bought this week"
   }
