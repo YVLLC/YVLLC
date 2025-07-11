@@ -131,6 +131,7 @@ export default function OrderModal({
   const [step, setStep] = useState<number>(0);
   const [platform, setPlatform] = useState(PLATFORMS[0]);
   const [service, setService] = useState(PLATFORMS[0].services[0]);
+  const [hoveredService, setHoveredService] = useState<typeof service | null>(null);
   const [quantity, setQuantity] = useState(100);
   const [target, setTarget] = useState("");
   const [error, setError] = useState("");
@@ -174,6 +175,7 @@ export default function OrderModal({
     setTarget("");
     setError("");
     setDone(false);
+    setHoveredService(null);
     setStep(stepToSet);
   }, [open, initialPlatform, initialService]);
 
@@ -186,6 +188,7 @@ export default function OrderModal({
     setQuantity(100);
     setTarget("");
     setError("");
+    setHoveredService(null);
     setStep(1);
   };
 
@@ -193,6 +196,7 @@ export default function OrderModal({
     setService(s);
     setQuantity(100);
     setError("");
+    setHoveredService(null);
     setStep(2);
   };
 
@@ -203,6 +207,7 @@ export default function OrderModal({
     setQuantity(100);
     setTarget("");
     setError("");
+    setHoveredService(null);
     setDone(false);
   };
 
@@ -278,7 +283,7 @@ export default function OrderModal({
               </div>
             </>
           )}
-          {/* Step 1: Service List */}
+          {/* Step 1: Service List with hover/tap update */}
           {step === 1 && (
             <>
               <h3 className="font-bold text-xl mb-3 text-[#222] text-center">
@@ -291,6 +296,10 @@ export default function OrderModal({
                     className={`flex items-center justify-between px-4 py-4 rounded-xl border-2 text-base font-semibold shadow hover:shadow-lg transition
                       ${service.type === s.type ? "border-[#007BFF] bg-[#E8F1FF] text-[#007BFF]" : "border-[#D2E6FF] text-[#222] bg-white"}`}
                     onClick={() => chooseService(s)}
+                    onMouseEnter={() => setHoveredService(s)}
+                    onMouseLeave={() => setHoveredService(null)}
+                    onFocus={() => setHoveredService(s)}
+                    onBlur={() => setHoveredService(null)}
                   >
                     <div className="flex items-center gap-2">
                       {s.icon}
@@ -302,11 +311,11 @@ export default function OrderModal({
               </div>
               <div className="mt-5 bg-[#F5FAFF] border border-[#CFE4FF] p-5 rounded-xl">
                 <div className="flex items-center gap-2 mb-2">
-                  {service.icon}
-                  <span className="font-bold text-[#007BFF]">{service.type}</span>
+                  {(hoveredService || service).icon}
+                  <span className="font-bold text-[#007BFF]">{(hoveredService || service).type}</span>
                   <Star size={15} className="text-yellow-400 animate-pulse" />
                 </div>
-                <div className="text-[#444] text-sm">{service.desc}</div>
+                <div className="text-[#444] text-sm">{(hoveredService || service).desc}</div>
               </div>
               <button className="block mx-auto mt-7 text-[#007BFF] underline text-sm" onClick={() => setStep(0)}>← Back</button>
             </>
