@@ -229,6 +229,7 @@ export default function OrderModal({
   const [target, setTarget] = useState("");
   const [error, setError] = useState("");
   const [done, setDone] = useState(false);
+  const [isDetailsHovered, setIsDetailsHovered] = useState(false);
 
   useEffect(() => {
     if (!open) return;
@@ -270,11 +271,11 @@ export default function OrderModal({
     setDone(false);
     setHoveredService(null);
     setStep(stepToSet);
+    setIsDetailsHovered(false);
   }, [open, initialPlatform, initialService]);
 
   if (!open) return null;
 
-  // Pickers
   const choosePlatform = (p: typeof platform) => {
     setPlatform(p);
     setService(p.services[0]);
@@ -302,6 +303,7 @@ export default function OrderModal({
     setError("");
     setHoveredService(null);
     setDone(false);
+    setIsDetailsHovered(false);
   };
 
   const closeAndReset = () => {
@@ -390,9 +392,13 @@ export default function OrderModal({
                       ${service.type === s.type ? "border-[#007BFF] bg-[#E8F1FF] text-[#007BFF]" : "border-[#D2E6FF] text-[#222] bg-white"}`}
                     onClick={() => chooseService(s)}
                     onMouseEnter={() => setHoveredService(s)}
-                    onMouseLeave={() => setHoveredService(null)}
+                    onMouseLeave={() => {
+                      if (!isDetailsHovered) setHoveredService(null);
+                    }}
                     onFocus={() => setHoveredService(s)}
-                    onBlur={() => setHoveredService(null)}
+                    onBlur={() => {
+                      if (!isDetailsHovered) setHoveredService(null);
+                    }}
                   >
                     <div className="flex items-center gap-2">
                       {s.icon}
@@ -402,8 +408,14 @@ export default function OrderModal({
                   </button>
                 ))}
               </div>
-              {/* Service details (show hovered if present, else selected) */}
-              <div className="mt-5 bg-[#F5FAFF] border border-[#CFE4FF] p-5 rounded-xl">
+              <div
+                onMouseEnter={() => setIsDetailsHovered(true)}
+                onMouseLeave={() => {
+                  setIsDetailsHovered(false);
+                  setHoveredService(null);
+                }}
+                className="mt-5 bg-[#F5FAFF] border border-[#CFE4FF] p-5 rounded-xl"
+              >
                 <div className="flex items-center gap-2 mb-2">
                   {(hoveredService || service).icon}
                   <span className="font-bold text-[#007BFF]">{(hoveredService || service).type}</span>
