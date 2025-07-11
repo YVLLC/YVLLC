@@ -22,10 +22,10 @@ const SERVICES = [
     key: "instagram",
     price: "$0.09 / 100",
     description: [
-      "✅ Verified, premium followers",
-      "✅ Instant, discreet delivery",
-      "✅ Retention guarantee included",
-      "✅ No data risk, ever"
+      "💎 High-Quality Followers & Likes",
+      "⚡️ Rapid delivery",
+      "🛡️ Drop protection",
+      "🔒 Secure checkout"
     ].join('\n'),
     icon: (
       <svg width={28} height={28} viewBox="0 0 48 48" fill="none">
@@ -44,10 +44,10 @@ const SERVICES = [
     key: "tiktok",
     price: "$0.08 / 100",
     description: [
-      "⭐️ Authentic likes from real users",
-      "⭐️ For You boost, no bots",
-      "⭐️ Results visible within minutes",
-      "⭐️ Full account protection"
+      "✨ High-impact likes & views",
+      "🚀 Instant order start",
+      "🙅‍♂️ No login needed",
+      "🛡️ Protected service"
     ].join('\n'),
     icon: (
       <svg width={28} height={28} viewBox="0 0 48 48" fill="none">
@@ -68,10 +68,10 @@ const SERVICES = [
     key: "youtube",
     price: "$0.05 / 1000",
     description: [
-      "🎯 High-retention, genuine views",
-      "🎯 Analytics and ranking safe",
-      "🎯 Private, rapid fulfillment",
-      "🎯 Trusted by leading creators"
+      "🏆 Premium views & watch time",
+      "📈 Boosts channel performance",
+      "🤫 Private delivery",
+      "🤖 Algorithm friendly"
     ].join('\n'),
     icon: (
       <svg width={28} height={28} viewBox="0 0 48 48" fill="none">
