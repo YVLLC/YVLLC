@@ -1,82 +1,53 @@
 import { useState, useEffect } from "react";
 import {
-  Instagram, Youtube, Music2, UserPlus, ThumbsUp, Eye, X, Loader2, CheckCircle, Lock, Star
+  Instagram, Youtube, Music2, UserPlus, ThumbsUp, Eye, Loader2, CheckCircle, Lock, Star
 } from "lucide-react";
 import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 
-// Stripe key — replace with your live/public key in production!
 const stripePromise = loadStripe("pk_live_51Rgpc4Dzq312KvGPUkyCKLxH4ZdPWeJlmBAnMrSlAl5BHF8Wu8qFW6hqxKlo3l7F87X3qmvVnmDrZYcP3FSSTPVN00fygC8Pfl");
 
-type Service = {
-  type: string;
-  price: number;
-  icon: JSX.Element;
-  desc: string;
-  features: string[];
-};
-
-type Platform = {
-  key: string;
-  name: string;
-  color: string;
-  icon: JSX.Element;
-  services: Service[];
-};
-
-const PLATFORMS: Platform[] = [
+const PLATFORMS = [
   {
     key: "instagram",
     name: "Instagram",
+    icon: <Instagram size={24} className="text-[#E1306C]" />,
     color: "#E1306C",
-    icon: <Instagram className="text-[#E1306C]" size={26} />,
     services: [
       {
         type: "Followers",
         price: 0.09,
-        icon: <UserPlus size={17} className="text-[#E1306C]" />,
-        desc: "Attract genuine Instagram followers. Real, active accounts only. Zero bots, zero risk. 100% refill guarantee if you lose any.",
+        icon: <UserPlus size={18} className="text-[#E1306C]" />,
+        desc: "Grow your page instantly with real, active followers. No bots, no drops — just pure engagement with refill guarantee.",
         features: [
-          "100% real, active users",
-          "Followers stay — or we refill, free",
-          "No account login required",
-          "Start seeing results in 2–10 minutes"
+          "Real users only, never bots",
+          "Refill guarantee — 30 days",
+          "No login, 100% private",
+          "Fastest US/EU delivery"
         ]
       },
       {
         type: "Likes",
         price: 0.07,
-        icon: <ThumbsUp size={17} className="text-[#E1306C]" />,
-        desc: "Boost your posts with authentic likes from real profiles. Get on the Explore page and attract organic engagement.",
+        icon: <ThumbsUp size={18} className="text-[#E1306C]" />,
+        desc: "Boost your post’s popularity with high-quality likes from active IG accounts. No risk of fake engagement.",
         features: [
-          "No fakes, no bots, real users only",
-          "Works for any public post or Reel",
-          "Blazing fast delivery",
-          "Permanent results"
+          "Active, real profiles",
+          "No fake accounts — ever",
+          "Works for any public post",
+          "Instant top-up available"
         ]
       },
       {
         type: "Views",
         price: 0.04,
-        icon: <Eye size={17} className="text-[#E1306C]" />,
-        desc: "Want your Reels and videos seen by more people? Our real views help you rank higher and increase reach — 100% safe.",
+        icon: <Eye size={18} className="text-[#E1306C]" />,
+        desc: "Get noticed — real, high-retention views for Reels & Stories. Your content deserves reach, not bots.",
         features: [
-          "Guaranteed retention & delivery",
-          "Increases reach + organic growth",
-          "No password, no risk",
-          "Great for Reels, Stories, IGTV"
-        ]
-      },
-      {
-        type: "Comments",
-        price: 0.20,
-        icon: <X size={17} className="text-[#E1306C]" />,
-        desc: "Level up your social proof. Choose random or custom comments — all posted from active profiles, never bots.",
-        features: [
-          "Custom or random text",
-          "Only real accounts (no bots)",
-          "Increases engagement rate",
-          "Perfect for boosting promo posts"
+          "Real, watch-through views",
+          "Best for Reels & Stories",
+          "Rank higher in Explore",
+          "Delivered in minutes"
         ]
       }
     ]
@@ -84,43 +55,43 @@ const PLATFORMS: Platform[] = [
   {
     key: "tiktok",
     name: "TikTok",
+    icon: <Music2 size={24} className="text-[#00F2EA]" />,
     color: "#00F2EA",
-    icon: <Music2 className="text-[#00F2EA]" size={26} />,
     services: [
       {
         type: "Followers",
         price: 0.10,
-        icon: <UserPlus size={17} className="text-[#00F2EA]" />,
-        desc: "Grow your TikTok audience with real, permanent followers. Your account stays safe — no logins, no sketchy methods.",
+        icon: <UserPlus size={18} className="text-[#00F2EA]" />,
+        desc: "Level up your TikTok clout with real, loyal followers. Safe, organic, never botted.",
         features: [
-          "Real users, not bots",
-          "Works for any public profile",
+          "100% real users",
           "No password needed",
-          "Includes 30-day refill protection"
+          "Instant or slow delivery",
+          "Supports all countries"
         ]
       },
       {
         type: "Likes",
         price: 0.08,
-        icon: <ThumbsUp size={17} className="text-[#00F2EA]" />,
-        desc: "Get your TikToks trending! Real people liking your videos within minutes. Perfect for launching a new post.",
+        icon: <ThumbsUp size={18} className="text-[#00F2EA]" />,
+        desc: "Make your TikToks pop with likes that count. Zero fakes, real reach.",
         features: [
-          "High-retention, permanent likes",
-          "Delivered instantly",
-          "Boosts algorithm ranking",
-          "No password, 100% private"
+          "Active TikTok accounts",
+          "Boosts video ranking",
+          "Private and safe",
+          "24/7 support"
         ]
       },
       {
         type: "Views",
         price: 0.06,
-        icon: <Eye size={17} className="text-[#00F2EA]" />,
-        desc: "Watch your views skyrocket with our genuine TikTok view campaigns — designed for maximum FYP exposure.",
+        icon: <Eye size={18} className="text-[#00F2EA]" />,
+        desc: "Unlock the FYP with rapid, authentic video views. No risk, all reward.",
         features: [
-          "Guaranteed real, high-retention views",
-          "Safe for any video or Reel",
-          "Fastest delivery on the market",
-          "24/7 support if you need help"
+          "High retention, fast views",
+          "Works on any video",
+          "No fake metrics",
+          "Top global delivery"
         ]
       }
     ]
@@ -128,43 +99,43 @@ const PLATFORMS: Platform[] = [
   {
     key: "youtube",
     name: "YouTube",
+    icon: <Youtube size={24} className="text-[#FF0000]" />,
     color: "#FF0000",
-    icon: <Youtube className="text-[#FF0000]" size={26} />,
     services: [
       {
         type: "Subscribers",
         price: 0.12,
-        icon: <UserPlus size={17} className="text-[#FF0000]" />,
-        desc: "Get real YouTube subscribers, no drop, no risk. Unlock channel features and look more established instantly.",
+        icon: <UserPlus size={18} className="text-[#FF0000]" />,
+        desc: "Unlock channel features & look legit with real, permanent subs. 0% drop rate, 100% safe.",
         features: [
-          "Worldwide or targeted delivery",
-          "Eligible for monetization",
-          "No fake or dead accounts",
-          "Refill guarantee included"
+          "Monetization safe",
+          "Global or targeted subs",
+          "No drops — refill for free",
+          "No logins required"
         ]
       },
       {
         type: "Likes",
         price: 0.09,
-        icon: <ThumbsUp size={17} className="text-[#FF0000]" />,
-        desc: "Make your videos stand out with genuine likes. Attract more organic traffic and boost video rankings.",
+        icon: <ThumbsUp size={18} className="text-[#FF0000]" />,
+        desc: "Boost your videos to the top with premium likes from active YT users.",
         features: [
-          "Delivered in minutes",
+          "Instant & scheduled",
+          "No fake accounts",
           "Permanent engagement",
-          "Only from active profiles",
-          "No password required"
+          "Organic push boost"
         ]
       },
       {
         type: "Views",
         price: 0.05,
-        icon: <Eye size={17} className="text-[#FF0000]" />,
-        desc: "Increase your video’s views with high-retention, real watch time. Safe for AdSense and YouTube Partner.",
+        icon: <Eye size={18} className="text-[#FF0000]" />,
+        desc: "Get real YouTube views that actually count. High watch time, high retention.",
         features: [
-          "100% authentic, high retention",
-          "Safe for channel and monetization",
-          "Fastest delivery in the industry",
-          "Counts toward YouTube algorithms"
+          "High-retention, real views",
+          "AdSense safe",
+          "Delivered in 1–10 min",
+          "Best for new uploads"
         ]
       }
     ]
@@ -264,26 +235,24 @@ function PaymentForm({
   );
 }
 
-type OrderModalProps = {
-  open: boolean;
-  onClose: () => void;
-  initialPlatform?: string | null;
-  initialService?: string | null;
-};
-
 export default function OrderModal({
   open,
   onClose,
   initialPlatform,
   initialService
-}: OrderModalProps) {
+}: {
+  open: boolean,
+  onClose: () => void,
+  initialPlatform?: string | null,
+  initialService?: string | null
+}) {
   const [step, setStep] = useState<number>(0);
-  const [platform, setPlatform] = useState<Platform>(PLATFORMS[0]);
-  const [service, setService] = useState<Service>(PLATFORMS[0].services[0]);
-  const [quantity, setQuantity] = useState<number>(100);
-  const [target, setTarget] = useState<string>("");
-  const [error, setError] = useState<string>("");
-  const [done, setDone] = useState<boolean>(false);
+  const [platform, setPlatform] = useState(PLATFORMS[0]);
+  const [service, setService] = useState(PLATFORMS[0].services[0]);
+  const [quantity, setQuantity] = useState(100);
+  const [target, setTarget] = useState("");
+  const [error, setError] = useState("");
+  const [done, setDone] = useState(false);
 
   useEffect(() => {
     if (!open) return;
@@ -328,7 +297,8 @@ export default function OrderModal({
 
   if (!open) return null;
 
-  const choosePlatform = (p: Platform) => {
+  // Pickers
+  const choosePlatform = (p: typeof platform) => {
     setPlatform(p);
     setService(p.services[0]);
     setQuantity(100);
@@ -337,7 +307,7 @@ export default function OrderModal({
     setStep(1);
   };
 
-  const chooseService = (s: Service) => {
+  const chooseService = (s: typeof service) => {
     setService(s);
     setQuantity(100);
     setError("");
@@ -370,8 +340,7 @@ export default function OrderModal({
 
   return (
     <div className="fixed z-[9999] inset-0 flex items-center justify-center bg-black/60 backdrop-blur-[2px]">
-      <div className="relative max-w-md w-full sm:w-[98vw] md:w-[96vw] mx-auto bg-white/95 rounded-3xl shadow-2xl border border-[#e3edfc] overflow-visible max-h-[98vh] flex flex-col"
-        style={{ minHeight: '440px', maxHeight: '98vh' }}>
+      <div className="relative w-full max-w-xl mx-auto bg-white/95 rounded-3xl shadow-2xl border border-[#e3edfc] overflow-visible max-h-[98vh] flex flex-col" style={{ minHeight: 440 }}>
         {/* Modal HEADER */}
         <div className="w-full px-4 pt-7 pb-3 rounded-t-3xl relative bg-gradient-to-r from-[#f7fbff] via-[#ecf4ff] to-[#f8fbff] border-b border-[#e3edfc]">
           <button
@@ -380,7 +349,7 @@ export default function OrderModal({
             aria-label="Close"
             style={{ boxShadow: "0 2px 14px 0 #0086ff18" }}
           >
-            <X size={22} className="text-[#007BFF]" />
+            <span className="sr-only">Close</span>✕
           </button>
           <div className="flex items-center gap-2 pr-9">
             {platform.icon}
@@ -408,8 +377,9 @@ export default function OrderModal({
             ))}
           </div>
         </div>
-        {/* Modal CONTENT */}
+        {/* CONTENT */}
         <div className="px-4 py-6 flex-1 overflow-y-auto min-h-[340px]">
+          {/* Step 0: Pick Platform */}
           {step === 0 && (
             <>
               <h3 className="font-bold text-xl mb-3 text-[#222] text-center">Pick a Platform</h3>
@@ -428,18 +398,19 @@ export default function OrderModal({
               </div>
             </>
           )}
+          {/* Step 1: Pick Service */}
           {step === 1 && (
             <>
               <h3 className="font-bold text-xl mb-3 text-[#222] text-center">
                 {platform.icon} {platform.name} Services
               </h3>
-              {/* Scrollable service picker for mobile! */}
-              <div className="w-full overflow-x-auto hide-scrollbar mb-2">
-                <div className="flex gap-3 min-w-[340px] pb-2">
+              {/* Mobile: Horizontal Scroll, Desktop: Grid */}
+              <div className="w-full overflow-x-auto hide-scrollbar mb-2 sm:overflow-visible">
+                <div className="flex gap-3 min-w-[340px] pb-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:pb-0">
                   {platform.services.map((s) => (
                     <button
                       key={s.type}
-                      className={`rounded-xl flex items-center justify-between px-5 py-4 border-2 text-base font-semibold shadow hover:shadow-lg transition min-w-[220px]
+                      className={`rounded-xl flex items-center justify-between px-5 py-4 border-2 text-base font-semibold shadow hover:shadow-lg transition min-w-[220px] sm:min-w-0
                         ${service.type === s.type ? "border-[#007BFF] bg-[#E8F1FF] text-[#007BFF]" : "border-[#D2E6FF] text-[#222] bg-white"}`}
                       onClick={() => chooseService(s)}
                       style={{ flex: '0 0 220px' }}
@@ -453,7 +424,7 @@ export default function OrderModal({
                   ))}
                 </div>
               </div>
-              {/* Service details, always visible */}
+              {/* Service details */}
               <div className="mt-4 rounded-xl bg-[#F5FAFF] border border-[#CFE4FF] p-5 shadow flex flex-col gap-2 animate-fadeInPop">
                 <div className="flex items-center gap-2 mb-2">
                   {service.icon}
@@ -472,6 +443,7 @@ export default function OrderModal({
               <button className="block mx-auto mt-7 text-[#007BFF] underline text-sm" onClick={() => setStep(0)}>← Back</button>
             </>
           )}
+          {/* Step 2: Order Details */}
           {step === 2 && (
             <>
               <h3 className="font-bold text-xl mb-4 text-[#222] text-center">Your {service.type} Order</h3>
@@ -525,6 +497,7 @@ export default function OrderModal({
               <button className="block mx-auto mt-7 text-[#007BFF] underline text-sm" onClick={() => setStep(1)}>← Back</button>
             </>
           )}
+          {/* Step 3: Payment */}
           {step === 3 && (
             <>
               <h3 className="font-bold text-xl mb-4 text-[#222] text-center">Pay & Complete Your Order</h3>
@@ -540,6 +513,7 @@ export default function OrderModal({
               <button className="block mx-auto mt-7 text-[#007BFF] underline text-sm" onClick={() => setStep(2)}>← Back</button>
             </>
           )}
+          {/* Step 4: Success */}
           {step === 4 && done && (
             <div className="text-center space-y-4">
               <CheckCircle className="mx-auto text-green-500" size={48} />
@@ -564,7 +538,7 @@ export default function OrderModal({
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         @media (max-width: 700px) {
-          .max-w-md { max-width: 99vw !important; }
+          .max-w-xl { max-width: 99vw !important; }
         }
       `}</style>
     </div>
