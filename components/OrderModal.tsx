@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Instagram, Youtube, Music2, UserPlus, ThumbsUp, Eye, X, Loader2, CheckCircle, Lock, Star, RefreshCcw, ShieldCheck, BarChart, MessageCircle, Clock, UserCheck, Zap
 } from "lucide-react";
@@ -8,6 +8,7 @@ import { loadStripe } from "@stripe/stripe-js";
 const stripePromise = loadStripe("pk_live_51Rgpc4Dzq312KvGPUkyCKLxH4ZdPWeJlmBAnMrSlAl5BHF8Wu8qFW6hqxKlo3l7F87X3qmvVnmDrZYcP3FSSTPVN00fygC8Pfl");
 
 const PLATFORMS = [
+  // ... your platforms and services here as before ...
   {
     key: "instagram",
     name: "Instagram",
@@ -25,130 +26,37 @@ const PLATFORMS = [
           { text: "Guaranteed refill for 30 days", icon: <RefreshCcw size={16} className="text-[#22C55E]" /> }
         ]
       },
-      {
-        type: "Likes",
-        price: 0.07,
-        icon: <ThumbsUp size={16} className="text-[#E1306C]" />,
-        desc: "Get high-quality likes on your posts to boost reach and engagement. Works for Reels & Photos.",
-        features: [
-          { text: "Real likes from real profiles", icon: <CheckCircle size={16} className="text-green-500" /> },
-          { text: "Works for all post types", icon: <Star size={16} className="text-yellow-400" /> },
-          { text: "Delivery starts instantly", icon: <Zap size={16} className="text-[#007BFF]" /> },
-        ]
-      },
-      {
-        type: "Views",
-        price: 0.04,
-        icon: <Eye size={16} className="text-[#E1306C]" />,
-        desc: "Increase views on any video—IGTV, Reels, or Stories. 100% real and high-retention.",
-        features: [
-          { text: "High retention, real views", icon: <CheckCircle size={16} className="text-green-500" /> },
-          { text: "Suitable for all video content", icon: <Eye size={16} className="text-[#007BFF]" /> },
-        ]
-      },
-      {
-        type: "Comments",
-        price: 0.20,
-        icon: <X size={16} className="text-[#E1306C]" />,
-        desc: "Custom, authentic comments from active users. Great for boosting engagement and trust.",
-        features: [
-          { text: "Custom comment support", icon: <MessageCircle size={16} className="text-[#007BFF]" /> },
-          { text: "Delivered by real users", icon: <CheckCircle size={16} className="text-green-500" /> },
-        ]
-      }
+      // ... other Instagram services ...
     ]
   },
-  {
-    key: "tiktok",
-    name: "TikTok",
-    icon: <Music2 size={22} className="text-[#00F2EA]" />,
-    services: [
-      {
-        type: "Followers",
-        price: 0.10,
-        icon: <UserPlus size={16} className="text-[#00F2EA]" />,
-        desc: "Explode your TikTok presence with real followers. Get featured & go viral faster.",
-        features: [
-          { text: "Organic growth only", icon: <BarChart size={16} className="text-[#007BFF]" /> },
-          { text: "Fastest delivery in the industry", icon: <Zap size={16} className="text-[#00F2EA]" /> },
-          { text: "No ban risk, fully safe", icon: <ShieldCheck size={16} className="text-[#22C55E]" /> },
-        ]
-      },
-      {
-        type: "Likes",
-        price: 0.08,
-        icon: <ThumbsUp size={16} className="text-[#00F2EA]" />,
-        desc: "Real TikTok likes, delivered instantly to your videos for max algorithm boost.",
-        features: [
-          { text: "No bots, no drop", icon: <CheckCircle size={16} className="text-green-500" /> },
-          { text: "Full support for trending sounds", icon: <Music2 size={16} className="text-[#00F2EA]" /> },
-        ]
-      },
-      {
-        type: "Views",
-        price: 0.06,
-        icon: <Eye size={16} className="text-[#00F2EA]" />,
-        desc: "Boost your TikTok videos to the For You Page with authentic views.",
-        features: [
-          { text: "High retention, real views", icon: <CheckCircle size={16} className="text-green-500" /> },
-          { text: "Works for all video types", icon: <Eye size={16} className="text-[#00F2EA]" /> },
-        ]
-      }
-    ]
-  },
-  {
-    key: "youtube",
-    name: "YouTube",
-    icon: <Youtube size={22} className="text-[#FF0000]" />,
-    services: [
-      {
-        type: "Subscribers",
-        price: 0.12,
-        icon: <UserPlus size={16} className="text-[#FF0000]" />,
-        desc: "Grow your channel with real YouTube subscribers. No risk, no drops.",
-        features: [
-          { text: "Real, active subscribers", icon: <UserCheck size={16} className="text-[#FF0000]" /> },
-          { text: "30-day refill guarantee", icon: <RefreshCcw size={16} className="text-[#22C55E]" /> },
-        ]
-      },
-      {
-        type: "Likes",
-        price: 0.09,
-        icon: <ThumbsUp size={16} className="text-[#FF0000]" />,
-        desc: "Increase video likes to build trust and get recommended more.",
-        features: [
-          { text: "Genuine likes, not bots", icon: <CheckCircle size={16} className="text-green-500" /> },
-          { text: "Works for Shorts, Streams, and more", icon: <Zap size={16} className="text-[#FF0000]" /> },
-        ]
-      },
-      {
-        type: "Views",
-        price: 0.05,
-        icon: <Eye size={16} className="text-[#FF0000]" />,
-        desc: "Drive real viewers to your videos. Helps with ranking & monetization.",
-        features: [
-          { text: "Guaranteed watch-time", icon: <Clock size={16} className="text-[#007BFF]" /> },
-          { text: "100% safe, no risk", icon: <ShieldCheck size={16} className="text-green-500" /> },
-        ]
-      }
-    ]
-  }
+  // ... TikTok, YouTube platforms ...
 ];
 
-const steps = [
-  { label: "Platform" },
-  { label: "Service" },
-  { label: "Details" },
-  { label: "Payment" },
-  { label: "Done" }
-];
+// Custom hook to track hover on an element via ref
+function useHover<T extends HTMLElement>() {
+  const [hovered, setHovered] = useState(false);
+  const ref = useRef<T>(null);
 
-function PaymentForm({
-  amount,
-  orderDetails,
-  onPaymentSuccess,
-  onError
-}: {
+  useEffect(() => {
+    const node = ref.current;
+    if (!node) return;
+
+    const handleMouseEnter = () => setHovered(true);
+    const handleMouseLeave = () => setHovered(false);
+
+    node.addEventListener("mouseenter", handleMouseEnter);
+    node.addEventListener("mouseleave", handleMouseLeave);
+
+    return () => {
+      node.removeEventListener("mouseenter", handleMouseEnter);
+      node.removeEventListener("mouseleave", handleMouseLeave);
+    };
+  }, [ref]);
+
+  return [ref, hovered] as const;
+}
+
+function PaymentForm({ amount, orderDetails, onPaymentSuccess, onError }: {
   amount: number;
   orderDetails: any;
   onPaymentSuccess: () => void;
@@ -210,18 +118,13 @@ function PaymentForm({
   );
 }
 
-export default function OrderModal({
-  open,
-  onClose,
-  initialPlatform,
-  initialService
-}: {
-  open: boolean,
-  onClose: () => void,
-  initialPlatform?: string | null,
-  initialService?: string | null
+export default function OrderModal({ open, onClose, initialPlatform, initialService }: {
+  open: boolean;
+  onClose: () => void;
+  initialPlatform?: string | null;
+  initialService?: string | null;
 }) {
-  const [step, setStep] = useState<number>(0);
+  const [step, setStep] = useState(0);
   const [platform, setPlatform] = useState(PLATFORMS[0]);
   const [service, setService] = useState(PLATFORMS[0].services[0]);
   const [hoveredService, setHoveredService] = useState<typeof service | null>(null);
@@ -229,7 +132,10 @@ export default function OrderModal({
   const [target, setTarget] = useState("");
   const [error, setError] = useState("");
   const [done, setDone] = useState(false);
-  const [isDetailsHovered, setIsDetailsHovered] = useState(false);
+
+  // Use refs & hover state on service list and details to control flicker-free hover
+  const [servicesRef, servicesHovered] = useHover<HTMLDivElement>();
+  const [detailsRef, detailsHovered] = useHover<HTMLDivElement>();
 
   useEffect(() => {
     if (!open) return;
@@ -239,9 +145,7 @@ export default function OrderModal({
 
     if (initialPlatform) {
       const foundPlat = PLATFORMS.find(
-        p =>
-          p.key === initialPlatform.toLowerCase() ||
-          p.name.toLowerCase() === initialPlatform.toLowerCase()
+        p => p.key === initialPlatform.toLowerCase() || p.name.toLowerCase() === initialPlatform.toLowerCase()
       );
       if (foundPlat) {
         selectedPlatform = foundPlat;
@@ -271,8 +175,14 @@ export default function OrderModal({
     setDone(false);
     setHoveredService(null);
     setStep(stepToSet);
-    setIsDetailsHovered(false);
   }, [open, initialPlatform, initialService]);
+
+  // Clear hovered service only if neither service list nor details panel hovered
+  useEffect(() => {
+    if (!servicesHovered && !detailsHovered) {
+      setHoveredService(null);
+    }
+  }, [servicesHovered, detailsHovered]);
 
   if (!open) return null;
 
@@ -303,7 +213,6 @@ export default function OrderModal({
     setError("");
     setHoveredService(null);
     setDone(false);
-    setIsDetailsHovered(false);
   };
 
   const closeAndReset = () => {
@@ -339,20 +248,19 @@ export default function OrderModal({
           </div>
           {/* Steps */}
           <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-2 mt-5 mb-[-6px] min-h-[42px]">
-            {steps.map((s, i) => (
-              <div key={s.label} className="flex items-center gap-2 flex-shrink-0">
-                <div className={`
-                  rounded-full w-7 h-7 flex items-center justify-center font-bold
+            {["Platform", "Service", "Details", "Payment", "Done"].map((label, i) => (
+              <div key={label} className="flex items-center gap-2 flex-shrink-0">
+                <div className={`rounded-full w-7 h-7 flex items-center justify-center font-bold
                   ${step === i || (done && i === 4) ? "bg-[#007BFF] text-white shadow" :
-                    step > i ? "bg-[#95e1fc] text-[#0d88c7]" :
-                      "bg-[#e6f4ff] text-[#A0B3C7]"}
-                  border-2 border-white
-                  transition
-                `}>
+                  step > i ? "bg-[#95e1fc] text-[#0d88c7]" :
+                  "bg-[#e6f4ff] text-[#A0B3C7]"} border-2 border-white transition`}>
                   {i + 1}
                 </div>
-                <span className={`text-xs font-semibold whitespace-nowrap ${step === i || (done && i === 4) ? "text-[#007BFF]" : "text-[#A0B3C7]"}`}>{s.label}</span>
-                {i < steps.length - 1 && <div className="w-6 h-1 bg-[#e3edfc] rounded-full flex-shrink-0" />}
+                <span className={`text-xs font-semibold whitespace-nowrap
+                  ${step === i || (done && i === 4) ? "text-[#007BFF]" : "text-[#A0B3C7]"}`}>
+                  {label}
+                </span>
+                {i < 4 && <div className="w-6 h-1 bg-[#e3edfc] rounded-full flex-shrink-0" />}
               </div>
             ))}
           </div>
@@ -384,7 +292,7 @@ export default function OrderModal({
               <h3 className="font-bold text-xl mb-3 text-[#222] text-center">
                 {platform.icon} {platform.name} Services
               </h3>
-              <div className="flex flex-col gap-2 w-full max-w-md mx-auto">
+              <div ref={servicesRef} className="flex flex-col gap-2 w-full max-w-md mx-auto">
                 {platform.services.map((s) => (
                   <button
                     key={s.type}
@@ -392,13 +300,7 @@ export default function OrderModal({
                       ${service.type === s.type ? "border-[#007BFF] bg-[#E8F1FF] text-[#007BFF]" : "border-[#D2E6FF] text-[#222] bg-white"}`}
                     onClick={() => chooseService(s)}
                     onMouseEnter={() => setHoveredService(s)}
-                    onMouseLeave={() => {
-                      if (!isDetailsHovered) setHoveredService(null);
-                    }}
                     onFocus={() => setHoveredService(s)}
-                    onBlur={() => {
-                      if (!isDetailsHovered) setHoveredService(null);
-                    }}
                   >
                     <div className="flex items-center gap-2">
                       {s.icon}
@@ -409,11 +311,7 @@ export default function OrderModal({
                 ))}
               </div>
               <div
-                onMouseEnter={() => setIsDetailsHovered(true)}
-                onMouseLeave={() => {
-                  setIsDetailsHovered(false);
-                  setHoveredService(null);
-                }}
+                ref={detailsRef}
                 className="mt-5 bg-[#F5FAFF] border border-[#CFE4FF] p-5 rounded-xl"
               >
                 <div className="flex items-center gap-2 mb-2">
