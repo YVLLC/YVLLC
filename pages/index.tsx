@@ -311,7 +311,7 @@ export default function Home() {
             </div>
           </div>
           <div className="flex justify-center gap-8 mt-7 text-[#007BFF] font-bold text-lg">
-            <span>19M+ followers delivered</span>
+            <span>100k+ followers delivered</span>
             <span className="hidden sm:inline">Rated 4.8/5 by 10,000+ clients</span>
           </div>
         </section>
@@ -382,16 +382,16 @@ export default function Home() {
               </div>
             ))}
             <div className="text-center mt-4">
-              <Link href="/support" className="text-[#007BFF] underline font-semibold hover:text-[#005FCC] text-sm">
+              <Link href="/contact" className="text-[#007BFF] underline font-semibold hover:text-[#005FCC] text-sm">
                 Didn’t find your answer? Chat with us!
               </Link>
             </div>
           </div>
         </section>
         <section className="text-center space-y-5 mt-24">
-          <h2 className="text-4xl font-extrabold mb-3">Ready to Go Viral?</h2>
+          <h2 className="text-4xl font-extrabold mb-3">Ready to try YesViral?</h2>
           <p className="text-[#444] text-lg mb-8">
-            Start growing now — choose your package and watch your stats climb.
+Join thousands already boosting their socials—choose your package and grow now.
           </p>
           <div className="mt-8">
             <button
