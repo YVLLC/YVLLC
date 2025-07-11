@@ -11,27 +11,9 @@ import {
   Star,
   MessageCircle,
 } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import OrderModal from "@/components/OrderModal";
 
-// --- LIVE NOTIFICATION DATA ---
-const LIVE_ORDERS = [
-  { name: "Olivia", city: "Los Angeles", qty: 500, service: "Instagram Followers", icon: "📸" },
-  { name: "Noah", city: "Miami", qty: 1200, service: "TikTok Likes", icon: "🎵" },
-  { name: "Ava", city: "Toronto", qty: 1000, service: "YouTube Views", icon: "▶️" },
-  { name: "Elijah", city: "London", qty: 700, service: "Instagram Likes", icon: "💖" },
-  { name: "Sophia", city: "Berlin", qty: 1500, service: "TikTok Followers", icon: "🎵" },
-  { name: "Lucas", city: "Sydney", qty: 1200, service: "YouTube Subscribers", icon: "▶️" },
-  { name: "Mia", city: "Paris", qty: 1800, service: "Instagram Followers", icon: "📸" },
-  { name: "Liam", city: "New York", qty: 2200, service: "TikTok Views", icon: "🎵" },
-  { name: "Amelia", city: "Dubai", qty: 900, service: "Instagram Comments", icon: "💬" },
-  { name: "Henry", city: "Tokyo", qty: 400, service: "YouTube Likes", icon: "👍" },
-  { name: "Emma", city: "Chicago", qty: 2500, service: "Instagram Followers", icon: "📸" },
-  { name: "James", city: "Cape Town", qty: 1500, service: "TikTok Followers", icon: "🎵" },
-  { name: "Harper", city: "Barcelona", qty: 950, service: "YouTube Views", icon: "▶️" },
-];
-
-// --- SERVICES ---
 const SERVICES = [
   {
     name: "Instagram Services",
@@ -88,7 +70,6 @@ const SERVICES = [
   }
 ];
 
-// --- FAQ ---
 const FAQS = [
   {
     question: "Why choose us?",
@@ -116,7 +97,6 @@ const FAQS = [
   }
 ];
 
-// --- HOW IT WORKS ---
 const HOW_IT_WORKS = [
   {
     icon: <Zap size={32} className="mx-auto text-blue-400" />,
@@ -135,7 +115,6 @@ const HOW_IT_WORKS = [
   }
 ];
 
-// --- TESTIMONIALS ---
 const TESTIMONIALS = [
   {
     quote: "I gained real followers in under an hour — and they didn’t drop!",
@@ -188,26 +167,21 @@ export default function Home() {
   const [orderModalOpen, setOrderModalOpen] = useState(false);
   const [modalPlatform, setModalPlatform] = useState<string | null>(null);
   const [modalService, setModalService] = useState<string | null>(null);
-  const [notifIndex, setNotifIndex] = useState(0);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setNotifIndex((i) => (i + 1) % LIVE_ORDERS.length);
-    }, 3400);
-    return () => clearInterval(interval);
-  }, []);
-
-  // Modal handlers
+  // Open modal at platform picker (step 0)
   const openOrderModalPlatform = () => {
     setModalPlatform(null);
     setModalService(null);
     setOrderModalOpen(true);
   };
+
+  // Open modal at service picker (step 1)
   const openOrderModalService = (platformKey: string) => {
     setModalPlatform(platformKey);
     setModalService(null);
     setOrderModalOpen(true);
   };
+
   const toggleFaq = (index: number) => setOpenFaq(openFaq === index ? null : index);
 
   return (
@@ -228,7 +202,7 @@ export default function Home() {
           <span className="font-semibold text-[#007BFF] text-sm">Live Support</span>
         </button>
       </Link>
-      <main className="px-4 sm:px-6 max-w-7xl mx-auto py-14 space-y-24 select-none">
+      <main className="px-4 sm:px-6 max-w-7xl mx-auto py-14 space-y-28 select-none">
         {/* HERO SECTION WITH ANIMATED STAR */}
         <section className="grid md:grid-cols-2 gap-12 items-center">
           <div className="space-y-7 text-center md:text-left">
@@ -274,24 +248,6 @@ export default function Home() {
             />
           </div>
         </section>
-
-        {/* --- LIVE ORDER NOTIFICATIONS STRIP --- */}
-        <section className="relative z-20 flex justify-center select-none mt-[-32px] mb-5">
-          <div className="bg-white border border-[#CFE4FF] rounded-full shadow-sm px-6 py-3 flex items-center gap-3 min-w-[260px] max-w-full transition-all animate-fadeInLiveNotif">
-            <span className="text-2xl">{LIVE_ORDERS[notifIndex].icon}</span>
-            <span className="font-semibold text-[#111]">{LIVE_ORDERS[notifIndex].name}</span>
-            <span className="text-[#888] text-xs">from</span>
-            <span className="text-[#007BFF] font-bold">{LIVE_ORDERS[notifIndex].city}</span>
-            <span className="text-[#444] text-sm font-medium">
-              just ordered
-            </span>
-            <span className="font-bold text-[#007BFF] ml-1">
-              {LIVE_ORDERS[notifIndex].qty.toLocaleString()} {LIVE_ORDERS[notifIndex].service}
-            </span>
-            <span className="ml-2 text-[#22C55E] text-xs font-bold bg-[#E8FBEF] px-2 py-1 rounded-full">Just now</span>
-          </div>
-        </section>
-
         {/* SERVICES SECTION */}
         <section id="order" className="space-y-10">
           <h2 className="text-center text-4xl font-extrabold">Place Your Order Instantly</h2>
@@ -454,7 +410,7 @@ export default function Home() {
         </section>
       </main>
 
-      {/* --- STYLES FOR STAR ANIMATION + NOTIFICATION FADE --- */}
+      {/* --- ANIMATED STAR STYLE --- */}
       <style jsx global>{`
         @keyframes starGlow {
           0% { transform: rotate(0deg) scale(1); filter: drop-shadow(0 0 0 #FFD700);}
@@ -467,11 +423,6 @@ export default function Home() {
           animation: starGlow 2.6s cubic-bezier(.65,.05,.36,1) infinite;
           will-change: transform, filter;
         }
-        @keyframes fadeInLiveNotif {
-          from { opacity: 0; transform: translateY(10px);}
-          to { opacity: 1; transform: translateY(0);}
-        }
-        .animate-fadeInLiveNotif { animation: fadeInLiveNotif 0.7s; }
       `}</style>
     </>
   );
