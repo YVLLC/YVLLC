@@ -1,3 +1,5 @@
+// ✅ Full updated file with enhanced service descriptions below the "Place Your Order Instantly" section.
+
 import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
@@ -19,12 +21,8 @@ const SERVICES = [
     name: "Instagram Services",
     key: "instagram",
     price: "$0.09 / 100",
-    description: "Boost your IG presence with real followers.",
-    subtext: (
-      <span className="text-sm text-[#555] leading-snug">
-        Delivered in minutes. 30-day refill. Perfect for influencers, brands & businesses who want visible, credible growth that lasts.
-      </span>
-    ),
+    description:
+      "Boost your IG presence with real followers, fast likes, and high-retention views. Perfect for creators, small businesses, and influencers who want to dominate the algorithm with instant engagement. No bots, no fluff — just consistent results backed by a 30-day refill guarantee.",
     icon: (
       <svg width={28} height={28} viewBox="0 0 48 48" fill="none">
         <rect width="48" height="48" rx="16" fill="#F9E5F6" />
@@ -44,12 +42,8 @@ const SERVICES = [
     name: "TikTok Services",
     key: "tiktok",
     price: "$0.08 / 100",
-    description: "Get instant likes on your videos.",
-    subtext: (
-      <span className="text-sm text-[#555] leading-snug">
-        Real likes & views from engaged TikTok users. Engineered for algorithm reach and viral potential. Always safe, always fast.
-      </span>
-    ),
+    description:
+      "Get instant TikTok likes and views from engaged users that help push your content to the For You Page. Boost visibility, drive real interactions, and build viral momentum in minutes — with safe, organic-looking delivery.",
     icon: (
       <svg width={28} height={28} viewBox="0 0 48 48" fill="none">
         <rect width="48" height="48" rx="16" fill="#E3F4FE" />
@@ -83,12 +77,8 @@ const SERVICES = [
     name: "YouTube Services",
     key: "youtube",
     price: "$0.05 / 1000",
-    description: "Skyrocket your video reach and impressions.",
-    subtext: (
-      <span className="text-sm text-[#555] leading-snug">
-        Real YouTube views, likes & subs. Boost watch time, visibility & credibility — without ever risking your channel.
-      </span>
-    ),
+    description:
+      "Skyrocket your YouTube channel’s authority with high-retention views, instant likes, and authentic subscribers. Perfect for boosting watch time, improving SEO, and triggering YouTube’s recommendation system — safely and effectively.",
     icon: (
       <svg width={28} height={28} viewBox="0 0 48 48" fill="none">
         <rect width="48" height="48" rx="16" fill="#FEECE3" />
