@@ -29,7 +29,6 @@ const SERVICES = [
         Trusted by brands, influencers, and agencies.
       </>
     ),
-    icon: (/* icon unchanged */),
     tag: "Bestseller",
     count: "2,000+ bought this week"
   },
@@ -45,7 +44,6 @@ const SERVICES = [
         100% safe for any account.
       </>
     ),
-    icon: (/* icon unchanged */),
     tag: "🔥 Hot",
     count: "1,400+ bought this week"
   },
@@ -61,7 +59,6 @@ const SERVICES = [
         Used by creators serious about growth.
       </>
     ),
-    icon: (/* icon unchanged */),
     tag: "",
     count: "950+ bought this week"
   }
