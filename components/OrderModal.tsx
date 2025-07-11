@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import {
-  Instagram, Youtube, Music2, UserPlus, ThumbsUp, Eye, X, Loader2, CheckCircle, Lock
+  Instagram, Youtube, Music2, UserPlus, ThumbsUp, Eye, X, Loader2, CheckCircle, Lock, Star
 } from "lucide-react";
 import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
@@ -9,17 +9,57 @@ import { loadStripe } from "@stripe/stripe-js";
 const stripePromise = loadStripe("pk_live_51Rgpc4Dzq312KvGPUkyCKLxH4ZdPWeJlmBAnMrSlAl5BHF8Wu8qFW6hqxKlo3l7F87X3qmvVnmDrZYcP3FSSTPVN00fygC8Pfl");
 
 const PLATFORMS = [
-  // ... same as before ...
   {
     key: "instagram",
     name: "Instagram",
     color: "#E1306C",
     icon: <Instagram className="text-[#E1306C]" size={26} />,
     services: [
-      { type: "Followers", price: 0.09, icon: <UserPlus size={17} className="text-[#E1306C]" /> },
-      { type: "Likes", price: 0.07, icon: <ThumbsUp size={17} className="text-[#E1306C]" /> },
-      { type: "Views", price: 0.04, icon: <Eye size={17} className="text-[#E1306C]" /> },
-      { type: "Comments", price: 0.20, icon: <X size={17} className="text-[#E1306C]" /> }
+      {
+        type: "Followers",
+        price: 0.09,
+        icon: <UserPlus size={17} className="text-[#E1306C]" />,
+        desc: "Boost your Instagram credibility instantly with high-quality, real followers. No bots, no risk.",
+        features: [
+          "🔒 No password needed",
+          "🚀 Instant start (1–10 min)",
+          "✅ 30-day refill guarantee",
+          "👤 Real accounts, real growth"
+        ]
+      },
+      {
+        type: "Likes",
+        price: 0.07,
+        icon: <ThumbsUp size={17} className="text-[#E1306C]" />,
+        desc: "Get real, lasting likes on any post. Help your content go viral.",
+        features: [
+          "⚡ Blazing-fast delivery",
+          "🕒 Permanent engagement",
+          "🎯 Targeted for Explore"
+        ]
+      },
+      {
+        type: "Views",
+        price: 0.04,
+        icon: <Eye size={17} className="text-[#E1306C]" />,
+        desc: "Increase your reach and boost algorithm rank with authentic views.",
+        features: [
+          "🎬 Guaranteed retention",
+          "🌍 Worldwide delivery",
+          "📈 Counts towards reach"
+        ]
+      },
+      {
+        type: "Comments",
+        price: 0.20,
+        icon: <X size={17} className="text-[#E1306C]" />,
+        desc: "Custom or random comments to build social proof and engagement.",
+        features: [
+          "💬 Customizable text",
+          "🤖 0% bots",
+          "📝 Choose your comment"
+        ]
+      }
     ]
   },
   {
@@ -28,9 +68,39 @@ const PLATFORMS = [
     color: "#00F2EA",
     icon: <Music2 className="text-[#00F2EA]" size={26} />,
     services: [
-      { type: "Followers", price: 0.10, icon: <UserPlus size={17} className="text-[#00F2EA]" /> },
-      { type: "Likes", price: 0.08, icon: <ThumbsUp size={17} className="text-[#00F2EA]" /> },
-      { type: "Views", price: 0.06, icon: <Eye size={17} className="text-[#00F2EA]" /> }
+      {
+        type: "Followers",
+        price: 0.10,
+        icon: <UserPlus size={17} className="text-[#00F2EA]" />,
+        desc: "Real TikTok followers for instant social proof and trending potential.",
+        features: [
+          "🔒 No password required",
+          "🚀 Start in minutes",
+          "🛡️ Drop protection"
+        ]
+      },
+      {
+        type: "Likes",
+        price: 0.08,
+        icon: <ThumbsUp size={17} className="text-[#00F2EA]" />,
+        desc: "Make your TikToks go viral with high-retention likes.",
+        features: [
+          "⚡ Super-fast delivery",
+          "🌎 Real, global users",
+          "🔁 30-day refill"
+        ]
+      },
+      {
+        type: "Views",
+        price: 0.06,
+        icon: <Eye size={17} className="text-[#00F2EA]" />,
+        desc: "Real views for maximum reach and FYP placement.",
+        features: [
+          "📈 Rapid growth",
+          "🎥 FYP-boosted",
+          "💯 100% safe"
+        ]
+      }
     ]
   },
   {
@@ -39,9 +109,39 @@ const PLATFORMS = [
     color: "#FF0000",
     icon: <Youtube className="text-[#FF0000]" size={26} />,
     services: [
-      { type: "Subscribers", price: 0.12, icon: <UserPlus size={17} className="text-[#FF0000]" /> },
-      { type: "Likes", price: 0.09, icon: <ThumbsUp size={17} className="text-[#FF0000]" /> },
-      { type: "Views", price: 0.05, icon: <Eye size={17} className="text-[#FF0000]" /> }
+      {
+        type: "Subscribers",
+        price: 0.12,
+        icon: <UserPlus size={17} className="text-[#FF0000]" />,
+        desc: "Real YouTube subscribers to legitimize your channel and unlock features.",
+        features: [
+          "🌎 Worldwide/targeted",
+          "🔁 No-drop, refill",
+          "💼 Monetization safe"
+        ]
+      },
+      {
+        type: "Likes",
+        price: 0.09,
+        icon: <ThumbsUp size={17} className="text-[#FF0000]" />,
+        desc: "Get more likes for your videos and build social proof.",
+        features: [
+          "⚡ Instant delivery",
+          "🕒 Lifetime retention",
+          "🚀 Organic boost"
+        ]
+      },
+      {
+        type: "Views",
+        price: 0.05,
+        icon: <Eye size={17} className="text-[#FF0000]" />,
+        desc: "Increase your YouTube video watch count with high-quality real views.",
+        features: [
+          "🎬 Watch-time included",
+          "🌍 Worldwide",
+          "🛡️ Safe and secure"
+        ]
+      }
     ]
   }
 ];
@@ -131,6 +231,9 @@ function PaymentForm({
       </button>
       <div className="flex items-center gap-2 justify-center text-[#007BFF] text-sm font-semibold mt-2">
         <Lock size={16} /> 100% Secure Card Payment
+      </div>
+      <div className="text-xs text-gray-400 text-center mt-1">
+        SSL-encrypted checkout. No card details ever touch our servers.
       </div>
     </form>
   );
@@ -241,7 +344,7 @@ export default function OrderModal({
   return (
     <div className="fixed z-[9999] inset-0 flex items-center justify-center bg-black/60 backdrop-blur-[2px]">
       <div className="relative max-w-md w-[96vw] mx-auto bg-white/95 rounded-3xl shadow-2xl border border-[#e3edfc] overflow-hidden">
-        {/* Modal HEADER (includes steps, always inside modal) */}
+        {/* Modal HEADER */}
         <div className="w-full px-4 pt-7 pb-3 rounded-t-3xl relative bg-gradient-to-r from-[#f7fbff] via-[#ecf4ff] to-[#f8fbff] border-b border-[#e3edfc]">
           <button
             className="absolute top-4 right-5 z-20 bg-white/95 border border-[#e3edfc] shadow-lg rounded-full p-2 hover:bg-[#eaf4ff] transition"
@@ -314,9 +417,25 @@ export default function OrderModal({
                       {s.icon}
                       <span>{s.type}</span>
                     </div>
-                    <span className="font-normal text-[13px] text-[#888]">${s.price}/each</span>
+                    <span className="font-normal text-[13px] text-[#888]">${s.price}/ea</span>
                   </button>
                 ))}
+              </div>
+              {/* Service details! */}
+              <div className="mt-6 rounded-xl bg-[#F5FAFF] border border-[#CFE4FF] p-5 shadow flex flex-col gap-2 animate-fadeInPop">
+                <div className="flex items-center gap-2 mb-2">
+                  {service.icon}
+                  <span className="font-bold text-[#007BFF]">{service.type}</span>
+                  <Star size={15} className="text-yellow-400" />
+                </div>
+                <div className="text-[#444] text-sm mb-1">{service.desc}</div>
+                <ul className="space-y-1">
+                  {service.features && service.features.map((f, i) => (
+                    <li key={i} className="text-xs text-[#007BFF] flex items-center gap-2">
+                      <CheckCircle size={12} className="inline text-[#22C55E]" /> {f}
+                    </li>
+                  ))}
+                </ul>
               </div>
               <button className="block mx-auto mt-7 text-[#007BFF] underline text-sm" onClick={() => setStep(0)}>← Back</button>
             </>
