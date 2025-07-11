@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import {
-  Instagram, Youtube, Music2, UserPlus, ThumbsUp, Eye, X, Loader2, CheckCircle, Lock, Star
+  Instagram, Youtube, Music2, UserPlus, ThumbsUp, Eye, X, Loader2, CheckCircle, Lock, Star, RefreshCcw, ShieldCheck, BarChart, MessageCircle, Clock, UserCheck, Zap
 } from "lucide-react";
 import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
@@ -13,10 +13,49 @@ const PLATFORMS = [
     name: "Instagram",
     icon: <Instagram size={22} className="text-[#E1306C]" />,
     services: [
-      { type: "Followers", price: 0.09, icon: <UserPlus size={16} className="text-[#E1306C]" />, desc: "Boost your IG page instantly with real followers, not bots." },
-      { type: "Likes", price: 0.07, icon: <ThumbsUp size={16} className="text-[#E1306C]" />, desc: "High-quality, real likes for your posts." },
-      { type: "Views", price: 0.04, icon: <Eye size={16} className="text-[#E1306C]" />, desc: "Get real, high-retention video views." },
-      { type: "Comments", price: 0.20, icon: <X size={16} className="text-[#E1306C]" />, desc: "Custom comments from real users." }
+      {
+        type: "Followers",
+        price: 0.09,
+        icon: <UserPlus size={16} className="text-[#E1306C]" />,
+        desc: "Boost your IG page instantly with real, organic followers. Perfect for credibility and rapid growth.",
+        features: [
+          { text: "Genuine, active users only", icon: <CheckCircle size={16} className="text-green-500" /> },
+          { text: "Starts in under 10 minutes", icon: <Zap size={16} className="text-[#007BFF]" /> },
+          { text: "No password required", icon: <Lock size={16} className="text-[#007BFF]" /> },
+          { text: "Guaranteed refill for 30 days", icon: <RefreshCcw size={16} className="text-[#22C55E]" /> }
+        ]
+      },
+      {
+        type: "Likes",
+        price: 0.07,
+        icon: <ThumbsUp size={16} className="text-[#E1306C]" />,
+        desc: "Get high-quality likes on your posts to boost reach and engagement. Works for Reels & Photos.",
+        features: [
+          { text: "Real likes from real profiles", icon: <CheckCircle size={16} className="text-green-500" /> },
+          { text: "Works for all post types", icon: <Star size={16} className="text-yellow-400" /> },
+          { text: "Delivery starts instantly", icon: <Zap size={16} className="text-[#007BFF]" /> },
+        ]
+      },
+      {
+        type: "Views",
+        price: 0.04,
+        icon: <Eye size={16} className="text-[#E1306C]" />,
+        desc: "Increase views on any video—IGTV, Reels, or Stories. 100% real and high-retention.",
+        features: [
+          { text: "High retention, real views", icon: <CheckCircle size={16} className="text-green-500" /> },
+          { text: "Suitable for all video content", icon: <Eye size={16} className="text-[#007BFF]" /> },
+        ]
+      },
+      {
+        type: "Comments",
+        price: 0.20,
+        icon: <X size={16} className="text-[#E1306C]" />,
+        desc: "Custom, authentic comments from active users. Great for boosting engagement and trust.",
+        features: [
+          { text: "Custom comment support", icon: <MessageCircle size={16} className="text-[#007BFF]" /> },
+          { text: "Delivered by real users", icon: <CheckCircle size={16} className="text-green-500" /> },
+        ]
+      }
     ]
   },
   {
@@ -24,9 +63,37 @@ const PLATFORMS = [
     name: "TikTok",
     icon: <Music2 size={22} className="text-[#00F2EA]" />,
     services: [
-      { type: "Followers", price: 0.10, icon: <UserPlus size={16} className="text-[#00F2EA]" />, desc: "Grow fast with real TikTok followers." },
-      { type: "Likes", price: 0.08, icon: <ThumbsUp size={16} className="text-[#00F2EA]" />, desc: "Get likes from real TikTok users." },
-      { type: "Views", price: 0.06, icon: <Eye size={16} className="text-[#00F2EA]" />, desc: "Boost your video with high-retention views." }
+      {
+        type: "Followers",
+        price: 0.10,
+        icon: <UserPlus size={16} className="text-[#00F2EA]" />,
+        desc: "Explode your TikTok presence with real followers. Get featured & go viral faster.",
+        features: [
+          { text: "Organic growth only", icon: <BarChart size={16} className="text-[#007BFF]" /> },
+          { text: "Fastest delivery in the industry", icon: <Zap size={16} className="text-[#00F2EA]" /> },
+          { text: "No ban risk, fully safe", icon: <ShieldCheck size={16} className="text-[#22C55E]" /> },
+        ]
+      },
+      {
+        type: "Likes",
+        price: 0.08,
+        icon: <ThumbsUp size={16} className="text-[#00F2EA]" />,
+        desc: "Real TikTok likes, delivered instantly to your videos for max algorithm boost.",
+        features: [
+          { text: "No bots, no drop", icon: <CheckCircle size={16} className="text-green-500" /> },
+          { text: "Full support for trending sounds", icon: <Music2 size={16} className="text-[#00F2EA]" /> },
+        ]
+      },
+      {
+        type: "Views",
+        price: 0.06,
+        icon: <Eye size={16} className="text-[#00F2EA]" />,
+        desc: "Boost your TikTok videos to the For You Page with authentic views.",
+        features: [
+          { text: "High retention, real views", icon: <CheckCircle size={16} className="text-green-500" /> },
+          { text: "Works for all video types", icon: <Eye size={16} className="text-[#00F2EA]" /> },
+        ]
+      }
     ]
   },
   {
@@ -34,9 +101,36 @@ const PLATFORMS = [
     name: "YouTube",
     icon: <Youtube size={22} className="text-[#FF0000]" />,
     services: [
-      { type: "Subscribers", price: 0.12, icon: <UserPlus size={16} className="text-[#FF0000]" />, desc: "Get real, permanent channel subscribers." },
-      { type: "Likes", price: 0.09, icon: <ThumbsUp size={16} className="text-[#FF0000]" />, desc: "Real likes for your videos." },
-      { type: "Views", price: 0.05, icon: <Eye size={16} className="text-[#FF0000]" />, desc: "Boost your videos with high-retention views." }
+      {
+        type: "Subscribers",
+        price: 0.12,
+        icon: <UserPlus size={16} className="text-[#FF0000]" />,
+        desc: "Grow your channel with real YouTube subscribers. No risk, no drops.",
+        features: [
+          { text: "Real, active subscribers", icon: <UserCheck size={16} className="text-[#FF0000]" /> },
+          { text: "30-day refill guarantee", icon: <RefreshCcw size={16} className="text-[#22C55E]" /> },
+        ]
+      },
+      {
+        type: "Likes",
+        price: 0.09,
+        icon: <ThumbsUp size={16} className="text-[#FF0000]" />,
+        desc: "Increase video likes to build trust and get recommended more.",
+        features: [
+          { text: "Genuine likes, not bots", icon: <CheckCircle size={16} className="text-green-500" /> },
+          { text: "Works for Shorts, Streams, and more", icon: <Zap size={16} className="text-[#FF0000]" /> },
+        ]
+      },
+      {
+        type: "Views",
+        price: 0.05,
+        icon: <Eye size={16} className="text-[#FF0000]" />,
+        desc: "Drive real viewers to your videos. Helps with ranking & monetization.",
+        features: [
+          { text: "Guaranteed watch-time", icon: <Clock size={16} className="text-[#007BFF]" /> },
+          { text: "100% safe, no risk", icon: <ShieldCheck size={16} className="text-green-500" /> },
+        ]
+      }
     ]
   }
 ];
@@ -86,7 +180,6 @@ function PaymentForm({
       });
       if (stripeError) throw new Error(stripeError.message);
 
-      // fake "order complete"
       onPaymentSuccess();
     } catch (e: any) {
       setError(e.message || "An error occurred.");
@@ -309,13 +402,22 @@ export default function OrderModal({
                   </button>
                 ))}
               </div>
+              {/* Service details (show hovered if present, else selected) */}
               <div className="mt-5 bg-[#F5FAFF] border border-[#CFE4FF] p-5 rounded-xl">
                 <div className="flex items-center gap-2 mb-2">
                   {(hoveredService || service).icon}
                   <span className="font-bold text-[#007BFF]">{(hoveredService || service).type}</span>
                   <Star size={15} className="text-yellow-400 animate-pulse" />
                 </div>
-                <div className="text-[#444] text-sm">{(hoveredService || service).desc}</div>
+                <div className="text-[#444] text-sm mb-3">{(hoveredService || service).desc}</div>
+                <ul className="space-y-2">
+                  {(hoveredService || service).features?.map((f, idx) => (
+                    <li key={idx} className="flex items-center gap-2 text-[#222] text-[15px]">
+                      {f.icon}
+                      <span>{f.text}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
               <button className="block mx-auto mt-7 text-[#007BFF] underline text-sm" onClick={() => setStep(0)}>← Back</button>
             </>
