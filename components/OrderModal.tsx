@@ -261,18 +261,32 @@ export default function OrderModal({
           <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-2 mt-5 mb-[-6px] min-h-[42px]">
             {steps.map((s, i) => (
               <div key={s.label} className="flex items-center gap-2 flex-shrink-0">
-                <div className={
-                  rounded-full w-7 h-7 flex items-center justify-center font-bold
-                  ${step === i || (done && i === 4) ? "bg-[#007BFF] text-white shadow" :
-                    step > i ? "bg-[#95e1fc] text-[#0d88c7]" :
-                      "bg-[#e6f4ff] text-[#A0B3C7]"}
-                  border-2 border-white
-                  transition
-                }>
+                <div
+                  className={`
+                    rounded-full w-7 h-7 flex items-center justify-center font-bold
+                    ${
+                      step === i || (done && i === 4)
+                        ? "bg-[#007BFF] text-white shadow"
+                        : step > i
+                        ? "bg-[#95e1fc] text-[#0d88c7]"
+                        : "bg-[#e6f4ff] text-[#A0B3C7]"
+                    }
+                    border-2 border-white
+                    transition
+                  `}
+                >
                   {i + 1}
                 </div>
-                <span className={text-xs font-semibold whitespace-nowrap ${step === i || (done && i === 4) ? "text-[#007BFF]" : "text-[#A0B3C7]"}}>{s.label}</span>
-                {i < steps.length - 1 && <div className="w-6 h-1 bg-[#e3edfc] rounded-full flex-shrink-0" />}
+                <span
+                  className={`text-xs font-semibold whitespace-nowrap ${
+                    step === i || (done && i === 4) ? "text-[#007BFF]" : "text-[#A0B3C7]"
+                  }`}
+                >
+                  {s.label}
+                </span>
+                {i < steps.length - 1 && (
+                  <div className="w-6 h-1 bg-[#e3edfc] rounded-full flex-shrink-0" />
+                )}
               </div>
             ))}
           </div>
@@ -286,8 +300,14 @@ export default function OrderModal({
                 {PLATFORMS.map((p) => (
                   <button
                     key={p.key}
-                    className={rounded-xl flex flex-col items-center gap-1 px-5 py-4 border-2 font-bold text-sm shadow hover:shadow-lg transition 
-                      ${platform.key === p.key ? "border-[#007BFF] bg-[#F5FAFF] text-[#007BFF] scale-105" : "border-[#D2E6FF] text-[#333] bg-white"}}
+                    className={`
+                      rounded-xl flex flex-col items-center gap-1 px-5 py-4 border-2 font-bold text-sm shadow hover:shadow-lg transition
+                      ${
+                        platform.key === p.key
+                          ? "border-[#007BFF] bg-[#F5FAFF] text-[#007BFF] scale-105"
+                          : "border-[#D2E6FF] text-[#333] bg-white"
+                      }
+                    `}
                     onClick={() => choosePlatform(p)}
                   >
                     {p.icon}
@@ -306,8 +326,14 @@ export default function OrderModal({
                 {platform.services.map((s) => (
                   <button
                     key={s.type}
-                    className={rounded-xl flex items-center justify-between px-5 py-4 border-2 text-base font-semibold shadow hover:shadow-lg transition
-                      ${service.type === s.type ? "border-[#007BFF] bg-[#E8F1FF] text-[#007BFF]" : "border-[#D2E6FF] text-[#222] bg-white"}}
+                    className={`
+                      rounded-xl flex items-center justify-between px-5 py-4 border-2 text-base font-semibold shadow hover:shadow-lg transition
+                      ${
+                        service.type === s.type
+                          ? "border-[#007BFF] bg-[#E8F1FF] text-[#007BFF]"
+                          : "border-[#D2E6FF] text-[#222] bg-white"
+                      }
+                    `}
                     onClick={() => chooseService(s)}
                   >
                     <div className="flex items-center gap-2">
@@ -318,15 +344,22 @@ export default function OrderModal({
                   </button>
                 ))}
               </div>
-              <button className="block mx-auto mt-7 text-[#007BFF] underline text-sm" onClick={() => setStep(0)}>← Back</button>
+              <button
+                className="block mx-auto mt-7 text-[#007BFF] underline text-sm"
+                onClick={() => setStep(0)}
+              >
+                ← Back
+              </button>
             </>
           )}
           {step === 2 && (
             <>
-              <h3 className="font-bold text-xl mb-4 text-[#222] text-center">Your {service.type} Order</h3>
+              <h3 className="font-bold text-xl mb-4 text-[#222] text-center">
+                Your {service.type} Order
+              </h3>
               <form
                 className="space-y-5"
-                onSubmit={e => {
+                onSubmit={(e) => {
                   e.preventDefault();
                   if (!target || quantity < 10) {
                     setError("Paste your profile link or username, and enter a quantity.");
@@ -342,9 +375,9 @@ export default function OrderModal({
                     type="text"
                     autoFocus
                     className="w-full border border-[#CFE4FF] rounded-lg px-3 py-2 text-base font-medium outline-[#007BFF] bg-white/90"
-                    placeholder={Paste your ${platform.name} username or post link}
+                    placeholder={`Paste your ${platform.name} username or post link`}
                     value={target}
-                    onChange={e => setTarget(e.target.value)}
+                    onChange={(e) => setTarget(e.target.value)}
                   />
                 </div>
                 <div className="flex items-center gap-3">
@@ -355,7 +388,7 @@ export default function OrderModal({
                     max={500000}
                     step={10}
                     value={quantity}
-                    onChange={e => setQuantity(Number(e.target.value))}
+                    onChange={(e) => setQuantity(Number(e.target.value))}
                     className="border border-[#CFE4FF] rounded-lg px-3 py-2 text-base w-24 font-bold bg-white/90"
                   />
                   <span className="ml-auto font-bold text-[#007BFF] text-lg">
@@ -364,14 +397,18 @@ export default function OrderModal({
                 </div>
                 <button
                   type="submit"
-                  className="w-full py-3 rounded-xl font-extrabold text-lg flex justify-center items-center gap-2
-                  bg-gradient-to-br from-[#007BFF] to-[#35c4ff] hover:from-[#005FCC] hover:to-[#28a3e6] text-white shadow-lg transition"
+                  className="w-full py-3 rounded-xl font-extrabold text-lg flex justify-center items-center gap-2 bg-gradient-to-br from-[#007BFF] to-[#35c4ff] hover:from-[#005FCC] hover:to-[#28a3e6] text-white shadow-lg transition"
                 >
                   <CheckCircle size={20} /> Continue to Payment
                 </button>
                 {error && <div className="mt-2 text-red-500 text-center">{error}</div>}
               </form>
-              <button className="block mx-auto mt-7 text-[#007BFF] underline text-sm" onClick={() => setStep(1)}>← Back</button>
+              <button
+                className="block mx-auto mt-7 text-[#007BFF] underline text-sm"
+                onClick={() => setStep(1)}
+              >
+                ← Back
+              </button>
             </>
           )}
           {step === 3 && (
@@ -381,12 +418,20 @@ export default function OrderModal({
                 <PaymentForm
                   amount={amountCents}
                   orderDetails={orderDetails}
-                  onPaymentSuccess={() => { setStep(4); setDone(true); }}
+                  onPaymentSuccess={() => {
+                    setStep(4);
+                    setDone(true);
+                  }}
                   onError={setError}
                 />
               </Elements>
               {error && <div className="mt-2 text-red-500 text-center">{error}</div>}
-              <button className="block mx-auto mt-7 text-[#007BFF] underline text-sm" onClick={() => setStep(2)}>← Back</button>
+              <button
+                className="block mx-auto mt-7 text-[#007BFF] underline text-sm"
+                onClick={() => setStep(2)}
+              >
+                ← Back
+              </button>
             </>
           )}
           {step === 4 && done && (
@@ -394,23 +439,35 @@ export default function OrderModal({
               <CheckCircle className="mx-auto text-green-500" size={48} />
               <h3 className="text-2xl font-bold text-[#222]">Thank You! 🎉</h3>
               <p className="text-[#444] text-base">
-                Your order was received and is being processed.<br />
+                Your order was received and is being processed.
+                <br />
                 You’ll receive updates shortly.
               </p>
-              <button className="mt-5 bg-[#007BFF] text-white px-6 py-2 rounded-xl font-bold" onClick={closeAndReset}>
+              <button
+                className="mt-5 bg-[#007BFF] text-white px-6 py-2 rounded-xl font-bold"
+                onClick={closeAndReset}
+              >
                 Done
               </button>
             </div>
           )}
         </div>
       </div>
-      <style jsx global>{
+      <style jsx global>{`
         @keyframes fadeInPop {
-          from { opacity: 0; transform: translateY(32px) scale(.95);}
-          to   { opacity: 1; transform: translateY(0) scale(1);}
+          from {
+            opacity: 0;
+            transform: translateY(32px) scale(0.95);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
         }
-        .animate-fadeInPop { animation: fadeInPop 0.22s cubic-bezier(.39,1.7,.47,.99); }
-      }</style>
+        .animate-fadeInPop {
+          animation: fadeInPop 0.22s cubic-bezier(0.39, 1.7, 0.47, 0.99);
+        }
+      `}</style>
     </div>
   );
 }
