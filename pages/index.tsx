@@ -13,7 +13,6 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import OrderModal from "@/components/OrderModal";
-// Footer removed entirely!
 
 const SERVICES = [
   {
@@ -204,17 +203,18 @@ export default function Home() {
         </button>
       </Link>
       <main className="px-4 sm:px-6 max-w-7xl mx-auto py-14 space-y-28 select-none">
+        {/* HERO SECTION WITH ANIMATED STAR */}
         <section className="grid md:grid-cols-2 gap-12 items-center">
           <div className="space-y-7 text-center md:text-left">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#E8F1FF] rounded-full mb-2 text-xs font-bold text-[#007BFF] tracking-wide shadow-sm">
-              <Star size={16} className="text-yellow-400 animate-spin-slow" />
+              <Star size={18} className="text-yellow-400 star-animate" />
               Trusted by 100,000+ Creators
             </div>
             <h1 className="text-5xl sm:text-6xl font-extrabold text-[#007BFF] leading-tight drop-shadow-sm">
               Blow Up Your Socials. <br /> Real Growth. No Waiting.
             </h1>
             <p className="text-[#444] text-lg max-w-xl mx-auto md:mx-0 font-medium">
-Elevate your social presence with genuine Followers, Likes, and Views—delivered seamlessly, No logins required.
+              Elevate your social presence with genuine Followers, Likes, and Views—delivered seamlessly, No logins required.
             </p>
             <div className="flex flex-col sm:flex-row justify-center md:justify-start gap-4">
               <button
@@ -248,6 +248,7 @@ Elevate your social presence with genuine Followers, Likes, and Views—delivere
             />
           </div>
         </section>
+        {/* SERVICES SECTION */}
         <section id="order" className="space-y-10">
           <h2 className="text-center text-4xl font-extrabold">Place Your Order Instantly</h2>
           <p className="text-[#444] text-center max-w-2xl mx-auto">
@@ -281,6 +282,7 @@ Elevate your social presence with genuine Followers, Likes, and Views—delivere
             ))}
           </div>
         </section>
+        {/* ABOUT SECTION */}
         <section id="about" className="bg-[#F5FAFF] p-12 rounded-2xl text-center shadow-sm space-y-8">
           <h2 className="text-4xl font-extrabold text-[#111]">Why Choose YesViral?</h2>
           <div className="flex flex-wrap gap-7 justify-center mt-6">
@@ -315,6 +317,7 @@ Elevate your social presence with genuine Followers, Likes, and Views—delivere
             <span className="hidden sm:inline">Rated 4.8/5 by 10,000+ Clients</span>
           </div>
         </section>
+        {/* HOW IT WORKS SECTION */}
         <section id="how-it-works" className="space-y-10">
           <h2 className="text-center text-4xl font-extrabold">How It Works</h2>
           <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-8 text-center">
@@ -327,6 +330,7 @@ Elevate your social presence with genuine Followers, Likes, and Views—delivere
             ))}
           </div>
         </section>
+        {/* TESTIMONIALS SECTION */}
         <section id="testimonials" className="space-y-7">
           <h2 className="text-center text-4xl font-extrabold">Customer Reviews</h2>
           <div className="grid md:grid-cols-3 gap-7">
@@ -348,6 +352,7 @@ Elevate your social presence with genuine Followers, Likes, and Views—delivere
             ))}
           </div>
         </section>
+        {/* FAQ SECTION */}
         <section id="faq" className="space-y-7">
           <h2 className="text-center text-4xl font-extrabold">Frequently Asked Questions</h2>
           <p className="text-center text-[#444] mb-4">Everything you need to know about our services, safety, and support.</p>
@@ -388,10 +393,11 @@ Elevate your social presence with genuine Followers, Likes, and Views—delivere
             </div>
           </div>
         </section>
+        {/* CTA SECTION */}
         <section className="text-center space-y-5 mt-24">
           <h2 className="text-4xl font-extrabold mb-3">Ready to try YesViral?</h2>
           <p className="text-[#444] text-lg mb-8">
-Join thousands already boosting their socials—choose your package and grow now.
+            Join thousands already boosting their socials—choose your package and grow now.
           </p>
           <div className="mt-8">
             <button
@@ -403,6 +409,21 @@ Join thousands already boosting their socials—choose your package and grow now
           </div>
         </section>
       </main>
+
+      {/* --- ANIMATED STAR STYLE --- */}
+      <style jsx global>{`
+        @keyframes starGlow {
+          0% { transform: rotate(0deg) scale(1); filter: drop-shadow(0 0 0 #FFD700);}
+          30% { transform: rotate(8deg) scale(1.16); filter: drop-shadow(0 0 8px #FFD700);}
+          55% { transform: rotate(-7deg) scale(1.09); filter: drop-shadow(0 0 12px #FFF78A);}
+          80% { transform: rotate(0deg) scale(1.13); filter: drop-shadow(0 0 10px #FFD700);}
+          100% { transform: rotate(0deg) scale(1); filter: drop-shadow(0 0 0 #FFD700);}
+        }
+        .star-animate {
+          animation: starGlow 2.6s cubic-bezier(.65,.05,.36,1) infinite;
+          will-change: transform, filter;
+        }
+      `}</style>
     </>
   );
 }
