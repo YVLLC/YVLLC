@@ -164,7 +164,20 @@ const steps = [
   { label: "Done" }
 ];
 
-function PaymentForm({ amount, orderDetails, onPaymentSuccess, onError }) {
+type PaymentFormProps = {
+  amount: number;
+  orderDetails: {
+    platform: string;
+    service: string;
+    quantity: number;
+    target: string;
+    price: number;
+  };
+  onPaymentSuccess: () => void;
+  onError?: (err: string) => void;
+};
+
+function PaymentForm({ amount, orderDetails, onPaymentSuccess, onError }: PaymentFormProps) {
   const stripe = useStripe();
   const elements = useElements();
   const [loading, setLoading] = useState(false);
