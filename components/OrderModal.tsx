@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import {
-  Instagram, Youtube, Music2, UserPlus, ThumbsUp, Eye, Loader2, CheckCircle, Lock, Star
+  Instagram, Youtube, Music2, UserPlus, ThumbsUp, Eye, X, Loader2, CheckCircle, Lock, Star
 } from "lucide-react";
 import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
@@ -11,133 +11,32 @@ const PLATFORMS = [
   {
     key: "instagram",
     name: "Instagram",
-    icon: <Instagram size={24} className="text-[#E1306C]" />,
-    color: "#E1306C",
+    icon: <Instagram size={22} className="text-[#E1306C]" />,
     services: [
-      {
-        type: "Followers",
-        price: 0.09,
-        icon: <UserPlus size={18} className="text-[#E1306C]" />,
-        desc: "Grow your page instantly with real, active followers. No bots, no drops — just pure engagement with refill guarantee.",
-        features: [
-          "Real users only, never bots",
-          "Refill guarantee — 30 days",
-          "No login, 100% private",
-          "Fastest US/EU delivery"
-        ]
-      },
-      {
-        type: "Likes",
-        price: 0.07,
-        icon: <ThumbsUp size={18} className="text-[#E1306C]" />,
-        desc: "Boost your post’s popularity with high-quality likes from active IG accounts. No risk of fake engagement.",
-        features: [
-          "Active, real profiles",
-          "No fake accounts — ever",
-          "Works for any public post",
-          "Instant top-up available"
-        ]
-      },
-      {
-        type: "Views",
-        price: 0.04,
-        icon: <Eye size={18} className="text-[#E1306C]" />,
-        desc: "Get noticed — real, high-retention views for Reels & Stories. Your content deserves reach, not bots.",
-        features: [
-          "Real, watch-through views",
-          "Best for Reels & Stories",
-          "Rank higher in Explore",
-          "Delivered in minutes"
-        ]
-      }
+      { type: "Followers", price: 0.09, icon: <UserPlus size={16} className="text-[#E1306C]" />, desc: "Boost your IG page instantly with real followers, not bots." },
+      { type: "Likes", price: 0.07, icon: <ThumbsUp size={16} className="text-[#E1306C]" />, desc: "High-quality, real likes for your posts." },
+      { type: "Views", price: 0.04, icon: <Eye size={16} className="text-[#E1306C]" />, desc: "Get real, high-retention video views." },
+      { type: "Comments", price: 0.20, icon: <X size={16} className="text-[#E1306C]" />, desc: "Custom comments from real users." }
     ]
   },
   {
     key: "tiktok",
     name: "TikTok",
-    icon: <Music2 size={24} className="text-[#00F2EA]" />,
-    color: "#00F2EA",
+    icon: <Music2 size={22} className="text-[#00F2EA]" />,
     services: [
-      {
-        type: "Followers",
-        price: 0.10,
-        icon: <UserPlus size={18} className="text-[#00F2EA]" />,
-        desc: "Level up your TikTok clout with real, loyal followers. Safe, organic, never botted.",
-        features: [
-          "100% real users",
-          "No password needed",
-          "Instant or slow delivery",
-          "Supports all countries"
-        ]
-      },
-      {
-        type: "Likes",
-        price: 0.08,
-        icon: <ThumbsUp size={18} className="text-[#00F2EA]" />,
-        desc: "Make your TikToks pop with likes that count. Zero fakes, real reach.",
-        features: [
-          "Active TikTok accounts",
-          "Boosts video ranking",
-          "Private and safe",
-          "24/7 support"
-        ]
-      },
-      {
-        type: "Views",
-        price: 0.06,
-        icon: <Eye size={18} className="text-[#00F2EA]" />,
-        desc: "Unlock the FYP with rapid, authentic video views. No risk, all reward.",
-        features: [
-          "High retention, fast views",
-          "Works on any video",
-          "No fake metrics",
-          "Top global delivery"
-        ]
-      }
+      { type: "Followers", price: 0.10, icon: <UserPlus size={16} className="text-[#00F2EA]" />, desc: "Grow fast with real TikTok followers." },
+      { type: "Likes", price: 0.08, icon: <ThumbsUp size={16} className="text-[#00F2EA]" />, desc: "Get likes from real TikTok users." },
+      { type: "Views", price: 0.06, icon: <Eye size={16} className="text-[#00F2EA]" />, desc: "Boost your video with high-retention views." }
     ]
   },
   {
     key: "youtube",
     name: "YouTube",
-    icon: <Youtube size={24} className="text-[#FF0000]" />,
-    color: "#FF0000",
+    icon: <Youtube size={22} className="text-[#FF0000]" />,
     services: [
-      {
-        type: "Subscribers",
-        price: 0.12,
-        icon: <UserPlus size={18} className="text-[#FF0000]" />,
-        desc: "Unlock channel features & look legit with real, permanent subs. 0% drop rate, 100% safe.",
-        features: [
-          "Monetization safe",
-          "Global or targeted subs",
-          "No drops — refill for free",
-          "No logins required"
-        ]
-      },
-      {
-        type: "Likes",
-        price: 0.09,
-        icon: <ThumbsUp size={18} className="text-[#FF0000]" />,
-        desc: "Boost your videos to the top with premium likes from active YT users.",
-        features: [
-          "Instant & scheduled",
-          "No fake accounts",
-          "Permanent engagement",
-          "Organic push boost"
-        ]
-      },
-      {
-        type: "Views",
-        price: 0.05,
-        icon: <Eye size={18} className="text-[#FF0000]" />,
-        desc: "Get real YouTube views that actually count. High watch time, high retention.",
-        features: [
-          "High-retention, real views",
-          "AdSense safe",
-          "Delivered in 1–10 min",
-          "Best for new uploads"
-        ]
-      }
+      { type: "Subscribers", price: 0.12, icon: <UserPlus size={16} className="text-[#FF0000]" />, desc: "Get real, permanent channel subscribers." },
+      { type: "Likes", price: 0.09, icon: <ThumbsUp size={16} className="text-[#FF0000]" />, desc: "Real likes for your videos." },
+      { type: "Views", price: 0.05, icon: <Eye size={16} className="text-[#FF0000]" />, desc: "Boost your videos with high-retention views." }
     ]
   }
 ];
@@ -150,25 +49,17 @@ const steps = [
   { label: "Done" }
 ];
 
-type PaymentFormProps = {
-  amount: number;
-  orderDetails: {
-    platform: string;
-    service: string;
-    quantity: number;
-    target: string;
-    price: number;
-  };
-  onPaymentSuccess: () => void;
-  onError?: (err: string) => void;
-};
-
 function PaymentForm({
   amount,
   orderDetails,
   onPaymentSuccess,
   onError
-}: PaymentFormProps) {
+}: {
+  amount: number;
+  orderDetails: any;
+  onPaymentSuccess: () => void;
+  onError?: (err: string) => void;
+}) {
   const stripe = useStripe();
   const elements = useElements();
   const [loading, setLoading] = useState(false);
@@ -195,13 +86,7 @@ function PaymentForm({
       });
       if (stripeError) throw new Error(stripeError.message);
 
-      const jap = await fetch("/api/jap_order", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...orderDetails, paymentId: paymentIntent.id }),
-      });
-      const japResult = await jap.json();
-      if (!jap.ok && japResult?.error) throw new Error(japResult.error || "JAP order failed.");
+      // fake "order complete"
       onPaymentSuccess();
     } catch (e: any) {
       setError(e.message || "An error occurred.");
@@ -227,9 +112,6 @@ function PaymentForm({
       </button>
       <div className="flex items-center gap-2 justify-center text-[#007BFF] text-sm font-semibold mt-2">
         <Lock size={16} /> 100% Secure Card Payment
-      </div>
-      <div className="text-xs text-gray-400 text-center mt-1">
-        SSL-encrypted checkout. We never store your card info.
       </div>
     </form>
   );
@@ -340,7 +222,7 @@ export default function OrderModal({
 
   return (
     <div className="fixed z-[9999] inset-0 flex items-center justify-center bg-black/60 backdrop-blur-[2px]">
-      <div className="relative w-full max-w-xl mx-auto bg-white/95 rounded-3xl shadow-2xl border border-[#e3edfc] overflow-visible max-h-[98vh] flex flex-col" style={{ minHeight: 440 }}>
+      <div className="relative max-w-md w-[96vw] mx-auto bg-white/95 rounded-3xl shadow-2xl border border-[#e3edfc] overflow-visible max-h-[98vh] flex flex-col" style={{ minHeight: 440 }}>
         {/* Modal HEADER */}
         <div className="w-full px-4 pt-7 pb-3 rounded-t-3xl relative bg-gradient-to-r from-[#f7fbff] via-[#ecf4ff] to-[#f8fbff] border-b border-[#e3edfc]">
           <button
@@ -353,9 +235,7 @@ export default function OrderModal({
           </button>
           <div className="flex items-center gap-2 pr-9">
             {platform.icon}
-            <span className="font-extrabold text-lg" style={{ color: platform.color }}>
-              {platform.name}
-            </span>
+            <span className="font-extrabold text-lg">{platform.name}</span>
           </div>
           {/* Steps */}
           <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-2 mt-5 mb-[-6px] min-h-[42px]">
@@ -398,47 +278,35 @@ export default function OrderModal({
               </div>
             </>
           )}
-          {/* Step 1: Pick Service */}
+          {/* Step 1: Service List */}
           {step === 1 && (
             <>
               <h3 className="font-bold text-xl mb-3 text-[#222] text-center">
                 {platform.icon} {platform.name} Services
               </h3>
-              {/* Mobile: Horizontal Scroll, Desktop: Grid */}
-              <div className="w-full overflow-x-auto hide-scrollbar mb-2 sm:overflow-visible">
-                <div className="flex gap-3 min-w-[340px] pb-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:pb-0">
-                  {platform.services.map((s) => (
-                    <button
-                      key={s.type}
-                      className={`rounded-xl flex items-center justify-between px-5 py-4 border-2 text-base font-semibold shadow hover:shadow-lg transition min-w-[220px] sm:min-w-0
-                        ${service.type === s.type ? "border-[#007BFF] bg-[#E8F1FF] text-[#007BFF]" : "border-[#D2E6FF] text-[#222] bg-white"}`}
-                      onClick={() => chooseService(s)}
-                      style={{ flex: '0 0 220px' }}
-                    >
-                      <div className="flex items-center gap-2">
-                        {s.icon}
-                        <span>{s.type}</span>
-                      </div>
-                      <span className="font-normal text-[13px] text-[#888]">${s.price}/ea</span>
-                    </button>
-                  ))}
-                </div>
+              <div className="flex flex-col gap-2 w-full max-w-md mx-auto">
+                {platform.services.map((s) => (
+                  <button
+                    key={s.type}
+                    className={`flex items-center justify-between px-4 py-4 rounded-xl border-2 text-base font-semibold shadow hover:shadow-lg transition
+                      ${service.type === s.type ? "border-[#007BFF] bg-[#E8F1FF] text-[#007BFF]" : "border-[#D2E6FF] text-[#222] bg-white"}`}
+                    onClick={() => chooseService(s)}
+                  >
+                    <div className="flex items-center gap-2">
+                      {s.icon}
+                      <span>{s.type}</span>
+                    </div>
+                    <span className="font-normal text-[13px] text-[#888]">${s.price}/ea</span>
+                  </button>
+                ))}
               </div>
-              {/* Service details */}
-              <div className="mt-4 rounded-xl bg-[#F5FAFF] border border-[#CFE4FF] p-5 shadow flex flex-col gap-2 animate-fadeInPop">
+              <div className="mt-5 bg-[#F5FAFF] border border-[#CFE4FF] p-5 rounded-xl">
                 <div className="flex items-center gap-2 mb-2">
                   {service.icon}
                   <span className="font-bold text-[#007BFF]">{service.type}</span>
                   <Star size={15} className="text-yellow-400 animate-pulse" />
                 </div>
-                <div className="text-[#444] text-sm mb-1">{service.desc}</div>
-                <ul className="space-y-1">
-                  {service.features && service.features.map((f, i) => (
-                    <li key={i} className="text-xs text-[#007BFF] flex items-center gap-2">
-                      <CheckCircle size={12} className="inline text-[#22C55E]" /> {f}
-                    </li>
-                  ))}
-                </ul>
+                <div className="text-[#444] text-sm">{service.desc}</div>
               </div>
               <button className="block mx-auto mt-7 text-[#007BFF] underline text-sm" onClick={() => setStep(0)}>← Back</button>
             </>
@@ -535,10 +403,8 @@ export default function OrderModal({
           to   { opacity: 1; transform: translateY(0) scale(1);}
         }
         .animate-fadeInPop { animation: fadeInPop 0.22s cubic-bezier(.39,1.7,.47,.99); }
-        .hide-scrollbar::-webkit-scrollbar { display: none; }
-        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         @media (max-width: 700px) {
-          .max-w-xl { max-width: 99vw !important; }
+          .max-w-md { max-width: 99vw !important; }
         }
       `}</style>
     </div>
