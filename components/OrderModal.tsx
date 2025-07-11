@@ -8,8 +8,23 @@ import { loadStripe } from "@stripe/stripe-js";
 // Stripe key — replace with your live/public key in production!
 const stripePromise = loadStripe("pk_live_51Rgpc4Dzq312KvGPUkyCKLxH4ZdPWeJlmBAnMrSlAl5BHF8Wu8qFW6hqxKlo3l7F87X3qmvVnmDrZYcP3FSSTPVN00fygC8Pfl");
 
-// Real, natural service details!
-const PLATFORMS = [
+type Service = {
+  type: string;
+  price: number;
+  icon: JSX.Element;
+  desc: string;
+  features: string[];
+};
+
+type Platform = {
+  key: string;
+  name: string;
+  color: string;
+  icon: JSX.Element;
+  services: Service[];
+};
+
+const PLATFORMS: Platform[] = [
   {
     key: "instagram",
     name: "Instagram",
@@ -177,13 +192,18 @@ type PaymentFormProps = {
   onError?: (err: string) => void;
 };
 
-function PaymentForm({ amount, orderDetails, onPaymentSuccess, onError }: PaymentFormProps) {
+function PaymentForm({
+  amount,
+  orderDetails,
+  onPaymentSuccess,
+  onError
+}: PaymentFormProps) {
   const stripe = useStripe();
   const elements = useElements();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
-  const handlePayment = async (e) => {
+  const handlePayment = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
@@ -199,7 +219,7 @@ function PaymentForm({ amount, orderDetails, onPaymentSuccess, onError }: Paymen
       if (!stripe || !elements) throw new Error("Stripe not loaded");
       const { error: stripeError, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
         payment_method: {
-          card: elements.getElement(CardElement),
+          card: elements.getElement(CardElement)!,
         }
       });
       if (stripeError) throw new Error(stripeError.message);
@@ -212,7 +232,7 @@ function PaymentForm({ amount, orderDetails, onPaymentSuccess, onError }: Paymen
       const japResult = await jap.json();
       if (!jap.ok && japResult?.error) throw new Error(japResult.error || "JAP order failed.");
       onPaymentSuccess();
-    } catch (e) {
+    } catch (e: any) {
       setError(e.message || "An error occurred.");
       onError?.(e.message || "Payment error");
     }
@@ -244,19 +264,26 @@ function PaymentForm({ amount, orderDetails, onPaymentSuccess, onError }: Paymen
   );
 }
 
+type OrderModalProps = {
+  open: boolean;
+  onClose: () => void;
+  initialPlatform?: string | null;
+  initialService?: string | null;
+};
+
 export default function OrderModal({
   open,
   onClose,
   initialPlatform,
   initialService
-}) {
-  const [step, setStep] = useState(0);
-  const [platform, setPlatform] = useState(PLATFORMS[0]);
-  const [service, setService] = useState(PLATFORMS[0].services[0]);
-  const [quantity, setQuantity] = useState(100);
-  const [target, setTarget] = useState("");
-  const [error, setError] = useState("");
-  const [done, setDone] = useState(false);
+}: OrderModalProps) {
+  const [step, setStep] = useState<number>(0);
+  const [platform, setPlatform] = useState<Platform>(PLATFORMS[0]);
+  const [service, setService] = useState<Service>(PLATFORMS[0].services[0]);
+  const [quantity, setQuantity] = useState<number>(100);
+  const [target, setTarget] = useState<string>("");
+  const [error, setError] = useState<string>("");
+  const [done, setDone] = useState<boolean>(false);
 
   useEffect(() => {
     if (!open) return;
@@ -301,7 +328,7 @@ export default function OrderModal({
 
   if (!open) return null;
 
-  const choosePlatform = (p) => {
+  const choosePlatform = (p: Platform) => {
     setPlatform(p);
     setService(p.services[0]);
     setQuantity(100);
@@ -310,7 +337,7 @@ export default function OrderModal({
     setStep(1);
   };
 
-  const chooseService = (s) => {
+  const chooseService = (s: Service) => {
     setService(s);
     setQuantity(100);
     setError("");
