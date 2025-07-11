@@ -36,7 +36,7 @@ export default function LoginPage() {
           <Image src="/logo.png" alt="YesViral Logo" width={48} height={48} />
           <h1 className="text-3xl font-bold text-[#007BFF] mt-3">Welcome Back</h1>
           <p className="text-sm text-[#666] text-center leading-snug max-w-sm mt-2">
-            Trusted by thousands. Secure, fast, and effective growth services for Instagram, TikTok, and YouTube.
+            Trusted by thousands. Secure, Fast, and Effective Growth Services for Instagram, TikTok, and YouTube.
           </p>
         </div>
 
