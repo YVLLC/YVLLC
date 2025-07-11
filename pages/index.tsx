@@ -21,14 +21,13 @@ const SERVICES = [
     name: "Instagram Services",
     key: "instagram",
     price: "$0.09 / 100",
-    description: (
-      <>
-        Premium followers from real profiles. <br />
-        Instant, safe delivery. <br />
-        No drops. No bots. <br />
-        Trusted by brands, influencers, and agencies.
-      </>
-    ),
+    description: [
+      "✅ Verified, premium followers",
+      "✅ Instant, discreet delivery",
+      "✅ Retention guarantee included",
+      "✅ No data risk, ever"
+    ].join('\n'),
+    icon: (/* your icon code */),
     tag: "Bestseller",
     count: "2,000+ bought this week"
   },
@@ -36,14 +35,13 @@ const SERVICES = [
     name: "TikTok Services",
     key: "tiktok",
     price: "$0.08 / 100",
-    description: (
-      <>
-        Real likes and views that push you up the For You page. <br />
-        Organic engagement, no fakes. <br />
-        Boost virality instantly. <br />
-        100% safe for any account.
-      </>
-    ),
+    description: [
+      "⭐️ Authentic likes from real users",
+      "⭐️ For You boost, no bots",
+      "⭐️ Results visible within minutes",
+      "⭐️ Full account protection"
+    ].join('\n'),
+    icon: (/* your icon code */),
     tag: "🔥 Hot",
     count: "1,400+ bought this week"
   },
@@ -51,14 +49,13 @@ const SERVICES = [
     name: "YouTube Services",
     key: "youtube",
     price: "$0.05 / 1000",
-    description: (
-      <>
-        Genuine views and watch time that actually stick. <br />
-        Improve ranking and channel trust. <br />
-        Fast, discrete, and algorithm-safe. <br />
-        Used by creators serious about growth.
-      </>
-    ),
+    description: [
+      "🎯 High-retention, genuine views",
+      "🎯 Analytics and ranking safe",
+      "🎯 Private, rapid fulfillment",
+      "🎯 Trusted by leading creators"
+    ].join('\n'),
+    icon: (/* your icon code */),
     tag: "",
     count: "950+ bought this week"
   }
