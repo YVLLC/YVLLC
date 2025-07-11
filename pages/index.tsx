@@ -214,7 +214,7 @@ export default function Home() {
               Blow Up Your Socials. <br /> Real Growth. No Waiting.
             </h1>
             <p className="text-[#444] text-lg max-w-xl mx-auto md:mx-0 font-medium">
-              Get real followers, likes, and views in minutes. No logins, no risk. Start your viral growth journey with YesViral.
+Elevate your social presence with genuine Followers, Likes, and Views—delivered seamlessly, No logins required.
             </p>
             <div className="flex flex-col sm:flex-row justify-center md:justify-start gap-4">
               <button
@@ -292,7 +292,7 @@ export default function Home() {
             <div className="flex flex-col items-center max-w-[170px]">
               <UserCheck className="text-[#007BFF]" size={32} />
               <span className="font-semibold mt-2">Real Users</span>
-              <span className="text-sm text-[#444]">100% authentic, lasting</span>
+              <span className="text-sm text-[#444]">100% High Quality, lasting</span>
             </div>
             <div className="flex flex-col items-center max-w-[170px]">
               <ShieldCheck className="text-[#007BFF]" size={32} />
@@ -302,7 +302,7 @@ export default function Home() {
             <div className="flex flex-col items-center max-w-[170px]">
               <Clock className="text-[#007BFF]" size={32} />
               <span className="font-semibold mt-2">24/7 Support</span>
-              <span className="text-sm text-[#444]">Chat any time, any day</span>
+              <span className="text-sm text-[#444]">Chat any time, any day.</span>
             </div>
             <div className="flex flex-col items-center max-w-[170px]">
               <RefreshCcw className="text-[#007BFF]" size={32} />
@@ -311,8 +311,8 @@ export default function Home() {
             </div>
           </div>
           <div className="flex justify-center gap-8 mt-7 text-[#007BFF] font-bold text-lg">
-            <span>100k+ followers delivered</span>
-            <span className="hidden sm:inline">Rated 4.8/5 by 10,000+ clients</span>
+            <span>100k+ Followers Delivered</span>
+            <span className="hidden sm:inline">Rated 4.8/5 by 10,000+ Clients</span>
           </div>
         </section>
         <section id="how-it-works" className="space-y-10">
