@@ -329,45 +329,44 @@ export default function Home() {
       </Link>
       <main className="px-4 sm:px-6 max-w-7xl mx-auto py-14 space-y-28 select-none">
         {/* HERO SECTION */}
-        <section className="flex flex-col-reverse md:grid md:grid-cols-2 md:gap-12 items-center">
-          {/* Text Content */}
-          <div className="w-full flex flex-col items-center md:items-start space-y-7 text-center md:text-left mt-6 md:mt-0">
+        <section className="grid md:grid-cols-2 gap-12 items-center">
+          <div className="space-y-7 text-center md:text-left">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#E8F1FF] rounded-full mb-2 text-xs font-bold text-[#007BFF] tracking-wide shadow-sm">
               <Star size={18} className="text-yellow-400 star-animate" />
               Trusted by 100,000+ Creators
             </div>
-            <h1 className="text-4xl sm:text-5xl font-extrabold text-[#007BFF] leading-tight drop-shadow-sm">
-              Blow Up Your Socials. <br className="hidden sm:block" /> 
-              <span className="text-[#005FCC]">Real Growth.</span> No Waiting.
+            <h1 className="text-5xl sm:text-6xl font-extrabold text-[#007BFF] leading-tight drop-shadow-sm">
+              Blow Up Your Socials. <br /> Real Growth. No Waiting.
             </h1>
-            <p className="text-[#444] text-base sm:text-lg max-w-md sm:max-w-xl mx-auto md:mx-0 font-medium">
-              Elevate your social presence with genuine Followers, Likes, and Views—delivered seamlessly. No logins required.
+            <p className="text-[#444] text-lg max-w-xl mx-auto md:mx-0 font-medium">
+              Elevate your social presence with genuine Followers, Likes, and Views—delivered seamlessly, No logins required.
             </p>
-            <div className="flex flex-col xs:flex-row gap-3 w-full sm:w-auto justify-center md:justify-start">
+            <div className="flex flex-col sm:flex-row justify-center md:justify-start gap-4">
               <button
-                className="bg-[#007BFF] text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:bg-[#005FCC] transition text-base sm:text-lg w-full xs:w-auto"
+                className="bg-[#007BFF] text-white font-semibold px-8 py-3 rounded-xl shadow-lg hover:bg-[#005FCC] transition text-lg"
                 onClick={openOrderModalPlatform}
               >
                 Order Now
               </button>
               <Link href="/track-order">
-                <button className="bg-white text-[#007BFF] border border-[#007BFF] font-semibold px-6 py-3 rounded-xl hover:bg-[#E6F0FF] transition text-base sm:text-lg w-full xs:w-auto">
+                <button className="bg-white text-[#007BFF] border border-[#007BFF] font-semibold px-8 py-3 rounded-xl hover:bg-[#E6F0FF] transition text-lg">
                   Try Free Likes
                 </button>
               </Link>
             </div>
-            <span className="text-xs text-[#555] font-medium mt-2">
-              100% Secure Payments
-            </span>
+            <div className="flex flex-wrap gap-3 mt-6 justify-center md:justify-start items-center">
+              <span className="ml-2 text-xs text-[#555] font-medium mt-2 hidden sm:inline">
+                100% Secure Payments
+              </span>
+            </div>
           </div>
-          {/* Hero Illustration */}
-          <div className="w-full flex justify-center mb-6 md:mb-0">
+          <div className="hidden md:flex justify-center animate-fadeIn">
             <Image
               src="/hero-illustration.png"
               alt="Social Media Growth"
-              width={340}
-              height={260}
-              className="w-full max-w-[340px] sm:max-w-[420px] h-auto object-contain drop-shadow-2xl"
+              width={480}
+              height={400}
+              className="w-full max-w-[420px] h-auto object-contain drop-shadow-2xl"
               draggable={false}
               unselectable="on"
               priority
