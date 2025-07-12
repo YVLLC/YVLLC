@@ -19,7 +19,7 @@ const faqList = [
   {
     question: "Will my followers or likes drop after purchase?",
     answer:
-      "All of our services are backed by refill guarantees, and we only use stable providers. If a drop occurs, we will restore the balance automatically or upon request.",
+      "All of our services are backed by refill guarantees, If a drop occurs, we will restore the balance automatically or upon request.",
   },
   {
     question: "Can I try a free sample before buying?",
@@ -38,7 +38,7 @@ export default function FAQPage() {
     <>
       <Head>
         <title>FAQ – YesViral</title>
-        <meta name="description" content="Common questions about YesViral social media growth services." />
+        <meta name="description" content="Common questions about YesViral's Social Media Growth Services." />
       </Head>
       <main className="container py-16">
         <h1 className="section-title">Frequently Asked Questions</h1>

@@ -23,7 +23,7 @@ export default function HowItWorks() {
             <div className="text-5xl mb-4 text-[#007BFF]">1</div>
             <h2 className="text-lg font-semibold mb-2">Choose a Service</h2>
             <p className="text-[#444]">
-              Select from a wide range of services like followers, likes, or views across Instagram, TikTok, YouTube, and more.
+              Select from a wide range of services like Followers, Likes, or Views across Instagram, TikTok, YouTube, and more.
             </p>
           </div>
 
