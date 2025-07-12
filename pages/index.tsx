@@ -1,28 +1,10 @@
-// ✅ Full updated file with enhanced service descriptions below the "Place Your Order Instantly" section.
-
-import Head from "next/head";
-import Link from "next/link";
-import Image from "next/image";
-import {
-  ChevronDown,
-  ShieldCheck,
-  Clock,
-  UserCheck,
-  Zap,
-  RefreshCcw,
-  Star,
-  MessageCircle,
-} from "lucide-react";
-import { useState } from "react";
-import OrderModal from "@/components/OrderModal";
-
 const SERVICES = [
   {
     name: "Instagram Services",
     key: "instagram",
     price: "$0.09 / 100",
     description: [
-      "💎 High-Quality Followers & Likes",
+      "💎 Quality followers & likes",
       "⚡️ Rapid delivery",
       "🛡️ Drop protection",
       "🔒 Secure checkout"
