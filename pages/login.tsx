@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { supabase } from "@/lib/supabase";
 import { Toaster, toast } from "react-hot-toast";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -80,9 +81,9 @@ export default function LoginPage() {
 
         <p className="text-center text-xs text-[#888] mt-6">
           Forgot your password?{" "}
-          <a href="#" className="text-[#007BFF] hover:underline">
+          <Link href="/reset-password" className="text-[#007BFF] hover:underline">
             Reset it
-          </a>
+          </Link>
         </p>
       </div>
     </main>
