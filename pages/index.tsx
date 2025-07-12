@@ -1,3 +1,19 @@
+import Head from "next/head";
+import Link from "next/link";
+import Image from "next/image";
+import {
+  ChevronDown,
+  ShieldCheck,
+  Clock,
+  UserCheck,
+  Zap,
+  RefreshCcw,
+  Star,
+  MessageCircle,
+} from "lucide-react";
+import { useState } from "react";
+import OrderModal from "@/components/OrderModal";
+
 const SERVICES = [
   {
     name: "Instagram Services",
