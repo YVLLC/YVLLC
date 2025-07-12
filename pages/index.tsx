@@ -14,7 +14,17 @@ import {
 import { useState } from "react";
 import OrderModal from "@/components/OrderModal";
 
-const SERVICES = [
+type Service = {
+  name: string;
+  key: string;
+  price: string;
+  description: string[];
+  icon: JSX.Element;
+  tag: string;
+  count: string;
+};
+
+const SERVICES: Service[] = [
   {
     name: "Instagram Services",
     key: "instagram",
@@ -283,13 +293,9 @@ export default function Home() {
                   <h3 className="text-xl font-bold text-[#111]">{name}</h3>
                 </div>
                 <ul className="text-sm text-[#444] pl-5 list-disc space-y-1">
-                  {Array.isArray(description)
-                    ? description.map((point, i) => (
-                        <li key={i}>{point}</li>
-                      ))
-                    : description.split('\n').map((point, i) => (
-                        <li key={i}>{point}</li>
-                      ))}
+                  {description.map((point, i) => (
+                    <li key={i}>{point}</li>
+                  ))}
                 </ul>
                 <div className="flex items-center gap-2 mt-2">
                   <span className="text-sm font-medium text-[#007BFF]">{price}</span>
