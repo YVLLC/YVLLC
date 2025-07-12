@@ -13,9 +13,11 @@ import {
   ThumbsUp,
   Lock,
   HeartHandshake,
+  Sparkles,
 } from "lucide-react";
 import { useState } from "react";
 import OrderModal from "@/components/OrderModal";
+import OurPromise from "@/components/OurPromise";
 
 type Service = {
   name: string;
@@ -38,15 +40,7 @@ const SERVICES: Service[] = [
       "🛡️ Drop Protection",
       "🔒 100% Secure Checkout"
     ],
-    icon: (
-      <svg width={28} height={28} viewBox="0 0 48 48" fill="none">
-        <rect width="48" height="48" rx="16" fill="#F9E5F6"/>
-        <g>
-          <circle cx="24" cy="24" r="14" fill="#fff"/>
-          <path d="M24 16a8 8 0 100 16 8 8 0 000-16zm0 13a5 5 0 110-10 5 5 0 010 10zm6.25-12.5a1.25 1.25 0 112.5 0 1.25 1.25 0 01-2.5 0z" fill="#E1306C"/>
-        </g>
-      </svg>
-    ),
+    icon: <ShieldCheck className="text-pink-500" size={28} />,
     tag: "Bestseller",
     count: "2,000+ bought this week"
   },
@@ -60,17 +54,7 @@ const SERVICES: Service[] = [
       "🙅‍♂️ No Login Needed",
       "🛡️ Protected Service"
     ],
-    icon: (
-      <svg width={28} height={28} viewBox="0 0 48 48" fill="none">
-        <rect width="48" height="48" rx="16" fill="#E3F4FE"/>
-        <g>
-          <circle cx="24" cy="24" r="14" fill="#fff"/>
-          <path d="M32 20.19a4.09 4.09 0 01-2.13-.61 4.09 4.09 0 01-1.44-1.71V30.5a6.5 6.5 0 11-6.5-6.5" stroke="#000" strokeWidth="2" strokeLinecap="round"/>
-          <path d="M29 13v4.41a4.09 4.09 0 002.13.61" stroke="#00F2EA" strokeWidth="2" strokeLinecap="round"/>
-          <path d="M27.5 17.4V29.4a4.9 4.9 0 11-4.9-4.9" stroke="#FE2C55" strokeWidth="2" strokeLinecap="round"/>
-        </g>
-      </svg>
-    ),
+    icon: <Zap className="text-blue-400" size={28} />,
     tag: "🔥 Hot",
     count: "1,400+ bought this week"
   },
@@ -84,15 +68,7 @@ const SERVICES: Service[] = [
       "🤫 Private Delivery",
       "🤖 Algorithm Friendly"
     ],
-    icon: (
-      <svg width={28} height={28} viewBox="0 0 48 48" fill="none">
-        <rect width="48" height="48" rx="16" fill="#FEECE3"/>
-        <g>
-          <circle cx="24" cy="24" r="14" fill="#fff"/>
-          <path d="M30 24l-8 5V19l8 5z" fill="#FF0000"/>
-        </g>
-      </svg>
-    ),
+    icon: <Star className="text-red-500" size={28} />,
     tag: "",
     count: "950+ bought this week"
   }
@@ -148,159 +124,34 @@ const TESTIMONIALS = [
     quote: "I gained real followers in under an hour — and they didn’t drop!",
     name: "Taylor M.",
     platform: "Instagram",
-    icon: (
-      <svg width={48} height={48} viewBox="0 0 48 48" fill="none">
-        <rect width="48" height="48" rx="16" fill="#F9E5F6"/>
-        <g>
-          <circle cx="24" cy="24" r="14" fill="#fff"/>
-          <path d="M24 16a8 8 0 100 16 8 8 0 000-16zm0 13a5 5 0 110-10 5 5 0 010 10zm6.25-12.5a1.25 1.25 0 112.5 0 1.25 1.25 0 01-2.5 0z" fill="#E1306C"/>
-        </g>
-      </svg>
-    )
+    icon: <ShieldCheck className="text-[#E1306C]" size={32} />
   },
   {
     quote: "Great support, great pricing, real growth. Worth every cent.",
     name: "Jake B.",
     platform: "TikTok",
-    icon: (
-      <svg width={48} height={48} viewBox="0 0 48 48" fill="none">
-        <rect width="48" height="48" rx="16" fill="#E3F4FE"/>
-        <g>
-          <circle cx="24" cy="24" r="14" fill="#fff"/>
-          <path d="M32 20.19a4.09 4.09 0 01-2.13-.61 4.09 4.09 0 01-1.44-1.71V30.5a6.5 6.5 0 11-6.5-6.5" stroke="#000" strokeWidth="2" strokeLinecap="round"/>
-          <path d="M29 13v4.41a4.09 4.09 0 002.13.61" stroke="#00F2EA" strokeWidth="2" strokeLinecap="round"/>
-          <path d="M27.5 17.4V29.4a4.9 4.9 0 11-4.9-4.9" stroke="#FE2C55" strokeWidth="2" strokeLinecap="round"/>
-        </g>
-      </svg>
-    )
+    icon: <Zap className="text-[#00F2EA]" size={32} />
   },
   {
     quote: "The only site I trust. Super fast and my YouTube blew up.",
     name: "Lina S.",
     platform: "YouTube",
-    icon: (
-      <svg width={48} height={48} viewBox="0 0 48 48" fill="none">
-        <rect width="48" height="48" rx="16" fill="#FEECE3"/>
-        <g>
-          <circle cx="24" cy="24" r="14" fill="#fff"/>
-          <path d="M30 24l-8 5V19l8 5z" fill="#FF0000"/>
-        </g>
-      </svg>
-    )
+    icon: <Star className="text-[#FF0000]" size={32} />
   }
 ];
 
-// --- OUR PROMISE COMPONENT ---
-function OurPromise() {
-  return (
-    <section
-      id="our-promise"
-      className="relative z-10 bg-gradient-to-b from-[#F2F9FF] to-white rounded-3xl shadow-xl px-6 py-16 md:py-20 xl:px-24 mx-auto max-w-6xl mt-20 mb-14 border-2 border-[#CFE4FF] overflow-hidden"
-    >
-      <div className="absolute inset-0 pointer-events-none">
-        <svg width="100%" height="100%" viewBox="0 0 600 300" fill="none" className="opacity-30">
-          <defs>
-            <radialGradient id="glow" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
-              <stop offset="0%" stopColor="#CFE4FF" stopOpacity="0.7" />
-              <stop offset="100%" stopColor="#F2F9FF" stopOpacity="0" />
-            </radialGradient>
-          </defs>
-          <ellipse cx="300" cy="150" rx="270" ry="120" fill="url(#glow)" />
-        </svg>
-      </div>
-      <div className="relative z-10">
-        <div className="flex flex-col items-center mb-10">
-          <Star size={48} className="text-yellow-400 star-animate mb-4" />
-          <h2 className="text-4xl md:text-5xl font-extrabold text-[#007BFF] text-center drop-shadow-sm mb-3">
-            Our Promise &amp; Guarantees
-          </h2>
-          <p className="max-w-2xl mx-auto text-[#444] text-lg text-center font-medium">
-            Experience the YesViral Difference. We’re not just another growth service—we’re your edge. Our guarantees are designed to give you <span className="text-[#007BFF] font-bold">total confidence</span> every step of the way.
-          </p>
-        </div>
-        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-8 mt-12">
-          <div className="bg-white/80 backdrop-blur-2xl border border-[#CFE4FF] rounded-2xl shadow-lg p-7 flex flex-col items-center hover:scale-105 hover:shadow-2xl transition-transform">
-            <ShieldCheck size={36} className="text-[#007BFF] mb-2" />
-            <h3 className="font-bold text-lg text-[#111] mb-1">100% Safe & Secure</h3>
-            <p className="text-[#444] text-sm text-center">
-              No passwords, no risks. All orders are protected by industry-standard SSL and full privacy—your data is never shared.
-            </p>
-          </div>
-          <div className="bg-white/80 backdrop-blur-2xl border border-[#CFE4FF] rounded-2xl shadow-lg p-7 flex flex-col items-center hover:scale-105 hover:shadow-2xl transition-transform">
-            <UserCheck size={36} className="text-[#23C55E] mb-2" />
-            <h3 className="font-bold text-lg text-[#111] mb-1">Real Results—Always</h3>
-            <p className="text-[#444] text-sm text-center">
-              All engagement is from real users, never bots. We guarantee authentic growth and real impact, for every order.
-            </p>
-          </div>
-          <div className="bg-white/80 backdrop-blur-2xl border border-[#CFE4FF] rounded-2xl shadow-lg p-7 flex flex-col items-center hover:scale-105 hover:shadow-2xl transition-transform">
-            <RefreshCcw size={36} className="text-[#007BFF] mb-2" />
-            <h3 className="font-bold text-lg text-[#111] mb-1">30-Day Refill Coverage</h3>
-            <p className="text-[#444] text-sm text-center">
-              If you experience any drop in followers, likes, or views within 30 days, we’ll refill it—fast, free, and unlimited.
-            </p>
-          </div>
-          <div className="bg-white/80 backdrop-blur-2xl border border-[#CFE4FF] rounded-2xl shadow-lg p-7 flex flex-col items-center hover:scale-105 hover:shadow-2xl transition-transform">
-            <Zap size={36} className="text-[#FFB300] mb-2" />
-            <h3 className="font-bold text-lg text-[#111] mb-1">Lightning Fast Delivery</h3>
-            <p className="text-[#444] text-sm text-center">
-              Most orders start within 1–10 minutes. No waiting, no delays—just instant results.
-            </p>
-          </div>
-          <div className="bg-white/80 backdrop-blur-2xl border border-[#CFE4FF] rounded-2xl shadow-lg p-7 flex flex-col items-center hover:scale-105 hover:shadow-2xl transition-transform">
-            <ThumbsUp size={36} className="text-[#007BFF] mb-2" />
-            <h3 className="font-bold text-lg text-[#111] mb-1">Satisfaction Guarantee</h3>
-            <p className="text-[#444] text-sm text-center">
-              If you’re not 100% happy, we’ll make it right—refunds or replacements, no questions asked.
-            </p>
-          </div>
-          <div className="bg-white/80 backdrop-blur-2xl border border-[#CFE4FF] rounded-2xl shadow-lg p-7 flex flex-col items-center hover:scale-105 hover:shadow-2xl transition-transform">
-            <HeartHandshake size={36} className="text-[#ED4956] mb-2" />
-            <h3 className="font-bold text-lg text-[#111] mb-1">24/7 Human Support</h3>
-            <p className="text-[#444] text-sm text-center">
-              Real people ready to help, any time. No bots, no waiting—just world-class support.
-            </p>
-          </div>
-        </div>
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-5 mt-12">
-          <Lock size={28} className="text-[#007BFF]" />
-          <span className="font-semibold text-[#111] text-base">
-            We stake our reputation on your success. <span className="text-[#007BFF]">Your growth, guaranteed.</span>
-          </span>
-        </div>
-      </div>
-      <style jsx>{`
-        .star-animate {
-          animation: starGlow 2.6s cubic-bezier(.65,.05,.36,1) infinite;
-          will-change: transform, filter;
-        }
-        @keyframes starGlow {
-          0% { transform: rotate(0deg) scale(1); filter: drop-shadow(0 0 0 #FFD700);}
-          30% { transform: rotate(8deg) scale(1.16); filter: drop-shadow(0 0 8px #FFD700);}
-          55% { transform: rotate(-7deg) scale(1.09); filter: drop-shadow(0 0 12px #FFF78A);}
-          80% { transform: rotate(0deg) scale(1.13); filter: drop-shadow(0 0 10px #FFD700);}
-          100% { transform: rotate(0deg) scale(1); filter: drop-shadow(0 0 0 #FFD700);}
-        }
-      `}</style>
-    </section>
-  );
-}
-
-// --- MAIN PAGE ---
 export default function Home() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [orderModalOpen, setOrderModalOpen] = useState(false);
   const [modalPlatform, setModalPlatform] = useState<string | null>(null);
   const [modalService, setModalService] = useState<string | null>(null);
 
-  // Open modal at platform picker (step 0)
   const openOrderModalPlatform = () => {
     setModalPlatform(null);
     setModalService(null);
     setOrderModalOpen(true);
   };
 
-  // Open modal at service picker (step 1)
   const openOrderModalService = (platformKey: string) => {
     setModalPlatform(platformKey);
     setModalService(null);
@@ -329,44 +180,43 @@ export default function Home() {
       </Link>
       <main className="px-4 sm:px-6 max-w-7xl mx-auto py-14 space-y-28 select-none">
         {/* HERO SECTION */}
-        <section className="grid md:grid-cols-2 gap-12 items-center">
-          <div className="space-y-7 text-center md:text-left">
+        <section className="flex flex-col-reverse md:grid md:grid-cols-2 md:gap-12 items-center">
+          <div className="w-full flex flex-col items-center md:items-start space-y-7 text-center md:text-left mt-6 md:mt-0">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#E8F1FF] rounded-full mb-2 text-xs font-bold text-[#007BFF] tracking-wide shadow-sm">
               <Star size={18} className="text-yellow-400 star-animate" />
               Trusted by 100,000+ Creators
             </div>
-            <h1 className="text-5xl sm:text-6xl font-extrabold text-[#007BFF] leading-tight drop-shadow-sm">
-              Blow Up Your Socials. <br /> Real Growth. No Waiting.
+            <h1 className="text-4xl sm:text-5xl font-extrabold text-[#007BFF] leading-tight drop-shadow-sm">
+              Blow Up Your Socials. <br className="hidden sm:block" />
+              <span className="text-[#005FCC]">Real Growth.</span> No Waiting.
             </h1>
-            <p className="text-[#444] text-lg max-w-xl mx-auto md:mx-0 font-medium">
-              Elevate your social presence with genuine Followers, Likes, and Views—delivered seamlessly, No logins required.
+            <p className="text-[#444] text-base sm:text-lg max-w-md sm:max-w-xl mx-auto md:mx-0 font-medium">
+              Elevate your social presence with genuine Followers, Likes, and Views—delivered seamlessly. No logins required.
             </p>
-            <div className="flex flex-col sm:flex-row justify-center md:justify-start gap-4">
+            <div className="flex flex-col xs:flex-row gap-3 w-full sm:w-auto justify-center md:justify-start">
               <button
-                className="bg-[#007BFF] text-white font-semibold px-8 py-3 rounded-xl shadow-lg hover:bg-[#005FCC] transition text-lg"
+                className="bg-[#007BFF] text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:bg-[#005FCC] transition text-base sm:text-lg w-full xs:w-auto"
                 onClick={openOrderModalPlatform}
               >
                 Order Now
               </button>
               <Link href="/track-order">
-                <button className="bg-white text-[#007BFF] border border-[#007BFF] font-semibold px-8 py-3 rounded-xl hover:bg-[#E6F0FF] transition text-lg">
+                <button className="bg-white text-[#007BFF] border border-[#007BFF] font-semibold px-6 py-3 rounded-xl hover:bg-[#E6F0FF] transition text-base sm:text-lg w-full xs:w-auto">
                   Try Free Likes
                 </button>
               </Link>
             </div>
-            <div className="flex flex-wrap gap-3 mt-6 justify-center md:justify-start items-center">
-              <span className="ml-2 text-xs text-[#555] font-medium mt-2 hidden sm:inline">
-                100% Secure Payments
-              </span>
-            </div>
+            <span className="text-xs text-[#555] font-medium mt-2">
+              100% Secure Payments
+            </span>
           </div>
-          <div className="hidden md:flex justify-center animate-fadeIn">
+          <div className="w-full flex justify-center mb-6 md:mb-0">
             <Image
               src="/hero-illustration.png"
               alt="Social Media Growth"
-              width={480}
-              height={400}
-              className="w-full max-w-[420px] h-auto object-contain drop-shadow-2xl"
+              width={340}
+              height={260}
+              className="w-full max-w-[340px] sm:max-w-[420px] h-auto object-contain drop-shadow-2xl"
               draggable={false}
               unselectable="on"
               priority
