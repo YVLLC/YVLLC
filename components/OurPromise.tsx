@@ -33,7 +33,7 @@ export default function OurPromise() {
         <div className="group bg-[#E6F0FF] border border-[#CFE4FF] rounded-2xl shadow-md p-8 flex flex-col items-center transition-all duration-150 hover:border-[#005FCC] hover:shadow-lg">
           <TrendingUp size={40} className="text-[#007BFF] mb-3" />
           <h3 className="font-extrabold text-xl text-[#111111] mb-2 text-center">
-            Real Results
+            High-Quality Results
           </h3>
           <p className="text-[#444444] text-base text-center font-medium mb-2">
             Only real, high-quality engagement—no bots, ever. Your growth is authentic and designed to last.
