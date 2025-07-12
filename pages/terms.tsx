@@ -66,7 +66,7 @@ export default function Terms() {
               <Ban className="text-[#007BFF]" size={20} /> No Commercial Exploitation
             </h2>
             <ul className="list-disc pl-6">
-              <li>No reselling, “SMM” agency usage, or brand deal leverage allowed.</li>
+              <li>No reselling or brand deal leverage allowed.</li>
               <li>Commercial usage, business benefit, or representing a company is a breach.</li>
             </ul>
           </div>

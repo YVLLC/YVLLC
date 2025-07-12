@@ -7,7 +7,7 @@ export default function HowItWorks() {
         <title>How It Works – YesViral</title>
         <meta
           name="description"
-          content="Learn how YesViral delivers real followers, likes, and views to your social media profiles in 3 simple steps."
+          content="Learn how YesViral delivers real Followers, Likes, and Views to your social media profiles in 3 simple steps."
         />
       </Head>
 
