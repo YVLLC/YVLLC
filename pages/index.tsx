@@ -24,7 +24,7 @@ const SERVICES = [
       "⚡️ Rapid delivery",
       "🛡️ Drop protection",
       "🔒 Secure checkout"
-    ].join('\n'),
+    ],
     icon: (
       <svg width={28} height={28} viewBox="0 0 48 48" fill="none">
         <rect width="48" height="48" rx="16" fill="#F9E5F6"/>
@@ -46,7 +46,7 @@ const SERVICES = [
       "🚀 Instant order start",
       "🙅‍♂️ No login needed",
       "🛡️ Protected service"
-    ].join('\n'),
+    ],
     icon: (
       <svg width={28} height={28} viewBox="0 0 48 48" fill="none">
         <rect width="48" height="48" rx="16" fill="#E3F4FE"/>
@@ -70,7 +70,7 @@ const SERVICES = [
       "📈 Boosts channel performance",
       "🤫 Private delivery",
       "🤖 Algorithm friendly"
-    ].join('\n'),
+    ],
     icon: (
       <svg width={28} height={28} viewBox="0 0 48 48" fill="none">
         <rect width="48" height="48" rx="16" fill="#FEECE3"/>
@@ -218,7 +218,7 @@ export default function Home() {
         </button>
       </Link>
       <main className="px-4 sm:px-6 max-w-7xl mx-auto py-14 space-y-28 select-none">
-        {/* HERO SECTION WITH ANIMATED STAR */}
+        {/* HERO SECTION */}
         <section className="grid md:grid-cols-2 gap-12 items-center">
           <div className="space-y-7 text-center md:text-left">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#E8F1FF] rounded-full mb-2 text-xs font-bold text-[#007BFF] tracking-wide shadow-sm">
@@ -282,7 +282,15 @@ export default function Home() {
                   <div className="bg-[#F5FAFF] p-2 rounded-full">{icon}</div>
                   <h3 className="text-xl font-bold text-[#111]">{name}</h3>
                 </div>
-                <p className="text-sm text-[#444]">{description}</p>
+                <ul className="text-sm text-[#444] pl-5 list-disc space-y-1">
+                  {Array.isArray(description)
+                    ? description.map((point, i) => (
+                        <li key={i}>{point}</li>
+                      ))
+                    : description.split('\n').map((point, i) => (
+                        <li key={i}>{point}</li>
+                      ))}
+                </ul>
                 <div className="flex items-center gap-2 mt-2">
                   <span className="text-sm font-medium text-[#007BFF]">{price}</span>
                   <span className="text-xs text-[#111] bg-[#E8F1FF] px-2 py-0.5 rounded">{count}</span>
@@ -424,7 +432,6 @@ export default function Home() {
           </div>
         </section>
       </main>
-
       {/* --- ANIMATED STAR STYLE --- */}
       <style jsx global>{`
         @keyframes starGlow {
