@@ -38,7 +38,7 @@ export default function ResetPasswordPage() {
           <h1 className="text-3xl font-bold text-[#007BFF] mt-3">Reset Password</h1>
           <p className="text-sm text-[#666] text-center leading-snug max-w-sm mt-2">
             Enter your email and we'll send you a secure link to reset your password.<br />
-            Need help? <Link href="/support" className="text-[#007BFF] hover:underline">Contact support</Link>
+            Need help? <Link href="/contact" className="text-[#007BFF] hover:underline">Contact support</Link>
           </p>
         </div>
 
@@ -78,7 +78,7 @@ export default function ResetPasswordPage() {
             <h2 className="text-lg font-bold text-[#007BFF] mb-1">Check your inbox</h2>
             <p className="text-sm text-[#444]">
               We've sent a password reset link to <span className="font-semibold">{email}</span>.<br />
-              It may take a minute to arrive. Be sure to check your spam folder.
+              It may take a minute to arrive.
             </p>
           </div>
         )}
