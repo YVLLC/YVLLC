@@ -336,7 +336,7 @@ export default function Home() {
         {/* FAQ SECTION */}
         <section id="faq" className="space-y-7">
           <h2 className="text-center text-4xl font-extrabold">Frequently Asked Questions</h2>
-          <p className="text-center text-[#444] mb-4">Everything you need to know about our services, safety, and support.</p>
+          <p className="text-center text-[#444] mb-4">Everything you need to know about our Services, Safety, and Support.</p>
           <div className="max-w-3xl mx-auto space-y-4">
             {FAQS.map(({ question, answer }, index) => (
               <div
@@ -378,7 +378,7 @@ export default function Home() {
         <section className="text-center space-y-5 mt-24">
           <h2 className="text-4xl font-extrabold mb-3">Ready to try YesViral?</h2>
           <p className="text-[#444] text-lg mb-8">
-            Join thousands already boosting their socials—choose your package and grow now.
+            Join thousands already Boosting their Socials—Choose your package and grow now.
           </p>
           <div className="mt-8">
             <button
