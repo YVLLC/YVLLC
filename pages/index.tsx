@@ -210,18 +210,18 @@ export default function Home() {
               100% Secure Payments
             </span>
           </div>
-          <div className="w-full flex justify-center mb-6 md:mb-0">
-            <Image
-              src="/hero-illustration.png"
-              alt="Social Media Growth"
-              width={340}
-              height={260}
-              className="w-full max-w-[340px] sm:max-w-[420px] h-auto object-contain drop-shadow-2xl"
-              draggable={false}
-              unselectable="on"
-              priority
-            />
-          </div>
+<div className="w-full hidden md:flex justify-center mb-6 md:mb-0">
+  <Image
+    src="/hero-illustration.png"
+    alt="Social Media Growth"
+    width={340}
+    height={260}
+    className="w-full max-w-[340px] sm:max-w-[420px] h-auto object-contain drop-shadow-2xl"
+    draggable={false}
+    unselectable="on"
+    priority
+  />
+</div>
         </section>
         {/* SERVICES SECTION */}
         <section id="order" className="space-y-10">
