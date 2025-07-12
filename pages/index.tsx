@@ -33,10 +33,10 @@ const SERVICES: Service[] = [
     key: "instagram",
     price: "$0.09 / 100",
     description: [
-      "💎 Quality followers & likes",
-      "⚡️ Rapid delivery",
-      "🛡️ Drop protection",
-      "🔒 Secure checkout"
+      "💎 Quality Followers & Likes",
+      "⚡️ Rapid Delivery",
+      "🛡️ Drop Protection",
+      "🔒 100% Secure Checkout"
     ],
     icon: (
       <svg width={28} height={28} viewBox="0 0 48 48" fill="none">
@@ -55,10 +55,10 @@ const SERVICES: Service[] = [
     key: "tiktok",
     price: "$0.08 / 100",
     description: [
-      "✨ High-impact likes & views",
-      "🚀 Instant order start",
-      "🙅‍♂️ No login needed",
-      "🛡️ Protected service"
+      "✨ High-impact Likes & Views",
+      "🚀 Instant Order Start",
+      "🙅‍♂️ No Login Needed",
+      "🛡️ Protected Service"
     ],
     icon: (
       <svg width={28} height={28} viewBox="0 0 48 48" fill="none">
@@ -79,10 +79,10 @@ const SERVICES: Service[] = [
     key: "youtube",
     price: "$0.05 / 1000",
     description: [
-      "🏆 Premium views & watch time",
-      "📈 Boosts channel performance",
-      "🤫 Private delivery",
-      "🤖 Algorithm friendly"
+      "🏆 Premium Views & Watch time",
+      "📈 Boosts Channel Performance",
+      "🤫 Private Delivery",
+      "🤖 Algorithm Friendly"
     ],
     icon: (
       <svg width={28} height={28} viewBox="0 0 48 48" fill="none">
