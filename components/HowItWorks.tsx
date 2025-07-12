@@ -14,7 +14,7 @@ export default function HowItWorks() {
       <main className="max-w-5xl mx-auto px-4 py-16">
         <h1 className="text-3xl font-bold text-center mb-4">How It Works</h1>
         <p className="text-center text-[#444] mb-12">
-          Getting real social media growth with YesViral is simple, fast, and secure.
+          Getting real social media growth with YesViral is Simple, Fast, and Secure.
         </p>
 
         <div className="grid gap-10 md:grid-cols-3">
@@ -32,7 +32,7 @@ export default function HowItWorks() {
             <div className="text-5xl mb-4 text-[#007BFF]">2</div>
             <h2 className="text-lg font-semibold mb-2">Enter Your Info</h2>
             <p className="text-[#444]">
-              Just provide your username or a post link — no password ever required. All orders are 100% safe and encrypted.
+              Just provide your username or a post link — No password ever required. All orders are 100% safe and encrypted.
             </p>
           </div>
 

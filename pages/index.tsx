@@ -227,7 +227,7 @@ export default function Home() {
         <section id="order" className="space-y-10">
           <h2 className="text-center text-4xl font-extrabold">Place Your Order Instantly</h2>
           <p className="text-[#444] text-center max-w-2xl mx-auto">
-            Choose your service — no logins, no commitment. <span className="font-semibold text-[#007BFF]">Instant delivery starts within minutes.</span>
+            Choose your service — No logins needed, No Hassle. <span className="font-semibold text-[#007BFF]">Instant delivery starts within minutes.</span>
           </p>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {SERVICES.map(({ name, price, description, icon, tag, count, key }, idx) => (
