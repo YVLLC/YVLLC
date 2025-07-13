@@ -32,7 +32,7 @@ const testimonials = [
   },
 ];
 
-export default function TestimonialsPage() {
+export default function Testimonials() {
   return (
     <>
       <Head>
