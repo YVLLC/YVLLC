@@ -13,7 +13,7 @@ const STEPS = [
   },
   {
     title: "See Instant Results",
-    desc: "Your boost starts in minutes and grows naturally. Track your order and reach support anytime.",
+    desc: "Your Boost starts in minutes and grows naturally. Track your order and reach support anytime.",
     number: 3,
   },
 ];
