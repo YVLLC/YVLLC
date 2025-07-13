@@ -11,9 +11,6 @@ import {
   Star,
   MessageCircle,
   ThumbsUp,
-  Lock,
-  HeartHandshake,
-  Sparkles,
 } from "lucide-react";
 import { useState } from "react";
 import OrderModal from "@/components/OrderModal";
@@ -104,45 +101,6 @@ const FAQS = [
   }
 ];
 
-const HOW_IT_WORKS = [
-  {
-    icon: <Zap size={32} className="mx-auto text-blue-400" />,
-    title: "Choose a Service",
-    description: "Pick your platform and what you need — followers, likes, or views."
-  },
-  {
-    icon: <UserCheck size={32} className="mx-auto text-blue-400" />,
-    title: "Enter Info",
-    description: "Just your username or post URL. No password ever required."
-  },
-  {
-    icon: <Clock size={32} className="mx-auto text-blue-400" />,
-    title: "Get Results",
-    description: "See growth begin in minutes — smooth, secure, and fast."
-  }
-];
-
-const TESTIMONIALS = [
-  {
-    quote: "I gained real followers in under an hour — and they didn’t drop!",
-    name: "Taylor M.",
-    platform: "Instagram",
-    icon: <ShieldCheck className="text-[#E1306C]" size={32} />
-  },
-  {
-    quote: "Great support, great pricing, real growth. Worth every cent.",
-    name: "Jake B.",
-    platform: "TikTok",
-    icon: <Zap className="text-[#00F2EA]" size={32} />
-  },
-  {
-    quote: "The only site I trust. Super fast and my YouTube blew up.",
-    name: "Lina S.",
-    platform: "YouTube",
-    icon: <Star className="text-[#FF0000]" size={32} />
-  }
-];
-
 export default function Home() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [orderModalOpen, setOrderModalOpen] = useState(false);
@@ -166,7 +124,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>YesViral – Buy Real Followers, Likes & Views</title>
+        <title>YesViral – Buy High-Quality Followers, Likes & Views.</title>
         <meta name="description" content="Grow your social media with YesViral. Buy real followers, likes, views, and more across Instagram, TikTok, YouTube & beyond — fast, secure, and trusted." />
       </Head>
       <OrderModal
@@ -181,50 +139,51 @@ export default function Home() {
           <span className="font-semibold text-[#007BFF] text-sm">Live Support</span>
         </button>
       </Link>
-<main className="px-4 sm:px-6 max-w-7xl mx-auto py-2 sm:py-10 space-y-10 select-none">
-  {/* HERO SECTION */}
-  <section className="flex flex-col-reverse md:grid md:grid-cols-2 md:gap-12 items-center">
-    <div className="w-full flex flex-col items-center md:items-start space-y-7 text-center md:text-left mt-0">
-      <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#E8F1FF] rounded-full mb-2 mt-4 sm:mt-0 text-xs font-bold text-[#007BFF] tracking-wide shadow-sm">
-        <Star size={18} className="text-yellow-400 star-animate" />
-        Trusted by 100,000+ Creators
-      </div>
-      <h1 className="text-4xl sm:text-5xl font-extrabold text-[#007BFF] leading-tight drop-shadow-sm">
-        Blow Up Your Socials. <br className="hidden sm:block" />
-        <span className="text-[#005FCC]">Real Growth.</span> No Waiting.
-      </h1>
-      <p className="text-[#444] text-base sm:text-lg max-w-md sm:max-w-xl mx-auto md:mx-0 font-medium">
-        Elevate your social presence with genuine Followers, Likes, and Views—delivered seamlessly. No logins required.
-      </p>
-      <div className="flex flex-col xs:flex-row gap-3 w-full sm:w-auto justify-center md:justify-start">
-        <button
-          className="bg-[#007BFF] text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:bg-[#005FCC] transition text-base sm:text-lg w-full xs:w-auto"
-          onClick={openOrderModalPlatform}
-        >
-          Order Now
-        </button>
-        <Link href="/track-order">
-          <button className="bg-white text-[#007BFF] border border-[#007BFF] font-semibold px-6 py-3 rounded-xl hover:bg-[#E6F0FF] transition text-base sm:text-lg w-full xs:w-auto">
-            Try Free Likes
-          </button>
-        </Link>
-      </div>
-      <span className="text-xs text-[#555] font-medium mt-2">
-        100% Secure Payments
-      </span>
-    </div>
-    <div className="w-full hidden md:flex justify-center mb-0">
-      <Image
-        src="/hero-illustration.png"
-        alt="Social Media Growth"
-        width={340}
-        height={260}
-        className="w-full max-w-[340px] sm:max-w-[420px] h-auto object-contain drop-shadow-2xl"
-        draggable={false}
-        unselectable="on"
-        priority
-      />
-    </div>
+      <main className="px-4 sm:px-6 max-w-7xl mx-auto py-2 sm:py-10 space-y-10 select-none">
+        {/* HERO SECTION */}
+        <section className="flex flex-col-reverse md:grid md:grid-cols-2 md:gap-12 items-center">
+          <div className="w-full flex flex-col items-center md:items-start space-y-7 text-center md:text-left mt-0">
+            {/* ADD MARGIN-TOP TO BADGE ON MOBILE */}
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#E8F1FF] rounded-full mb-2 mt-6 sm:mt-0 text-xs font-bold text-[#007BFF] tracking-wide shadow-sm">
+              <Star size={18} className="text-yellow-400 star-animate" />
+              Trusted by 100,000+ Creators
+            </div>
+            <h1 className="text-4xl sm:text-5xl font-extrabold text-[#007BFF] leading-tight drop-shadow-sm">
+              Blow Up Your Socials. <br className="hidden sm:block" />
+              <span className="text-[#005FCC]">Real Growth.</span> No Waiting.
+            </h1>
+            <p className="text-[#444] text-base sm:text-lg max-w-md sm:max-w-xl mx-auto md:mx-0 font-medium">
+              Elevate your social presence with genuine Followers, Likes, and Views—delivered seamlessly. No logins required.
+            </p>
+            <div className="flex flex-col xs:flex-row gap-3 w-full sm:w-auto justify-center md:justify-start">
+              <button
+                className="bg-[#007BFF] text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:bg-[#005FCC] transition text-base sm:text-lg w-full xs:w-auto"
+                onClick={openOrderModalPlatform}
+              >
+                Order Now
+              </button>
+              <Link href="/track-order">
+                <button className="bg-white text-[#007BFF] border border-[#007BFF] font-semibold px-6 py-3 rounded-xl hover:bg-[#E6F0FF] transition text-base sm:text-lg w-full xs:w-auto">
+                  Try Free Likes
+                </button>
+              </Link>
+            </div>
+            <span className="text-xs text-[#555] font-medium mt-2">
+              100% Secure Payments
+            </span>
+          </div>
+          <div className="w-full hidden md:flex justify-center mb-0">
+            <Image
+              src="/hero-illustration.png"
+              alt="Social Media Growth"
+              width={340}
+              height={260}
+              className="w-full max-w-[340px] sm:max-w-[420px] h-auto object-contain drop-shadow-2xl"
+              draggable={false}
+              unselectable="on"
+              priority
+            />
+          </div>
         </section>
         {/* SERVICES SECTION */}
         <section id="order" className="space-y-10">
@@ -347,20 +306,20 @@ export default function Home() {
           </div>
         </section>
         {/* CTA SECTION */}
-<section className="text-center space-y-5 mt-24">
-  <h2 className="text-4xl font-extrabold mb-3">Ready to try YesViral?</h2>
-  <p className="text-[#444] text-lg mb-8">
-    Join over 100,000 creators already growing with YesViral—choose your service and unlock High-Quality results in minutes.
-  </p>
-  <div className="mt-12 mb-12"> {/* <-- margin bottom added */}
-    <button
-      className="bg-[#007BFF] text-white px-8 py-3 text-lg rounded-xl hover:bg-[#005FCC] font-bold shadow transition"
-      onClick={openOrderModalPlatform}
-    >
-      View Services
-    </button>
-  </div>
-</section>
+        <section className="text-center space-y-5 mt-24">
+          <h2 className="text-4xl font-extrabold mb-3">Ready to try YesViral?</h2>
+          <p className="text-[#444] text-lg mb-8">
+            Join over 100,000+ creators already growing with YesViral—choose your service and unlock High-Quality results in minutes.
+          </p>
+          <div className="mt-12 mb-12">
+            <button
+              className="bg-[#007BFF] text-white px-8 py-3 text-lg rounded-xl hover:bg-[#005FCC] font-bold shadow transition"
+              onClick={openOrderModalPlatform}
+            >
+              View Services
+            </button>
+          </div>
+        </section>
       </main>
       {/* --- ANIMATED STAR STYLE --- */}
       <style jsx global>{`
