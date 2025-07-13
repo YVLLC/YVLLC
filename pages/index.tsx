@@ -181,16 +181,14 @@ export default function Home() {
           <span className="font-semibold text-[#007BFF] text-sm">Live Support</span>
         </button>
       </Link>
-<main className="px-4 sm:px-6 max-w-7xl mx-auto py-0 space-y-10 select-none">
+<main className="px-4 sm:px-6 max-w-7xl mx-auto py-2 sm:py-10 space-y-10 select-none">
   {/* HERO SECTION */}
   <section className="flex flex-col-reverse md:grid md:grid-cols-2 md:gap-12 items-center">
     <div className="w-full flex flex-col items-center md:items-start space-y-7 text-center md:text-left mt-0">
-      {/* BADGE – NO EXTRA MARGIN */}
       <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#E8F1FF] rounded-full mb-2 text-xs font-bold text-[#007BFF] tracking-wide shadow-sm">
         <Star size={18} className="text-yellow-400 star-animate" />
         Trusted by 100,000+ Creators
       </div>
-      {/* HEADLINE */}
       <h1 className="text-4xl sm:text-5xl font-extrabold text-[#007BFF] leading-tight drop-shadow-sm">
         Blow Up Your Socials. <br className="hidden sm:block" />
         <span className="text-[#005FCC]">Real Growth.</span> No Waiting.
@@ -215,7 +213,6 @@ export default function Home() {
         100% Secure Payments
       </span>
     </div>
-    {/* IMAGE – NO EXTRA MARGIN */}
     <div className="w-full hidden md:flex justify-center mb-0">
       <Image
         src="/hero-illustration.png"
