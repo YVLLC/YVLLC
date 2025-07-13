@@ -1,33 +1,4 @@
-import Head from "next/head";
-import Link from "next/link";
-import Image from "next/image";
-import {
-  ChevronDown,
-  ShieldCheck,
-  Clock,
-  UserCheck,
-  Zap,
-  RefreshCcw,
-  Star,
-  MessageCircle,
-  ThumbsUp,
-  Lock,
-  HeartHandshake,
-  Sparkles,
-} from "lucide-react";
-import { useState } from "react";
-import OrderModal from "@/components/OrderModal";
-import OurPromise from "@/components/OurPromise";
-
-type Service = {
-  name: string;
-  key: string;
-  price: string;
-  description: string[];
-  icon: JSX.Element;
-  tag: string;
-  count: string;
-};
+import { Instagram, Music2, Youtube } from "lucide-react"; // Add these at the top
 
 const SERVICES: Service[] = [
   {
@@ -35,12 +6,12 @@ const SERVICES: Service[] = [
     key: "instagram",
     price: "$0.09 / 100",
     description: [
-      "💎 Quality Followers & Likes",
+      "💎 Quality Followers, Likes & Views",
       "⚡️ Rapid Delivery",
       "🛡️ Drop Protection",
       "🔒 100% Secure Checkout"
     ],
-    icon: <ShieldCheck className="text-pink-500" size={28} />,
+    icon: <Instagram className="text-[#E1306C]" size={28} />, // IG Pink
     tag: "Bestseller",
     count: "2,000+ bought this week"
   },
@@ -54,7 +25,7 @@ const SERVICES: Service[] = [
       "🙅‍♂️ No Login Needed",
       "🛡️ Protected Service"
     ],
-    icon: <Zap className="text-blue-400" size={28} />,
+    icon: <Music2 className="text-[#25F4EE]" size={28} />, // TikTok blue
     tag: "🔥 Hot",
     count: "1,400+ bought this week"
   },
@@ -68,7 +39,7 @@ const SERVICES: Service[] = [
       "🤫 Private Delivery",
       "🤖 Algorithm Friendly"
     ],
-    icon: <Star className="text-red-500" size={28} />,
+    icon: <Youtube className="text-[#FF0000]" size={28} />, // YouTube red
     tag: "",
     count: "950+ bought this week"
   }
