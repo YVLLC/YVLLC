@@ -3,12 +3,12 @@ import Head from "next/head";
 const STEPS = [
   {
     title: "Choose a Service",
-    desc: "Select followers, likes, or views for any major platform. Every option is real, fast, and safe.",
+    desc: "Select Followers, Likes, or Views for any major platform. Every option is High-Quality, Fast, and Safe.",
     number: 1,
   },
   {
     title: "Enter Your Info",
-    desc: "No passwords. Just your @username or a link. Orders are private, secure, and encrypted.",
+    desc: "No passwords. Just your @Username or a Link. Orders are Private, Secure, and Encrypted.",
     number: 2,
   },
   {
@@ -33,7 +33,7 @@ export default function HowItWorks() {
           How YesViral Works
         </h1>
         <p className="text-center text-[#444] mb-12 text-lg max-w-xl mx-auto">
-          Getting real growth is simple. Three steps, zero hassle—just results.
+          Getting real growth is simple. Three steps, Zero Hassle—just results.
         </p>
 
         {/* Steps */}
