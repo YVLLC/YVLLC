@@ -19,6 +19,7 @@ import { useState } from "react";
 import OrderModal from "@/components/OrderModal";
 import OurPromise from "@/components/OurPromise";
 import Testimonials from "@/components/Testimonials";
+import HowItWorks from "@/components/HowItWorks";
 import { Instagram, Music2, Youtube } from "lucide-react";
 
 type Service = {
