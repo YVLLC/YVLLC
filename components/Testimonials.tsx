@@ -1,5 +1,6 @@
 import Head from "next/head";
 import { Star, Instagram, Youtube, Music2, Briefcase } from "lucide-react";
+import Testimonials from "@/components/Testimonials";
 
 const testimonials = [
   {
@@ -32,7 +33,7 @@ const testimonials = [
   },
 ];
 
-export default function Testimonials() {
+export default function TestimonialsPage() {
   return (
     <>
       <Head>
