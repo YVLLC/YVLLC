@@ -185,7 +185,7 @@ export default function Home() {
   {/* HERO SECTION */}
   <section className="flex flex-col-reverse md:grid md:grid-cols-2 md:gap-12 items-center">
     <div className="w-full flex flex-col items-center md:items-start space-y-7 text-center md:text-left mt-0">
-      <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#E8F1FF] rounded-full mb-2 text-xs font-bold text-[#007BFF] tracking-wide shadow-sm">
+      <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#E8F1FF] rounded-full mb-2 mt-4 sm:mt-0 text-xs font-bold text-[#007BFF] tracking-wide shadow-sm">
         <Star size={18} className="text-yellow-400 star-animate" />
         Trusted by 100,000+ Creators
       </div>
