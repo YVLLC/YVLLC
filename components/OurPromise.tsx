@@ -26,7 +26,7 @@ export default function OurPromise() {
             Our network keeps growing—unlocking new sources, platforms, and strategies for your next-level reach.
           </p>
           <span className="text-[#888888] text-xs mt-1">
-            7X network scale since 2023
+            7X Network scale since 2021
           </span>
         </div>
         {/* CARD 2 */}
@@ -36,10 +36,10 @@ export default function OurPromise() {
             High-Quality Results
           </h3>
           <p className="text-[#444444] text-base text-center font-medium mb-2">
-            Only real, high-quality engagement—no bots, ever. Your growth is authentic and designed to last.
+            Only real, High-Quality engagement—no bots, ever. Your growth is authentic and designed to last.
           </p>
           <span className="text-[#888888] text-xs mt-1">
-            21% avg. engagement lift in 2024
+            21% avg. Engagement lift in 2024
           </span>
         </div>
         {/* CARD 3 */}
@@ -52,7 +52,7 @@ export default function OurPromise() {
             No logins, no risks. 256-bit SSL and privacy-first by design—your account stays safe and in your control.
           </p>
           <span className="text-[#888888] text-xs mt-1">
-            0 security incidents. 100% safe.
+            0 Security incidents. 100% safe.
           </span>
         </div>
       </div>
