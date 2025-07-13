@@ -36,8 +36,8 @@ export default function TestimonialsPage() {
   return (
     <>
       <Head>
-        <title>Testimonials – YesViral</title>
-        <meta
+  <title>YesViral – Buy High-Quality Followers, Likes & Views.</title>
+          <meta
           name="description"
           content="Read real customer reviews about YesViral’s social growth services."
         />
