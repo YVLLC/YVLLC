@@ -9,7 +9,6 @@ import { loadStripe } from "@stripe/stripe-js";
 const stripePromise = loadStripe("pk_live_51Rgpc4Dzq312KvGPUkyCKLxH4ZdPWeJlmBAnMrSlAl5BHF8Wu8qFW6hqxKlo3l7F87X3qmvVnmDrZYcP3FSSTPVN00fygC8Pfl");
 
 const PLATFORMS = [
-  // ... same as before ...
   {
     key: "instagram",
     name: "Instagram",
@@ -155,6 +154,19 @@ export default function OrderModal({
   const [error, setError] = useState("");
   const [done, setDone] = useState(false);
 
+  // ---- BODY SCROLL LOCK (NEW!) ----
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [open]);
+  // ----------------------------------
+
   useEffect(() => {
     if (!open) return;
     let selectedPlatform = PLATFORMS[0];
@@ -241,7 +253,7 @@ export default function OrderModal({
   return (
     <div className="fixed z-[9999] inset-0 flex items-center justify-center bg-black/60 backdrop-blur-[2px]">
       <div className="relative max-w-md w-[96vw] mx-auto bg-white/95 rounded-3xl shadow-2xl border border-[#e3edfc] overflow-hidden">
-        {/* Modal HEADER (includes steps, always inside modal) */}
+        {/* Modal HEADER */}
         <div className="w-full px-4 pt-7 pb-3 rounded-t-3xl relative bg-gradient-to-r from-[#f7fbff] via-[#ecf4ff] to-[#f8fbff] border-b border-[#e3edfc]">
           <button
             className="absolute top-4 right-5 z-20 bg-white/95 border border-[#e3edfc] shadow-lg rounded-full p-2 hover:bg-[#eaf4ff] transition"
@@ -257,7 +269,7 @@ export default function OrderModal({
               {platform.name}
             </span>
           </div>
-          {/* Steps - wraps to 2 lines on mobile if needed */}
+          {/* Steps */}
           <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-2 mt-5 mb-[-6px] min-h-[42px]">
             {steps.map((s, i) => (
               <div key={s.label} className="flex items-center gap-2 flex-shrink-0">

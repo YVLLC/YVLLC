@@ -352,7 +352,7 @@ export default function Home() {
   <p className="text-[#444] text-lg mb-8">
     Join over 100,000 creators already growing with YesViral—choose your service and unlock High-Quality results in minutes.
   </p>
-  <div className="mt-12">
+  <div className="mt-12 mb-12"> {/* <-- margin bottom added */}
     <button
       className="bg-[#007BFF] text-white px-8 py-3 text-lg rounded-xl hover:bg-[#005FCC] font-bold shadow transition"
       onClick={openOrderModalPlatform}
