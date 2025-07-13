@@ -1,4 +1,34 @@
-import { Instagram, Music2, Youtube } from "lucide-react"; // Add these at the top
+import Head from "next/head";
+import Link from "next/link";
+import Image from "next/image";
+import {
+  ChevronDown,
+  ShieldCheck,
+  Clock,
+  UserCheck,
+  Zap,
+  RefreshCcw,
+  Star,
+  MessageCircle,
+  ThumbsUp,
+  Lock,
+  HeartHandshake,
+  Sparkles,
+} from "lucide-react";
+import { useState } from "react";
+import OrderModal from "@/components/OrderModal";
+import OurPromise from "@/components/OurPromise";
+import { Instagram, Music2, Youtube } from "lucide-react";
+
+type Service = {
+  name: string;
+  key: string;
+  price: string;
+  description: string[];
+  icon: JSX.Element;
+  tag: string;
+  count: string;
+};
 
 const SERVICES: Service[] = [
   {
@@ -11,7 +41,7 @@ const SERVICES: Service[] = [
       "🛡️ Drop Protection",
       "🔒 100% Secure Checkout"
     ],
-    icon: <Instagram className="text-[#E1306C]" size={28} />, // IG Pink
+    icon: <Instagram className="text-[#E1306C]" size={28} />,
     tag: "Bestseller",
     count: "2,000+ bought this week"
   },
@@ -25,7 +55,7 @@ const SERVICES: Service[] = [
       "🙅‍♂️ No Login Needed",
       "🛡️ Protected Service"
     ],
-    icon: <Music2 className="text-[#25F4EE]" size={28} />, // TikTok blue
+    icon: <Music2 className="text-[#25F4EE]" size={28} />,
     tag: "🔥 Hot",
     count: "1,400+ bought this week"
   },
@@ -39,7 +69,7 @@ const SERVICES: Service[] = [
       "🤫 Private Delivery",
       "🤖 Algorithm Friendly"
     ],
-    icon: <Youtube className="text-[#FF0000]" size={28} />, // YouTube red
+    icon: <Youtube className="text-[#FF0000]" size={28} />,
     tag: "",
     count: "950+ bought this week"
   }
