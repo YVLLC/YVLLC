@@ -314,27 +314,7 @@ export default function Home() {
         {/* OUR PROMISE / GUARANTEES SECTION */}
         <OurPromise />
         {/* TESTIMONIALS SECTION */}
-        <section id="testimonials" className="space-y-7">
-          <h2 className="text-center text-4xl font-extrabold">Customer Reviews</h2>
-          <div className="grid md:grid-cols-3 gap-7">
-            {TESTIMONIALS.map(({ quote, name, platform, icon }, i) => (
-              <div key={i} className="bg-white border border-gray-200 p-7 rounded-2xl shadow flex flex-col items-center text-center">
-                <div className="mb-2">{icon}</div>
-                <div className="flex items-center gap-1 mb-1">
-                  {Array(5)
-                    .fill(0)
-                    .map((_, j) => (
-                      <Star key={j} size={16} className="text-yellow-400" />
-                    ))}
-                </div>
-                <p className="italic text-[#222] text-base font-medium mb-2">“{quote}”</p>
-                <p className="mt-1 text-sm text-[#007BFF] font-semibold">
-                  {name} <span className="text-[#444] font-normal">· {platform}</span>
-                </p>
-              </div>
-            ))}
-          </div>
-        </section>
+        <Testimonials />
         {/* FAQ SECTION */}
         <section id="faq" className="space-y-7">
           <h2 className="text-center text-4xl font-extrabold">Frequently Asked Questions</h2>
