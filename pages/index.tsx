@@ -347,20 +347,20 @@ export default function Home() {
           </div>
         </section>
         {/* CTA SECTION */}
-        <section className="text-center space-y-5 mt-24">
-          <h2 className="text-4xl font-extrabold mb-3">Ready to try YesViral?</h2>
-          <p className="text-[#444] text-lg mb-8">
-            Join thousands already Boosting their Socials—Choose your package and start growing today.
-          </p>
-          <div className="mt-8">
-            <button
-              className="bg-[#007BFF] text-white px-8 py-3 text-lg rounded-xl hover:bg-[#005FCC] font-bold shadow transition"
-              onClick={openOrderModalPlatform}
-            >
-              View Services
-            </button>
-          </div>
-        </section>
+<section className="text-center space-y-5 mt-24">
+  <h2 className="text-4xl font-extrabold mb-3">Ready to try YesViral?</h2>
+  <p className="text-[#444] text-lg mb-8">
+    Join over 100,000 creators already growing with YesViral—choose your service and unlock High-Quality results in minutes.
+  </p>
+  <div className="mt-12">
+    <button
+      className="bg-[#007BFF] text-white px-8 py-3 text-lg rounded-xl hover:bg-[#005FCC] font-bold shadow transition"
+      onClick={openOrderModalPlatform}
+    >
+      View Services
+    </button>
+  </div>
+</section>
       </main>
       {/* --- ANIMATED STAR STYLE --- */}
       <style jsx global>{`
