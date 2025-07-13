@@ -54,29 +54,34 @@ export default function HowItWorks() {
               {idx < STEPS.length - 1 && (
                 <>
                   {/* Desktop: horizontal */}
-                  <div className="hidden md:block absolute top-1/2 right-[-40px] w-[80px] h-0 flex items-center z-0">
+                  <div className="hidden md:block absolute top-1/2 right-[-40px] w-[80px] h-0 flex items-center z-0"
+                       style={{ marginTop: "-12px", marginBottom: "-12px" }}
+                  >
                     <div className="flex w-full items-center justify-center">
                       {[...Array(5)].map((_, d) => (
                         <span
                           key={d}
-                          className="inline-block w-2 h-2 mx-[3px] rounded-full bg-[#007BFF] opacity-80"
+                          className="inline-block w-2 h-2 mx-[5px] rounded-full bg-[#007BFF] opacity-80"
                           style={{
                             animation: "dotPulse 1.2s infinite alternate",
-                            animationDelay: `${d * 0.12}s`
+                            animationDelay: `${d * 0.13}s`
                           }}
                         />
                       ))}
                     </div>
                   </div>
                   {/* Mobile: vertical */}
-                  <div className="md:hidden flex flex-col items-center mt-4 mb-[-32px]">
+                  <div
+                    className="md:hidden flex flex-col items-center"
+                    style={{ marginTop: "24px", marginBottom: "24px" }}
+                  >
                     {[...Array(5)].map((_, d) => (
                       <span
                         key={d}
-                        className="inline-block w-2 h-2 my-[3px] rounded-full bg-[#007BFF] opacity-80"
+                        className="inline-block w-2 h-2 my-[5px] rounded-full bg-[#007BFF] opacity-80"
                         style={{
                           animation: "dotPulse 1.2s infinite alternate",
-                          animationDelay: `${d * 0.12}s`
+                          animationDelay: `${d * 0.13}s`
                         }}
                       />
                     ))}
