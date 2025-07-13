@@ -59,7 +59,7 @@ export default function OurPromise() {
       {/* Footer Statement */}
       <div className="flex flex-col items-center justify-center gap-2 mt-12">
         <span className="font-semibold text-[#111111] text-base text-center px-2">
-          <span className="text-[#007BFF] font-black">YesViral</span> is committed to your Growth—today, tomorrow, and every step forward.
+          <span className="text-[#007BFF] font-black">YesViral</span> is committed to your Growth. What sets YesViral apart? Every service is powered by our Exclusive, High-Performance Private Networks—raising the bar for quality and results in the industry.
         </span>
       </div>
     </section>
