@@ -28,30 +28,16 @@ export default function HowItWorks() {
           content="Learn how YesViral delivers real Followers, Likes, and Views to your social media in 3 easy steps."
         />
       </Head>
-      <main className="max-w-4xl mx-auto px-4 py-20 relative">
-        {/* Decorative Blue Glow (behind steps) */}
-        <div className="absolute inset-0 flex justify-center items-center z-0 pointer-events-none">
-          <svg width="600" height="320" className="hidden md:block" style={{position:'absolute',top:'-50px',left:'50%',transform:'translateX(-50%)',zIndex:0}}><defs><radialGradient id="glow1" cx="50%" cy="55%" r="65%"><stop offset="0%" stopColor="#B4D8FF" stopOpacity="0.55"/><stop offset="95%" stopColor="#fff" stopOpacity="0"/></radialGradient></defs><ellipse cx="300" cy="150" rx="260" ry="110" fill="url(#glow1)"/></svg>
-          <svg width="370" height="370" className="md:hidden" style={{position:'absolute',top:'0',left:'50%',transform:'translateX(-50%)',zIndex:0}}><defs><radialGradient id="glow2" cx="50%" cy="55%" r="65%"><stop offset="0%" stopColor="#B4D8FF" stopOpacity="0.55"/><stop offset="95%" stopColor="#fff" stopOpacity="0"/></radialGradient></defs><ellipse cx="185" cy="170" rx="140" ry="80" fill="url(#glow2)"/></svg>
-        </div>
-
-        {/* Decorative Connector Lines */}
-        <div className="absolute inset-0 z-0 pointer-events-none">
-          {/* Desktop horizontal line */}
-          <svg className="hidden md:block" width="100%" height="100" style={{position:'absolute',top:'70px',left:0,right:0}}><line x1="17%" y1="50%" x2="83%" y2="50%" stroke="#CFE4FF" strokeWidth="3" strokeDasharray="12 8" strokeLinecap="round" /></svg>
-          {/* Mobile vertical line */}
-          <svg className="md:hidden" width="100" height="270" style={{position:'absolute',top:'110px',left:'50%',transform:'translateX(-50%)'}}><line x1="50" y1="10" x2="50" y2="260" stroke="#CFE4FF" strokeWidth="3" strokeDasharray="10 10" strokeLinecap="round" /></svg>
-        </div>
-
-        <h1 className="text-4xl font-extrabold text-[#007BFF] text-center mb-2 relative z-10">
+      <main className="max-w-4xl mx-auto px-4 py-16">
+        <h1 className="text-4xl font-extrabold text-[#007BFF] text-center mb-2">
           How YesViral Works
         </h1>
-        <p className="text-center text-[#444] mb-12 text-lg max-w-xl mx-auto relative z-10">
+        <p className="text-center text-[#444] mb-12 text-lg max-w-xl mx-auto">
           Getting real growth is simple. Three steps, zero hassle—just results.
         </p>
 
         {/* Steps */}
-        <div className="flex flex-col md:flex-row md:items-start items-center justify-center relative z-10">
+        <div className="flex flex-col md:flex-row md:items-start items-center justify-center relative">
           {STEPS.map((step, idx) => (
             <div
               key={idx}
@@ -104,7 +90,7 @@ export default function HowItWorks() {
       <style jsx>{`
         @keyframes dotPulse {
           0% { opacity: 0.7; transform: scale(1);}
-          60% { opacity: 1; transform: scale(1.25);}
+          60% { opacity: 1; transform: scale(1.35);}
           100% { opacity: 0.7; transform: scale(1);}
         }
       `}</style>
