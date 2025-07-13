@@ -309,7 +309,7 @@ export default function Home() {
         <section className="text-center space-y-5 mt-24">
           <h2 className="text-4xl font-extrabold mb-3">Ready to try YesViral?</h2>
           <p className="text-[#444] text-lg mb-8">
-            Join over 100,000+ creators already growing with YesViral—choose your service and unlock High-Quality results in minutes.
+            Join over 100,000+ Creators already growing with YesViral—choose your service and unlock High-Quality results in minutes.
           </p>
           <div className="mt-12 mb-12">
             <button
