@@ -299,18 +299,7 @@ export default function Home() {
           </div>
         </section>
         {/* HOW IT WORKS SECTION */}
-        <section id="how-it-works" className="space-y-10">
-          <h2 className="text-center text-4xl font-extrabold">How It Works</h2>
-          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-8 text-center">
-            {HOW_IT_WORKS.map(({ title, description, icon }, i) => (
-              <div key={i} className="bg-white border border-[#CFE4FF] rounded-2xl p-7 shadow hover:shadow-lg transition">
-                <div className="mb-2">{icon}</div>
-                <h3 className="text-lg font-bold mb-1">{title}</h3>
-                <p className="text-sm text-[#444]">{description}</p>
-              </div>
-            ))}
-          </div>
-        </section>
+        <HowItWorks />
         {/* OUR PROMISE / GUARANTEES SECTION */}
         <OurPromise />
         {/* TESTIMONIALS SECTION */}
