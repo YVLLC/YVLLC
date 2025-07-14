@@ -134,7 +134,8 @@ export default function Home() {
               <span className="text-[#005FCC]">Real Growth.</span> No Waiting.
             </h1>
             <p className="text-[#444] text-base sm:text-lg max-w-md sm:max-w-xl mx-auto md:mx-0 font-medium">
-Unlock Fast, High-Quality social growth with YesViral — trusted by Creators and Brands for real Followers, Likes, and Views powered by exclusive private networks built for Speed, Trust, and Results. <div className="flex flex-col xs:flex-row gap-3 w-full sm:w-auto justify-center md:justify-start">
+Unlock Fast, High-Quality social growth with YesViral — trusted by Creators and Brands for real Followers, Likes, and Views powered by exclusive private networks built for Speed, Trust, and Results.
+ <div className="flex flex-col xs:flex-row gap-3 w-full sm:w-auto justify-center md:justify-start">
               <button
                 className="bg-[#007BFF] text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:bg-[#005FCC] transition text-base sm:text-lg w-full xs:w-auto"
                 onClick={openOrderModalPlatform}
