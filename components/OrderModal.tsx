@@ -48,6 +48,24 @@ const steps = [
   { label: "Done" }
 ];
 
+// ---- SAFETY: Make sure you only send Stripe-safe info to checkout! ----
+function getStealthPackage(platform: any, service: any) {
+  // Stripe-safe, always neutral wording!
+  let pkg = "Premium Package";
+  let type = "Standard";
+  if (platform && service) {
+    if (platform.key === "instagram" && service.type === "Followers") pkg = "Insta Package";
+    if (platform.key === "instagram" && service.type === "Likes") pkg = "Insta Plus";
+    if (platform.key === "tiktok") pkg = "Ultimate Package";
+    if (platform.key === "youtube") pkg = "Pro Package";
+    if (service.type === "Followers" || service.type === "Subscribers") type = "Growth";
+    if (service.type === "Likes") type = "Engagement";
+    if (service.type === "Views") type = "Boost";
+    if (service.type === "Comments") type = "Comments";
+  }
+  return { pkg, type };
+}
+
 export default function OrderModal({
   open,
   onClose,
@@ -152,14 +170,14 @@ export default function OrderModal({
     onClose();
   };
 
-  // This is the generic order info you'll pass to the checkout subdomain
+  // -- Only pass neutral values to checkout --
+  const { pkg, type } = getStealthPackage(platform, service);
   const orderToSend = {
-    product: platform.key,     // E.g. "instagram"
-    option: service.type,      // E.g. "Followers"
-    amount: quantity,          // E.g. 100
-    reference: target,         // E.g. username or link
-    price: service.price,      // Price per item
-    total: service.price * quantity // Total cost
+    package: pkg,
+    type: type,
+    amount: quantity,
+    reference: target,
+    total: Number((service.price * quantity).toFixed(2))
   };
 
   return (
@@ -279,7 +297,7 @@ export default function OrderModal({
           {step === 2 && (
             <>
               <h3 className="font-bold text-xl mb-4 text-[#222] text-center">
-                Your {service.type} Order
+                Order Details
               </h3>
               <form
                 className="space-y-5"
@@ -290,24 +308,23 @@ export default function OrderModal({
                     return;
                   }
                   setError("");
-                  // ENCODE the order as base64 for URL (works everywhere!)
                   const orderString = btoa(unescape(encodeURIComponent(JSON.stringify(orderToSend))));
                   window.location.href = "https://checkout.yesviral.com/checkout?order=" + orderString;
                 }}
               >
                 <div>
-                  <label className="block font-semibold text-[#007BFF] mb-1">Profile or Post Link</label>
+                  <label className="block font-semibold text-[#007BFF] mb-1">Profile or Link</label>
                   <input
                     type="text"
                     autoFocus
                     className="w-full border border-[#CFE4FF] rounded-lg px-3 py-2 text-base font-medium outline-[#007BFF] bg-white/90"
-                    placeholder={`Paste your ${platform.name} username or post link`}
+                    placeholder={`Enter your link or username`}
                     value={target}
                     onChange={e => setTarget(e.target.value)}
                   />
                 </div>
                 <div className="flex items-center gap-3">
-                  <label className="font-semibold text-[#007BFF]">Quantity</label>
+                  <label className="font-semibold text-[#007BFF]">Amount</label>
                   <input
                     type="number"
                     min={10}
