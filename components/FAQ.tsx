@@ -42,8 +42,8 @@ const FAQ: React.FC<FAQProps> = ({ faqs }) => {
             style={{ marginBottom: 0 }}
           >
             <div className="flex items-center gap-3">
-              {/* Soft colored dot accent */}
-              <span className={`w-3 h-3 rounded-full transition bg-[#007BFF] ${open === idx ? "scale-110 shadow" : "opacity-70"}`} />
+              {/* Sleek, tiny dot accent */}
+              <span className={`w-[7px] h-[7px] rounded-full transition bg-[#007BFF] ${open === idx ? "scale-110 shadow" : "opacity-70"}`} />
               <span className="font-semibold text-[#111] text-base sm:text-lg flex-1">{question}</span>
               <ChevronDown
                 className={`
@@ -70,9 +70,10 @@ const FAQ: React.FC<FAQProps> = ({ faqs }) => {
         <div className="text-center mt-6">
           <a
             href="/contact"
-            className="inline-block px-6 py-2 rounded-xl bg-[#007BFF] text-white font-bold shadow hover:bg-[#005FCC] transition text-base"
+            className="inline-block text-[#007BFF] font-semibold underline underline-offset-2 hover:text-[#005FCC] transition text-base"
+            style={{ textDecorationThickness: 2 }}
           >
-            Didn’t find your answer? Chat with us!
+            Didn’t find your answer? Chat with us
           </a>
         </div>
       </div>
