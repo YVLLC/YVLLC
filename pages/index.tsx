@@ -2,22 +2,14 @@ import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
 import {
-  ChevronDown,
-  ShieldCheck,
-  Clock,
-  UserCheck,
-  Zap,
-  RefreshCcw,
-  Star,
-  MessageCircle,
-  ThumbsUp,
+  ShieldCheck, Clock, UserCheck, Zap, RefreshCcw, Star, MessageCircle, ThumbsUp,
 } from "lucide-react";
 import { useState } from "react";
 import OrderModal from "@/components/OrderModal";
 import OurPromise from "@/components/OurPromise";
 import Testimonials from "@/components/Testimonials";
 import HowItWorks from "@/components/HowItWorks";
-import FAQ from "@/components/FAQ";
+import FAQ from "@/components/FAQ"; // <-- Here!
 import { Instagram, Music2, Youtube } from "lucide-react";
 
 // ---- SERVICES DATA ----
@@ -65,6 +57,53 @@ const SERVICES = [
     count: "950+ bought this week"
   }
 ];
+
+// ---- FAQ DATA ----
+const FAQS = [
+  {
+    question: "Why choose us?",
+    answer: "We combine unbeatable prices, real results, and blazing-fast delivery to help you grow on social media with confidence. Every order is backed by our satisfaction guarantee and refill policy, so you can grow your presence safely, quickly, and with real users. Trusted by over 100,000 creators and businesses."
+  },
+  {
+    question: "What services do you offer?",
+    answer: "Our Social Media Marketing services help individuals, influencers, and brands grow their online presence with targeted engagement. Whether you want more followers, subscribers, video views, or music plays, we offer a wide range of services across platforms like Instagram, YouTube, Spotify, TikTok, and more."
+  },
+  {
+    question: "Do I need to share my account password?",
+    answer: "No, never. We do not require your password for any of our services. Everything is delivered securely without accessing your account. If you ever receive a message asking for your password claiming to be from us, do not share it—please report it to us immediately."
+  },
+  {
+    question: "Are the followers, likes, and subscribers real?",
+    answer: "Yes. We don’t use bots or fake accounts. All engagement comes from real users, helping your account grow through authentic, organic activity that boosts your reach and credibility."
+  },
+  {
+    question: "Is your service safe and legal?",
+    answer: "Absolutely. We use safe, secure, and compliant methods to deliver likes, followers, and more. Your account stays 100% protected, and everything we do follows platform guidelines to keep your profile secure."
+  },
+  {
+    question: "What is your refill guarantee?",
+    answer: "Our 30-day refill guarantee means that if any followers, likes, views, or engagement drop within 30 days of your purchase, we’ll replace them free of charge. This keeps your results strong and consistent. Just reach out through our contact form—no hassle, no extra cost."
+  }
+];
+
+export default function Home() {
+  const [orderModalOpen, setOrderModalOpen] = useState(false);
+  const [modalPlatform, setModalPlatform] = useState<string | null>(null);
+  const [modalService, setModalService] = useState<string | null>(null);
+
+  const openOrderModalPlatform = () => {
+    setModalPlatform(null);
+    setModalService(null);
+    setOrderModalOpen(true);
+  };
+
+  const openOrderModalService = (platformKey: string) => {
+    setModalPlatform(platformKey);
+    setModalService(null);
+    setOrderModalOpen(true);
+  };
+
+  return (
     <>
       <Head>
         <title>YesViral – Buy High-Quality Followers, Likes & Views.</title>
@@ -212,10 +251,8 @@ const SERVICES = [
         <section className="py-8 md:py-14">
           <Testimonials />
         </section>
-        {/* FAQ SECTION */}
-        <section id="faq" className="space-y-7 py-8 md:py-14">
-          <FAQ />
-        </section>
+        {/* FAQ SECTION (USE COMPONENT) */}
+        <FAQ faqs={FAQS} />
         {/* CTA SECTION */}
         <section className="text-center space-y-5 mt-16 py-10 md:py-14">
           <h2 className="text-4xl font-extrabold mb-3">Ready to try YesViral?</h2>
@@ -248,3 +285,4 @@ const SERVICES = [
       `}</style>
     </>
   );
+}
