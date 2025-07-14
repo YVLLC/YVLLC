@@ -134,7 +134,7 @@ export default function Home() {
               <span className="text-[#005FCC]">Real Growth.</span> No Waiting.
             </h1>
             <p className="text-[#444] text-base sm:text-lg max-w-md sm:max-w-xl mx-auto md:mx-0 font-medium">
-Unlock Fast, High-Quality social growth with YesViral — trusted by Creators and Brands for real Followers, Likes, and Views powered by exclusive private networks built for Speed, Trust, and Results.
+Unlock Social Growth with YesViral — Trusted by Creators and Brands for High-Quality Followers, Likes, and Views powered by Exclusive Private Networks built for Speed, Trust, and Results.
  </p>
  <div className="flex flex-col xs:flex-row gap-3 w-full sm:w-auto justify-center md:justify-start">
               <button
@@ -150,8 +150,8 @@ Unlock Fast, High-Quality social growth with YesViral — trusted by Creators an
               </Link>
             </div>
             <span className="text-xs text-[#555] font-medium mt-2">
-              100% Secure Payments
-            </span>
+ Trusted by 100K+ Creators · 100% Secure Payments · High Quality Growth
+             </span>
           </div>
           <div className="w-full hidden md:flex justify-center mb-0">
             <Image
