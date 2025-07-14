@@ -36,7 +36,6 @@ export default function HowItWorks() {
           Getting real growth is simple. Three steps, Zero Hassle—just results.
         </p>
 
-        {/* Steps Timeline */}
         <div className="relative flex flex-col md:flex-row md:items-start items-center md:justify-between">
           {STEPS.map((step, idx) => (
             <div
@@ -44,34 +43,46 @@ export default function HowItWorks() {
               className="relative flex flex-col items-center text-center flex-1 min-w-[180px] max-w-xs md:mx-0 mb-12 md:mb-0"
             >
               {/* Step Circle */}
+              <div className="w-16 h-16 flex items-center justify-center rounded-full border-4 border-[#007BFF] bg-white text-2xl font-extrabold text-[#007BFF] shadow-lg z-10 mb-4" />
+              <span className="absolute left-1/2 top-0 -translate-x-1/2 w-full flex justify-center items-center pointer-events-none">
+                {/* Space holder for consistent layout */}
+              </span>
+              <span className="absolute left-1/2 top-0 -translate-x-1/2 w-full flex justify-center items-center pointer-events-none">
+                {/* Space holder for consistent layout */}
+              </span>
+              <span className="absolute left-1/2 top-0 -translate-x-1/2 w-full flex justify-center items-center pointer-events-none">
+                {/* Space holder for consistent layout */}
+              </span>
               <div className="w-16 h-16 flex items-center justify-center rounded-full border-4 border-[#007BFF] bg-white text-2xl font-extrabold text-[#007BFF] shadow-lg z-10 mb-4">
                 {step.number}
               </div>
               {/* Connector Dots */}
               {idx < STEPS.length - 1 && (
                 <>
-                  {/* Desktop: horizontal dots */}
-                  <div className="hidden md:flex absolute top-1/2 right-[-60px] left-auto translate-y-[-50%]">
-                    <div className="flex gap-2">
-                      {[...Array(5)].map((_, d) => (
+                  {/* Desktop: horizontal dots with extra margin */}
+                  <div className="hidden md:flex absolute top-1/2 right-[-90px] left-auto translate-y-[-50%]">
+                    <div className="flex gap-2" style={{ marginLeft: 32, marginRight: 32 }}>
+                      {[...Array(7)].map((_, d) => (
                         <span
                           key={d}
-                          className="block w-3 h-3 rounded-full bg-[#007BFF] opacity-80 animate-dot-pulse"
+                          className="block w-2 h-2 rounded-full bg-[#007BFF] opacity-80 animate-dot-pulse"
                           style={{
-                            animationDelay: `${d * 0.13}s`
+                            animationDelay: `${d * 0.12}s`
                           }}
                         />
                       ))}
                     </div>
                   </div>
-                  {/* Mobile: vertical dots */}
-                  <div className="md:hidden flex flex-col items-center mt-2 mb-[-30px]">
-                    {[...Array(5)].map((_, d) => (
+                  {/* Mobile: vertical dots with extra margin */}
+                  <div className="md:hidden flex flex-col items-center mt-4 mb-[-30px]" style={{ marginTop: 24 }}>
+                    {[...Array(7)].map((_, d) => (
                       <span
                         key={d}
-                        className="block w-3 h-3 rounded-full bg-[#007BFF] opacity-80 animate-dot-pulse"
+                        className="block w-2 h-2 rounded-full bg-[#007BFF] opacity-80 animate-dot-pulse"
                         style={{
-                          animationDelay: `${d * 0.13}s`
+                          animationDelay: `${d * 0.12}s`,
+                          marginTop: d === 0 ? 0 : 4,
+                          marginBottom: d === 6 ? 0 : 4,
                         }}
                       />
                     ))}
@@ -79,7 +90,7 @@ export default function HowItWorks() {
                 </>
               )}
               {/* Step Title */}
-              <h2 className="text-lg font-extrabold text-[#111] mb-2 mt-3">{step.title}</h2>
+              <h2 className="text-lg font-extrabold text-[#111] mb-2 mt-5">{step.title}</h2>
               <p className="text-[#444] text-base max-w-[240px] mx-auto">{step.desc}</p>
             </div>
           ))}
@@ -88,18 +99,17 @@ export default function HowItWorks() {
       <style jsx>{`
         /* Dots Animation */
         @keyframes dot-pulse {
-          0% { opacity: 0.5; transform: scale(1); }
-          60% { opacity: 1; transform: scale(1.35);}
-          100% { opacity: 0.5; transform: scale(1); }
+          0% { opacity: 0.6; transform: scale(1);}
+          60% { opacity: 1; transform: scale(1.25);}
+          100% { opacity: 0.6; transform: scale(1);}
         }
         .animate-dot-pulse {
-          animation: dot-pulse 1.2s infinite alternate;
+          animation: dot-pulse 1.15s infinite alternate;
         }
-        /* Responsive connector positioning */
+        /* Desktop: step spacing */
         @media (min-width: 768px) {
-          /* Tweak horizontal spacing between step cards for desktop perfection */
           .md\\:flex > div.relative:not(:last-child) {
-            margin-right: 60px;
+            margin-right: 80px;
           }
         }
       `}</style>
