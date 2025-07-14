@@ -65,7 +65,6 @@ const SERVICES = [
     count: "950+ bought this week"
   }
 ];
-  return (
     <>
       <Head>
         <title>YesViral – Buy High-Quality Followers, Likes & Views.</title>
