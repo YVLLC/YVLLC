@@ -19,6 +19,7 @@ import Testimonials from "@/components/Testimonials";
 import HowItWorks from "@/components/HowItWorks";
 import { Instagram, Music2, Youtube } from "lucide-react";
 
+// ---- SERVICE DATA ----
 type Service = {
   name: string;
   key: string;
@@ -139,11 +140,10 @@ export default function Home() {
           <span className="font-semibold text-[#007BFF] text-sm">Live Support</span>
         </button>
       </Link>
-      <main className="px-4 sm:px-6 max-w-7xl mx-auto py-2 sm:py-10 space-y-10 select-none">
+      <main className="px-4 sm:px-6 max-w-7xl mx-auto py-2 sm:py-10 space-y-20 md:space-y-24 select-none">
         {/* HERO SECTION */}
-        <section className="flex flex-col-reverse md:grid md:grid-cols-2 md:gap-12 items-center">
+        <section className="flex flex-col-reverse md:grid md:grid-cols-2 md:gap-12 items-center pt-8 md:pt-16">
           <div className="w-full flex flex-col items-center md:items-start space-y-7 text-center md:text-left mt-0">
-            {/* ADD MARGIN-TOP TO BADGE ON MOBILE */}
             <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#E8F1FF] rounded-full mb-2 mt-6 sm:mt-0 text-xs font-bold text-[#007BFF] tracking-wide shadow-sm">
               <Star size={18} className="text-yellow-400 star-animate" />
               Trusted by 100,000+ Creators
@@ -186,7 +186,7 @@ export default function Home() {
           </div>
         </section>
         {/* SERVICES SECTION */}
-        <section id="order" className="space-y-10">
+        <section id="order" className="space-y-10 py-12 md:py-20">
           <h2 className="text-center text-4xl font-extrabold">Place Your Order Instantly</h2>
           <p className="text-[#444] text-center max-w-2xl mx-auto">
             Choose your service — No logins needed, No Hassle. <span className="font-semibold text-[#007BFF]">Instant delivery starts within minutes.</span>
@@ -224,7 +224,7 @@ export default function Home() {
           </div>
         </section>
         {/* ABOUT SECTION */}
-        <section id="about" className="bg-[#F5FAFF] p-12 rounded-2xl text-center shadow-sm space-y-8">
+        <section id="about" className="bg-[#F5FAFF] p-12 rounded-2xl text-center shadow-sm space-y-8 py-12 md:py-20">
           <h2 className="text-4xl font-extrabold text-[#111]">Why Choose YesViral?</h2>
           <div className="flex flex-wrap gap-7 justify-center mt-6">
             <div className="flex flex-col items-center max-w-[170px]">
@@ -259,13 +259,19 @@ export default function Home() {
           </div>
         </section>
         {/* HOW IT WORKS SECTION */}
-        <HowItWorks />
+        <section className="py-12 md:py-20">
+          <HowItWorks />
+        </section>
         {/* OUR PROMISE / GUARANTEES SECTION */}
-        <OurPromise />
+        <section className="py-12 md:py-20">
+          <OurPromise />
+        </section>
         {/* TESTIMONIALS SECTION */}
-        <Testimonials />
+        <section className="py-12 md:py-20">
+          <Testimonials />
+        </section>
         {/* FAQ SECTION */}
-        <section id="faq" className="space-y-7">
+        <section id="faq" className="space-y-7 py-12 md:py-20">
           <h2 className="text-center text-4xl font-extrabold">Frequently Asked Questions</h2>
           <p className="text-center text-[#444] mb-4">Everything you need to know about our Services, Safety, and Support.</p>
           <div className="max-w-3xl mx-auto space-y-4">
@@ -306,7 +312,7 @@ export default function Home() {
           </div>
         </section>
         {/* CTA SECTION */}
-        <section className="text-center space-y-5 mt-24">
+        <section className="text-center space-y-5 mt-24 py-16 md:py-24">
           <h2 className="text-4xl font-extrabold mb-3">Ready to try YesViral?</h2>
           <p className="text-[#444] text-lg mb-8">
             Join over 100,000+ Creators already growing with YesViral—choose your service and unlock High-Quality results in minutes.

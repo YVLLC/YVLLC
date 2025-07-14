@@ -43,27 +43,28 @@ export default function HowItWorks() {
               key={idx}
               className="relative flex flex-col items-center text-center flex-1 min-w-[180px] max-w-xs mb-12 md:mb-0"
             >
-              {/* Step circle number */}
+              {/* Step number */}
               <div className="w-14 h-14 flex items-center justify-center rounded-full border-4 border-[#007BFF] bg-white text-2xl font-extrabold text-[#007BFF] shadow-lg mb-4 z-10">
                 {step.number}
               </div>
-              {/* Step Title */}
               <h2 className="text-lg font-bold text-[#111] mb-2">{step.title}</h2>
               <p className="text-[#444] text-base max-w-[240px] mx-auto">{step.desc}</p>
-              {/* Connector Dots: show unless last step */}
+
+              {/* Dots */}
               {idx < STEPS.length - 1 && (
                 <>
                   {/* Desktop: horizontal */}
-                  <div className="hidden md:block absolute top-1/2 right-[-40px] w-[80px] h-0 flex items-center z-0"
-                       style={{ marginTop: "-12px", marginBottom: "-12px" }}
+                  <div
+                    className="hidden md:flex absolute left-full top-1/2 transform -translate-y-1/2"
+                    style={{ width: "80px", height: "24px", justifyContent: "center", alignItems: "center" }}
                   >
-                    <div className="flex w-full items-center justify-center">
+                    <div className="flex w-full justify-center items-center gap-3">
                       {[...Array(5)].map((_, d) => (
                         <span
                           key={d}
-                          className="inline-block w-2 h-2 mx-[5px] rounded-full bg-[#007BFF] opacity-80"
+                          className="inline-block w-3 h-3 rounded-full bg-[#007BFF] opacity-80"
                           style={{
-                            animation: "dotPulse 1.2s infinite alternate",
+                            animation: "dotPulse 1.4s infinite alternate",
                             animationDelay: `${d * 0.13}s`
                           }}
                         />
@@ -73,14 +74,14 @@ export default function HowItWorks() {
                   {/* Mobile: vertical */}
                   <div
                     className="md:hidden flex flex-col items-center"
-                    style={{ marginTop: "24px", marginBottom: "24px" }}
+                    style={{ marginTop: "32px", marginBottom: "32px" }}
                   >
                     {[...Array(5)].map((_, d) => (
                       <span
                         key={d}
-                        className="inline-block w-2 h-2 my-[5px] rounded-full bg-[#007BFF] opacity-80"
+                        className="inline-block w-3 h-3 rounded-full bg-[#007BFF] opacity-80 mb-[8px]"
                         style={{
-                          animation: "dotPulse 1.2s infinite alternate",
+                          animation: "dotPulse 1.4s infinite alternate",
                           animationDelay: `${d * 0.13}s`
                         }}
                       />
