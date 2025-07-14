@@ -17,6 +17,7 @@ import OrderModal from "@/components/OrderModal";
 import OurPromise from "@/components/OurPromise";
 import Testimonials from "@/components/Testimonials";
 import HowItWorks from "@/components/HowItWorks";
+import FAQ from "@/components/FAQ";
 import { Instagram, Music2, Youtube } from "lucide-react";
 
 // ---- SERVICES DATA ----
@@ -64,55 +65,6 @@ const SERVICES = [
     count: "950+ bought this week"
   }
 ];
-
-// ---- FAQS ----
-const FAQS = [
-  {
-    question: "Why choose us?",
-    answer: "We combine unbeatable prices, real results, and blazing-fast delivery to help you grow on social media with confidence. Every order is backed by our satisfaction guarantee and refill policy, so you can grow your presence safely, quickly, and with real users. Trusted by over 100,000 creators and businesses."
-  },
-  {
-    question: "What services do you offer?",
-    answer: "Our Social Media Marketing services help individuals, influencers, and brands grow their online presence with targeted engagement. Whether you want more followers, subscribers, video views, or music plays, we offer a wide range of services across platforms like Instagram, YouTube, Spotify, TikTok, and more."
-  },
-  {
-    question: "Do I need to share my account password?",
-    answer: "No, never. We do not require your password for any of our services. Everything is delivered securely without accessing your account. If you ever receive a message asking for your password claiming to be from us, do not share it—please report it to us immediately."
-  },
-  {
-    question: "Are the followers, likes, and subscribers real?",
-    answer: "Yes. We don’t use bots or fake accounts. All engagement comes from real users, helping your account grow through authentic, organic activity that boosts your reach and credibility."
-  },
-  {
-    question: "Is your service safe and legal?",
-    answer: "Absolutely. We use safe, secure, and compliant methods to deliver likes, followers, and more. Your account stays 100% protected, and everything we do follows platform guidelines to keep your profile secure."
-  },
-  {
-    question: "What is your refill guarantee?",
-    answer: "Our 30-day refill guarantee means that if any followers, likes, views, or engagement drop within 30 days of your purchase, we’ll replace them free of charge. This keeps your results strong and consistent. Just reach out through our contact form—no hassle, no extra cost."
-  }
-];
-
-export default function Home() {
-  const [openFaq, setOpenFaq] = useState<number | null>(null);
-  const [orderModalOpen, setOrderModalOpen] = useState(false);
-  const [modalPlatform, setModalPlatform] = useState<string | null>(null);
-  const [modalService, setModalService] = useState<string | null>(null);
-
-  const openOrderModalPlatform = () => {
-    setModalPlatform(null);
-    setModalService(null);
-    setOrderModalOpen(true);
-  };
-
-  const openOrderModalService = (platformKey: string) => {
-    setModalPlatform(platformKey);
-    setModalService(null);
-    setOrderModalOpen(true);
-  };
-
-  const toggleFaq = (index: number) => setOpenFaq(openFaq === index ? null : index);
-
   return (
     <>
       <Head>
@@ -263,44 +215,7 @@ export default function Home() {
         </section>
         {/* FAQ SECTION */}
         <section id="faq" className="space-y-7 py-8 md:py-14">
-          <h2 className="text-center text-4xl font-extrabold">Frequently Asked Questions</h2>
-          <p className="text-center text-[#444] mb-4">Everything you need to know about our Services, Safety, and Support.</p>
-          <div className="max-w-3xl mx-auto space-y-4">
-            {FAQS.map(({ question, answer }, index) => (
-              <div
-                key={index}
-                className={`border border-gray-200 rounded-2xl px-5 py-4 cursor-pointer transition-all duration-200 ${
-                  openFaq === index ? "bg-[#F5FAFF] shadow-lg" : "bg-white"
-                }`}
-                onClick={() => toggleFaq(index)}
-                tabIndex={0}
-                onKeyDown={e => { if (e.key === "Enter") toggleFaq(index); }}
-              >
-                <div className="flex justify-between items-center select-none">
-                  <p className="font-semibold text-[#111] text-base">{question}</p>
-                  <ChevronDown
-                    className={`w-6 h-6 transition-transform ${openFaq === index ? "rotate-180" : "rotate-0"}`}
-                  />
-                </div>
-                <div
-                  style={{
-                    maxHeight: openFaq === index ? 200 : 0,
-                    overflow: "hidden",
-                    transition: "max-height 0.3s"
-                  }}
-                >
-                  {openFaq === index && (
-                    <p className="mt-3 text-sm text-[#444]">{answer}</p>
-                  )}
-                </div>
-              </div>
-            ))}
-            <div className="text-center mt-4">
-              <Link href="/contact" className="text-[#007BFF] underline font-semibold hover:text-[#005FCC] text-sm">
-                Didn’t find your answer? Chat with us!
-              </Link>
-            </div>
-          </div>
+          <FAQ />
         </section>
         {/* CTA SECTION */}
         <section className="text-center space-y-5 mt-16 py-10 md:py-14">
