@@ -134,9 +134,9 @@ export default function Home() {
               <span className="text-[#005FCC]">Real Growth.</span> No Waiting.
             </h1>
             <p className="text-[#444] text-base sm:text-lg max-w-md sm:max-w-xl mx-auto md:mx-0 font-medium">
-Unlock Social Growth with YesViral — Trusted by Creators and Brands for High-Quality Followers, Likes, and Views powered by Exclusive Private Networks built for Speed, Trust, and Results.
- </p>
- <div className="flex flex-col xs:flex-row gap-3 w-full sm:w-auto justify-center md:justify-start">
+              Unlock Social Growth with YesViral — Trusted by Creators and Brands for High-Quality Followers, Likes, & Views powered by Exclusive Private Networks built for Speed, Trust, and Results.
+            </p>
+            <div className="flex flex-col xs:flex-row gap-3 w-full sm:w-auto justify-center md:justify-start">
               <button
                 className="bg-[#007BFF] text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:bg-[#005FCC] transition text-base sm:text-lg w-full xs:w-auto"
                 onClick={openOrderModalPlatform}
@@ -150,8 +150,8 @@ Unlock Social Growth with YesViral — Trusted by Creators and Brands for High-Q
               </Link>
             </div>
             <span className="text-xs text-[#555] font-medium mt-2">
- Trusted by 100K+ Creators · 100% Secure Payments · High Quality Growth
-             </span>
+              Trusted by 100K+ Creators · 100% Secure Payments · High Quality Growth
+            </span>
           </div>
           <div className="w-full hidden md:flex justify-center mb-0">
             <Image
@@ -239,11 +239,11 @@ Unlock Social Growth with YesViral — Trusted by Creators and Brands for High-Q
             <span className="hidden sm:inline">Rated 4.8/5 by 10,000+ Clients</span>
           </div>
         </section>
-        {/* HOW IT WORKS SECTION (TIGHTER) */}
-        <section className="py-4 md:py-6">
+        {/* HOW IT WORKS SECTION (NOW TIGHTER TO OUR PROMISE) */}
+        <section className="py-4 md:py-6 mb-3 md:mb-5">
           <HowItWorks />
         </section>
-        {/* OUR PROMISE / GUARANTEES SECTION (TIGHTER) */}
+        {/* OUR PROMISE / GUARANTEES SECTION (TIGHTLY GROUPED) */}
         <section className="py-4 md:py-6">
           <OurPromise />
         </section>
