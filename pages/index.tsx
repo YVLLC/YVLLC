@@ -62,15 +62,15 @@ const SERVICES = [
 const FAQS = [
   {
     question: "Why choose us?",
-    answer: "We combine unbeatable prices, real results, and blazing-fast delivery to help you grow on social media with confidence. Every order is backed by our satisfaction guarantee and refill policy, so you can grow your presence safely, quickly, and with real users. Trusted by over 100,000 creators and businesses."
+    answer: "Unlike other Social Growth Services, YesViral constantly upgrades our Private Delivery Networks (PDNs) to ensure users receive the Highest-Quality services every time. We focus on Fast, Reliable, and High-Quality results that evolve and improve with every order placed."
   },
   {
     question: "What services do you offer?",
-    answer: "Our Social Media Marketing services help individuals, influencers, and brands grow their online presence with targeted engagement. Whether you want more followers, subscribers, video views, or music plays, we offer a wide range of services across platforms like Instagram, YouTube, Spotify, TikTok, and more."
+    answer: "Our Social Media Marketing services help Individuals, Influencers, and Brands grow their online presence with targeted High-Quality Engagement. Whether you want more Followers, Subscribers, Video views, We offer a wide range of services across platforms like Instagram, YouTube, Spotify, TikTok, and more."
   },
   {
     question: "Do I need to share my account password?",
-    answer: "No, never. We do not require your password for any of our services. Everything is delivered securely without accessing your account. If you ever receive a message asking for your password claiming to be from us, do not share it—please report it to us immediately."
+    answer: "No, never. We do not require your password for any of our services. Everything is delivered securely without accessing your account. If you ever receive a message asking for your password claiming to be from us, DO NOT share it—Please report it to us immediately."
   },
   {
     question: "Are the followers, likes, and subscribers real?",
@@ -78,11 +78,11 @@ const FAQS = [
   },
   {
     question: "Is your service safe and legal?",
-    answer: "Absolutely. We use safe, secure, and compliant methods to deliver likes, followers, and more. Your account stays 100% protected, and everything we do follows platform guidelines to keep your profile secure."
+    answer: "Absolutely. We use safe, secure, and compliant methods to deliver Likes, Followers, Views & more. Your account stays 100% Protected, and everything we do follows platform guidelines to keep your profile secure."
   },
   {
     question: "What is your refill guarantee?",
-    answer: "Our 30-day refill guarantee means that if any followers, likes, views, or engagement drop within 30 days of your purchase, we’ll replace them free of charge. This keeps your results strong and consistent. Just reach out through our contact form—no hassle, no extra cost."
+    answer: "Our 30-day refill guarantee means that if any Followers, Likes, Views, or Engagement drop within 30 days of your purchase, we’ll replace them free of charge. This keeps your results strong and consistent. Just reach out through our contact form—No hassle, No extra cost."
   }
 ];
 
