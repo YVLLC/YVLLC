@@ -1,13 +1,9 @@
 import { useState, useEffect } from "react";
 import {
-  Instagram, Youtube, Music2, UserPlus, ThumbsUp, Eye, X, Loader2, CheckCircle, Lock
+  Instagram, Youtube, Music2, UserPlus, ThumbsUp, Eye, X, CheckCircle
 } from "lucide-react";
-import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
 
-// Use your real Stripe public key here!
-const stripePromise = loadStripe("pk_live_51Rgpc4Dzq312KvGPUkyCKLxH4ZdPWeJlmBAnMrSlAl5BHF8Wu8qFW6hqxKlo3l7F87X3qmvVnmDrZYcP3FSSTPVN00fygC8Pfl");
-
+// ---- SMM Platform data. Safe to keep here, but do NOT pass keywords to checkout subdomain! ----
 const PLATFORMS = [
   {
     key: "instagram",
@@ -49,91 +45,9 @@ const steps = [
   { label: "Platform" },
   { label: "Service" },
   { label: "Details" },
-  { label: "Payment" },
+  { label: "Checkout" },
   { label: "Done" }
 ];
-
-type PaymentFormProps = {
-  amount: number;
-  orderDetails: {
-    platform: string;
-    service: string;
-    quantity: number;
-    target: string;
-    price: number;
-  };
-  onPaymentSuccess: () => void;
-  onError?: (err: string) => void;
-};
-
-function PaymentForm({
-  amount,
-  orderDetails,
-  onPaymentSuccess,
-  onError
-}: PaymentFormProps) {
-  const stripe = useStripe();
-  const elements = useElements();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const handlePayment = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await fetch("/api/payment_intent", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ amount }),
-      });
-      const { clientSecret, error: serverError } = await res.json();
-      if (serverError || !clientSecret) throw new Error(serverError || "Payment failed.");
-
-      if (!stripe || !elements) throw new Error("Stripe not loaded");
-      const { error: stripeError, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
-        payment_method: {
-          card: elements.getElement(CardElement)!,
-        }
-      });
-      if (stripeError) throw new Error(stripeError.message);
-
-      const jap = await fetch("/api/jap_order", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...orderDetails, paymentId: paymentIntent.id }),
-      });
-      const japResult = await jap.json();
-      if (!jap.ok && japResult?.error) throw new Error(japResult.error || "JAP order failed.");
-      onPaymentSuccess();
-    } catch (e: any) {
-      setError(e.message || "An error occurred.");
-      onError?.(e.message || "Payment error");
-    }
-    setLoading(false);
-  };
-
-  return (
-    <form onSubmit={handlePayment} className="space-y-5">
-      <div className="border rounded-lg px-3 py-2 bg-white">
-        <CardElement options={{ style: { base: { fontSize: "16px" } } }} />
-      </div>
-      {error && <div className="text-red-500 text-center">{error}</div>}
-      <button
-        type="submit"
-        disabled={loading}
-        className="w-full py-3 rounded-xl font-extrabold text-lg flex justify-center items-center gap-2
-        bg-gradient-to-br from-[#007BFF] to-[#35c4ff] hover:from-[#005FCC] hover:to-[#28a3e6] text-white shadow-lg transition"
-      >
-        {loading ? <Loader2 className="animate-spin mr-1" size={20} /> : <CheckCircle size={20} />}
-        {loading ? "Processing…" : "Pay & Order"}
-      </button>
-      <div className="flex items-center gap-2 justify-center text-[#007BFF] text-sm font-semibold mt-2">
-        <Lock size={16} /> 100% Secure Card Payment
-      </div>
-    </form>
-  );
-}
 
 export default function OrderModal({
   open,
@@ -154,7 +68,6 @@ export default function OrderModal({
   const [error, setError] = useState("");
   const [done, setDone] = useState(false);
 
-  // ---- BODY SCROLL LOCK (NEW!) ----
   useEffect(() => {
     if (open) {
       document.body.style.overflow = 'hidden';
@@ -165,7 +78,6 @@ export default function OrderModal({
       document.body.style.overflow = '';
     };
   }, [open]);
-  // ----------------------------------
 
   useEffect(() => {
     if (!open) return;
@@ -241,14 +153,15 @@ export default function OrderModal({
     onClose();
   };
 
-  const orderDetails = {
-    platform: platform.key,
-    service: service.type,
-    quantity,
-    target,
-    price: service.price * quantity,
+  // This is the generic order info you'll pass to the checkout subdomain
+  const orderToSend = {
+    product: platform.key,     // E.g. "instagram"
+    option: service.type,      // E.g. "Followers"
+    amount: quantity,          // E.g. 100
+    reference: target,         // E.g. username or link
+    price: service.price,      // Price per item
+    total: service.price * quantity // Total cost
   };
-  const amountCents = Math.round(service.price * quantity * 100);
 
   return (
     <div className="fixed z-[9999] inset-0 flex items-center justify-center bg-black/60 backdrop-blur-[2px]">
@@ -371,14 +284,16 @@ export default function OrderModal({
               </h3>
               <form
                 className="space-y-5"
-                onSubmit={(e) => {
+                onSubmit={e => {
                   e.preventDefault();
                   if (!target || quantity < 10) {
                     setError("Paste your profile link or username, and enter a quantity.");
                     return;
                   }
                   setError("");
-                  setStep(3);
+                  // ⭐️ Instead of payment, save order and redirect:
+                  window.sessionStorage.setItem("yesviral_order", JSON.stringify(orderToSend));
+                  window.location.href = "https://checkout.yesviral.com";
                 }}
               >
                 <div>
@@ -389,7 +304,7 @@ export default function OrderModal({
                     className="w-full border border-[#CFE4FF] rounded-lg px-3 py-2 text-base font-medium outline-[#007BFF] bg-white/90"
                     placeholder={`Paste your ${platform.name} username or post link`}
                     value={target}
-                    onChange={(e) => setTarget(e.target.value)}
+                    onChange={e => setTarget(e.target.value)}
                   />
                 </div>
                 <div className="flex items-center gap-3">
@@ -400,7 +315,7 @@ export default function OrderModal({
                     max={500000}
                     step={10}
                     value={quantity}
-                    onChange={(e) => setQuantity(Number(e.target.value))}
+                    onChange={e => setQuantity(Number(e.target.value))}
                     className="border border-[#CFE4FF] rounded-lg px-3 py-2 text-base w-24 font-bold bg-white/90"
                   />
                   <span className="ml-auto font-bold text-[#007BFF] text-lg">
@@ -411,7 +326,7 @@ export default function OrderModal({
                   type="submit"
                   className="w-full py-3 rounded-xl font-extrabold text-lg flex justify-center items-center gap-2 bg-gradient-to-br from-[#007BFF] to-[#35c4ff] hover:from-[#005FCC] hover:to-[#28a3e6] text-white shadow-lg transition"
                 >
-                  <CheckCircle size={20} /> Continue to Payment
+                  <CheckCircle size={20} /> Continue to Secure Checkout
                 </button>
                 {error && <div className="mt-2 text-red-500 text-center">{error}</div>}
               </form>
@@ -424,27 +339,13 @@ export default function OrderModal({
             </>
           )}
           {step === 3 && (
-            <>
-              <h3 className="font-bold text-xl mb-4 text-[#222] text-center">Pay & Complete Your Order</h3>
-              <Elements stripe={stripePromise}>
-                <PaymentForm
-                  amount={amountCents}
-                  orderDetails={orderDetails}
-                  onPaymentSuccess={() => {
-                    setStep(4);
-                    setDone(true);
-                  }}
-                  onError={setError}
-                />
-              </Elements>
-              {error && <div className="mt-2 text-red-500 text-center">{error}</div>}
-              <button
-                className="block mx-auto mt-7 text-[#007BFF] underline text-sm"
-                onClick={() => setStep(2)}
-              >
-                ← Back
-              </button>
-            </>
+            <div className="text-center space-y-4">
+              <CheckCircle className="mx-auto text-green-500" size={48} />
+              <h3 className="text-2xl font-bold text-[#222]">Order Sent!</h3>
+              <p className="text-[#444] text-base">
+                Redirecting to secure checkout...
+              </p>
+            </div>
           )}
           {step === 4 && done && (
             <div className="text-center space-y-4">
