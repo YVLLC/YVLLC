@@ -2,14 +2,14 @@ import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
 import {
-  ShieldCheck, Clock, UserCheck, Zap, RefreshCcw, Star, MessageCircle, ThumbsUp,
+  ShieldCheck, Clock, UserCheck, Zap, RefreshCcw, Star, MessageCircle
 } from "lucide-react";
 import { useState } from "react";
 import OrderModal from "@/components/OrderModal";
 import OurPromise from "@/components/OurPromise";
 import Testimonials from "@/components/Testimonials";
 import HowItWorks from "@/components/HowItWorks";
-import FAQ from "@/components/FAQ"; // <-- Here!
+import FAQ from "@/components/FAQ";
 import { Instagram, Music2, Youtube } from "lucide-react";
 
 // ---- SERVICES DATA ----
@@ -121,7 +121,7 @@ export default function Home() {
           <span className="font-semibold text-[#007BFF] text-sm">Live Support</span>
         </button>
       </Link>
-      <main className="px-4 sm:px-6 max-w-7xl mx-auto py-4 sm:py-8 space-y-12 md:space-y-16 select-none">
+      <main className="px-4 sm:px-6 max-w-7xl mx-auto py-4 sm:py-8 space-y-6 md:space-y-10 select-none">
         {/* HERO SECTION */}
         <section className="flex flex-col-reverse md:grid md:grid-cols-2 md:gap-12 items-center pt-6 md:pt-10">
           <div className="w-full flex flex-col items-center md:items-start space-y-7 text-center md:text-left mt-0">
@@ -166,7 +166,7 @@ export default function Home() {
             />
           </div>
         </section>
-        {/* SERVICES SECTION */}
+        {/* SERVICES SECTION (SPACED OUT!) */}
         <section id="order" className="space-y-7 py-8 md:py-14">
           <h2 className="text-center text-4xl font-extrabold">Place Your Order Instantly</h2>
           <p className="text-[#444] text-center max-w-2xl mx-auto">
@@ -204,7 +204,7 @@ export default function Home() {
             ))}
           </div>
         </section>
-        {/* ABOUT SECTION */}
+        {/* ABOUT SECTION (SPACED OUT!) */}
         <section id="about" className="bg-[#F5FAFF] p-8 md:p-12 rounded-2xl text-center shadow-sm space-y-8 py-8 md:py-14">
           <h2 className="text-4xl font-extrabold text-[#111]">Why Choose YesViral?</h2>
           <div className="flex flex-wrap gap-7 justify-center mt-6">
@@ -239,27 +239,29 @@ export default function Home() {
             <span className="hidden sm:inline">Rated 4.8/5 by 10,000+ Clients</span>
           </div>
         </section>
-        {/* HOW IT WORKS SECTION */}
-        <section className="py-8 md:py-14">
+        {/* HOW IT WORKS SECTION (TIGHTER) */}
+        <section className="py-4 md:py-6">
           <HowItWorks />
         </section>
-        {/* OUR PROMISE / GUARANTEES SECTION */}
-        <section className="py-8 md:py-14">
+        {/* OUR PROMISE / GUARANTEES SECTION (TIGHTER) */}
+        <section className="py-4 md:py-6">
           <OurPromise />
         </section>
-        {/* TESTIMONIALS SECTION */}
-        <section className="py-8 md:py-14">
+        {/* TESTIMONIALS SECTION (TIGHTER) */}
+        <section className="py-4 md:py-6">
           <Testimonials />
         </section>
-        {/* FAQ SECTION (USE COMPONENT) */}
-        <FAQ faqs={FAQS} />
-        {/* CTA SECTION */}
-        <section className="text-center space-y-5 mt-16 py-10 md:py-14">
+        {/* FAQ SECTION (COMPONENT, NO EXTRA PADDING) */}
+        <section>
+          <FAQ faqs={FAQS} />
+        </section>
+        {/* CTA SECTION (TIGHTER) */}
+        <section className="text-center space-y-5 mt-10 py-6 md:py-10">
           <h2 className="text-4xl font-extrabold mb-3">Ready to try YesViral?</h2>
           <p className="text-[#444] text-lg mb-8">
             Join over 100,000+ Creators already growing with YesViral—choose your service and unlock High-Quality results in minutes.
           </p>
-          <div className="mt-10 mb-10">
+          <div className="mt-8 mb-8">
             <button
               className="bg-[#007BFF] text-white px-8 py-3 text-lg rounded-xl hover:bg-[#005FCC] font-bold shadow transition"
               onClick={openOrderModalPlatform}
