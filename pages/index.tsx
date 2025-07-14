@@ -249,4 +249,3 @@ const SERVICES = [
       `}</style>
     </>
   );
-}
