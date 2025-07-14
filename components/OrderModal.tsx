@@ -3,7 +3,6 @@ import {
   Instagram, Youtube, Music2, UserPlus, ThumbsUp, Eye, X, CheckCircle
 } from "lucide-react";
 
-// ---- SMM Platform data. Safe to keep here, but do NOT pass keywords to checkout subdomain! ----
 const PLATFORMS = [
   {
     key: "instagram",
@@ -291,9 +290,9 @@ export default function OrderModal({
                     return;
                   }
                   setError("");
-                  // ⭐️ Instead of payment, save order and redirect:
-                  window.sessionStorage.setItem("yesviral_order", JSON.stringify(orderToSend));
-                  window.location.href = "https://checkout.yesviral.com";
+                  // ENCODE the order as base64 for URL (works everywhere!)
+                  const orderString = btoa(unescape(encodeURIComponent(JSON.stringify(orderToSend))));
+                  window.location.href = "https://checkout.yesviral.com/checkout?order=" + orderString;
                 }}
               >
                 <div>
