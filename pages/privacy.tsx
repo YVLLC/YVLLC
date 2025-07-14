@@ -13,8 +13,8 @@ export default function Privacy() {
           <ShieldCheck className="text-[#007BFF]" size={40} />
           <h1 className="text-4xl sm:text-5xl font-extrabold text-[#007BFF] mt-3 mb-1 text-center">Privacy Policy</h1>
           <div className="flex flex-wrap gap-2 items-center text-xs mt-1 text-[#444]">
-            <span className="bg-[#E8F1FF] text-[#007BFF] px-2 py-1 rounded-full font-bold">Published: May 18, 2018</span>
-            <span className="bg-[#F2F9FF] text-[#005FCC] px-2 py-1 rounded-full font-semibold">Last Updated: February 3, 2025</span>
+            <span className="bg-[#E8F1FF] text-[#007BFF] px-2 py-1 rounded-full font-bold">Published: May 21st, 2021</span>
+            <span className="bg-[#F2F9FF] text-[#005FCC] px-2 py-1 rounded-full font-semibold">Last Updated: February 8th, 2025</span>
           </div>
         </div>
 

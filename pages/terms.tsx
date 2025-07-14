@@ -13,7 +13,7 @@ export default function Terms() {
           <FileText className="text-[#007BFF]" size={40} />
           <h1 className="text-4xl sm:text-5xl font-extrabold text-[#007BFF] mt-3 mb-1 text-center">Terms & Conditions</h1>
           <div className="flex flex-wrap gap-2 items-center text-xs mt-1 text-[#444]">
-            <span className="bg-[#F2F9FF] text-[#005FCC] px-2 py-1 rounded-full font-semibold">Last Updated: Feb 3, 2025</span>
+            <span className="bg-[#F2F9FF] text-[#005FCC] px-2 py-1 rounded-full font-semibold">Last Updated: April 3rd, 2025</span>
           </div>
         </div>
 
