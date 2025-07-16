@@ -48,9 +48,8 @@ const steps = [
   { label: "Done" }
 ];
 
-// ---- SAFETY: Make sure you only send Stripe-safe info to checkout! ----
-function getStealthPackage(platform: any, service: any) {
-  // Stripe-safe, always neutral wording!
+// --- SAFETY: Stripe-safe checkout info only! ---
+function getStealthPackage(platform, service) {
   let pkg = "Premium Package";
   let type = "Standard";
   if (platform && service) {
@@ -71,13 +70,8 @@ export default function OrderModal({
   onClose,
   initialPlatform,
   initialService
-}: {
-  open: boolean,
-  onClose: () => void,
-  initialPlatform?: string | null,
-  initialService?: string | null
 }) {
-  const [step, setStep] = useState<number>(0);
+  const [step, setStep] = useState(0);
   const [platform, setPlatform] = useState(PLATFORMS[0]);
   const [service, setService] = useState(PLATFORMS[0].services[0]);
   const [quantity, setQuantity] = useState(100);
@@ -85,15 +79,11 @@ export default function OrderModal({
   const [error, setError] = useState("");
   const [done, setDone] = useState(false);
 
+  // Responsive lock scroll on modal open
   useEffect(() => {
-    if (open) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-    return () => {
-      document.body.style.overflow = '';
-    };
+    if (open) document.body.style.overflow = 'hidden';
+    else document.body.style.overflow = '';
+    return () => { document.body.style.overflow = ''; };
   }, [open]);
 
   useEffect(() => {
@@ -139,7 +129,7 @@ export default function OrderModal({
 
   if (!open) return null;
 
-  const choosePlatform = (p: typeof platform) => {
+  const choosePlatform = (p) => {
     setPlatform(p);
     setService(p.services[0]);
     setQuantity(100);
@@ -148,7 +138,7 @@ export default function OrderModal({
     setStep(1);
   };
 
-  const chooseService = (s: typeof service) => {
+  const chooseService = (s) => {
     setService(s);
     setQuantity(100);
     setError("");
@@ -170,7 +160,7 @@ export default function OrderModal({
     onClose();
   };
 
-  // -- Only pass neutral values to checkout --
+  // -- Stripe-safe order info --
   const { pkg, type } = getStealthPackage(platform, service);
   const orderToSend = {
     package: pkg,
@@ -180,9 +170,12 @@ export default function OrderModal({
     total: Number((service.price * quantity).toFixed(2))
   };
 
+  // Amount Quick Options
+  const quickAmounts = [100, 500, 1000, 2000, 5000, 10000, 25000, 50000];
+
   return (
     <div className="fixed z-[9999] inset-0 flex items-center justify-center bg-black/60 backdrop-blur-[2px]">
-      <div className="relative max-w-md w-[96vw] mx-auto bg-white/95 rounded-3xl shadow-2xl border border-[#e3edfc] overflow-hidden">
+      <div className="relative max-w-md w-[96vw] mx-auto bg-white/95 rounded-3xl shadow-2xl border border-[#e3edfc] overflow-hidden animate-fadeInPop">
         {/* Modal HEADER */}
         <div className="w-full px-4 pt-7 pb-3 rounded-t-3xl relative bg-gradient-to-r from-[#f7fbff] via-[#ecf4ff] to-[#f8fbff] border-b border-[#e3edfc]">
           <button
@@ -300,7 +293,7 @@ export default function OrderModal({
                 Order Details
               </h3>
               <form
-                className="space-y-5"
+                className="space-y-6"
                 onSubmit={e => {
                   e.preventDefault();
                   if (!target || quantity < 10) {
@@ -323,20 +316,52 @@ export default function OrderModal({
                     onChange={e => setTarget(e.target.value)}
                   />
                 </div>
-                <div className="flex items-center gap-3">
-                  <label className="font-semibold text-[#007BFF]">Amount</label>
+                <div>
+                  <label className="block font-semibold text-[#007BFF] mb-1">Amount</label>
+                  <div className="flex flex-wrap items-center gap-2 mb-2">
+                    {/* Quick pick buttons */}
+                    {quickAmounts.map(val => (
+                      <button
+                        key={val}
+                        type="button"
+                        className={`
+                          rounded-lg px-4 py-2 font-bold border text-sm
+                          ${quantity === val ? "bg-[#007BFF] text-white border-[#007BFF] scale-105" : "bg-[#f1f7ff] text-[#007BFF] border-[#b0d8ff]"}
+                          hover:bg-[#e6f4ff] hover:border-[#007BFF] transition
+                        `}
+                        onClick={() => setQuantity(val)}
+                      >
+                        {val >= 1000 ? `${val/1000}K` : val}
+                      </button>
+                    ))}
+                    <input
+                      type="number"
+                      min={10}
+                      max={500000}
+                      step={10}
+                      value={quantity}
+                      onChange={e => setQuantity(Number(e.target.value))}
+                      className="border border-[#CFE4FF] rounded-lg px-3 py-2 text-base w-24 font-bold bg-white/90"
+                      style={{ marginLeft: "12px" }}
+                    />
+                  </div>
+                  {/* Slider for quick adjust */}
                   <input
-                    type="number"
+                    type="range"
                     min={10}
                     max={500000}
                     step={10}
                     value={quantity}
                     onChange={e => setQuantity(Number(e.target.value))}
-                    className="border border-[#CFE4FF] rounded-lg px-3 py-2 text-base w-24 font-bold bg-white/90"
+                    className="w-full accent-[#007BFF]"
                   />
-                  <span className="ml-auto font-bold text-[#007BFF] text-lg">
-                    ${(service.price * quantity).toFixed(2)}
-                  </span>
+                  <div className="flex justify-between items-center mt-1">
+                    <span className="text-xs text-[#888] font-medium">Min: 10</span>
+                    <span className="text-xs text-[#888] font-medium">Max: 500,000</span>
+                    <span className="font-bold text-[#007BFF] text-lg">
+                      ${(service.price * quantity).toFixed(2)}
+                    </span>
+                  </div>
                 </div>
                 <button
                   type="submit"
@@ -395,6 +420,15 @@ export default function OrderModal({
         }
         .animate-fadeInPop {
           animation: fadeInPop 0.22s cubic-bezier(0.39, 1.7, 0.47, 0.99);
+        }
+        input[type='range'].accent-[#007BFF]::-webkit-slider-thumb {
+          background: #007BFF;
+        }
+        input[type='range'].accent-[#007BFF]::-moz-range-thumb {
+          background: #007BFF;
+        }
+        input[type='range'].accent-[#007BFF]::-ms-thumb {
+          background: #007BFF;
         }
       `}</style>
     </div>
