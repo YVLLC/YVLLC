@@ -330,11 +330,11 @@ export default function OrderModal({
                 Order Details
               </h3>
               <form
-                className="space-y-6"
+                className="space-y-8"
                 onSubmit={e => {
                   e.preventDefault();
-                  if (!target || quantity < 10) {
-                    setError("Paste your profile link or username, and enter a quantity.");
+                  if (!target) {
+                    setError("Paste your profile link or username.");
                     return;
                   }
                   setError("");
@@ -342,74 +342,51 @@ export default function OrderModal({
                   window.location.href = "https://checkout.yesviral.com/checkout?order=" + orderString;
                 }}
               >
-                <div>
-                  <label className="block font-semibold text-[#007BFF] mb-1">Profile or Link</label>
+                <div className="flex flex-col items-center">
+                  <label className="block font-semibold text-[#007BFF] mb-2 text-lg">Profile or Link</label>
                   <input
                     type="text"
                     autoFocus
-                    className="w-full border border-[#CFE4FF] rounded-lg px-3 py-2 text-base font-medium outline-[#007BFF] bg-white/90"
-                    placeholder={`Enter your link or username`}
+                    className="w-full border border-[#CFE4FF] rounded-xl px-4 py-3 text-base font-medium outline-[#007BFF] bg-white/90 shadow focus:border-[#007BFF] focus:ring-2 focus:ring-[#E8F1FF] transition"
+                    placeholder={`Paste your link or username here`}
                     value={target}
                     onChange={e => setTarget(e.target.value)}
                   />
                 </div>
-                <div>
-                  <label className="block font-semibold text-[#007BFF] mb-1">Amount</label>
-                  <div className="flex flex-wrap items-center gap-2 mb-2">
-                    {/* Quick pick buttons */}
-                    {quickAmounts.map(val => (
-                      <button
-                        key={val}
-                        type="button"
-                        className={`
-                          rounded-lg px-4 py-2 font-bold border text-sm
-                          ${quantity === val ? "bg-[#007BFF] text-white border-[#007BFF] scale-105" : "bg-[#f1f7ff] text-[#007BFF] border-[#b0d8ff]"}
-                          hover:bg-[#e6f4ff] hover:border-[#007BFF] transition
-                        `}
-                        onClick={() => setQuantity(val)}
-                      >
-                        {val >= 1000 ? `${val/1000}K` : val}
-                      </button>
-                    ))}
-                    <input
-                      type="number"
-                      min={10}
-                      max={500000}
-                      step={10}
-                      value={quantity}
-                      onChange={e => setQuantity(Number(e.target.value))}
-                      className="border border-[#CFE4FF] rounded-lg px-3 py-2 text-base w-24 font-bold bg-white/90"
-                      style={{ marginLeft: "12px" }}
-                    />
-                  </div>
-                  {/* Slider for quick adjust */}
-                  <input
-                    type="range"
-                    min={10}
-                    max={500000}
-                    step={10}
-                    value={quantity}
-                    onChange={e => setQuantity(Number(e.target.value))}
-                    className="w-full accent-[#007BFF]"
-                  />
-                  <div className="flex justify-between items-center mt-1">
-                    <span className="text-xs text-[#888] font-medium">Min: 10</span>
-                    <span className="text-xs text-[#888] font-medium">Max: 500,000</span>
-                    <span className="font-bold text-[#007BFF] text-lg">
-                      ${(service.price * quantity).toFixed(2)}
+                <div className="mt-6 flex flex-col items-center justify-center gap-4">
+                  <div className="flex flex-col items-center gap-1">
+                    <span className="text-[#222] text-base font-semibold">Amount</span>
+                    <div className="flex gap-2">
+                      {quickAmounts.map(val => (
+                        <button
+                          key={val}
+                          type="button"
+                          className={`
+                            rounded-full px-5 py-2 font-bold border text-sm shadow
+                            ${quantity === val ? "bg-[#007BFF] text-white border-[#007BFF]" : "bg-[#f1f7ff] text-[#007BFF] border-[#b0d8ff]"}
+                            hover:bg-[#e6f4ff] hover:border-[#007BFF] transition
+                          `}
+                          onClick={() => setQuantity(val)}
+                        >
+                          {val >= 1000 ? `${val/1000}K` : val}
+                        </button>
+                      ))}
+                    </div>
+                    <span className="font-bold text-[#007BFF] text-xl mt-2">
+                      Total: ${(service.price * quantity).toFixed(2)}
                     </span>
                   </div>
                 </div>
                 <button
                   type="submit"
-                  className="w-full py-3 rounded-xl font-extrabold text-lg flex justify-center items-center gap-2 bg-gradient-to-br from-[#007BFF] to-[#35c4ff] hover:from-[#005FCC] hover:to-[#28a3e6] text-white shadow-lg transition"
+                  className="w-full py-3 rounded-2xl font-extrabold text-lg flex justify-center items-center gap-2 bg-gradient-to-br from-[#007BFF] to-[#35c4ff] hover:from-[#005FCC] hover:to-[#28a3e6] text-white shadow-xl transition mt-8"
                 >
                   <CheckCircle size={20} /> Continue to Secure Checkout
                 </button>
                 {error && <div className="mt-2 text-red-500 text-center">{error}</div>}
               </form>
               <button
-                className="block mx-auto mt-7 text-[#007BFF] underline text-sm"
+                className="block mx-auto mt-8 text-[#007BFF] underline text-sm"
                 onClick={() => setStep(1)}
               >
                 ← Back
@@ -457,15 +434,6 @@ export default function OrderModal({
         }
         .animate-fadeInPop {
           animation: fadeInPop 0.22s cubic-bezier(0.39, 1.7, 0.47, 0.99);
-        }
-        input[type='range'].accent-[#007BFF]::-webkit-slider-thumb {
-          background: #007BFF;
-        }
-        input[type='range'].accent-[#007BFF]::-moz-range-thumb {
-          background: #007BFF;
-        }
-        input[type='range'].accent-[#007BFF]::-ms-thumb {
-          background: #007BFF;
         }
       `}</style>
     </div>
