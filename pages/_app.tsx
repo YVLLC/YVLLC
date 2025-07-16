@@ -14,8 +14,8 @@ function OrderModalWrapper() {
     <OrderModal
       open={open}
       onClose={closeOrderModal}
-      initialPlatform={platform}
-      initialService={service}
+      initialPlatform={platform ?? undefined}
+      initialService={service ?? undefined}
     />
   );
 }
