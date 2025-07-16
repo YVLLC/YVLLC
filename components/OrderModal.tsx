@@ -3,10 +3,35 @@ import {
   Instagram, Youtube, Music2, UserPlus, ThumbsUp, Eye, X, CheckCircle
 } from "lucide-react";
 
-type Platform = typeof PLATFORMS[number];
-type Service = Platform["services"][number];
+// --- TYPE DEFINITIONS ---
+type ServiceType =
+  | "Followers"
+  | "Likes"
+  | "Views"
+  | "Comments"
+  | "Subscribers";
 
-const PLATFORMS = [
+type Service = {
+  type: ServiceType | string;
+  price: number;
+  icon: JSX.Element;
+};
+
+type Platform = {
+  key: string;
+  name: string;
+  color: string;
+  icon: JSX.Element;
+  services: Service[];
+};
+
+type StealthPackageResult = {
+  pkg: string;
+  type: string;
+};
+
+// --- DATA ---
+const PLATFORMS: Platform[] = [
   {
     key: "instagram",
     name: "Instagram",
@@ -52,7 +77,7 @@ const steps = [
 ];
 
 // --- SAFETY: Stripe-safe checkout info only! ---
-function getStealthPackage(platform, service) {
+function getStealthPackage(platform: Platform, service: Service): StealthPackageResult {
   let pkg = "Premium Package";
   let type = "Standard";
   if (platform && service) {
@@ -68,19 +93,28 @@ function getStealthPackage(platform, service) {
   return { pkg, type };
 }
 
+// --- PROPS TYPES ---
+type OrderModalProps = {
+  open: boolean;
+  onClose: () => void;
+  initialPlatform?: string;
+  initialService?: string;
+};
+
+// --- COMPONENT ---
 export default function OrderModal({
   open,
   onClose,
   initialPlatform,
   initialService
-}) {
+}: OrderModalProps) {
   const [step, setStep] = useState(0);
-  const [platform, setPlatform] = useState(PLATFORMS[0]);
-  const [service, setService] = useState(PLATFORMS[0].services[0]);
-  const [quantity, setQuantity] = useState(100);
-  const [target, setTarget] = useState("");
-  const [error, setError] = useState("");
-  const [done, setDone] = useState(false);
+  const [platform, setPlatform] = useState<Platform>(PLATFORMS[0]);
+  const [service, setService] = useState<Service>(PLATFORMS[0].services[0]);
+  const [quantity, setQuantity] = useState<number>(100);
+  const [target, setTarget] = useState<string>("");
+  const [error, setError] = useState<string>("");
+  const [done, setDone] = useState<boolean>(false);
 
   // Responsive lock scroll on modal open
   useEffect(() => {
@@ -132,7 +166,7 @@ export default function OrderModal({
 
   if (!open) return null;
 
-  const choosePlatform = (p) => {
+  const choosePlatform = (p: Platform) => {
     setPlatform(p);
     setService(p.services[0]);
     setQuantity(100);
@@ -141,7 +175,7 @@ export default function OrderModal({
     setStep(1);
   };
 
-  const chooseService = (s) => {
+  const chooseService = (s: Service) => {
     setService(s);
     setQuantity(100);
     setError("");
