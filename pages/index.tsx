@@ -112,8 +112,8 @@ export default function Home() {
       <OrderModal
         open={orderModalOpen}
         onClose={() => setOrderModalOpen(false)}
-        initialPlatform={modalPlatform}
-        initialService={modalService}
+        initialPlatform={modalPlatform ?? undefined}
+        initialService={modalService ?? undefined}
       />
       <Link href="/support" className="fixed bottom-6 right-6 z-50">
         <button className="flex items-center gap-2 bg-white shadow-lg px-5 py-3 rounded-full border border-[#CFE4FF] hover:bg-[#F2F9FF] transition group">
