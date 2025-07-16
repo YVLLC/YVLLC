@@ -49,6 +49,9 @@ const steps = [
 ];
 
 // --- SAFETY: Stripe-safe checkout info only! ---
+type Platform = typeof PLATFORMS[number];
+type Service = Platform["services"][number];
+
 function getStealthPackage(platform, service) {
   let pkg = "Premium Package";
   let type = "Standard";
