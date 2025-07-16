@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import {
-  Instagram, Youtube, Music2, UserPlus, ThumbsUp, Eye, X, CheckCircle
+  Instagram, Youtube, Music2, UserPlus, ThumbsUp, Eye, X, CheckCircle, Tag
 } from "lucide-react";
 
 // --- TYPE DEFINITIONS ---
@@ -76,6 +76,14 @@ const steps = [
   { label: "Done" }
 ];
 
+// --- DISCOUNT LOGIC ---
+function getDiscountedPrice(price: number): {discount: number, discounted: number} {
+  // Small "flash sale" discount between 2-4%
+  const discount = 0.02 + Math.random() * 0.02;
+  const discounted = Math.max(0.01, Number((price * (1 - discount)).toFixed(3)));
+  return { discount: Math.round(discount * 100), discounted };
+}
+
 // --- SAFETY: Stripe-safe checkout info only! ---
 function getStealthPackage(platform: Platform, service: Service): StealthPackageResult {
   let pkg = "Premium Package";
@@ -101,7 +109,6 @@ type OrderModalProps = {
   initialService?: string;
 };
 
-// --- COMPONENT ---
 export default function OrderModal({
   open,
   onClose,
@@ -199,12 +206,13 @@ export default function OrderModal({
 
   // -- Stripe-safe order info --
   const { pkg, type } = getStealthPackage(platform, service);
+  const { discount, discounted } = getDiscountedPrice(service.price);
   const orderToSend = {
     package: pkg,
     type: type,
     amount: quantity,
     reference: target,
-    total: Number((service.price * quantity).toFixed(2))
+    total: Number((discounted * quantity).toFixed(2))
   };
 
   // Amount Quick Options
@@ -295,26 +303,37 @@ export default function OrderModal({
                 {platform.icon} {platform.name} Services
               </h3>
               <div className="flex flex-col gap-3">
-                {platform.services.map((s) => (
-                  <button
-                    key={s.type}
-                    className={`
-                      rounded-xl flex items-center justify-between px-5 py-4 border-2 text-base font-semibold shadow hover:shadow-lg transition
-                      ${
-                        service.type === s.type
-                          ? "border-[#007BFF] bg-[#E8F1FF] text-[#007BFF]"
-                          : "border-[#D2E6FF] text-[#222] bg-white"
-                      }
-                    `}
-                    onClick={() => chooseService(s)}
-                  >
-                    <div className="flex items-center gap-2">
-                      {s.icon}
-                      <span>{s.type}</span>
-                    </div>
-                    <span className="font-normal text-[13px] text-[#888]">${s.price}/each</span>
-                  </button>
-                ))}
+                {platform.services.map((s) => {
+                  const { discount, discounted } = getDiscountedPrice(s.price);
+                  return (
+                    <button
+                      key={s.type}
+                      className={`
+                        rounded-xl flex items-center justify-between px-5 py-4 border-2 text-base font-semibold shadow hover:shadow-lg transition group
+                        ${
+                          service.type === s.type
+                            ? "border-[#007BFF] bg-[#E8F1FF] text-[#007BFF] scale-[1.04]"
+                            : "border-[#D2E6FF] text-[#222] bg-white"
+                        }
+                      `}
+                      onClick={() => chooseService(s)}
+                    >
+                      <div className="flex items-center gap-2">
+                        {s.icon}
+                        <span className="">{s.type}</span>
+                        {discount > 0 && (
+                          <span className="ml-2 px-2 py-0.5 rounded-full bg-[#e7f7f0] text-[#08a881] text-xs font-bold flex items-center gap-1 animate-flashSale">
+                            <Tag size={14} className="mr-0.5" />-{discount}%
+                          </span>
+                        )}
+                      </div>
+                      <span className="font-normal text-[13px] text-[#888] flex items-center gap-2">
+                        <span className="line-through text-[#c7c7c7]">${s.price.toFixed(2)}</span>
+                        <span className="font-bold text-[#007BFF]">${discounted.toFixed(2)}/each</span>
+                      </span>
+                    </button>
+                  );
+                })}
               </div>
               <button
                 className="block mx-auto mt-7 text-[#007BFF] underline text-sm"
@@ -354,9 +373,9 @@ export default function OrderModal({
                   />
                 </div>
                 <div className="mt-6 flex flex-col items-center justify-center gap-4">
-                  <div className="flex flex-col items-center gap-1">
+                  <div className="flex flex-col items-center gap-1 w-full">
                     <span className="text-[#222] text-base font-semibold">Amount</span>
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 flex-wrap justify-center w-full">
                       {quickAmounts.map(val => (
                         <button
                           key={val}
@@ -373,7 +392,11 @@ export default function OrderModal({
                       ))}
                     </div>
                     <span className="font-bold text-[#007BFF] text-xl mt-2">
-                      Total: ${(service.price * quantity).toFixed(2)}
+                      Total: <span className="text-[#11aa80]">${(discounted * quantity).toFixed(2)}</span>
+                      <span className="ml-2 text-sm text-[#c7c7c7] line-through">${(service.price * quantity).toFixed(2)}</span>
+                    </span>
+                    <span className="text-xs text-[#08a881] font-semibold mt-1">
+                      Flash Sale! {discount}% off for a limited time
                     </span>
                   </div>
                 </div>
@@ -434,6 +457,13 @@ export default function OrderModal({
         }
         .animate-fadeInPop {
           animation: fadeInPop 0.22s cubic-bezier(0.39, 1.7, 0.47, 0.99);
+        }
+        @keyframes flashSale {
+          0%,100% { background: #e7f7f0; color: #08a881;}
+          50% { background: #bbfbe3; color: #06a06c;}
+        }
+        .animate-flashSale {
+          animation: flashSale 2.5s infinite;
         }
       `}</style>
     </div>
