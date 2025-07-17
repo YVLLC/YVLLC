@@ -79,24 +79,6 @@ const SERVICES = [
   },
 ];
 
-// ---- NOTIFICATION PHRASES ----
-const HEADERS = [
-  "Recent Order",
-  "Just Sold",
-  "New Purchase",
-  "Order Processed",
-  "Latest Sale",
-  "Order Confirmed",
-  "Order Update",
-  "Just Delivered",
-  "Activity",
-  "Another Order",
-  "Hot Order",
-  "Fresh Sale",
-  "Popular Service",
-  "Trending Now"
-];
-
 // ---- TIME AGO OPTIONS ----
 const TIMEAGO = [
   "just now", "10 seconds ago", "a minute ago", "2 minutes ago", "5 minutes ago", "8 minutes ago", "12 minutes ago",
@@ -106,7 +88,29 @@ const TIMEAGO = [
   "a month ago", "5 weeks ago"
 ];
 
-// ---- HELPERS ----
+// ---- HEADERS BASED ON TIME ----
+function getHeaderByTimeAgo(timeAgo: string): string {
+  // "Fresh" headlines only for recent times, else more generic
+  const recentTimes = [
+    "just now", "10 seconds ago", "a minute ago", "2 minutes ago", "5 minutes ago",
+    "8 minutes ago", "12 minutes ago", "18 minutes ago", "20 minutes ago",
+    "30 minutes ago", "45 minutes ago", "an hour ago"
+  ];
+  if (recentTimes.includes(timeAgo)) {
+    const FRESH = [
+      "Fresh Sale", "Just Sold", "Recent Order", "Order Confirmed", "Order Update",
+      "Just Delivered", "Hot Order", "Latest Sale"
+    ];
+    return FRESH[Math.floor(Math.random() * FRESH.length)];
+  } else {
+    const OLD = [
+      "Popular Service", "Trending Now", "Activity", "Another Order", "Order Processed"
+    ];
+    return OLD[Math.floor(Math.random() * OLD.length)];
+  }
+}
+
+// ---- UTILS ----
 function shuffle<T>(arr: T[]): T[] {
   const a = arr.slice();
   for (let i = a.length - 1; i > 0; i--) {
@@ -133,7 +137,7 @@ function makeNotifications(howMany = 50): Notification[] {
     const amt = svc.amounts[Math.floor(Math.random() * svc.amounts.length)];
     const city = cities[count % cities.length];
     const time = TIMEAGO[Math.floor(Math.random() * TIMEAGO.length)];
-    const header = HEADERS[Math.floor(Math.random() * HEADERS.length)];
+    const header = getHeaderByTimeAgo(time);
     all.push({
       location: city,
       service: svc.label(amt),
@@ -157,20 +161,21 @@ export default function SalesNotifications() {
 
   useEffect(() => {
     if (idx >= notifs.length) return;
-    if (visible) {
-      // Show notification for 6 seconds
-      timerRef.current = setTimeout(() => setVisible(false), timeoutVisible);
-    } else {
-      // Wait 3 minutes, then next notification
+    timerRef.current = setTimeout(() => setVisible(false), timeoutVisible);
+    return () => { if (timerRef.current) clearTimeout(timerRef.current); };
+  }, [idx]);
+
+  useEffect(() => {
+    if (!visible && idx < notifs.length - 1) {
       timerRef.current = setTimeout(() => {
-        setIdx(i => (i + 1) % notifs.length);
+        setIdx(i => i + 1);
         setVisible(true);
       }, timeoutHidden);
+      return () => { if (timerRef.current) clearTimeout(timerRef.current); };
     }
-    return () => { if (timerRef.current) clearTimeout(timerRef.current); };
   }, [visible, idx, notifs.length]);
 
-  if (idx >= notifs.length || !visible) return null;
+  if (idx >= notifs.length) return null;
 
   const notification = notifs[idx];
 
@@ -181,7 +186,7 @@ export default function SalesNotifications() {
           fixed z-[60] bottom-7 left-4 sm:left-8 md:left-12
           max-w-xs sm:max-w-sm bg-white border-2 border-[#CFE4FF] rounded-2xl shadow-2xl flex items-center gap-3 px-4 py-3
           animate-notify-in transition-all duration-500
-          opacity-100 translate-y-0 pointer-events-auto
+          ${visible ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 translate-y-6 pointer-events-none"}
         `}
         style={{
           minWidth: 235,

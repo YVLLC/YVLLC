@@ -10,8 +10,9 @@ import OurPromise from "@/components/OurPromise";
 import Testimonials from "@/components/Testimonials";
 import HowItWorks from "@/components/HowItWorks";
 import FAQ from "@/components/FAQ";
-import SalesNotifications from "@/components/SalesNotifications"; // 👈 IMPORT HERE
+import SalesNotifications from "@/components/SalesNotifications"; // 👈 NEW NOTIFICATIONS
 
+// ---- FAQS ----
 const FAQS = [
   {
     question: "Why choose us?",
@@ -39,22 +40,53 @@ const FAQS = [
   }
 ];
 
-// ---- EXAMPLE SERVICES (minimal, for demo - you should replace with your real UI/cards) ----
+// ---- SERVICES DATA (PUT YOURS HERE IF CUSTOM) ----
 const SERVICES = [
   {
-    name: "Instagram Followers",
-    platform: "instagram"
+    name: "Instagram Services",
+    key: "instagram",
+    price: "$0.09 / 100",
+    description: [
+      "💎 Quality Followers, Likes & Views",
+      "⚡️ Rapid Delivery",
+      "🛡️ Drop Protection",
+      "🔒 100% Secure Checkout"
+    ],
+    icon: <svg width="28" height="28"><circle cx="14" cy="14" r="13" fill="#E1306C" /></svg>,
+    tag: "Bestseller",
+    count: "2,000+ bought this week"
   },
   {
-    name: "TikTok Followers",
-    platform: "tiktok"
+    name: "TikTok Services",
+    key: "tiktok",
+    price: "$0.08 / 100",
+    description: [
+      "✨ High-impact Likes & Views",
+      "🚀 Instant Order Start",
+      "🙅‍♂️ No Login Needed",
+      "🛡️ Protected Service"
+    ],
+    icon: <svg width="28" height="28"><circle cx="14" cy="14" r="13" fill="#25F4EE" /></svg>,
+    tag: "🔥 Hot",
+    count: "1,400+ bought this week"
   },
   {
-    name: "YouTube Subscribers",
-    platform: "youtube"
+    name: "YouTube Services",
+    key: "youtube",
+    price: "$0.05 / 1000",
+    description: [
+      "🏆 Premium Views & Watch time",
+      "📈 Boosts Channel Performance",
+      "🤫 Private Delivery",
+      "🤖 Algorithm Friendly"
+    ],
+    icon: <svg width="28" height="28"><circle cx="14" cy="14" r="13" fill="#FF0000" /></svg>,
+    tag: "",
+    count: "950+ bought this week"
   }
 ];
 
+// --- PAGE START ---
 export default function Home() {
   const [orderModalOpen, setOrderModalOpen] = useState(false);
   const [modalPlatform, setModalPlatform] = useState<string | null>(null);
@@ -128,18 +160,41 @@ export default function Home() {
             />
           </div>
         </section>
-        {/* SERVICES SECTION (replace with your cards/list) */}
-        <section className="py-8">
-          <h2 className="text-center text-4xl font-extrabold mb-6">Place Your Order Instantly</h2>
-          <div className="flex justify-center gap-5">
-            {SERVICES.map((svc, idx) => (
-              <button
+        {/* --- REAL SERVICES SECTION --- */}
+        <section id="order" className="space-y-7 py-8 md:py-14">
+          <h2 className="text-center text-4xl font-extrabold">Place Your Order Instantly</h2>
+          <p className="text-[#444] text-center max-w-2xl mx-auto">
+            Choose your service — No logins needed, No Hassle. <span className="font-semibold text-[#007BFF]">Instant delivery starts within minutes.</span>
+          </p>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {SERVICES.map(({ name, price, description, icon, tag, count, key }, idx) => (
+              <div
                 key={idx}
-                className="bg-[#007BFF] text-white px-5 py-3 rounded-lg shadow font-bold text-lg hover:bg-[#005FCC] transition"
-                onClick={() => openOrderModalService(svc.platform)}
+                className="bg-white border-2 border-[#CFE4FF] rounded-2xl p-7 shadow-md hover:shadow-2xl transition group flex flex-col gap-3 relative"
               >
-                {svc.name}
-              </button>
+                {tag && (
+                  <span className="absolute top-4 right-5 bg-[#E8F1FF] text-[#007BFF] text-xs font-bold px-3 py-1 rounded-full shadow">{tag}</span>
+                )}
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="bg-[#F5FAFF] p-2 rounded-full">{icon}</div>
+                  <h3 className="text-xl font-bold text-[#111]">{name}</h3>
+                </div>
+                <ul className="text-sm text-[#444] pl-5 list-disc space-y-1">
+                  {description.map((point, i) => (
+                    <li key={i}>{point}</li>
+                  ))}
+                </ul>
+                <div className="flex items-center gap-2 mt-2">
+                  <span className="text-sm font-medium text-[#007BFF]">{price}</span>
+                  <span className="text-xs text-[#111] bg-[#E8F1FF] px-2 py-0.5 rounded">{count}</span>
+                </div>
+                <button
+                  className="mt-4 w-full bg-[#007BFF] text-white text-sm px-4 py-2 rounded-lg font-bold hover:bg-[#005FCC] shadow transition transform hover:scale-[1.03] active:scale-95"
+                  onClick={() => openOrderModalService(key)}
+                >
+                  Order
+                </button>
+              </div>
             ))}
           </div>
         </section>
@@ -210,7 +265,7 @@ export default function Home() {
           </div>
         </section>
       </main>
-      {/* SALES NOTIFICATIONS (OUTSIDE MAIN, GLOBAL!) */}
+      {/* SALES NOTIFICATIONS */}
       <SalesNotifications />
       {/* ANIMATED STAR STYLE */}
       <style jsx global>{`
