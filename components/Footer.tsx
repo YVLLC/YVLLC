@@ -121,7 +121,7 @@ export default function Footer({ onServiceOrder }: FooterProps) {
                 Try Free Likes
               </button>
             </Link>
-            <Link href="/support">
+            <Link href="/contact">
               <button className="bg-white border border-[#007BFF] text-[#007BFF] text-xs px-4 py-2 rounded-lg shadow hover:bg-[#E6F0FF] font-semibold transition">
                 24/7 Support
               </button>

@@ -1,9 +1,10 @@
 import { useState, useRef } from "react";
 import axios from "axios";
 import {
-  Search, CheckCircle, AlertTriangle, RefreshCw, MessageCircle, Home, ChevronDown
+  Search, CheckCircle, AlertTriangle, RefreshCw, MessageCircle, Home, ChevronDown, Repeat
 } from "lucide-react";
 import Link from "next/link";
+import OrderModal from "@/components/OrderModal"; // <--- Import your OrderModal
 
 // --- STATUS & FAQS ---
 const STATUS_ICONS: Record<string, JSX.Element> = {
@@ -47,6 +48,7 @@ export default function TrackOrderPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showFaq, setShowFaq] = useState<number | null>(null);
+  const [showOrderModal, setShowOrderModal] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleTrack = async (e: React.FormEvent) => {
@@ -75,6 +77,9 @@ export default function TrackOrderPage() {
 
   return (
     <main className="min-h-screen w-full bg-gradient-to-br from-[#f4f9ff] to-[#e6f0ff] flex flex-col items-center px-2 py-8 sm:py-16">
+      {/* Order Modal */}
+      <OrderModal open={showOrderModal} onClose={() => setShowOrderModal(false)} />
+
       <div className="w-full max-w-xl mx-auto glass-card px-4 sm:px-8 py-8 sm:py-12 rounded-3xl border-2 border-[#CFE4FF] shadow-xl space-y-10 relative">
 
         {/* Top Header */}
@@ -140,11 +145,14 @@ export default function TrackOrderPage() {
               <Home size={18} /> Home
             </button>
           </Link>
-          <Link href="/checkout" className="flex-1">
-            <button className="w-full flex items-center gap-2 bg-[#007BFF] text-white font-semibold px-6 py-2.5 rounded-xl hover:bg-[#005FCC] transition">
-              Order Again
-            </button>
-          </Link>
+          <button
+            className="w-full flex items-center gap-2 bg-[#007BFF] text-white font-semibold px-6 py-2.5 rounded-xl hover:bg-[#005FCC] transition justify-center"
+            style={{ minWidth: 0 }}
+            onClick={() => setShowOrderModal(true)}
+            type="button"
+          >
+            <Repeat size={19} /> Order Again
+          </button>
         </div>
       </div>
 
