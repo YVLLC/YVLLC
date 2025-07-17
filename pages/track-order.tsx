@@ -6,7 +6,7 @@ import {
 import Link from "next/link";
 
 // --- STATUS & FAQS ---
-const STATUS_ICONS = {
+const STATUS_ICONS: Record<string, JSX.Element> = {
   searching: <RefreshCw className="animate-spin text-[#007BFF]" size={32} />,
   delivered: <CheckCircle className="text-[#22C55E]" size={32} />,
   completed: <CheckCircle className="text-[#22C55E]" size={32} />,
@@ -16,13 +16,14 @@ const STATUS_ICONS = {
   error: <AlertTriangle className="text-red-500" size={32} />,
 };
 
-const STATUS_TITLES = {
+const STATUS_TITLES: Record<string, string> = {
   delivered: "Delivered!",
   completed: "Completed!",
   in_progress: "In Progress",
   pending: "Pending",
   unknown: "Order Not Found",
-  error: "Order Not Found"
+  error: "Order Not Found",
+  searching: "Searching...",
 };
 
 const FAQS = [
