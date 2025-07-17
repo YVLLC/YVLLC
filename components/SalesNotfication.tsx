@@ -152,27 +152,25 @@ export default function SalesNotifications() {
   const [idx, setIdx] = useState(0);
   const [visible, setVisible] = useState(true);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const timeoutVisible = 6000;    // 6 seconds visible
+  const timeoutHidden = 180000;   // 3 minutes hidden
 
-  // Show for 6s, then hide. Next one: after 3 min.
   useEffect(() => {
     if (idx >= notifs.length) return;
-    // Show for 6 seconds
-    timerRef.current = setTimeout(() => setVisible(false), 6000);
-    return () => { if (timerRef.current) clearTimeout(timerRef.current); };
-  }, [idx]);
-
-  useEffect(() => {
-    if (!visible && idx < notifs.length - 1) {
-      // Wait 3 min (180000 ms), then show next
+    if (visible) {
+      // Show notification for 6 seconds
+      timerRef.current = setTimeout(() => setVisible(false), timeoutVisible);
+    } else {
+      // Wait 3 minutes, then next notification
       timerRef.current = setTimeout(() => {
-        setIdx(i => i + 1);
+        setIdx(i => (i + 1) % notifs.length);
         setVisible(true);
-      }, 180000);
-      return () => { if (timerRef.current) clearTimeout(timerRef.current); };
+      }, timeoutHidden);
     }
+    return () => { if (timerRef.current) clearTimeout(timerRef.current); };
   }, [visible, idx, notifs.length]);
 
-  if (idx >= notifs.length) return null;
+  if (idx >= notifs.length || !visible) return null;
 
   const notification = notifs[idx];
 
@@ -183,7 +181,7 @@ export default function SalesNotifications() {
           fixed z-[60] bottom-7 left-4 sm:left-8 md:left-12
           max-w-xs sm:max-w-sm bg-white border-2 border-[#CFE4FF] rounded-2xl shadow-2xl flex items-center gap-3 px-4 py-3
           animate-notify-in transition-all duration-500
-          ${visible ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 translate-y-6 pointer-events-none"}
+          opacity-100 translate-y-0 pointer-events-auto
         `}
         style={{
           minWidth: 235,
