@@ -1,7 +1,7 @@
 import { Instagram, Music2, Youtube } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 
-// ---- US CITIES (add more if you want even more variety!) ----
+// ---- US CITIES ----
 const US_CITIES = [
   "New York, NY", "Los Angeles, CA", "Chicago, IL", "Houston, TX", "Phoenix, AZ", "Philadelphia, PA", "San Antonio, TX",
   "San Diego, CA", "Dallas, TX", "San Jose, CA", "Austin, TX", "Jacksonville, FL", "Fort Worth, TX", "Columbus, OH",
@@ -12,70 +12,70 @@ const US_CITIES = [
   "Oakland, CA", "Minneapolis, MN", "Tulsa, OK", "Arlington, TX", "New Orleans, LA"
 ];
 
-// ---- SERVICE DEFS AND AMOUNTS ----
+// ---- SERVICE DEFINITIONS ----
 const SERVICES = [
   {
     platform: "Instagram",
     type: "Followers",
     icon: <Instagram className="text-[#E1306C]" size={19} />,
     amounts: [100, 200, 350, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
-    label: (amt) => `${amt.toLocaleString()} Instagram Followers`
+    label: (amt: number) => `${amt.toLocaleString()} Instagram Followers`
   },
   {
     platform: "Instagram",
     type: "Likes",
     icon: <Instagram className="text-[#E1306C]" size={19} />,
     amounts: [50, 100, 300, 500, 1000, 2000, 5000, 10000, 20000],
-    label: (amt) => `${amt.toLocaleString()} Instagram Likes`
+    label: (amt: number) => `${amt.toLocaleString()} Instagram Likes`
   },
   {
     platform: "Instagram",
     type: "Views",
     icon: <Instagram className="text-[#E1306C]" size={19} />,
     amounts: [500, 2000, 5000, 10000, 20000, 50000],
-    label: (amt) => `${amt.toLocaleString()} Instagram Views`
+    label: (amt: number) => `${amt.toLocaleString()} Instagram Views`
   },
   {
     platform: "TikTok",
     type: "Followers",
     icon: <Music2 className="text-[#25F4EE]" size={19} />,
     amounts: [100, 250, 500, 1000, 2000, 5000, 10000],
-    label: (amt) => `${amt.toLocaleString()} TikTok Followers`
+    label: (amt: number) => `${amt.toLocaleString()} TikTok Followers`
   },
   {
     platform: "TikTok",
     type: "Likes",
     icon: <Music2 className="text-[#25F4EE]" size={19} />,
     amounts: [100, 250, 500, 1000, 2000, 5000, 10000],
-    label: (amt) => `${amt.toLocaleString()} TikTok Likes`
+    label: (amt: number) => `${amt.toLocaleString()} TikTok Likes`
   },
   {
     platform: "TikTok",
     type: "Views",
     icon: <Music2 className="text-[#25F4EE]" size={19} />,
     amounts: [1000, 2000, 5000, 10000, 20000, 50000],
-    label: (amt) => `${amt.toLocaleString()} TikTok Views`
+    label: (amt: number) => `${amt.toLocaleString()} TikTok Views`
   },
   {
     platform: "YouTube",
     type: "Subscribers",
     icon: <Youtube className="text-[#FF0000]" size={19} />,
     amounts: [200, 500, 1000, 2000, 5000, 10000],
-    label: (amt) => `${amt.toLocaleString()} YouTube Subscribers`
+    label: (amt: number) => `${amt.toLocaleString()} YouTube Subscribers`
   },
   {
     platform: "YouTube",
     type: "Likes",
     icon: <Youtube className="text-[#FF0000]" size={19} />,
     amounts: [250, 500, 1000, 2000, 5000, 10000],
-    label: (amt) => `${amt.toLocaleString()} YouTube Likes`
+    label: (amt: number) => `${amt.toLocaleString()} YouTube Likes`
   },
   {
     platform: "YouTube",
     type: "Views",
     icon: <Youtube className="text-[#FF0000]" size={19} />,
     amounts: [200, 500, 1000, 2000, 5000, 10000],
-    label: (amt) => `${amt.toLocaleString()} YouTube Views`
+    label: (amt: number) => `${amt.toLocaleString()} YouTube Views`
   },
 ];
 
@@ -98,13 +98,18 @@ function shuffle<T>(arr: T[]): T[] {
   return a;
 }
 
-// ---- MAKE 50 HIGH QUALITY, ALL-USA, NONREPEATING NOTIFICATIONS ----
-function makeNotifications(howMany = 50) {
+type Notification = {
+  location: string;
+  service: string;
+  icon: JSX.Element;
+  timeAgo: string;
+};
+
+function makeNotifications(howMany = 50): Notification[] {
   const cities = shuffle(US_CITIES);
   let count = 0;
-  const all = [];
+  const all: Notification[] = [];
   while (count < howMany) {
-    // Services/amounts shuffled every loop for max variety
     const svc = SERVICES[Math.floor(Math.random() * SERVICES.length)];
     const amt = svc.amounts[Math.floor(Math.random() * svc.amounts.length)];
     const city = cities[count % cities.length];
@@ -121,16 +126,16 @@ function makeNotifications(howMany = 50) {
 }
 
 // ---- SALES NOTIFICATION COMPONENT ----
-function SalesNotifications() {
+export default function SalesNotifications() {
   const [notifs] = useState(() => makeNotifications(50));
   const [idx, setIdx] = useState(0);
   const [visible, setVisible] = useState(true);
-  const timerRef = useRef<any>(null);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (idx >= notifs.length) return;
     timerRef.current = setTimeout(() => setVisible(false), 4200 + Math.random() * 800);
-    return () => clearTimeout(timerRef.current);
+    return () => { if (timerRef.current) clearTimeout(timerRef.current); };
   }, [idx]);
 
   useEffect(() => {
@@ -139,7 +144,7 @@ function SalesNotifications() {
         setIdx(i => i + 1);
         setVisible(true);
       }, 550);
-      return () => clearTimeout(timerRef.current);
+      return () => { if (timerRef.current) clearTimeout(timerRef.current); };
     }
   }, [visible, idx, notifs.length]);
 
@@ -184,5 +189,3 @@ function SalesNotifications() {
     </>
   );
 }
-
-export default SalesNotifications;
