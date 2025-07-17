@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { supabase } from "@/lib/supabase";
 import Image from "next/image";
@@ -7,6 +7,7 @@ import {
   UserCircle, LogOut, Instagram, Youtube, Music2, UserPlus, ThumbsUp, Eye, BarChart, List, CheckCircle, Loader2, BadgePercent, Menu, Tag
 } from "lucide-react";
 
+// --- Types ---
 type ServiceType = "Followers" | "Likes" | "Views" | "Subscribers";
 type Service = {
   type: ServiceType | string;
@@ -30,6 +31,7 @@ interface Order {
   created_at: string;
 }
 
+// --- Constants ---
 const COLORS = {
   primary: "#007BFF",
   primaryHover: "#005FCC",
@@ -92,7 +94,8 @@ const NAV_TABS = [
 const ORDER_STEPS = [
   { label: "Platform" },
   { label: "Service" },
-  { label: "Details" }
+  { label: "Details" },
+  { label: "Review" }
 ];
 
 function getQuickAmounts(platform: Platform, service: Service): number[] {
@@ -150,7 +153,6 @@ export default function DashboardPage() {
   const [orderError, setOrderError] = useState<string>("");
   const [orderLoading, setOrderLoading] = useState(false);
 
-  // Fetch user/orders
   useEffect(() => {
     const fetchUserAndOrders = async () => {
       const { data: { session } } = await supabase.auth.getSession();
@@ -378,7 +380,7 @@ export default function DashboardPage() {
               </>
             )}
             {orderStep === 2 && (
-              <form onSubmit={handleSecureCheckout}>
+              <>
                 <h3 className="font-black text-2xl mb-8 text-[#111] text-center">Order Details</h3>
                 <div className="flex flex-col gap-6 max-w-sm mx-auto mb-8">
                   <label className="font-semibold text-[#007BFF] text-lg">
@@ -425,6 +427,38 @@ export default function DashboardPage() {
                 </div>
                 <div className="flex justify-between mt-8">
                   <button
+                    className="px-6 py-3 rounded-xl font-bold bg-[#E6F0FF] text-[#007BFF] border border-[#CFE4FF] hover:bg-[#d7eafd] shadow transition text-lg"
+                    onClick={handleOrderBack}
+                  >
+                    Back
+                  </button>
+                  <button
+                    className="px-6 py-3 rounded-xl font-bold bg-[#007BFF] text-white hover:bg-[#005FCC] shadow transition text-lg"
+                    onClick={handleOrderNext}
+                  >
+                    Review
+                  </button>
+                </div>
+              </>
+            )}
+            {orderStep === 3 && (
+              <form onSubmit={handleSecureCheckout}>
+                <h3 className="font-black text-2xl mb-5 text-[#111] text-center">Review & Secure Checkout</h3>
+                <div className="bg-[#F5FAFF] border border-[#CFE4FF] rounded-xl px-6 py-7 mb-7">
+                  <div className="flex items-center gap-2 mb-2">
+                    <platform.icon size={24} style={{ color: platform.iconColor }} />
+                    <span className="font-semibold text-lg">{platform.name}</span>
+                    <span className="ml-3 px-3 py-1 rounded-full bg-[#E6F0FF] text-[#007BFF] font-semibold text-xs">{service.type}</span>
+                  </div>
+                  <div className="text-[#444] mb-1"><b>Target:</b> {target}</div>
+                  <div className="text-[#444] mb-1"><b>Amount:</b> {quantity}</div>
+                  <div className="text-[#444] mb-1"><b>Unit:</b> ${discounted}/ea <span className="text-[#c7c7c7] line-through">${service.price}/ea</span></div>
+                  <div className="mt-2 font-extrabold text-lg text-[#007BFF]">
+                    Total: ${(discounted * quantity).toFixed(2)}
+                  </div>
+                </div>
+                <div className="flex justify-between mt-7">
+                  <button
                     type="button"
                     className="px-6 py-3 rounded-xl font-bold bg-[#E6F0FF] text-[#007BFF] border border-[#CFE4FF] hover:bg-[#d7eafd] shadow transition text-lg"
                     onClick={handleOrderBack}
@@ -461,13 +495,150 @@ export default function DashboardPage() {
       );
     }
 
-    // --- All your other tabs (Current, Completed, Analytics, Profile) here, unchanged ---
-    // (Omitted for brevity, use your original code.)
+    // --- ALL YOUR TABS AS ORIGINAL ---
+    if (activeTab === "orders") {
+      const inProgress = orders.filter(o => o.status !== "Completed");
+      return (
+        <div>
+          <h2 className="text-2xl font-extrabold mb-4 flex items-center gap-2"><List size={22} /> Current Orders</h2>
+          {inProgress.length === 0 ? (
+            <div className="text-[#888] py-16 text-center">No current orders. Place your first order above!</div>
+          ) : (
+            <div className="overflow-x-auto" style={{ WebkitOverflowScrolling: "touch" }}>
+              <table className="min-w-full text-sm">
+                <thead>
+                  <tr className="bg-[#F5FAFF]">
+                    <th className="p-3 text-left">Order ID</th>
+                    <th className="p-3 text-left">Platform</th>
+                    <th className="p-3 text-left">Service</th>
+                    <th className="p-3 text-left">Quantity</th>
+                    <th className="p-3 text-left">Status</th>
+                    <th className="p-3 text-left">Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {inProgress.map(order => (
+                    <tr key={order.id} className="border-t">
+                      <td className="p-3">{order.id.slice(0, 6)}...</td>
+                      <td className="p-3">{order.platform}</td>
+                      <td className="p-3">{order.service}</td>
+                      <td className="p-3">{order.quantity}</td>
+                      <td className="p-3 font-bold text-[#007BFF]">{order.status}</td>
+                      <td className="p-3">{new Date(order.created_at).toLocaleString()}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    if (activeTab === "completed") {
+      const completed = orders.filter(o => o.status === "Completed");
+      return (
+        <div>
+          <h2 className="text-2xl font-extrabold mb-4 flex items-center gap-2"><CheckCircle size={22} /> Completed Orders</h2>
+          {completed.length === 0 ? (
+            <div className="text-[#888] py-16 text-center">No completed orders yet.</div>
+          ) : (
+            <div className="overflow-x-auto" style={{ WebkitOverflowScrolling: "touch" }}>
+              <table className="min-w-full text-sm">
+                <thead>
+                  <tr className="bg-[#F5FAFF]">
+                    <th className="p-3 text-left">Order ID</th>
+                    <th className="p-3 text-left">Platform</th>
+                    <th className="p-3 text-left">Service</th>
+                    <th className="p-3 text-left">Quantity</th>
+                    <th className="p-3 text-left">Status</th>
+                    <th className="p-3 text-left">Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {completed.map(order => (
+                    <tr key={order.id} className="border-t">
+                      <td className="p-3">{order.id.slice(0, 6)}...</td>
+                      <td className="p-3">{order.platform}</td>
+                      <td className="p-3">{order.service}</td>
+                      <td className="p-3">{order.quantity}</td>
+                      <td className="p-3 font-bold text-[#007BFF]">{order.status}</td>
+                      <td className="p-3">{new Date(order.created_at).toLocaleString()}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    if (activeTab === "analytics") {
+      return (
+        <div>
+          <h2 className="text-2xl font-extrabold mb-4 flex items-center gap-2"><BarChart size={22} /> Analytics</h2>
+          <div className="grid grid-cols-2 gap-5 sm:grid-cols-4 mb-10">
+            <DashboardStat label="Orders" value={analytics.total} color="blue" />
+            <DashboardStat label="Completed" value={analytics.completed} color="blue" />
+            <DashboardStat
+              label="Spent"
+              value={
+                "$" +
+                orders
+                  .reduce(
+                    (sum, o) =>
+                      sum +
+                      o.quantity *
+                        (PLATFORMS.find((p) => p.name === o.platform)?.services.find((s) => s.type === o.service)?.price || 0),
+                    0
+                  )
+                  .toFixed(2)
+              }
+              color="blue"
+            />
+            <DashboardStat label="Refill Eligible" value={orders.filter(o => o.status === "Completed").length} color="blue" />
+          </div>
+        </div>
+      );
+    }
+
+    if (activeTab === "profile") {
+      return (
+        <div className="space-y-7">
+          <h2 className="text-2xl font-extrabold mb-2 flex items-center gap-2"><UserCircle size={22} /> Account</h2>
+          <div>
+            <label className="block text-[#111] font-bold mb-1">Email</label>
+            <input
+              type="email"
+              className="border px-3 py-2 rounded-md mr-2 w-full max-w-xs"
+              value={newEmail || profileEmail}
+              onChange={e => setNewEmail(e.target.value)}
+            />
+            <button onClick={() => toast.success("Email updated (demo)!")} className="bg-[#007BFF] text-white px-4 py-2 rounded mt-2">
+              Update Email
+            </button>
+          </div>
+          <div>
+            <label className="block text-[#111] font-bold mb-1">Change Password</label>
+            <input
+              type="password"
+              placeholder="New Password"
+              value={passwordData.new}
+              onChange={e => setPasswordData({ ...passwordData, new: e.target.value })}
+              className="border px-3 py-2 rounded-md mr-2 w-full max-w-xs"
+            />
+            <button onClick={() => toast.success("Password updated (demo)!")} className="bg-[#007BFF] text-white px-4 py-2 rounded mt-2">
+              Update Password
+            </button>
+          </div>
+        </div>
+      );
+    }
 
     return <div>Pick a tab…</div>;
   };
 
-  // Layout unchanged
   return (
     <main className="min-h-screen bg-[#F9FAFB]">
       <Toaster position="top-right" />
@@ -525,6 +696,35 @@ export default function DashboardPage() {
           </section>
         </div>
       </div>
+      <style jsx global>{`
+        @keyframes flashSale {
+          0%,100% { background: #e7f7f0; color: #007BFF;}
+          50% { background: #d9ecff; color: #005FCC;}
+        }
+        .animate-flashSale { animation: flashSale 2.5s infinite; }
+        @media (max-width: 900px) {
+          .max-w-7xl { padding: 0 0vw; }
+        }
+        @media (max-width: 600px) {
+          .max-w-7xl { padding: 0 1vw; }
+          aside, section { padding: 12px !important; }
+          h2 { font-size: 1.1rem !important; }
+          th, td { font-size: 0.98rem; }
+          .text-2xl { font-size: 1.3rem !important; }
+        }
+        table { width: 100%; }
+        th, td { white-space: nowrap; }
+      `}</style>
     </main>
+  );
+}
+
+function DashboardStat({ label, value, color }: { label: string, value: any, color: string }) {
+  const textColor = color === "blue" ? "text-[#007BFF]" : color === "green" ? "text-green-500" : color === "yellow" ? "text-yellow-500" : "";
+  return (
+    <div className={`p-4 rounded-xl bg-[#F5FAFF] border border-[#CFE4FF] text-center shadow`}>
+      <span className={`block text-sm font-semibold mb-1 ${textColor}`}>{label}</span>
+      <span className="text-2xl font-extrabold">{value}</span>
+    </div>
   );
 }
