@@ -10,6 +10,7 @@ const US_CITIES = [
   "Atlanta, GA", "Kansas City, MO", "Colorado Springs, CO", "Miami, FL", "Raleigh, NC", "Omaha, NE", "Long Beach, CA", "Virginia Beach, VA",
   "Oakland, CA", "Minneapolis, MN", "Tulsa, OK", "Arlington, TX", "New Orleans, LA"
 ];
+
 const TIMEAGO = [
   "just now", "10 seconds ago", "a minute ago", "2 minutes ago", "5 minutes ago", "8 minutes ago", "12 minutes ago",
   "18 minutes ago", "20 minutes ago", "30 minutes ago", "45 minutes ago", "an hour ago", "2 hours ago", "3 hours ago",
@@ -17,6 +18,7 @@ const TIMEAGO = [
   "5 days ago", "a week ago", "8 days ago", "10 days ago", "12 days ago", "2 weeks ago", "20 days ago", "3 weeks ago",
   "a month ago", "5 weeks ago"
 ];
+
 const SERVICES = [
   {
     platform: "Instagram",
@@ -92,16 +94,19 @@ function shuffle<T>(arr: T[]): T[] {
   return a;
 }
 
-type Notification = {
+// Only store serializable data (no JSX) in sessionStorage
+type NotificationData = {
   location: string;
-  service: string;
-  icon: JSX.Element;
+  platform: string;
+  type: string;
+  amount: number;
   timeAgo: string;
 };
-function makeNotifications(howMany = 50): Notification[] {
+
+function makeNotifications(howMany = 50): NotificationData[] {
   const cities = shuffle(US_CITIES);
   let count = 0;
-  const all: Notification[] = [];
+  const all: NotificationData[] = [];
   while (count < howMany) {
     const svc = SERVICES[Math.floor(Math.random() * SERVICES.length)];
     const amt = svc.amounts[Math.floor(Math.random() * svc.amounts.length)];
@@ -109,8 +114,9 @@ function makeNotifications(howMany = 50): Notification[] {
     const time = TIMEAGO[Math.floor(Math.random() * TIMEAGO.length)];
     all.push({
       location: city,
-      service: svc.label(amt),
-      icon: svc.icon,
+      platform: svc.platform,
+      type: svc.type,
+      amount: amt,
       timeAgo: time
     });
     count++;
@@ -118,22 +124,43 @@ function makeNotifications(howMany = 50): Notification[] {
   return shuffle(all);
 }
 
+function getServiceLabel(platform: string, type: string, amount: number): string {
+  const svc = SERVICES.find(
+    s => s.platform === platform && s.type === type
+  );
+  if (svc) return svc.label(amount);
+  return `${amount.toLocaleString()} ${platform} ${type}`;
+}
+
+function getServiceIcon(platform: string): JSX.Element {
+  switch (platform) {
+    case "Instagram":
+      return <Instagram className="text-[#E1306C]" size={19} />;
+    case "TikTok":
+      return <Music2 className="text-[#25F4EE]" size={19} />;
+    case "YouTube":
+      return <Youtube className="text-[#FF0000]" size={19} />;
+    default:
+      return <span />;
+  }
+}
+
 const NOTIFY_INTERVAL = 3 * 60 * 1000;
 
 export default function SalesNotifications() {
-  const [notifs, setNotifs] = useState<Notification[] | null>(null);
+  const [notifs, setNotifs] = useState<NotificationData[] | null>(null);
   const [idx, setIdx] = useState(0);
   const [visible, setVisible] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    let notifications: Notification[];
+    let notifications: NotificationData[];
     let idxInit = 0;
     try {
       const prev = window.sessionStorage.getItem("sales_notifs_data");
       if (prev) {
-        notifications = JSON.parse(prev) as Notification[];
+        notifications = JSON.parse(prev) as NotificationData[];
       } else {
         notifications = makeNotifications(50);
         window.sessionStorage.setItem("sales_notifs_data", JSON.stringify(notifications));
@@ -165,6 +192,7 @@ export default function SalesNotifications() {
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
     };
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
@@ -182,10 +210,14 @@ export default function SalesNotifications() {
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
     };
+    // eslint-disable-next-line
   }, [visible]);
 
   if (!notifs || idx >= notifs.length) return null;
   const notification = notifs[idx];
+
+  const icon = getServiceIcon(notification.platform);
+  const label = getServiceLabel(notification.platform, notification.type, notification.amount);
 
   return (
     <>
@@ -202,14 +234,14 @@ export default function SalesNotifications() {
           fontFamily: "inherit"
         }}
       >
-        <div className="bg-[#F5FAFF] p-2 rounded-full">{notification.icon}</div>
+        <div className="bg-[#F5FAFF] p-2 rounded-full">{icon}</div>
         <div>
           <div className="font-semibold text-[#007BFF] text-sm mb-0.5 flex items-center gap-1">
             Recent Sale
             <span className="inline-block w-1.5 h-1.5 bg-[#22C55E] rounded-full ml-1 animate-pulse" />
           </div>
           <div className="text-xs text-[#444] font-medium">{notification.location}</div>
-          <div className="text-sm font-bold text-[#222] mt-1">{notification.service}</div>
+          <div className="text-sm font-bold text-[#222] mt-1">{label}</div>
           <div className="text-[11px] text-[#888] mt-0.5">{notification.timeAgo}</div>
         </div>
       </div>
