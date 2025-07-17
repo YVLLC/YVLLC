@@ -79,6 +79,24 @@ const SERVICES = [
   },
 ];
 
+// ---- NOTIFICATION PHRASES ----
+const HEADERS = [
+  "Recent Order",
+  "Just Sold",
+  "New Purchase",
+  "Order Processed",
+  "Latest Sale",
+  "Order Confirmed",
+  "Order Update",
+  "Just Delivered",
+  "Activity",
+  "Another Order",
+  "Hot Order",
+  "Fresh Sale",
+  "Popular Service",
+  "Trending Now"
+];
+
 // ---- TIME AGO OPTIONS ----
 const TIMEAGO = [
   "just now", "10 seconds ago", "a minute ago", "2 minutes ago", "5 minutes ago", "8 minutes ago", "12 minutes ago",
@@ -103,6 +121,7 @@ type Notification = {
   service: string;
   icon: JSX.Element;
   timeAgo: string;
+  header: string;
 };
 
 function makeNotifications(howMany = 50): Notification[] {
@@ -114,11 +133,13 @@ function makeNotifications(howMany = 50): Notification[] {
     const amt = svc.amounts[Math.floor(Math.random() * svc.amounts.length)];
     const city = cities[count % cities.length];
     const time = TIMEAGO[Math.floor(Math.random() * TIMEAGO.length)];
+    const header = HEADERS[Math.floor(Math.random() * HEADERS.length)];
     all.push({
       location: city,
       service: svc.label(amt),
       icon: svc.icon,
-      timeAgo: time
+      timeAgo: time,
+      header
     });
     count++;
   }
@@ -132,18 +153,21 @@ export default function SalesNotifications() {
   const [visible, setVisible] = useState(true);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
+  // Show for 6s, then hide. Next one: after 3 min.
   useEffect(() => {
     if (idx >= notifs.length) return;
-    timerRef.current = setTimeout(() => setVisible(false), 4200 + Math.random() * 800);
+    // Show for 6 seconds
+    timerRef.current = setTimeout(() => setVisible(false), 6000);
     return () => { if (timerRef.current) clearTimeout(timerRef.current); };
   }, [idx]);
 
   useEffect(() => {
     if (!visible && idx < notifs.length - 1) {
+      // Wait 3 min (180000 ms), then show next
       timerRef.current = setTimeout(() => {
         setIdx(i => i + 1);
         setVisible(true);
-      }, 550);
+      }, 180000);
       return () => { if (timerRef.current) clearTimeout(timerRef.current); };
     }
   }, [visible, idx, notifs.length]);
@@ -170,7 +194,7 @@ export default function SalesNotifications() {
         <div className="bg-[#F5FAFF] p-2 rounded-full">{notification.icon}</div>
         <div>
           <div className="font-semibold text-[#007BFF] text-sm mb-0.5 flex items-center gap-1">
-            Someone
+            {notification.header}
             <span className="inline-block w-1.5 h-1.5 bg-[#22C55E] rounded-full ml-1 animate-pulse" />
           </div>
           <div className="text-xs text-[#444] font-medium">{notification.location}</div>
