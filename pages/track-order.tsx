@@ -1,18 +1,22 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import axios from "axios";
-import { Search, CheckCircle, AlertTriangle, RefreshCw, MessageCircle, Home, ChevronDown } from "lucide-react";
+import {
+  Search, CheckCircle, AlertTriangle, RefreshCw, MessageCircle, Home, ChevronDown
+} from "lucide-react";
 import Link from "next/link";
 
-const STATUS_ICONS: Record<string, JSX.Element> = {
+// --- STATUS & FAQS ---
+const STATUS_ICONS = {
   searching: <RefreshCw className="animate-spin text-[#007BFF]" size={32} />,
-  delivered: <CheckCircle className="text-green-500" size={32} />,
-  completed: <CheckCircle className="text-green-500" size={32} />,
+  delivered: <CheckCircle className="text-[#22C55E]" size={32} />,
+  completed: <CheckCircle className="text-[#22C55E]" size={32} />,
   in_progress: <RefreshCw className="animate-spin text-[#007BFF]" size={32} />,
+  pending: <RefreshCw className="animate-spin text-[#007BFF]" size={32} />,
   unknown: <AlertTriangle className="text-yellow-500" size={32} />,
   error: <AlertTriangle className="text-red-500" size={32} />,
 };
 
-const STATUS_TITLES: Record<string, string> = {
+const STATUS_TITLES = {
   delivered: "Delivered!",
   completed: "Completed!",
   in_progress: "In Progress",
@@ -42,6 +46,7 @@ export default function TrackOrderPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showFaq, setShowFaq] = useState<number | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const handleTrack = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -51,7 +56,7 @@ export default function TrackOrderPage() {
     try {
       const res = await axios.post("/api/track", { orderId });
       setStatus(res.data.status?.toLowerCase() || "unknown");
-    } catch (err: any) {
+    } catch {
       setError("Could not find order. Make sure the ID is correct.");
       setStatus("error");
     } finally {
@@ -62,50 +67,56 @@ export default function TrackOrderPage() {
   const statusKey =
     loading ? "searching" :
     status === "delivered" || status === "completed" ? "delivered" :
-    status === "in_progress" ? "in_progress" :
-    status === "pending" ? "in_progress" :
+    status === "in_progress" || status === "pending" ? "in_progress" :
     status === "error" || error ? "error" :
     status === "unknown" ? "unknown" :
     "";
 
   return (
-    <main className="max-w-xl mx-auto px-4 py-20">
-      <div className="bg-white border border-[#CFE4FF] rounded-2xl shadow-md p-8 space-y-8">
-        <div className="text-center">
+    <main className="min-h-screen w-full bg-gradient-to-br from-[#f4f9ff] to-[#e6f0ff] flex flex-col items-center px-2 py-8 sm:py-16">
+      <div className="w-full max-w-xl mx-auto glass-card px-4 sm:px-8 py-8 sm:py-12 rounded-3xl border-2 border-[#CFE4FF] shadow-xl space-y-10 relative">
+
+        {/* Top Header */}
+        <div className="text-center mb-2">
           <div className="flex justify-center mb-3">
-            <Search className="text-[#007BFF]" size={38} />
+            <Search className="text-[#007BFF]" size={40} />
           </div>
-          <h1 className="text-3xl font-extrabold text-[#007BFF] mb-1">Track Your Order</h1>
-          <p className="text-[#444] mb-2">We’re here for every step. Enter your order ID below to check the latest status.</p>
+          <h1 className="text-3xl md:text-4xl font-black text-[#007BFF] mb-1 tracking-tight">Track Your Order</h1>
+          <p className="text-[#555] mb-2 text-base md:text-lg">We’re here for every step. Enter your order ID below to check the latest status.</p>
         </div>
 
-        <form onSubmit={handleTrack} className="space-y-5">
+        {/* Input & Button */}
+        <form onSubmit={handleTrack} className="space-y-4 w-full">
           <input
+            ref={inputRef}
             type="text"
             placeholder="Enter your Order ID"
             value={orderId}
-            onChange={(e) => setOrderId(e.target.value)}
+            onChange={e => setOrderId(e.target.value)}
             required
-            className="w-full px-4 py-3 border-2 border-[#CFE4FF] rounded-xl bg-[#F9FBFF] text-lg focus:outline-none focus:border-[#007BFF] transition"
+            className="w-full px-4 py-3 border-2 border-[#CFE4FF] rounded-xl bg-[#F9FBFF] text-lg focus:outline-none focus:border-[#007BFF] shadow-sm transition"
           />
           <button
             type="submit"
             disabled={loading || !orderId.trim()}
-            className={`w-full bg-[#007BFF] text-white font-semibold py-3 rounded-xl hover:bg-[#005FCC] transition text-lg flex items-center justify-center gap-2 ${loading ? "opacity-70 cursor-not-allowed" : ""}`}
+            className={`w-full bg-[#007BFF] text-white font-semibold py-3 rounded-xl hover:bg-[#005FCC] transition text-lg flex items-center justify-center gap-2 shadow-lg ${loading ? "opacity-70 cursor-not-allowed" : ""}`}
           >
             {loading && <RefreshCw className="animate-spin" size={20} />}
             {loading ? "Tracking..." : "Track Order"}
           </button>
         </form>
 
+        {/* Status Output */}
         {(statusKey || error) && (
-          <div className="mt-3 flex flex-col items-center gap-2">
-            <div>{STATUS_ICONS[statusKey || "unknown"]}</div>
+          <div className="mt-1 flex flex-col items-center gap-2">
+            <div className="rounded-full bg-white shadow flex items-center justify-center w-14 h-14 border border-[#E6F0FF]">
+              {STATUS_ICONS[statusKey || "unknown"]}
+            </div>
             <div className="font-bold text-lg text-[#005FCC]">
               {STATUS_TITLES[statusKey || "unknown"] || status}
             </div>
             {status && !error && (
-              <p className="text-[#222] text-base text-center">
+              <p className="text-[#333] text-base text-center">
                 {status === "delivered" || status === "completed"
                   ? "Your order was completed! If you don't see results, please refresh your platform or reach out to our support team."
                   : status === "in_progress" || status === "pending"
@@ -121,14 +132,15 @@ export default function TrackOrderPage() {
           </div>
         )}
 
-        <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
-          <Link href="/">
-            <button className="flex items-center gap-2 bg-[#E8F1FF] text-[#007BFF] font-semibold px-6 py-2.5 rounded-xl hover:bg-[#E6F0FF] border border-[#CFE4FF] transition">
+        {/* Action Buttons */}
+        <div className="flex flex-col sm:flex-row justify-center gap-4 pt-2">
+          <Link href="/" className="flex-1">
+            <button className="w-full flex items-center gap-2 bg-[#E8F1FF] text-[#007BFF] font-semibold px-6 py-2.5 rounded-xl hover:bg-[#E6F0FF] border border-[#CFE4FF] transition">
               <Home size={18} /> Home
             </button>
           </Link>
-          <Link href="/checkout">
-            <button className="flex items-center gap-2 bg-[#007BFF] text-white font-semibold px-6 py-2.5 rounded-xl hover:bg-[#005FCC] transition">
+          <Link href="/checkout" className="flex-1">
+            <button className="w-full flex items-center gap-2 bg-[#007BFF] text-white font-semibold px-6 py-2.5 rounded-xl hover:bg-[#005FCC] transition">
               Order Again
             </button>
           </Link>
@@ -136,15 +148,13 @@ export default function TrackOrderPage() {
       </div>
 
       {/* FAQ Section */}
-      <section className="mt-12 mb-6">
-        <h2 className="text-center text-xl font-bold mb-5 text-[#222]">Tracking Help & FAQs</h2>
-        <div className="space-y-3 max-w-xl mx-auto">
+      <section className="w-full max-w-xl mx-auto mt-10 sm:mt-14">
+        <h2 className="text-center text-xl font-bold mb-4 text-[#222]">Tracking Help & FAQs</h2>
+        <div className="space-y-3">
           {FAQS.map((item, i) => (
             <div
               key={i}
-              className={`border border-[#CFE4FF] rounded-xl p-4 bg-[#F9FAFF] cursor-pointer transition-all ${
-                showFaq === i ? "shadow-lg" : ""
-              }`}
+              className={`border border-[#CFE4FF] rounded-xl p-4 bg-[#F9FAFF] cursor-pointer transition-all ${showFaq === i ? "shadow-xl scale-[1.02]" : ""}`}
               onClick={() => setShowFaq(showFaq === i ? null : i)}
               tabIndex={0}
               onKeyDown={e => { if (e.key === "Enter") setShowFaq(showFaq === i ? null : i); }}
@@ -159,7 +169,7 @@ export default function TrackOrderPage() {
                 style={{
                   maxHeight: showFaq === i ? 200 : 0,
                   overflow: "hidden",
-                  transition: "max-height 0.3s"
+                  transition: "max-height 0.4s cubic-bezier(.55,0,.1,1)"
                 }}
               >
                 {showFaq === i && (
@@ -172,13 +182,26 @@ export default function TrackOrderPage() {
       </section>
 
       {/* Support CTA */}
-      <div className="mt-8 text-center">
+      <div className="w-full max-w-xl mx-auto mt-8 text-center">
         <Link href="/support">
           <button className="inline-flex items-center gap-2 bg-white border border-[#CFE4FF] text-[#007BFF] px-5 py-2.5 rounded-full shadow hover:bg-[#F2F9FF] font-semibold transition">
             <MessageCircle size={18} /> Need more help? Chat with our support team
           </button>
         </Link>
       </div>
+
+      <style jsx global>{`
+        .glass-card {
+          background: rgba(255,255,255,0.87);
+          backdrop-filter: blur(6px);
+          -webkit-backdrop-filter: blur(6px);
+        }
+        @media (max-width: 540px) {
+          .glass-card { padding-left: 0.6rem !important; padding-right: 0.6rem !important;}
+        }
+        ::-webkit-scrollbar { width: 0.6em; background: #eaf4ff;}
+        ::-webkit-scrollbar-thumb { background: #e6f0ff; border-radius: 10px; }
+      `}</style>
     </main>
   );
 }

@@ -48,7 +48,7 @@ export default function Contact() {
             <div className="flex-1 min-w-[200px] flex items-center justify-center gap-2 bg-[#F5FAFF] rounded-xl px-4 py-3 text-[#007BFF] text-sm font-semibold shadow text-center whitespace-nowrap">
               <Clock size={18} />
               <div className="flex flex-col items-center md:items-start">
-                <span>Replies <span className="font-bold">in under 24h</span></span>
+                <span>Replies <span className="font-bold">in under 48h</span></span>
               </div>
             </div>
           </div>

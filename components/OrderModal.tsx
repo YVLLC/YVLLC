@@ -344,8 +344,8 @@ export default function OrderModal({
                         {s.icon}
                         <span className="">{s.type}</span>
                         {discount > 0 && (
-                          <span className="ml-2 px-2 py-0.5 rounded-full bg-[#e7f7f0] text-[#22C55E] text-xs font-bold flex items-center gap-1 animate-flashSale">
-                            <Tag size={14} className="mr-0.5" />-{discount}%
+                          <span className="ml-2 px-2 py-0.5 rounded-full bg-[#E6F0FF] text-[#007BFF] text-xs font-bold flex items-center gap-1">
+                            <Tag size={14} className="mr-0.5 text-[#007BFF]" />-{discount}%
                           </span>
                         )}
                       </div>
@@ -414,10 +414,10 @@ export default function OrderModal({
                       ))}
                     </div>
                     <span className="font-bold text-[#007BFF] text-xl mt-2">
-                      Total: <span className="text-[#22C55E]">${(discounted * quantity).toFixed(2)}</span>
+                      Total: <span className="text-[#007BFF]">${(discounted * quantity).toFixed(2)}</span>
                       <span className="ml-2 text-sm text-[#c7c7c7] line-through">${(service.price * quantity).toFixed(2)}</span>
                     </span>
-                    <span className="text-xs text-[#22C55E] font-semibold mt-1 animate-flashSale">
+                    <span className="text-xs text-[#007BFF] font-semibold mt-1">
                       Flash Sale! {discount}% off for a limited time
                     </span>
                   </div>

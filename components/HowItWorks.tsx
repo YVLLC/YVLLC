@@ -5,17 +5,17 @@ const STEPS = [
   {
     icon: <Zap className="text-[#007BFF]" size={36} />,
     title: "Choose a Service",
-    desc: "Pick what you want—Followers, Likes, or Views for any major platform. Every order is high-quality, fast, and safe.",
+    desc: "Pick what you want—Followers, Likes, or Views for any major platform. Every order is High-Quality, Fast, and Safe.",
   },
   {
     icon: <UserCheck className="text-[#007BFF]" size={36} />,
     title: "Enter Your Info",
-    desc: "No passwords ever. Just your username or a link—100% private, secure, and encrypted ordering.",
+    desc: "No passwords ever. Just your username or a link—100% Private, Secure, and Encrypted ordering.",
   },
   {
     icon: <Clock className="text-[#007BFF]" size={36} />,
     title: "See Instant Results",
-    desc: "Your boost starts in minutes, grows naturally, and you can track your order or reach support anytime.",
+    desc: "Your boost starts in minutes, Grows naturally, and you can track your order or reach our support anytime.",
   },
 ];
 
