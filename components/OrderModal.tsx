@@ -8,7 +8,6 @@ type ServiceType =
   | "Followers"
   | "Likes"
   | "Views"
-  | "Comments"
   | "Subscribers";
 
 type Service = {
@@ -36,34 +35,34 @@ const PLATFORMS: Platform[] = [
     key: "instagram",
     name: "Instagram",
     color: "#E1306C",
-    icon: <Instagram className="text-[#E1306C]" size={26} />,
+    icon: <Instagram className="text-[#E1306C]" size={28} />,
     services: [
-      { type: "Followers", price: 0.09, icon: <UserPlus size={17} className="text-[#E1306C]" /> },
-      { type: "Likes", price: 0.07, icon: <ThumbsUp size={17} className="text-[#E1306C]" /> },
-      { type: "Views", price: 0.04, icon: <Eye size={17} className="text-[#E1306C]" /> },
-      { type: "Comments", price: 0.20, icon: <X size={17} className="text-[#E1306C]" /> }
+      { type: "Followers", price: 0.09, icon: <UserPlus size={18} className="text-[#E1306C]" /> },
+      { type: "Likes", price: 0.07, icon: <ThumbsUp size={18} className="text-[#E1306C]" /> },
+      { type: "Views", price: 0.04, icon: <Eye size={18} className="text-[#E1306C]" /> }
+      // Comments removed
     ]
   },
   {
     key: "tiktok",
     name: "TikTok",
     color: "#00F2EA",
-    icon: <Music2 className="text-[#00F2EA]" size={26} />,
+    icon: <Music2 className="text-[#00F2EA]" size={28} />,
     services: [
-      { type: "Followers", price: 0.10, icon: <UserPlus size={17} className="text-[#00F2EA]" /> },
-      { type: "Likes", price: 0.08, icon: <ThumbsUp size={17} className="text-[#00F2EA]" /> },
-      { type: "Views", price: 0.06, icon: <Eye size={17} className="text-[#00F2EA]" /> }
+      { type: "Followers", price: 0.10, icon: <UserPlus size={18} className="text-[#00F2EA]" /> },
+      { type: "Likes", price: 0.08, icon: <ThumbsUp size={18} className="text-[#00F2EA]" /> },
+      { type: "Views", price: 0.06, icon: <Eye size={18} className="text-[#00F2EA]" /> }
     ]
   },
   {
     key: "youtube",
     name: "YouTube",
     color: "#FF0000",
-    icon: <Youtube className="text-[#FF0000]" size={26} />,
+    icon: <Youtube className="text-[#FF0000]" size={28} />,
     services: [
-      { type: "Subscribers", price: 0.12, icon: <UserPlus size={17} className="text-[#FF0000]" /> },
-      { type: "Likes", price: 0.09, icon: <ThumbsUp size={17} className="text-[#FF0000]" /> },
-      { type: "Views", price: 0.05, icon: <Eye size={17} className="text-[#FF0000]" /> }
+      { type: "Subscribers", price: 0.12, icon: <UserPlus size={18} className="text-[#FF0000]" /> },
+      { type: "Likes", price: 0.09, icon: <ThumbsUp size={18} className="text-[#FF0000]" /> },
+      { type: "Views", price: 0.05, icon: <Eye size={18} className="text-[#FF0000]" /> }
     ]
   }
 ];
@@ -96,7 +95,6 @@ function getStealthPackage(platform: Platform, service: Service): StealthPackage
     if (service.type === "Followers" || service.type === "Subscribers") type = "Growth";
     if (service.type === "Likes") type = "Engagement";
     if (service.type === "Views") type = "Boost";
-    if (service.type === "Comments") type = "Comments";
   }
   return { pkg, type };
 }
@@ -172,6 +170,11 @@ export default function OrderModal({
   }, [open, initialPlatform, initialService]);
 
   if (!open) return null;
+
+  const colorPrimary = "#0051ff";
+  const colorAccent = "#E1306C";
+  const colorBg = "#f7f9ff";
+  const colorBg2 = "#f0f6ff";
 
   const choosePlatform = (p: Platform) => {
     setPlatform(p);
@@ -279,47 +282,62 @@ export default function OrderModal({
   }
 
   return (
-    <div className="fixed z-[9999] inset-0 flex items-center justify-center bg-black/60 backdrop-blur-[2px]">
-      <div className="relative max-w-md w-[96vw] mx-auto bg-white/95 rounded-3xl shadow-2xl border border-[#e3edfc] overflow-hidden animate-fadeInPop">
+    <div className="fixed z-[9999] inset-0 flex items-center justify-center bg-black/80 backdrop-blur-[3px]">
+      <div
+        className="relative max-w-lg w-[98vw] mx-auto rounded-[2.7rem] border-2 border-[#e3edfc] overflow-hidden shadow-2xl"
+        style={{
+          background: `linear-gradient(135deg, ${colorBg} 65%, ${colorAccent}05 100%)`,
+          boxShadow: "0 6px 36px 0 #0048b925"
+        }}
+      >
         {/* Modal HEADER */}
-        <div className="w-full px-4 pt-7 pb-3 rounded-t-3xl relative bg-gradient-to-r from-[#f7fbff] via-[#ecf4ff] to-[#f8fbff] border-b border-[#e3edfc]">
+        <div
+          className="w-full px-6 pt-9 pb-4 rounded-t-[2.7rem] relative"
+          style={{
+            background: `linear-gradient(90deg, ${colorPrimary}0c 0%, ${colorAccent}09 100%)`,
+            borderBottom: `2px solid #e3edfc`
+          }}
+        >
           <button
-            className="absolute top-4 right-5 z-20 bg-white/95 border border-[#e3edfc] shadow-lg rounded-full p-2 hover:bg-[#eaf4ff] transition"
+            className="absolute top-5 right-6 z-20 bg-white/95 border border-[#e3edfc] shadow-lg rounded-full p-[10px] hover:bg-[#f8faff] transition"
             onClick={closeAndReset}
             aria-label="Close"
             style={{ boxShadow: "0 2px 14px 0 #0086ff18" }}
           >
             <X size={22} className="text-[#007BFF]" />
           </button>
-          <div className="flex items-center gap-2 pr-9">
+          <div className="flex items-center gap-2 pr-11">
             {platform.icon}
-            <span className="font-extrabold text-lg" style={{ color: platform.color }}>
+            <span className="font-black text-2xl tracking-tight" style={{ color: platform.color }}>
               {platform.name}
             </span>
           </div>
           {/* Steps */}
-          <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-2 mt-5 mb-[-6px] min-h-[42px]">
+          <div className="flex items-center justify-center gap-x-2 gap-y-2 mt-6 mb-[-4px] min-h-[42px]">
             {steps.map((s, i) => (
               <div key={s.label} className="flex items-center gap-2 flex-shrink-0">
                 <div
                   className={`
-                    rounded-full w-7 h-7 flex items-center justify-center font-bold
+                    rounded-full w-8 h-8 flex items-center justify-center font-black text-base
                     ${
                       step === i || (done && i === 4)
-                        ? "bg-[#007BFF] text-white shadow"
+                        ? "bg-[#0051ff] text-white shadow"
                         : step > i
-                        ? "bg-[#95e1fc] text-[#0d88c7]"
-                        : "bg-[#e6f4ff] text-[#A0B3C7]"
+                        ? "bg-[#E1306C]/70 text-[#fff] border-[#E1306C] border"
+                        : "bg-[#dde8ff] text-[#A0B3C7]"
                     }
                     border-2 border-white
                     transition
                   `}
+                  style={{
+                    boxShadow: step === i ? "0 2px 14px #0051ff33" : undefined
+                  }}
                 >
                   {i + 1}
                 </div>
                 <span
-                  className={`text-xs font-semibold whitespace-nowrap ${
-                    step === i || (done && i === 4) ? "text-[#007BFF]" : "text-[#A0B3C7]"
+                  className={`text-xs font-extrabold tracking-wide whitespace-nowrap ${
+                    step === i || (done && i === 4) ? "text-[#0051ff]" : "text-[#A0B3C7]"
                   }`}
                 >
                   {s.label}
@@ -332,22 +350,26 @@ export default function OrderModal({
           </div>
         </div>
         {/* Modal CONTENT */}
-        <div className="px-5 py-7 max-h-[75vh] overflow-y-auto">
+        <div className="px-8 py-9 max-h-[78vh] overflow-y-auto" style={{ background: colorBg2 }}>
           {step === 0 && (
             <>
-              <h3 className="font-bold text-xl mb-3 text-[#222] text-center">Pick a Platform</h3>
-              <div className="flex justify-center gap-3 flex-wrap">
+              <h3 className="font-black text-2xl mb-5 text-[#222] text-center tracking-tight drop-shadow-sm">Choose a Platform</h3>
+              <div className="flex justify-center gap-7 flex-wrap">
                 {PLATFORMS.map((p) => (
                   <button
                     key={p.key}
                     className={`
-                      rounded-xl flex flex-col items-center gap-1 px-5 py-4 border-2 font-bold text-sm shadow hover:shadow-lg transition
+                      rounded-2xl flex flex-col items-center gap-2 px-8 py-6 border-2 font-black text-lg shadow hover:shadow-2xl transition
                       ${
                         platform.key === p.key
-                          ? "border-[#007BFF] bg-[#F5FAFF] text-[#007BFF] scale-105"
-                          : "border-[#D2E6FF] text-[#333] bg-white"
+                          ? "border-[#0051ff] bg-[#e8efff] text-[#0051ff] scale-105"
+                          : "border-[#D2E6FF] text-[#222] bg-white/95"
                       }
                     `}
+                    style={{
+                      minWidth: 128,
+                      boxShadow: platform.key === p.key ? "0 3px 18px #0051ff15" : "0 2px 10px #cde0ff0a"
+                    }}
                     onClick={() => choosePlatform(p)}
                   >
                     {p.icon}
@@ -359,44 +381,47 @@ export default function OrderModal({
           )}
           {step === 1 && (
             <>
-              <h3 className="font-bold text-xl mb-3 text-[#222] text-center">
-                {platform.icon} {platform.name} Services
+              <h3 className="font-black text-2xl mb-5 text-[#222] text-center tracking-tight">
+                <span className="inline-flex items-center gap-2">{platform.icon} {platform.name} Services</span>
               </h3>
-              <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-5">
                 {platform.services.map((s) => {
                   const { discount, discounted } = getDiscountedPrice(s.price);
                   return (
                     <button
                       key={s.type}
                       className={`
-                        rounded-xl flex items-center justify-between px-5 py-4 border-2 text-base font-semibold shadow hover:shadow-lg transition group
+                        rounded-2xl flex items-center justify-between px-6 py-5 border-2 text-xl font-extrabold shadow hover:shadow-xl transition group
                         ${
                           service.type === s.type
-                            ? "border-[#007BFF] bg-[#E8F1FF] text-[#007BFF] scale-[1.04]"
-                            : "border-[#D2E6FF] text-[#222] bg-white"
+                            ? "border-[#0051ff] bg-[#e8efff] text-[#0051ff] scale-[1.045]"
+                            : "border-[#D2E6FF] text-[#222] bg-white/95"
                         }
                       `}
+                      style={{
+                        boxShadow: service.type === s.type ? "0 3px 18px #0051ff15" : undefined
+                      }}
                       onClick={() => chooseService(s)}
                     >
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-3">
                         {s.icon}
                         <span className="">{s.type}</span>
                         {discount > 0 && (
-                          <span className="ml-2 px-2 py-0.5 rounded-full bg-[#e7f7f0] text-[#08a881] text-xs font-bold flex items-center gap-1 animate-flashSale">
+                          <span className="ml-2 px-2 py-0.5 rounded-full bg-[#e7f7f0] text-[#08a881] text-xs font-black flex items-center gap-1 animate-flashSale">
                             <Tag size={14} className="mr-0.5" />-{discount}%
                           </span>
                         )}
                       </div>
-                      <span className="font-normal text-[13px] text-[#888] flex items-center gap-2">
+                      <span className="font-normal text-lg text-[#888] flex items-center gap-2">
                         <span className="line-through text-[#c7c7c7]">${s.price.toFixed(2)}</span>
-                        <span className="font-bold text-[#007BFF]">${discounted.toFixed(2)}/each</span>
+                        <span className="font-black text-[#0051ff]">${discounted.toFixed(2)}/ea</span>
                       </span>
                     </button>
                   );
                 })}
               </div>
               <button
-                className="block mx-auto mt-7 text-[#007BFF] underline text-sm"
+                className="block mx-auto mt-7 text-[#0051ff] underline text-md font-bold"
                 onClick={() => setStep(0)}
               >
                 ← Back
@@ -405,11 +430,11 @@ export default function OrderModal({
           )}
           {step === 2 && (
             <>
-              <h3 className="font-bold text-xl mb-4 text-[#222] text-center">
+              <h3 className="font-black text-2xl mb-7 text-[#222] text-center tracking-tight">
                 Order Details
               </h3>
               <form
-                className="space-y-8"
+                className="space-y-10"
                 onSubmit={e => {
                   e.preventDefault();
                   if (!target) {
@@ -421,29 +446,29 @@ export default function OrderModal({
                   window.location.href = "https://checkout.yesviral.com/checkout?order=" + orderString;
                 }}
               >
-                <div className="flex flex-col items-center">
-                  <label className="block font-semibold text-[#007BFF] mb-2 text-lg">Profile or Link</label>
+                <div className="flex flex-col items-center gap-2">
+                  <label className="block font-extrabold text-[#0051ff] mb-2 text-lg">Profile or Link</label>
                   <input
                     type="text"
                     autoFocus
-                    className="w-full border border-[#CFE4FF] rounded-xl px-4 py-3 text-base font-medium outline-[#007BFF] bg-white/90 shadow focus:border-[#007BFF] focus:ring-2 focus:ring-[#E8F1FF] transition"
+                    className="w-full border border-[#CFE4FF] rounded-2xl px-5 py-4 text-lg font-extrabold outline-[#0051ff] bg-white/98 shadow-lg focus:border-[#0051ff] focus:ring-2 focus:ring-[#E8F1FF] transition tracking-wide"
                     placeholder={`Paste your link or username here`}
                     value={target}
                     onChange={e => setTarget(e.target.value)}
                   />
                 </div>
-                <div className="mt-6 flex flex-col items-center justify-center gap-4">
-                  <div className="flex flex-col items-center gap-1 w-full">
-                    <span className="text-[#222] text-base font-semibold">Amount</span>
+                <div className="flex flex-col items-center justify-center gap-4">
+                  <div className="flex flex-col items-center gap-2 w-full">
+                    <span className="text-[#0051ff] text-lg font-bold tracking-wide">Amount</span>
                     <div className="flex gap-2 flex-wrap justify-center w-full">
                       {getQuickAmounts(platform, service).map(val => (
                         <button
                           key={val}
                           type="button"
                           className={`
-                            rounded-full px-5 py-2 font-bold border text-sm shadow
-                            ${quantity === val ? "bg-[#007BFF] text-white border-[#007BFF]" : "bg-[#f1f7ff] text-[#007BFF] border-[#b0d8ff]"}
-                            hover:bg-[#e6f4ff] hover:border-[#007BFF] transition
+                            rounded-full px-6 py-2 font-bold border text-lg shadow
+                            ${quantity === val ? "bg-[#0051ff] text-white border-[#0051ff] scale-105" : "bg-[#f1f7ff] text-[#0051ff] border-[#b0d8ff]"}
+                            hover:bg-[#e6f4ff] hover:border-[#0051ff] transition
                           `}
                           onClick={() => setQuantity(val)}
                         >
@@ -455,25 +480,29 @@ export default function OrderModal({
                         </button>
                       ))}
                     </div>
-                    <span className="font-bold text-[#007BFF] text-xl mt-2">
+                    <span className="font-black text-[#0051ff] text-2xl mt-2 drop-shadow">
                       Total: <span className="text-[#11aa80]">${(discounted * quantity).toFixed(2)}</span>
-                      <span className="ml-2 text-sm text-[#c7c7c7] line-through">${(service.price * quantity).toFixed(2)}</span>
+                      <span className="ml-2 text-lg text-[#c7c7c7] line-through">${(service.price * quantity).toFixed(2)}</span>
                     </span>
-                    <span className="text-xs text-[#08a881] font-semibold mt-1">
+                    <span className="text-xs text-[#08a881] font-semibold mt-1 uppercase tracking-wide animate-pulse">
                       Flash Sale! {discount}% off for a limited time
                     </span>
                   </div>
                 </div>
                 <button
                   type="submit"
-                  className="w-full py-3 rounded-2xl font-extrabold text-lg flex justify-center items-center gap-2 bg-gradient-to-br from-[#007BFF] to-[#35c4ff] hover:from-[#005FCC] hover:to-[#28a3e6] text-white shadow-xl transition mt-8"
+                  className="w-full py-4 rounded-[1.6rem] font-extrabold text-xl flex justify-center items-center gap-2 bg-gradient-to-br from-[#0051ff] to-[#E1306C] hover:from-[#003bb6] hover:to-[#b30d4a] text-white shadow-xl transition mt-8 tracking-tight"
+                  style={{
+                    letterSpacing: ".01em",
+                    boxShadow: "0 4px 22px #0051ff15,0 2px 8px #E1306C10"
+                  }}
                 >
-                  <CheckCircle size={20} /> Continue to Secure Checkout
+                  <CheckCircle size={22} /> Continue to Secure Checkout
                 </button>
-                {error && <div className="mt-2 text-red-500 text-center">{error}</div>}
+                {error && <div className="mt-4 text-[#E1306C] text-center font-bold">{error}</div>}
               </form>
               <button
-                className="block mx-auto mt-8 text-[#007BFF] underline text-sm"
+                className="block mx-auto mt-8 text-[#0051ff] underline text-md font-bold"
                 onClick={() => setStep(1)}
               >
                 ← Back
@@ -481,25 +510,25 @@ export default function OrderModal({
             </>
           )}
           {step === 3 && (
-            <div className="text-center space-y-4">
-              <CheckCircle className="mx-auto text-green-500" size={48} />
-              <h3 className="text-2xl font-bold text-[#222]">Order Sent!</h3>
-              <p className="text-[#444] text-base">
+            <div className="text-center space-y-7">
+              <CheckCircle className="mx-auto text-[#11aa80]" size={60} />
+              <h3 className="text-3xl font-black text-[#0051ff] tracking-tight drop-shadow">Order Sent!</h3>
+              <p className="text-[#444] text-lg font-semibold">
                 Redirecting to secure checkout...
               </p>
             </div>
           )}
           {step === 4 && done && (
-            <div className="text-center space-y-4">
-              <CheckCircle className="mx-auto text-green-500" size={48} />
-              <h3 className="text-2xl font-bold text-[#222]">Thank You! 🎉</h3>
-              <p className="text-[#444] text-base">
+            <div className="text-center space-y-7">
+              <CheckCircle className="mx-auto text-[#11aa80]" size={60} />
+              <h3 className="text-3xl font-black text-[#0051ff] tracking-tight drop-shadow">Thank You! 🎉</h3>
+              <p className="text-[#444] text-lg font-semibold">
                 Your order was received and is being processed.
                 <br />
                 You’ll receive updates shortly.
               </p>
               <button
-                className="mt-5 bg-[#007BFF] text-white px-6 py-2 rounded-xl font-bold"
+                className="mt-7 bg-[#0051ff] text-white px-8 py-3 rounded-2xl font-black text-lg tracking-tight shadow-xl"
                 onClick={closeAndReset}
               >
                 Done
@@ -529,6 +558,14 @@ export default function OrderModal({
         .animate-flashSale {
           animation: flashSale 2.5s infinite;
         }
+        .animate-pulse {
+          animation: pulse 2s cubic-bezier(.4,0,.6,1) infinite;
+        }
+        @keyframes pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: .65; }
+        }
+        input:focus { outline: none !important; }
       `}</style>
     </div>
   );
