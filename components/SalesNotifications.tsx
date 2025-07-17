@@ -1,7 +1,7 @@
 import { Instagram, Music2, Youtube } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 
-// ---- US CITIES ----
+// -- US-ONLY CITIES --
 const US_CITIES = [
   "New York, NY", "Los Angeles, CA", "Chicago, IL", "Houston, TX", "Phoenix, AZ", "Philadelphia, PA", "San Antonio, TX",
   "San Diego, CA", "Dallas, TX", "San Jose, CA", "Austin, TX", "Jacksonville, FL", "Fort Worth, TX", "Columbus, OH",
@@ -12,7 +12,16 @@ const US_CITIES = [
   "Oakland, CA", "Minneapolis, MN", "Tulsa, OK", "Arlington, TX", "New Orleans, LA"
 ];
 
-// ---- SERVICE DEFINITIONS ----
+// -- TIME LABELS --
+const TIMEAGO = [
+  "just now", "10 seconds ago", "a minute ago", "2 minutes ago", "5 minutes ago", "8 minutes ago", "12 minutes ago",
+  "18 minutes ago", "20 minutes ago", "30 minutes ago", "45 minutes ago", "an hour ago", "2 hours ago", "3 hours ago",
+  "6 hours ago", "10 hours ago", "12 hours ago", "18 hours ago", "22 hours ago", "a day ago", "2 days ago", "3 days ago",
+  "5 days ago", "a week ago", "8 days ago", "10 days ago", "12 days ago", "2 weeks ago", "20 days ago", "3 weeks ago",
+  "a month ago", "5 weeks ago"
+];
+
+// -- SERVICE DEFINITIONS --
 const SERVICES = [
   {
     platform: "Instagram",
@@ -79,16 +88,7 @@ const SERVICES = [
   },
 ];
 
-// ---- TIME AGO OPTIONS ----
-const TIMEAGO = [
-  "just now", "10 seconds ago", "a minute ago", "2 minutes ago", "5 minutes ago", "8 minutes ago", "12 minutes ago",
-  "18 minutes ago", "20 minutes ago", "30 minutes ago", "45 minutes ago", "an hour ago", "2 hours ago", "3 hours ago",
-  "6 hours ago", "10 hours ago", "12 hours ago", "18 hours ago", "22 hours ago", "a day ago", "2 days ago", "3 days ago",
-  "5 days ago", "a week ago", "8 days ago", "10 days ago", "12 days ago", "2 weeks ago", "20 days ago", "3 weeks ago",
-  "a month ago", "5 weeks ago"
-];
-
-// ---- HELPERS ----
+// -- HELPERS --
 function shuffle<T>(arr: T[]): T[] {
   const a = arr.slice();
   for (let i = a.length - 1; i > 0; i--) {
@@ -125,49 +125,52 @@ function makeNotifications(howMany = 50): Notification[] {
   return shuffle(all);
 }
 
-// ---- SALES NOTIFICATION COMPONENT ----
-const NOTIFY_INTERVAL = 3 * 60 * 1000; // 3 minutes
+// -- INTERVAL (3 MINUTES) --
+const NOTIFY_INTERVAL = 3 * 60 * 1000;
 
 export default function SalesNotifications() {
-  // Only create notifications list once per session
-  const [notifs] = useState(() => {
-    if (typeof window !== "undefined" && window.sessionStorage) {
-      const prev = window.sessionStorage.getItem("sales_notifs_data");
-      if (prev) return JSON.parse(prev) as Notification[];
-      const n = makeNotifications(50);
-      window.sessionStorage.setItem("sales_notifs_data", JSON.stringify(n));
-      return n;
-    }
-    return makeNotifications(50);
-  });
-
-  // Track index per session so users don't see same notification again and again
-  const [idx, setIdx] = useState(() => {
-    if (typeof window !== "undefined" && window.sessionStorage) {
-      const prevIdx = window.sessionStorage.getItem("sales_notifs_idx");
-      return prevIdx ? parseInt(prevIdx, 10) : 0;
-    }
-    return 0;
-  });
-  const [visible, setVisible] = useState(false); // Start hidden until interval passes
+  const [notifs, setNotifs] = useState<Notification[] | null>(null);
+  const [idx, setIdx] = useState(0);
+  const [visible, setVisible] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
+  // -- INIT on mount, ONLY ON CLIENT --
   useEffect(() => {
     if (typeof window === "undefined") return;
 
+    // Get or generate notifications
+    let notifications: Notification[];
+    let idxInit = 0;
+
+    try {
+      const prev = window.sessionStorage.getItem("sales_notifs_data");
+      if (prev) {
+        notifications = JSON.parse(prev) as Notification[];
+      } else {
+        notifications = makeNotifications(50);
+        window.sessionStorage.setItem("sales_notifs_data", JSON.stringify(notifications));
+      }
+      const prevIdx = window.sessionStorage.getItem("sales_notifs_idx");
+      idxInit = prevIdx ? parseInt(prevIdx, 10) : 0;
+    } catch (err) {
+      notifications = makeNotifications(50);
+      idxInit = 0;
+    }
+
+    setNotifs(notifications);
+    setIdx(idxInit);
+
+    // Handle interval
     const now = Date.now();
     const lastShownRaw = window.sessionStorage.getItem("sales_notifs_last_time");
     const lastShown = lastShownRaw ? parseInt(lastShownRaw, 10) : 0;
     const msAgo = now - lastShown;
 
     if (msAgo >= NOTIFY_INTERVAL) {
-      // Enough time passed, show notification
       setVisible(true);
       window.sessionStorage.setItem("sales_notifs_last_time", now.toString());
     } else {
-      // Not enough time, do not show now
       setVisible(false);
-      // Schedule for when interval passes
       const waitMs = NOTIFY_INTERVAL - msAgo;
       timerRef.current = setTimeout(() => {
         setVisible(true);
@@ -178,15 +181,13 @@ export default function SalesNotifications() {
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
     };
-    // eslint-disable-next-line
-  }, [idx]);
+  }, []);
 
-  // Hide notification after a few seconds, and increment to next notification (but only show after interval again)
+  // -- Hide notification and increment idx (only on visible) --
   useEffect(() => {
     if (!visible) return;
     timerRef.current = setTimeout(() => {
       setVisible(false);
-      // Update index in sessionStorage
       if (typeof window !== "undefined" && window.sessionStorage) {
         const newIdx = idx + 1;
         setIdx(newIdx);
@@ -194,14 +195,13 @@ export default function SalesNotifications() {
       } else {
         setIdx(idx + 1);
       }
-    }, 4600 + Math.random() * 600);
+    }, 4800 + Math.random() * 600);
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
     };
-    // eslint-disable-next-line
   }, [visible]);
 
-  if (idx >= notifs.length) return null;
+  if (!notifs || idx >= notifs.length) return null;
   const notification = notifs[idx];
 
   return (
