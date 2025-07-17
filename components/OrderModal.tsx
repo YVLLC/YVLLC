@@ -76,8 +76,7 @@ const steps = [
   { label: "Platform" },
   { label: "Service" },
   { label: "Details" },
-  { label: "Checkout" },
-  { label: "Done" }
+  { label: "Review" }
 ];
 
 // --- DISCOUNT LOGIC ---
@@ -123,7 +122,6 @@ export default function OrderModal({
   const [quantity, setQuantity] = useState<number>(100);
   const [target, setTarget] = useState<string>("");
   const [error, setError] = useState<string>("");
-  const [done, setDone] = useState<boolean>(false);
 
   useEffect(() => {
     if (open) document.body.style.overflow = 'hidden';
@@ -166,7 +164,6 @@ export default function OrderModal({
     setQuantity(100);
     setTarget("");
     setError("");
-    setDone(false);
     setStep(stepToSet);
   }, [open, initialPlatform, initialService]);
 
@@ -202,6 +199,38 @@ export default function OrderModal({
     total: Number((discounted * quantity).toFixed(2))
   };
 
+  function handleNext() {
+    if (step === 2) {
+      if (!target.trim()) {
+        setError("Paste your profile link or username.");
+        return;
+      }
+      if (!quantity || quantity < 1) {
+        setError("Enter a valid quantity.");
+        return;
+      }
+    }
+    setError("");
+    setStep(step + 1);
+  }
+
+  function handleBack() {
+    setError("");
+    setStep(step - 1);
+  }
+
+  function handleSecureCheckout(e: React.FormEvent) {
+    e.preventDefault();
+    if (!target.trim()) {
+      setError("Paste your profile link or username.");
+      return;
+    }
+    setError("");
+    const orderString = btoa(unescape(encodeURIComponent(JSON.stringify(orderToSend))));
+    window.location.href = "https://checkout.yesviral.com/checkout?order=" + orderString;
+  }
+
+  // --- UI ---
   return (
     <div className="fixed z-[9999] inset-0 flex items-center justify-center bg-black/85 backdrop-blur-[2.5px]">
       <div
@@ -359,7 +388,7 @@ export default function OrderModal({
               </div>
               <button
                 className="block mx-auto mt-7 text-[#007BFF] underline text-sm"
-                onClick={() => setStep(0)}
+                onClick={handleBack}
               >
                 ← Back
               </button>
@@ -370,19 +399,7 @@ export default function OrderModal({
               <h3 className="font-black text-2xl mb-7 text-[#111111] text-center">
                 Order Details
               </h3>
-              <form
-                className="space-y-8"
-                onSubmit={e => {
-                  e.preventDefault();
-                  if (!target) {
-                    setError("Paste your profile link or username.");
-                    return;
-                  }
-                  setError("");
-                  const orderString = btoa(unescape(encodeURIComponent(JSON.stringify(orderToSend))));
-                  window.location.href = "https://checkout.yesviral.com/checkout?order=" + orderString;
-                }}
-              >
+              <div className="space-y-8">
                 <div className="flex flex-col items-center">
                   <label className="block font-semibold text-[#007BFF] mb-2 text-lg">Profile or Link</label>
                   <input
@@ -422,50 +439,57 @@ export default function OrderModal({
                     </span>
                   </div>
                 </div>
-                <button
-                  type="submit"
-                  className="w-full py-3 rounded-2xl font-extrabold text-lg flex justify-center items-center gap-2 bg-gradient-to-br from-[#007BFF] to-[#005FCC] hover:from-[#005FCC] hover:to-[#007BFF] text-white shadow-xl transition mt-8"
-                  style={{
-                    boxShadow: "0 3px 18px #007BFF15,0 2px 8px #005FCC10"
-                  }}
-                >
-                  <CheckCircle size={20} /> Continue to Secure Checkout
-                </button>
                 {error && <div className="mt-2 text-[#EF4444] text-center">{error}</div>}
-              </form>
-              <button
-                className="block mx-auto mt-8 text-[#007BFF] underline text-sm"
-                onClick={() => setStep(1)}
-              >
-                ← Back
-              </button>
+              </div>
+              <div className="flex justify-between mt-8">
+                <button
+                  className="px-6 py-3 rounded-xl font-bold bg-[#E6F0FF] text-[#007BFF] border border-[#CFE4FF] hover:bg-[#d7eafd] shadow transition text-lg"
+                  onClick={handleBack}
+                >
+                  Back
+                </button>
+                <button
+                  className="px-6 py-3 rounded-xl font-bold bg-[#007BFF] text-white hover:bg-[#005FCC] shadow transition text-lg"
+                  onClick={handleNext}
+                >
+                  Review
+                </button>
+              </div>
             </div>
           )}
           {step === 3 && (
-            <div className="text-center space-y-4">
-              <CheckCircle className="mx-auto" size={48} style={{ color: COLORS.success }} />
-              <h3 className="text-2xl font-bold" style={{ color: COLORS.primary }}>Order Sent!</h3>
-              <p className="text-[#444] text-base">
-                Redirecting to secure checkout...
-              </p>
-            </div>
-          )}
-          {step === 4 && done && (
-            <div className="text-center space-y-4">
-              <CheckCircle className="mx-auto" size={48} style={{ color: COLORS.success }} />
-              <h3 className="text-2xl font-bold" style={{ color: COLORS.primary }}>Thank You! 🎉</h3>
-              <p className="text-[#444] text-base">
-                Your order was received and is being processed.
-                <br />
-                You’ll receive updates shortly.
-              </p>
-              <button
-                className="mt-5 bg-[#007BFF] text-white px-6 py-2 rounded-xl font-bold"
-                onClick={onClose}
-              >
-                Done
-              </button>
-            </div>
+            <form onSubmit={handleSecureCheckout}>
+              <h3 className="font-black text-2xl mb-5 text-[#111] text-center">Review & Secure Checkout</h3>
+              <div className="bg-[#F5FAFF] border border-[#CFE4FF] rounded-xl px-6 py-7 mb-7">
+                <div className="flex items-center gap-2 mb-2">
+                  {platform.icon}
+                  <span className="font-semibold text-lg">{platform.name}</span>
+                  <span className="ml-3 px-3 py-1 rounded-full bg-[#E6F0FF] text-[#007BFF] font-semibold text-xs">{service.type}</span>
+                </div>
+                <div className="text-[#444] mb-1"><b>Target:</b> {target}</div>
+                <div className="text-[#444] mb-1"><b>Amount:</b> {quantity}</div>
+                <div className="text-[#444] mb-1"><b>Unit:</b> ${discounted}/ea <span className="text-[#c7c7c7] line-through">${service.price}/ea</span></div>
+                <div className="mt-2 font-extrabold text-lg text-[#007BFF]">
+                  Total: ${(discounted * quantity).toFixed(2)}
+                </div>
+              </div>
+              <div className="flex justify-between mt-7">
+                <button
+                  type="button"
+                  className="px-6 py-3 rounded-xl font-bold bg-[#E6F0FF] text-[#007BFF] border border-[#CFE4FF] hover:bg-[#d7eafd] shadow transition text-lg"
+                  onClick={handleBack}
+                >
+                  Back
+                </button>
+                <button
+                  type="submit"
+                  className="px-6 py-3 rounded-xl font-bold bg-gradient-to-br from-[#007BFF] to-[#005FCC] hover:from-[#005FCC] hover:to-[#007BFF] text-white shadow-lg transition text-lg flex items-center gap-2"
+                >
+                  <CheckCircle size={20} />
+                  Secure Checkout
+                </button>
+              </div>
+            </form>
           )}
         </div>
       </div>
