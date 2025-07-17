@@ -4,18 +4,12 @@ import {
 } from "lucide-react";
 
 // --- TYPE DEFINITIONS ---
-type ServiceType =
-  | "Followers"
-  | "Likes"
-  | "Views"
-  | "Subscribers";
-
+type ServiceType = "Followers" | "Likes" | "Views" | "Subscribers";
 type Service = {
   type: ServiceType | string;
   price: number;
   icon: JSX.Element;
 };
-
 type Platform = {
   key: string;
   name: string;
@@ -23,11 +17,7 @@ type Platform = {
   icon: JSX.Element;
   services: Service[];
 };
-
-type StealthPackageResult = {
-  pkg: string;
-  type: string;
-};
+type StealthPackageResult = { pkg: string; type: string; };
 
 // --- COLORWAY ---
 const COLORS = {
@@ -91,7 +81,7 @@ const steps = [
 ];
 
 // --- DISCOUNT LOGIC ---
-function getDiscountedPrice(price: number): {discount: number, discounted: number} {
+function getDiscountedPrice(price: number): { discount: number; discounted: number } {
   const discount = 0.02 + Math.random() * 0.02;
   const discounted = Math.max(0.01, Number((price * (1 - discount)).toFixed(3)));
   return { discount: Math.round(discount * 100), discounted };
@@ -135,7 +125,6 @@ export default function OrderModal({
   const [error, setError] = useState<string>("");
   const [done, setDone] = useState<boolean>(false);
 
-  // Responsive lock scroll on modal open
   useEffect(() => {
     if (open) document.body.style.overflow = 'hidden';
     else document.body.style.overflow = '';
@@ -147,7 +136,6 @@ export default function OrderModal({
     let selectedPlatform = PLATFORMS[0];
     let selectedService = PLATFORMS[0].services[0];
     let stepToSet = 0;
-
     if (initialPlatform) {
       const foundPlat = PLATFORMS.find(
         p =>
@@ -173,7 +161,6 @@ export default function OrderModal({
         }
       }
     }
-
     setPlatform(selectedPlatform);
     setService(selectedService);
     setQuantity(100);
@@ -185,7 +172,6 @@ export default function OrderModal({
 
   if (!open) return null;
 
-  // Quick Amounts
   function getQuickAmounts(platform: Platform, service: Service) {
     if (platform.key === "instagram" && service.type.toLowerCase() === "views")
       return [500, 2000, 5000, 10000, 20000, 50000];
@@ -206,7 +192,6 @@ export default function OrderModal({
     return [100, 500, 1000, 2000, 5000, 10000, 25000, 50000];
   }
 
-  // Stripe-safe order info
   const { pkg, type } = getStealthPackage(platform, service);
   const { discount, discounted } = getDiscountedPrice(service.price);
   const orderToSend = {
@@ -217,7 +202,6 @@ export default function OrderModal({
     total: Number((discounted * quantity).toFixed(2))
   };
 
-  // Component
   return (
     <div className="fixed z-[9999] inset-0 flex items-center justify-center bg-black/85 backdrop-blur-[2.5px]">
       <div
@@ -226,7 +210,7 @@ export default function OrderModal({
       >
         {/* Header */}
         <div
-          className="w-full px-6 py-6 rounded-t-3xl border-b flex flex-col gap-2"
+          className="w-full px-6 pt-6 pb-4 rounded-t-3xl border-b flex flex-col gap-2"
           style={{
             background: `linear-gradient(90deg, ${COLORS.accentBg} 0%, ${COLORS.background} 80%)`,
             borderColor: COLORS.border,
@@ -246,66 +230,60 @@ export default function OrderModal({
               {platform.name}
             </span>
           </div>
-          {/* Stepper */}
-          <div className="relative px-2 py-1 mt-2 mb-[-2px] flex flex-col items-center">
-            {/* Progress Bar Background */}
-            <div className="absolute top-1/2 left-0 w-full h-2 flex items-center z-0" style={{ transform: "translateY(-50%)" }}>
-              <div
-                className="w-full h-2 rounded-full"
-                style={{
-                  background: COLORS.accentBg,
-                  borderRadius: 9999,
-                }}
-              />
-              {/* Animated Progress Line */}
-              <div
-                className="absolute top-0 left-0 h-2 transition-all duration-500"
-                style={{
-                  width: `${(step) / (steps.length - 1) * 100}%`,
-                  borderRadius: 9999,
-                  background: COLORS.primary,
-                  boxShadow: "0 0 10px #007bff55",
-                  zIndex: 1,
-                  transition: "width 0.4s cubic-bezier(0.4,0,0.2,1)",
-                }}
-              />
-            </div>
-            {/* Step Circles + Labels */}
-            <div className="relative z-10 flex items-center justify-center w-full gap-0">
-              {steps.map((s, i) => (
+          {/* Step Circles & Labels */}
+          <div className="relative w-full flex items-center justify-between mt-4 px-2 z-10">
+            {steps.map((s, i) => (
+              <div key={s.label} className="flex flex-col items-center flex-1 min-w-0">
                 <div
-                  key={s.label}
-                  className="flex flex-col items-center flex-1"
-                  style={{ minWidth: 0 }}
+                  className={`
+                    flex items-center justify-center rounded-full border-4 font-bold text-base
+                    ${step === i ? "bg-[#007BFF] text-white border-[#007BFF] shadow" : step > i ? "bg-[#E6F0FF] text-[#007BFF] border-[#007BFF]" : "bg-[#E6F0FF] text-[#888] border-[#E6F0FF]"}
+                    transition-all duration-300
+                  `}
+                  style={{
+                    width: 36,
+                    height: 36,
+                    zIndex: 2,
+                    boxShadow: step === i ? "0 2px 10px #007BFF20" : undefined,
+                  }}
                 >
-                  <div
-                    className={`
-                      flex items-center justify-center rounded-full border-4 font-bold text-base
-                      ${step === i ? "bg-[#007BFF] text-white border-[#007BFF] shadow" : step > i ? "bg-[#E6F0FF] text-[#007BFF] border-[#007BFF]" : "bg-[#E6F0FF] text-[#888] border-[#E6F0FF]"}
-                      transition-all duration-300
-                    `}
-                    style={{
-                      width: 36,
-                      height: 36,
-                      zIndex: 2,
-                      boxShadow: step === i ? "0 2px 10px #007BFF20" : undefined,
-                    }}
-                  >
-                    {i + 1}
-                  </div>
-                  <span
-                    className={`mt-2 text-xs font-semibold whitespace-nowrap text-center ${step === i ? "text-[#007BFF]" : "text-[#888]"}`}
-                    style={{ width: "max-content" }}
-                  >
-                    {s.label}
-                  </span>
+                  {i + 1}
                 </div>
-              ))}
-            </div>
+                <span
+                  className={`mt-2 text-xs font-semibold whitespace-nowrap text-center ${step === i ? "text-[#007BFF]" : "text-[#888]"}`}
+                  style={{ width: "max-content" }}
+                >
+                  {s.label}
+                </span>
+              </div>
+            ))}
+          </div>
+          {/* Progress Bar Under Steps */}
+          <div className="relative w-full h-3 mt-2 mb-[-8px] px-3 flex items-center">
+            <div
+              className="absolute left-0 top-1/2 w-full h-2 rounded-full"
+              style={{
+                background: COLORS.accentBg,
+                transform: "translateY(-50%)",
+                borderRadius: 9999,
+              }}
+            />
+            <div
+              className="absolute left-0 top-1/2 h-2 transition-all duration-500"
+              style={{
+                width: `${(step) / (steps.length - 1) * 100}%`,
+                background: COLORS.primary,
+                boxShadow: "0 0 10px #007bff55",
+                transform: "translateY(-50%)",
+                borderRadius: 9999,
+                zIndex: 1,
+                transition: "width 0.4s cubic-bezier(0.4,0,0.2,1)",
+              }}
+            />
           </div>
         </div>
-        {/* Content */}
-        <div className="flex-1 overflow-y-auto px-5 sm:px-8 py-7" style={{ background: COLORS.background }}>
+        {/* Content - now with rounded-b-3xl */}
+        <div className="flex-1 overflow-y-auto px-5 sm:px-8 py-7 rounded-b-3xl" style={{ background: COLORS.background }}>
           {step === 0 && (
             <div>
               <h3 className="font-black text-2xl mb-7 text-[#111111] text-center tracking-tight">Choose Platform</h3>
