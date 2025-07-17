@@ -1,7 +1,6 @@
 import { Instagram, Music2, Youtube } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 
-// -- US-ONLY CITIES --
 const US_CITIES = [
   "New York, NY", "Los Angeles, CA", "Chicago, IL", "Houston, TX", "Phoenix, AZ", "Philadelphia, PA", "San Antonio, TX",
   "San Diego, CA", "Dallas, TX", "San Jose, CA", "Austin, TX", "Jacksonville, FL", "Fort Worth, TX", "Columbus, OH",
@@ -11,8 +10,6 @@ const US_CITIES = [
   "Atlanta, GA", "Kansas City, MO", "Colorado Springs, CO", "Miami, FL", "Raleigh, NC", "Omaha, NE", "Long Beach, CA", "Virginia Beach, VA",
   "Oakland, CA", "Minneapolis, MN", "Tulsa, OK", "Arlington, TX", "New Orleans, LA"
 ];
-
-// -- TIME LABELS --
 const TIMEAGO = [
   "just now", "10 seconds ago", "a minute ago", "2 minutes ago", "5 minutes ago", "8 minutes ago", "12 minutes ago",
   "18 minutes ago", "20 minutes ago", "30 minutes ago", "45 minutes ago", "an hour ago", "2 hours ago", "3 hours ago",
@@ -20,8 +17,6 @@ const TIMEAGO = [
   "5 days ago", "a week ago", "8 days ago", "10 days ago", "12 days ago", "2 weeks ago", "20 days ago", "3 weeks ago",
   "a month ago", "5 weeks ago"
 ];
-
-// -- SERVICE DEFINITIONS --
 const SERVICES = [
   {
     platform: "Instagram",
@@ -88,7 +83,6 @@ const SERVICES = [
   },
 ];
 
-// -- HELPERS --
 function shuffle<T>(arr: T[]): T[] {
   const a = arr.slice();
   for (let i = a.length - 1; i > 0; i--) {
@@ -104,7 +98,6 @@ type Notification = {
   icon: JSX.Element;
   timeAgo: string;
 };
-
 function makeNotifications(howMany = 50): Notification[] {
   const cities = shuffle(US_CITIES);
   let count = 0;
@@ -125,7 +118,6 @@ function makeNotifications(howMany = 50): Notification[] {
   return shuffle(all);
 }
 
-// -- INTERVAL (3 MINUTES) --
 const NOTIFY_INTERVAL = 3 * 60 * 1000;
 
 export default function SalesNotifications() {
@@ -134,14 +126,10 @@ export default function SalesNotifications() {
   const [visible, setVisible] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-  // -- INIT on mount, ONLY ON CLIENT --
   useEffect(() => {
     if (typeof window === "undefined") return;
-
-    // Get or generate notifications
     let notifications: Notification[];
     let idxInit = 0;
-
     try {
       const prev = window.sessionStorage.getItem("sales_notifs_data");
       if (prev) {
@@ -156,16 +144,13 @@ export default function SalesNotifications() {
       notifications = makeNotifications(50);
       idxInit = 0;
     }
-
     setNotifs(notifications);
     setIdx(idxInit);
 
-    // Handle interval
     const now = Date.now();
     const lastShownRaw = window.sessionStorage.getItem("sales_notifs_last_time");
     const lastShown = lastShownRaw ? parseInt(lastShownRaw, 10) : 0;
     const msAgo = now - lastShown;
-
     if (msAgo >= NOTIFY_INTERVAL) {
       setVisible(true);
       window.sessionStorage.setItem("sales_notifs_last_time", now.toString());
@@ -177,13 +162,11 @@ export default function SalesNotifications() {
         window.sessionStorage.setItem("sales_notifs_last_time", Date.now().toString());
       }, waitMs);
     }
-
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
     };
   }, []);
 
-  // -- Hide notification and increment idx (only on visible) --
   useEffect(() => {
     if (!visible) return;
     timerRef.current = setTimeout(() => {
