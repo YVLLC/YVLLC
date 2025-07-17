@@ -1,6 +1,7 @@
 import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
+import dynamic from "next/dynamic";
 import {
   ShieldCheck, Clock, UserCheck, Zap, RefreshCcw, Star,
   Instagram, Music2, Youtube
@@ -11,7 +12,9 @@ import OurPromise from "@/components/OurPromise";
 import Testimonials from "@/components/Testimonials";
 import HowItWorks from "@/components/HowItWorks";
 import FAQ from "@/components/FAQ";
-import SalesNotifications from "@/components/SalesNotifications";
+
+// ---- SALES NOTIFICATIONS: CLIENT SIDE ONLY ----
+const SalesNotifications = dynamic(() => import("@/components/SalesNotifications"), { ssr: false });
 
 // ---- FAQS ----
 const FAQS = [
@@ -266,7 +269,7 @@ export default function Home() {
           </div>
         </section>
       </main>
-      {/* SALES NOTIFICATIONS */}
+      {/* SALES NOTIFICATIONS - CLIENT ONLY, NEVER SSR */}
       <SalesNotifications />
       {/* ANIMATED STAR STYLE */}
       <style jsx global>{`
