@@ -47,7 +47,7 @@ export default function TestimonialsPage() {
           Real Customer Reviews
         </h1>
         <p className="text-center text-[#444] mb-10">
-          Genuine feedback from creators, business owners, and artists who trust YesViral.
+          Genuine feedback from Creators, Business Owners, and Artists who trust YesViral.
         </p>
         <div className="grid md:grid-cols-2 gap-7">
           {testimonials.map((t, i) => (

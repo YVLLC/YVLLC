@@ -215,8 +215,68 @@ export default function OrderModal({
     total: Number((discounted * quantity).toFixed(2))
   };
 
-  // Amount Quick Options
-  const quickAmounts = [100, 500, 1000, 2000, 5000, 10000, 25000, 50000];
+  // Custom quick amounts for each service/platform
+  function getQuickAmounts(platform: Platform, service: Service) {
+    // Instagram Views
+    if (
+      platform.key === "instagram" &&
+      service.type.toLowerCase() === "views"
+    ) {
+      return [500, 2000, 5000, 10000, 20000, 50000];
+    }
+    // Instagram Followers
+    if (
+      platform.key === "instagram" &&
+      service.type.toLowerCase() === "followers"
+    ) {
+      return [100, 200, 350, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000];
+    }
+    // Instagram Likes
+    if (
+      platform.key === "instagram" &&
+      service.type.toLowerCase() === "likes"
+    ) {
+      return [50, 100, 300, 500, 1000, 2000, 5000, 10000, 20000];
+    }
+    // TikTok Followers or Likes
+    if (
+      platform.key === "tiktok" &&
+      (service.type.toLowerCase() === "followers" ||
+        service.type.toLowerCase() === "likes")
+    ) {
+      return [100, 250, 500, 1000, 2000, 5000, 10000];
+    }
+    // TikTok Views
+    if (
+      platform.key === "tiktok" &&
+      service.type.toLowerCase() === "views"
+    ) {
+      return [1000, 2000, 5000, 10000, 20000, 50000];
+    }
+    // YouTube Views
+    if (
+      platform.key === "youtube" &&
+      service.type.toLowerCase() === "views"
+    ) {
+      return [200, 500, 1000, 2000, 5000, 10000];
+    }
+    // YouTube Subscribers
+    if (
+      platform.key === "youtube" &&
+      service.type.toLowerCase() === "subscribers"
+    ) {
+      return [200, 500, 1000, 2000, 5000, 10000];
+    }
+    // YouTube Likes
+    if (
+      platform.key === "youtube" &&
+      service.type.toLowerCase() === "likes"
+    ) {
+      return [250, 500, 1000, 2000, 5000, 10000];
+    }
+    // Default options for all others
+    return [100, 500, 1000, 2000, 5000, 10000, 25000, 50000];
+  }
 
   return (
     <div className="fixed z-[9999] inset-0 flex items-center justify-center bg-black/60 backdrop-blur-[2px]">
@@ -376,7 +436,7 @@ export default function OrderModal({
                   <div className="flex flex-col items-center gap-1 w-full">
                     <span className="text-[#222] text-base font-semibold">Amount</span>
                     <div className="flex gap-2 flex-wrap justify-center w-full">
-                      {quickAmounts.map(val => (
+                      {getQuickAmounts(platform, service).map(val => (
                         <button
                           key={val}
                           type="button"
@@ -387,7 +447,11 @@ export default function OrderModal({
                           `}
                           onClick={() => setQuantity(val)}
                         >
-                          {val >= 1000 ? `${val/1000}K` : val}
+                          {val >= 1000
+                            ? val % 1000 === 0
+                              ? `${val/1000}K`
+                              : `${val}`
+                            : val}
                         </button>
                       ))}
                     </div>
