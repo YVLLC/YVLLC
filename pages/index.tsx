@@ -2,60 +2,101 @@ import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
 import {
-  ShieldCheck, Clock, UserCheck, Zap, RefreshCcw, Star, MessageCircle
+  ShieldCheck, Clock, UserCheck, Zap, RefreshCcw, Star
 } from "lucide-react";
-import { useState } from "react";
+import { Instagram, Music2, Youtube } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
 import OrderModal from "@/components/OrderModal";
 import OurPromise from "@/components/OurPromise";
 import Testimonials from "@/components/Testimonials";
 import HowItWorks from "@/components/HowItWorks";
 import FAQ from "@/components/FAQ";
-import { Instagram, Music2, Youtube } from "lucide-react";
 
 // ---- SERVICES DATA ----
 const SERVICES = [
   {
-    name: "Instagram Services",
-    key: "instagram",
-    price: "$0.09 / 100",
-    description: [
-      "💎 Quality Followers, Likes & Views",
-      "⚡️ Rapid Delivery",
-      "🛡️ Drop Protection",
-      "🔒 100% Secure Checkout"
-    ],
-    icon: <Instagram className="text-[#E1306C]" size={28} />,
-    tag: "Bestseller",
-    count: "2,000+ bought this week"
+    platform: "Instagram",
+    type: "Followers",
+    icon: <Instagram className="text-[#E1306C]" size={19} />,
+    amounts: [100, 200, 350, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
+    label: (amt) => `${amt.toLocaleString()} Instagram Followers`
   },
   {
-    name: "TikTok Services",
-    key: "tiktok",
-    price: "$0.08 / 100",
-    description: [
-      "✨ High-impact Likes & Views",
-      "🚀 Instant Order Start",
-      "🙅‍♂️ No Login Needed",
-      "🛡️ Protected Service"
-    ],
-    icon: <Music2 className="text-[#25F4EE]" size={28} />,
-    tag: "🔥 Hot",
-    count: "1,400+ bought this week"
+    platform: "Instagram",
+    type: "Likes",
+    icon: <Instagram className="text-[#E1306C]" size={19} />,
+    amounts: [50, 100, 300, 500, 1000, 2000, 5000, 10000, 20000],
+    label: (amt) => `${amt.toLocaleString()} Instagram Likes`
   },
   {
-    name: "YouTube Services",
-    key: "youtube",
-    price: "$0.05 / 1000",
-    description: [
-      "🏆 Premium Views & Watch time",
-      "📈 Boosts Channel Performance",
-      "🤫 Private Delivery",
-      "🤖 Algorithm Friendly"
-    ],
-    icon: <Youtube className="text-[#FF0000]" size={28} />,
-    tag: "",
-    count: "950+ bought this week"
-  }
+    platform: "Instagram",
+    type: "Views",
+    icon: <Instagram className="text-[#E1306C]" size={19} />,
+    amounts: [500, 2000, 5000, 10000, 20000, 50000],
+    label: (amt) => `${amt.toLocaleString()} Instagram Views`
+  },
+  {
+    platform: "TikTok",
+    type: "Followers",
+    icon: <Music2 className="text-[#25F4EE]" size={19} />,
+    amounts: [100, 250, 500, 1000, 2000, 5000, 10000],
+    label: (amt) => `${amt.toLocaleString()} TikTok Followers`
+  },
+  {
+    platform: "TikTok",
+    type: "Likes",
+    icon: <Music2 className="text-[#25F4EE]" size={19} />,
+    amounts: [100, 250, 500, 1000, 2000, 5000, 10000],
+    label: (amt) => `${amt.toLocaleString()} TikTok Likes`
+  },
+  {
+    platform: "TikTok",
+    type: "Views",
+    icon: <Music2 className="text-[#25F4EE]" size={19} />,
+    amounts: [1000, 2000, 5000, 10000, 20000, 50000],
+    label: (amt) => `${amt.toLocaleString()} TikTok Views`
+  },
+  {
+    platform: "YouTube",
+    type: "Subscribers",
+    icon: <Youtube className="text-[#FF0000]" size={19} />,
+    amounts: [200, 500, 1000, 2000, 5000, 10000],
+    label: (amt) => `${amt.toLocaleString()} YouTube Subscribers`
+  },
+  {
+    platform: "YouTube",
+    type: "Likes",
+    icon: <Youtube className="text-[#FF0000]" size={19} />,
+    amounts: [250, 500, 1000, 2000, 5000, 10000],
+    label: (amt) => `${amt.toLocaleString()} YouTube Likes`
+  },
+  {
+    platform: "YouTube",
+    type: "Views",
+    icon: <Youtube className="text-[#FF0000]" size={19} />,
+    amounts: [200, 500, 1000, 2000, 5000, 10000],
+    label: (amt) => `${amt.toLocaleString()} YouTube Views`
+  },
+];
+
+// US-ONLY CITIES
+const US_CITIES = [
+  "New York, NY", "Los Angeles, CA", "Chicago, IL", "Houston, TX", "Phoenix, AZ", "Philadelphia, PA", "San Antonio, TX",
+  "San Diego, CA", "Dallas, TX", "San Jose, CA", "Austin, TX", "Jacksonville, FL", "Fort Worth, TX", "Columbus, OH",
+  "Charlotte, NC", "San Francisco, CA", "Indianapolis, IN", "Seattle, WA", "Denver, CO", "Nashville, TN", "Washington, DC",
+  "Boston, MA", "El Paso, TX", "Detroit, MI", "Oklahoma City, OK", "Portland, OR", "Las Vegas, NV", "Memphis, TN",
+  "Louisville, KY", "Baltimore, MD", "Milwaukee, WI", "Albuquerque, NM", "Tucson, AZ", "Fresno, CA", "Mesa, AZ", "Sacramento, CA",
+  "Atlanta, GA", "Kansas City, MO", "Colorado Springs, CO", "Miami, FL", "Raleigh, NC", "Omaha, NE", "Long Beach, CA", "Virginia Beach, VA",
+  "Oakland, CA", "Minneapolis, MN", "Tulsa, OK", "Arlington, TX", "New Orleans, LA"
+];
+
+// Smart, natural "time ago" strings
+const TIMEAGO = [
+  "just now", "10 seconds ago", "a minute ago", "2 minutes ago", "5 minutes ago", "8 minutes ago", "12 minutes ago",
+  "18 minutes ago", "20 minutes ago", "30 minutes ago", "45 minutes ago", "an hour ago", "2 hours ago", "3 hours ago",
+  "6 hours ago", "10 hours ago", "12 hours ago", "18 hours ago", "22 hours ago", "a day ago", "2 days ago", "3 days ago",
+  "5 days ago", "a week ago", "8 days ago", "10 days ago", "12 days ago", "2 weeks ago", "20 days ago", "3 weeks ago",
+  "a month ago", "5 weeks ago"
 ];
 
 // ---- FAQ DATA ----
@@ -86,6 +127,100 @@ const FAQS = [
   }
 ];
 
+// ---- NOTIFICATION LOGIC ----
+function shuffle<T>(arr: T[]): T[] {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+function makeNotifications(howMany = 50) {
+  const cities = shuffle(US_CITIES);
+  let count = 0;
+  const all = [];
+  while (count < howMany) {
+    // Services/amounts/time shuffled for variety
+    const svc = SERVICES[Math.floor(Math.random() * SERVICES.length)];
+    const amt = svc.amounts[Math.floor(Math.random() * svc.amounts.length)];
+    const city = cities[count % cities.length];
+    const time = TIMEAGO[Math.floor(Math.random() * TIMEAGO.length)];
+    all.push({
+      location: city,
+      service: svc.label(amt),
+      icon: svc.icon,
+      timeAgo: time
+    });
+    count++;
+  }
+  return shuffle(all);
+}
+function SalesNotifications() {
+  const [notifs] = useState(() => makeNotifications(50));
+  const [idx, setIdx] = useState(0);
+  const [visible, setVisible] = useState(true);
+  const timerRef = useRef<any>(null);
+
+  useEffect(() => {
+    if (idx >= notifs.length) return;
+    timerRef.current = setTimeout(() => setVisible(false), 4200 + Math.random() * 800);
+    return () => clearTimeout(timerRef.current);
+  }, [idx]);
+
+  useEffect(() => {
+    if (!visible && idx < notifs.length - 1) {
+      timerRef.current = setTimeout(() => {
+        setIdx(i => i + 1);
+        setVisible(true);
+      }, 550);
+      return () => clearTimeout(timerRef.current);
+    }
+  }, [visible, idx, notifs.length]);
+
+  if (idx >= notifs.length) return null;
+
+  const notification = notifs[idx];
+
+  return (
+    <>
+      <div
+        className={`
+          fixed z-[60] bottom-7 left-4 sm:left-8 md:left-12
+          max-w-xs sm:max-w-sm bg-white border-2 border-[#CFE4FF] rounded-2xl shadow-2xl flex items-center gap-3 px-4 py-3
+          animate-notify-in transition-all duration-500
+          ${visible ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 translate-y-6 pointer-events-none"}
+        `}
+        style={{
+          minWidth: 235,
+          willChange: "opacity,transform",
+          fontFamily: "inherit"
+        }}
+      >
+        <div className="bg-[#F5FAFF] p-2 rounded-full">{notification.icon}</div>
+        <div>
+          <div className="font-semibold text-[#007BFF] text-sm mb-0.5 flex items-center gap-1">
+            Someone
+            <span className="inline-block w-1.5 h-1.5 bg-[#22C55E] rounded-full ml-1 animate-pulse" />
+          </div>
+          <div className="text-xs text-[#444] font-medium">{notification.location}</div>
+          <div className="text-sm font-bold text-[#222] mt-1">{notification.service}</div>
+          <div className="text-[11px] text-[#888] mt-0.5">{notification.timeAgo}</div>
+        </div>
+      </div>
+      <style jsx global>{`
+        @keyframes notify-in {
+          0% { opacity:0; transform: translateY(40px);}
+          65% { opacity:1; transform: translateY(-4px);}
+          100% { opacity:1; transform: translateY(0);}
+        }
+        .animate-notify-in { animation: notify-in 0.8s cubic-bezier(.52,2,.24,1) 1; }
+      `}</style>
+    </>
+  );
+}
+
+// ---- HOME PAGE STARTS ----
 export default function Home() {
   const [orderModalOpen, setOrderModalOpen] = useState(false);
   const [modalPlatform, setModalPlatform] = useState<string | null>(null);
@@ -96,7 +231,6 @@ export default function Home() {
     setModalService(null);
     setOrderModalOpen(true);
   };
-
   const openOrderModalService = (platformKey: string) => {
     setModalPlatform(platformKey);
     setModalService(null);
@@ -115,12 +249,6 @@ export default function Home() {
         initialPlatform={modalPlatform ?? undefined}
         initialService={modalService ?? undefined}
       />
-      <Link href="/support" className="fixed bottom-6 right-6 z-50">
-        <button className="flex items-center gap-2 bg-white shadow-lg px-5 py-3 rounded-full border border-[#CFE4FF] hover:bg-[#F2F9FF] transition group">
-          <MessageCircle className="text-[#007BFF] group-hover:scale-110 transition" size={20} />
-          <span className="font-semibold text-[#007BFF] text-sm">Live Support</span>
-        </button>
-      </Link>
       <main className="px-4 sm:px-6 max-w-7xl mx-auto py-4 sm:py-8 space-y-6 md:space-y-10 select-none">
         {/* HERO SECTION */}
         <section className="flex flex-col-reverse md:grid md:grid-cols-2 md:gap-12 items-center pt-6 md:pt-10">
@@ -166,37 +294,35 @@ export default function Home() {
             />
           </div>
         </section>
-        {/* SERVICES SECTION (SPACED OUT!) */}
+        {/* SERVICES SECTION */}
         <section id="order" className="space-y-7 py-8 md:py-14">
           <h2 className="text-center text-4xl font-extrabold">Place Your Order Instantly</h2>
           <p className="text-[#444] text-center max-w-2xl mx-auto">
             Choose your service — No logins needed, No Hassle. <span className="font-semibold text-[#007BFF]">Instant delivery starts within minutes.</span>
           </p>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {SERVICES.map(({ name, price, description, icon, tag, count, key }, idx) => (
+            {SERVICES.map(({ platform, type, icon, amounts, label }, idx) => (
               <div
                 key={idx}
                 className="bg-white border-2 border-[#CFE4FF] rounded-2xl p-7 shadow-md hover:shadow-2xl transition group flex flex-col gap-3 relative"
               >
-                {tag && (
-                  <span className="absolute top-4 right-5 bg-[#E8F1FF] text-[#007BFF] text-xs font-bold px-3 py-1 rounded-full shadow">{tag}</span>
-                )}
                 <div className="flex items-center gap-3 mb-2">
                   <div className="bg-[#F5FAFF] p-2 rounded-full">{icon}</div>
-                  <h3 className="text-xl font-bold text-[#111]">{name}</h3>
+                  <h3 className="text-xl font-bold text-[#111]">{platform} {type}</h3>
                 </div>
                 <ul className="text-sm text-[#444] pl-5 list-disc space-y-1">
-                  {description.map((point, i) => (
-                    <li key={i}>{point}</li>
-                  ))}
+                  <li>⚡️ Rapid Delivery</li>
+                  <li>🛡️ Drop Protection</li>
+                  <li>🔒 100% Secure Checkout</li>
                 </ul>
                 <div className="flex items-center gap-2 mt-2">
-                  <span className="text-sm font-medium text-[#007BFF]">{price}</span>
-                  <span className="text-xs text-[#111] bg-[#E8F1FF] px-2 py-0.5 rounded">{count}</span>
+                  <span className="text-sm font-medium text-[#007BFF]">
+                    from ${type === "Views" ? (amounts[0] * 0.04).toFixed(2) : (amounts[0] * 0.09).toFixed(2)}
+                  </span>
                 </div>
                 <button
                   className="mt-4 w-full bg-[#007BFF] text-white text-sm px-4 py-2 rounded-lg font-bold hover:bg-[#005FCC] shadow transition transform hover:scale-[1.03] active:scale-95"
-                  onClick={() => openOrderModalService(key)}
+                  onClick={() => openOrderModalService(platform.toLowerCase())}
                 >
                   Order
                 </button>
@@ -204,7 +330,7 @@ export default function Home() {
             ))}
           </div>
         </section>
-        {/* ABOUT SECTION (SPACED OUT!) */}
+        {/* ABOUT SECTION */}
         <section id="about" className="bg-[#F5FAFF] p-8 md:p-12 rounded-2xl text-center shadow-sm space-y-8 py-8 md:py-14">
           <h2 className="text-4xl font-extrabold text-[#111]">Why Choose YesViral?</h2>
           <div className="flex flex-wrap gap-7 justify-center mt-6">
@@ -239,23 +365,23 @@ export default function Home() {
             <span className="hidden sm:inline">Rated 4.8/5 by 10,000+ Clients</span>
           </div>
         </section>
-        {/* HOW IT WORKS SECTION (NOW TIGHTER TO OUR PROMISE) */}
+        {/* HOW IT WORKS */}
         <section className="py-4 md:py-6 mb-3 md:mb-5">
           <HowItWorks />
         </section>
-        {/* OUR PROMISE / GUARANTEES SECTION (TIGHTLY GROUPED) */}
+        {/* OUR PROMISE */}
         <section className="py-4 md:py-6">
           <OurPromise />
         </section>
-        {/* TESTIMONIALS SECTION (TIGHTER) */}
+        {/* TESTIMONIALS */}
         <section className="py-4 md:py-6">
           <Testimonials />
         </section>
-        {/* FAQ SECTION (COMPONENT, NO EXTRA PADDING) */}
+        {/* FAQ */}
         <section>
           <FAQ faqs={FAQS} />
         </section>
-        {/* CTA SECTION (TIGHTER) */}
+        {/* CTA */}
         <section className="text-center space-y-5 mt-10 py-6 md:py-10">
           <h2 className="text-4xl font-extrabold mb-3">Ready to try YesViral?</h2>
           <p className="text-[#444] text-lg mb-8">
@@ -271,7 +397,9 @@ export default function Home() {
           </div>
         </section>
       </main>
-      {/* --- ANIMATED STAR STYLE --- */}
+      {/* SALES NOTIFICATIONS */}
+      <SalesNotifications />
+      {/* ANIMATED STAR STYLE */}
       <style jsx global>{`
         @keyframes starGlow {
           0% { transform: rotate(0deg) scale(1); filter: drop-shadow(0 0 0 #FFD700);}
