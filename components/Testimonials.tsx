@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { Instagram, Youtube, Music2, Briefcase } from "lucide-react";
+import { Instagram, Youtube, Music2, Briefcase, CheckCircle } from "lucide-react";
 
 const testimonials = [
   {
@@ -36,8 +36,8 @@ export default function TestimonialsPage() {
   return (
     <>
       <Head>
-  <title>YesViral – Buy High-Quality Followers, Likes & Views.</title>
-          <meta
+        <title>YesViral – Buy High-Quality Followers, Likes & Views.</title>
+        <meta
           name="description"
           content="Read real customer reviews about YesViral’s social growth services."
         />
@@ -47,7 +47,7 @@ export default function TestimonialsPage() {
           Real Customer Reviews
         </h1>
         <p className="text-center text-[#444] mb-10">
-          100% Honest feedback from Creators, Business owners, and Artists using YesViral.
+          Genuine feedback from creators, business owners, and artists who trust YesViral.
         </p>
         <div className="grid md:grid-cols-2 gap-7">
           {testimonials.map((t, i) => (
@@ -58,8 +58,8 @@ export default function TestimonialsPage() {
               <div className="flex items-center gap-2 mb-2">
                 <span className="rounded-full bg-[#E6F0FF] p-1">{t.icon}</span>
                 <span className="font-bold text-[#111]">{t.name}</span>
-                <span className="ml-auto bg-[#007BFF] text-white text-xs font-semibold px-2 py-0.5 rounded">
-                  Verified Buyer
+                <span className="ml-auto flex items-center gap-1 bg-[#007BFF] text-white text-xs font-semibold px-2 py-0.5 rounded">
+                  <CheckCircle size={14} className="text-blue-300" /> Verified Buyer
                 </span>
               </div>
               <p className="text-[#222] mb-4 italic leading-snug">“{t.quote}”</p>
