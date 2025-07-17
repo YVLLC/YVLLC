@@ -8,6 +8,30 @@ import {
   UserCircle, LogOut, Instagram, Youtube, Music2, UserPlus, ThumbsUp, Eye, BarChart, List, CheckCircle, Lock, Mail, Loader2, BadgePercent, Menu, Tag
 } from "lucide-react";
 
+// --- Type Definitions ---
+type ServiceType = "Followers" | "Likes" | "Views" | "Subscribers";
+type Service = {
+  type: ServiceType | string;
+  price: number;
+  icon: React.ComponentType<{ size?: number; className?: string; style?: React.CSSProperties }>;
+  iconColor: string;
+};
+type Platform = {
+  key: string;
+  name: string;
+  icon: React.ComponentType<{ size?: number; className?: string; style?: React.CSSProperties }>;
+  iconColor: string;
+  services: Service[];
+};
+interface Order {
+  id: string;
+  platform: string;
+  service: string;
+  quantity: number;
+  status: string;
+  created_at: string;
+}
+
 const stripePromise = loadStripe("pk_test_51RgpcCRfq6GJQepR3xUT0RkiGdN8ZSRu3OR15DfKhpMNj5QgmysYrmGQ8rGCXiI6Vi3B2L5Czmf7cRvIdtKRrSOw00SaVptcQt");
 
 const COLORS = {
@@ -25,7 +49,7 @@ const COLORS = {
   focus: "#0056B3",
 };
 
-const PLATFORMS = [
+const PLATFORMS: Platform[] = [
   {
     key: "instagram",
     name: "Instagram",
@@ -69,15 +93,6 @@ const NAV_TABS = [
   { key: "profile", label: "Account", icon: <UserCircle size={19} /> },
 ];
 
-interface Order {
-  id: string;
-  platform: string;
-  service: string;
-  quantity: number;
-  status: string;
-  created_at: string;
-}
-
 export default function DashboardPage() {
   const router = useRouter();
   const [userEmail, setUserEmail] = useState("");
@@ -93,11 +108,11 @@ export default function DashboardPage() {
 
   // --- order form state ---
   const [orderStep, setOrderStep] = useState(0);
-  const [platform, setPlatform] = useState(PLATFORMS[0]);
-  const [service, setService] = useState(PLATFORMS[0].services[0]);
-  const [quantity, setQuantity] = useState(getQuickAmounts(PLATFORMS[0], PLATFORMS[0].services[0])[0]);
-  const [target, setTarget] = useState("");
-  const [orderError, setOrderError] = useState("");
+  const [platform, setPlatform] = useState<Platform>(PLATFORMS[0]);
+  const [service, setService] = useState<Service>(PLATFORMS[0].services[0]);
+  const [quantity, setQuantity] = useState<number>(getQuickAmounts(PLATFORMS[0], PLATFORMS[0].services[0])[0]);
+  const [target, setTarget] = useState<string>("");
+  const [orderError, setOrderError] = useState<string>("");
   const [orderLoading, setOrderLoading] = useState(false);
   const [orderSuccess, setOrderSuccess] = useState(false);
   const orderStepperRef = useRef<HTMLDivElement>(null);
@@ -131,40 +146,45 @@ export default function DashboardPage() {
     fetchUserAndOrders();
   }, [router]);
 
-  // Services for chosen platform
-  const selectedPlatform = platform;
-  const currentService = service;
-
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    router.push("/login");
-  };
-
-  // --- Order Tab Logic (stepper, validation) ---
-  function getDiscountedPrice(price: number) {
-    const discount = 0.02 + Math.random() * 0.02;
-    const discounted = Math.max(0.01, Number((price * (1 - discount)).toFixed(3)));
-    return { discount: Math.round(discount * 100), discounted };
-  }
-  function getQuickAmounts(platform, service) {
+  // --- Type-safe quick amounts ---
+  function getQuickAmounts(platform: Platform, service: Service): number[] {
     if (platform.key === "instagram" && service.type.toLowerCase() === "views")
       return [500, 2000, 5000, 10000, 20000, 50000];
     if (platform.key === "instagram" && service.type.toLowerCase() === "followers")
       return [100, 200, 350, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000];
     if (platform.key === "instagram" && service.type.toLowerCase() === "likes")
       return [50, 100, 300, 500, 1000, 2000, 5000, 10000, 20000];
-    if (platform.key === "tiktok" && (service.type.toLowerCase() === "followers" || service.type.toLowerCase() === "likes"))
+    if (
+      platform.key === "tiktok" &&
+      (service.type.toLowerCase() === "followers" ||
+        service.type.toLowerCase() === "likes")
+    )
       return [100, 250, 500, 1000, 2000, 5000, 10000];
     if (platform.key === "tiktok" && service.type.toLowerCase() === "views")
       return [1000, 2000, 5000, 10000, 20000, 50000];
     if (platform.key === "youtube" && service.type.toLowerCase() === "views")
       return [200, 500, 1000, 2000, 5000, 10000];
-    if (platform.key === "youtube" && service.type.toLowerCase() === "subscribers")
+    if (
+      platform.key === "youtube" &&
+      service.type.toLowerCase() === "subscribers"
+    )
       return [200, 500, 1000, 2000, 5000, 10000];
     if (platform.key === "youtube" && service.type.toLowerCase() === "likes")
       return [250, 500, 1000, 2000, 5000, 10000];
     return [100, 500, 1000, 2000, 5000, 10000, 25000, 50000];
   }
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    router.push("/login");
+  };
+
+  function getDiscountedPrice(price: number) {
+    const discount = 0.02 + Math.random() * 0.02;
+    const discounted = Math.max(0.01, Number((price * (1 - discount)).toFixed(3)));
+    return { discount: Math.round(discount * 100), discounted };
+  }
+
   const orderSteps = [
     { label: "Platform" },
     { label: "Service" },
@@ -172,10 +192,9 @@ export default function DashboardPage() {
     { label: "Checkout" }
   ];
   const orderPercent = orderStep === orderSteps.length - 1 ? 100 : Math.max(0, (orderStep / (orderSteps.length - 1)) * 100);
-  const { discount, discounted } = getDiscountedPrice(currentService.price);
+  const { discount, discounted } = getDiscountedPrice(service.price);
 
-  // Stripe checkout sample (replace with your real /api/checkout endpoint)
-  async function placeOrder(e) {
+  async function placeOrder(e: React.FormEvent) {
     e.preventDefault();
     if (!target.trim()) {
       setOrderError("Paste your profile link or username.");
@@ -183,7 +202,6 @@ export default function DashboardPage() {
     }
     setOrderLoading(true);
     setOrderError("");
-    // TODO: integrate your payment here
     setTimeout(() => {
       setOrderLoading(false);
       setOrderSuccess(true);
@@ -469,8 +487,7 @@ export default function DashboardPage() {
       );
     }
 
-    // ... (keep your other tab code unchanged)
-    // -- omitted for brevity, as before --
+    // ... your other tab content here ...
 
     return <div>Pick a tab…</div>;
   };
@@ -533,7 +550,6 @@ export default function DashboardPage() {
           </section>
         </div>
       </div>
-      {/* -- Mobile optimization -- */}
       <style jsx global>{`
         @media (max-width: 900px) {
           .max-w-7xl { padding: 0 0vw; }
