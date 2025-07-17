@@ -2,7 +2,8 @@ import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
 import {
-  ShieldCheck, Clock, UserCheck, Zap, RefreshCcw, Star
+  ShieldCheck, Clock, UserCheck, Zap, RefreshCcw, Star,
+  Instagram, Music2, Youtube
 } from "lucide-react";
 import { useState } from "react";
 import OrderModal from "@/components/OrderModal";
@@ -10,7 +11,7 @@ import OurPromise from "@/components/OurPromise";
 import Testimonials from "@/components/Testimonials";
 import HowItWorks from "@/components/HowItWorks";
 import FAQ from "@/components/FAQ";
-import SalesNotifications from "@/components/SalesNotifications"; // 👈 NEW NOTIFICATIONS
+import SalesNotifications from "@/components/SalesNotifications";
 
 // ---- FAQS ----
 const FAQS = [
@@ -40,7 +41,7 @@ const FAQS = [
   }
 ];
 
-// ---- SERVICES DATA (PUT YOURS HERE IF CUSTOM) ----
+// ---- SERVICES DATA (YOUR ICONS RESTORED) ----
 const SERVICES = [
   {
     name: "Instagram Services",
@@ -52,7 +53,7 @@ const SERVICES = [
       "🛡️ Drop Protection",
       "🔒 100% Secure Checkout"
     ],
-    icon: <svg width="28" height="28"><circle cx="14" cy="14" r="13" fill="#E1306C" /></svg>,
+    icon: <Instagram className="text-[#E1306C]" size={28} />,
     tag: "Bestseller",
     count: "2,000+ bought this week"
   },
@@ -66,7 +67,7 @@ const SERVICES = [
       "🙅‍♂️ No Login Needed",
       "🛡️ Protected Service"
     ],
-    icon: <svg width="28" height="28"><circle cx="14" cy="14" r="13" fill="#25F4EE" /></svg>,
+    icon: <Music2 className="text-[#25F4EE]" size={28} />,
     tag: "🔥 Hot",
     count: "1,400+ bought this week"
   },
@@ -80,7 +81,7 @@ const SERVICES = [
       "🤫 Private Delivery",
       "🤖 Algorithm Friendly"
     ],
-    icon: <svg width="28" height="28"><circle cx="14" cy="14" r="13" fill="#FF0000" /></svg>,
+    icon: <Youtube className="text-[#FF0000]" size={28} />,
     tag: "",
     count: "950+ bought this week"
   }
@@ -160,7 +161,7 @@ export default function Home() {
             />
           </div>
         </section>
-        {/* --- REAL SERVICES SECTION --- */}
+        {/* --- REAL SERVICES SECTION (YOUR ICONS) --- */}
         <section id="order" className="space-y-7 py-8 md:py-14">
           <h2 className="text-center text-4xl font-extrabold">Place Your Order Instantly</h2>
           <p className="text-[#444] text-center max-w-2xl mx-auto">
