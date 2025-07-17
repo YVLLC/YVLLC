@@ -13,13 +13,13 @@ type ServiceType = "Followers" | "Likes" | "Views" | "Subscribers";
 type Service = {
   type: ServiceType | string;
   price: number;
-  icon: React.ComponentType<{ size?: number; className?: string; style?: React.CSSProperties }>;
+  icon: React.ElementType;
   iconColor: string;
 };
 type Platform = {
   key: string;
   name: string;
-  icon: React.ComponentType<{ size?: number; className?: string; style?: React.CSSProperties }>;
+  icon: React.ElementType;
   iconColor: string;
   services: Service[];
 };
@@ -487,7 +487,7 @@ export default function DashboardPage() {
       );
     }
 
-    // ... your other tab content here ...
+    // ... your other tab content here, unchanged ...
 
     return <div>Pick a tab…</div>;
   };
