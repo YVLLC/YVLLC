@@ -1,33 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Instagram, Youtube, Music2, UserPlus, ThumbsUp, Eye, X, CheckCircle, Tag
 } from "lucide-react";
-
-// --- TYPE DEFINITIONS ---
-type ServiceType =
-  | "Followers"
-  | "Likes"
-  | "Views"
-  | "Subscribers";
-
-type Service = {
-  type: ServiceType | string;
-  price: number;
-  icon: JSX.Element;
-};
-
-type Platform = {
-  key: string;
-  name: string;
-  color: string;
-  icon: JSX.Element;
-  services: Service[];
-};
-
-type StealthPackageResult = {
-  pkg: string;
-  type: string;
-};
 
 // --- COLORWAY ---
 const COLORS = {
@@ -46,7 +20,7 @@ const COLORS = {
 };
 
 // --- DATA ---
-const PLATFORMS: Platform[] = [
+const PLATFORMS = [
   {
     key: "instagram",
     name: "Instagram",
@@ -90,15 +64,14 @@ const steps = [
   { label: "Done" }
 ];
 
-// --- DISCOUNT LOGIC ---
-function getDiscountedPrice(price: number): {discount: number, discounted: number} {
+// --- LOGIC ---
+function getDiscountedPrice(price: number) {
   const discount = 0.02 + Math.random() * 0.02;
   const discounted = Math.max(0.01, Number((price * (1 - discount)).toFixed(3)));
   return { discount: Math.round(discount * 100), discounted };
 }
 
-// --- SAFETY: Stripe-safe checkout info only! ---
-function getStealthPackage(platform: Platform, service: Service): StealthPackageResult {
+function getStealthPackage(platform, service) {
   let pkg = "Premium Package";
   let type = "Standard";
   if (platform && service) {
@@ -113,27 +86,42 @@ function getStealthPackage(platform: Platform, service: Service): StealthPackage
   return { pkg, type };
 }
 
-// --- PROPS TYPES ---
-type OrderModalProps = {
-  open: boolean;
-  onClose: () => void;
-  initialPlatform?: string;
-  initialService?: string;
-};
+function getQuickAmounts(platform, service) {
+  if (platform.key === "instagram" && service.type.toLowerCase() === "views")
+    return [500, 2000, 5000, 10000, 20000, 50000];
+  if (platform.key === "instagram" && service.type.toLowerCase() === "followers")
+    return [100, 200, 350, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000];
+  if (platform.key === "instagram" && service.type.toLowerCase() === "likes")
+    return [50, 100, 300, 500, 1000, 2000, 5000, 10000, 20000];
+  if (platform.key === "tiktok" && (service.type.toLowerCase() === "followers" || service.type.toLowerCase() === "likes"))
+    return [100, 250, 500, 1000, 2000, 5000, 10000];
+  if (platform.key === "tiktok" && service.type.toLowerCase() === "views")
+    return [1000, 2000, 5000, 10000, 20000, 50000];
+  if (platform.key === "youtube" && service.type.toLowerCase() === "views")
+    return [200, 500, 1000, 2000, 5000, 10000];
+  if (platform.key === "youtube" && service.type.toLowerCase() === "subscribers")
+    return [200, 500, 1000, 2000, 5000, 10000];
+  if (platform.key === "youtube" && service.type.toLowerCase() === "likes")
+    return [250, 500, 1000, 2000, 5000, 10000];
+  return [100, 500, 1000, 2000, 5000, 10000, 25000, 50000];
+}
 
 export default function OrderModal({
   open,
   onClose,
   initialPlatform,
   initialService
-}: OrderModalProps) {
+}) {
   const [step, setStep] = useState(0);
-  const [platform, setPlatform] = useState<Platform>(PLATFORMS[0]);
-  const [service, setService] = useState<Service>(PLATFORMS[0].services[0]);
-  const [quantity, setQuantity] = useState<number>(100);
-  const [target, setTarget] = useState<string>("");
-  const [error, setError] = useState<string>("");
-  const [done, setDone] = useState<boolean>(false);
+  const [platform, setPlatform] = useState(PLATFORMS[0]);
+  const [service, setService] = useState(PLATFORMS[0].services[0]);
+  const [quantity, setQuantity] = useState(100);
+  const [target, setTarget] = useState("");
+  const [error, setError] = useState("");
+  const [done, setDone] = useState(false);
+
+  // For animated stepper line
+  const stepperRef = useRef<HTMLDivElement>(null);
 
   // Responsive lock scroll on modal open
   useEffect(() => {
@@ -185,27 +173,6 @@ export default function OrderModal({
 
   if (!open) return null;
 
-  // Quick Amounts
-  function getQuickAmounts(platform: Platform, service: Service) {
-    if (platform.key === "instagram" && service.type.toLowerCase() === "views")
-      return [500, 2000, 5000, 10000, 20000, 50000];
-    if (platform.key === "instagram" && service.type.toLowerCase() === "followers")
-      return [100, 200, 350, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000];
-    if (platform.key === "instagram" && service.type.toLowerCase() === "likes")
-      return [50, 100, 300, 500, 1000, 2000, 5000, 10000, 20000];
-    if (platform.key === "tiktok" && (service.type.toLowerCase() === "followers" || service.type.toLowerCase() === "likes"))
-      return [100, 250, 500, 1000, 2000, 5000, 10000];
-    if (platform.key === "tiktok" && service.type.toLowerCase() === "views")
-      return [1000, 2000, 5000, 10000, 20000, 50000];
-    if (platform.key === "youtube" && service.type.toLowerCase() === "views")
-      return [200, 500, 1000, 2000, 5000, 10000];
-    if (platform.key === "youtube" && service.type.toLowerCase() === "subscribers")
-      return [200, 500, 1000, 2000, 5000, 10000];
-    if (platform.key === "youtube" && service.type.toLowerCase() === "likes")
-      return [250, 500, 1000, 2000, 5000, 10000];
-    return [100, 500, 1000, 2000, 5000, 10000, 25000, 50000];
-  }
-
   // Stripe-safe order info
   const { pkg, type } = getStealthPackage(platform, service);
   const { discount, discounted } = getDiscountedPrice(service.price);
@@ -217,20 +184,27 @@ export default function OrderModal({
     total: Number((discounted * quantity).toFixed(2))
   };
 
-  // Component
+  // Stepper animation logic
+  const stepCount = steps.length;
+  const percent = step === stepCount - 1 ? 100 : Math.max(0, (step / (stepCount - 1)) * 100);
+
   return (
-    <div className="fixed z-[9999] inset-0 flex items-center justify-center bg-black/85 backdrop-blur-[2.5px]">
+    <div className="fixed z-[9999] inset-0 flex items-center justify-center bg-black/80 backdrop-blur-[2.5px]">
       <div
-        className="relative w-full max-w-lg mx-auto bg-white rounded-3xl border-2 shadow-[0_6px_48px_0_rgba(0,123,255,0.13)] flex flex-col"
-        style={{ minHeight: 0, maxHeight: "94vh" }}
+        className="relative w-full max-w-lg mx-auto bg-white rounded-2xl sm:rounded-[2.2rem] border-2 shadow-[0_6px_48px_0_rgba(0,123,255,0.13)] flex flex-col"
+        style={{
+          minHeight: 0,
+          maxHeight: "96vh",
+          borderColor: COLORS.border,
+          boxShadow: "0 8px 48px 0 #007bff18"
+        }}
       >
-        {/* Header */}
+        {/* HEADER */}
         <div
-          className="w-full px-6 py-6 rounded-t-3xl border-b flex flex-col gap-2"
+          className="relative px-6 pt-7 pb-5 rounded-t-2xl sm:rounded-t-[2.2rem] border-b"
           style={{
             background: `linear-gradient(90deg, ${COLORS.accentBg} 0%, ${COLORS.background} 80%)`,
-            borderColor: COLORS.border,
-            boxShadow: "0 2px 16px 0 #e6f0ff1e"
+            borderColor: COLORS.border
           }}
         >
           <button
@@ -240,41 +214,64 @@ export default function OrderModal({
           >
             <X size={22} className="text-[#007BFF]" />
           </button>
-          <div className="flex items-center gap-2 pr-14">
+          <div className="flex items-center gap-2">
             {platform.icon}
-            <span className="font-extrabold text-lg tracking-tight" style={{ color: platform.color }}>
+            <span className="font-extrabold text-xl sm:text-2xl tracking-tight" style={{ color: platform.color }}>
               {platform.name}
             </span>
           </div>
           {/* Stepper */}
-          <div className="flex items-center justify-center gap-2 mt-2 mb-[-2px]">
-            {steps.map((s, i) => (
-              <div key={s.label} className="flex items-center gap-2 flex-shrink-0">
+          <div className="relative mt-6 mb-[-10px] px-1" ref={stepperRef}>
+            <div className="absolute left-0 right-0 top-1/2 h-[5px] rounded-full bg-[#E6F0FF] z-0" style={{transform: "translateY(-50%)"}} />
+            <div
+              className="absolute left-0 top-1/2 h-[5px] rounded-full z-10 stepper-anim-line"
+              style={{
+                width: `${percent}%`,
+                background: `linear-gradient(90deg, ${COLORS.primary} 0%, ${COLORS.primaryHover} 100%)`,
+                transition: "width .3s cubic-bezier(.51,1.15,.67,.97)",
+                transform: "translateY(-50%)"
+              }}
+            />
+            <div className="relative flex items-center justify-between z-20">
+              {steps.map((s, i) => (
                 <div
-                  className={`
-                    rounded-full w-8 h-8 flex items-center justify-center font-bold text-base
-                    ${step === i ? "bg-[#007BFF] text-white shadow" : step > i ? "bg-[#E6F0FF] text-[#007BFF] border-[#007BFF]" : "bg-[#E6F0FF] text-[#888]"}
-                    border-2 border-white
-                    transition
-                  `}
-                  style={{
-                    borderColor: step === i ? COLORS.primary : "#E6F0FF"
-                  }}
+                  key={s.label}
+                  className="flex flex-col items-center flex-1 min-w-0"
+                  style={{zIndex: 4}}
                 >
-                  {i + 1}
+                  <div
+                    className={`
+                      flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 font-extrabold text-base sm:text-lg border-2 transition
+                      ${step === i
+                        ? "bg-[#007BFF] text-white border-[#007BFF] shadow-lg scale-110"
+                        : step > i
+                        ? "bg-[#22C55E] text-white border-[#22C55E]"
+                        : "bg-[#E6F0FF] text-[#888] border-[#E6F0FF]"}
+                    `}
+                    style={{
+                      marginBottom: 3,
+                      boxShadow: step === i ? "0 2px 10px #007bff22" : undefined
+                    }}
+                  >
+                    {i + 1}
+                  </div>
+                  <span
+                    className={`text-xs font-bold text-center whitespace-nowrap mt-1 transition`}
+                    style={{
+                      color:
+                        step === i
+                          ? COLORS.primary
+                          : step > i
+                          ? COLORS.success
+                          : COLORS.muted,
+                      textShadow: step === i ? "0 1px 0 #fff" : "none"
+                    }}
+                  >
+                    {s.label}
+                  </span>
                 </div>
-                <span
-                  className={`text-xs font-semibold whitespace-nowrap ${
-                    step === i ? "text-[#007BFF]" : "text-[#888]"
-                  }`}
-                >
-                  {s.label}
-                </span>
-                {i < steps.length - 1 && (
-                  <span className="block w-5 h-1 bg-[#E6F0FF] rounded-full" />
-                )}
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
         {/* Content */}
@@ -472,10 +469,9 @@ export default function OrderModal({
         .animate-flashSale {
           animation: flashSale 2.5s infinite;
         }
-        ::-webkit-scrollbar { width: 0.7em; background: #f7f9ff;}
-        ::-webkit-scrollbar-thumb {
-          background: #e6f0ff;
-          border-radius: 8px;
+        @media (max-width: 650px) {
+          .max-w-lg { max-width: 98vw !important; }
+          .rounded-2xl, .sm\\:rounded-\\[2.2rem\\] { border-radius: 1.25rem !important; }
         }
       `}</style>
     </div>
