@@ -88,29 +88,7 @@ const TIMEAGO = [
   "a month ago", "5 weeks ago"
 ];
 
-// ---- HEADERS BASED ON TIME ----
-function getHeaderByTimeAgo(timeAgo: string): string {
-  // "Fresh" headlines only for recent times, else more generic
-  const recentTimes = [
-    "just now", "10 seconds ago", "a minute ago", "2 minutes ago", "5 minutes ago",
-    "8 minutes ago", "12 minutes ago", "18 minutes ago", "20 minutes ago",
-    "30 minutes ago", "45 minutes ago", "an hour ago"
-  ];
-  if (recentTimes.includes(timeAgo)) {
-    const FRESH = [
-      "Fresh Sale", "Just Sold", "Recent Order", "Order Confirmed", "Order Update",
-      "Just Delivered", "Hot Order", "Latest Sale"
-    ];
-    return FRESH[Math.floor(Math.random() * FRESH.length)];
-  } else {
-    const OLD = [
-      "Popular Service", "Trending Now", "Activity", "Another Order", "Order Processed"
-    ];
-    return OLD[Math.floor(Math.random() * OLD.length)];
-  }
-}
-
-// ---- UTILS ----
+// ---- HELPERS ----
 function shuffle<T>(arr: T[]): T[] {
   const a = arr.slice();
   for (let i = a.length - 1; i > 0; i--) {
@@ -125,7 +103,6 @@ type Notification = {
   service: string;
   icon: JSX.Element;
   timeAgo: string;
-  header: string;
 };
 
 function makeNotifications(howMany = 50): Notification[] {
@@ -137,13 +114,11 @@ function makeNotifications(howMany = 50): Notification[] {
     const amt = svc.amounts[Math.floor(Math.random() * svc.amounts.length)];
     const city = cities[count % cities.length];
     const time = TIMEAGO[Math.floor(Math.random() * TIMEAGO.length)];
-    const header = getHeaderByTimeAgo(time);
     all.push({
       location: city,
       service: svc.label(amt),
       icon: svc.icon,
-      timeAgo: time,
-      header
+      timeAgo: time
     });
     count++;
   }
@@ -151,32 +126,82 @@ function makeNotifications(howMany = 50): Notification[] {
 }
 
 // ---- SALES NOTIFICATION COMPONENT ----
+const NOTIFY_INTERVAL = 3 * 60 * 1000; // 3 minutes
+
 export default function SalesNotifications() {
-  const [notifs] = useState(() => makeNotifications(50));
-  const [idx, setIdx] = useState(0);
-  const [visible, setVisible] = useState(true);
+  // Only create notifications list once per session
+  const [notifs] = useState(() => {
+    if (typeof window !== "undefined" && window.sessionStorage) {
+      const prev = window.sessionStorage.getItem("sales_notifs_data");
+      if (prev) return JSON.parse(prev) as Notification[];
+      const n = makeNotifications(50);
+      window.sessionStorage.setItem("sales_notifs_data", JSON.stringify(n));
+      return n;
+    }
+    return makeNotifications(50);
+  });
+
+  // Track index per session so users don't see same notification again and again
+  const [idx, setIdx] = useState(() => {
+    if (typeof window !== "undefined" && window.sessionStorage) {
+      const prevIdx = window.sessionStorage.getItem("sales_notifs_idx");
+      return prevIdx ? parseInt(prevIdx, 10) : 0;
+    }
+    return 0;
+  });
+  const [visible, setVisible] = useState(false); // Start hidden until interval passes
   const timerRef = useRef<NodeJS.Timeout | null>(null);
-  const timeoutVisible = 6000;    // 6 seconds visible
-  const timeoutHidden = 180000;   // 3 minutes hidden
 
   useEffect(() => {
-    if (idx >= notifs.length) return;
-    timerRef.current = setTimeout(() => setVisible(false), timeoutVisible);
-    return () => { if (timerRef.current) clearTimeout(timerRef.current); };
+    if (typeof window === "undefined") return;
+
+    const now = Date.now();
+    const lastShownRaw = window.sessionStorage.getItem("sales_notifs_last_time");
+    const lastShown = lastShownRaw ? parseInt(lastShownRaw, 10) : 0;
+    const msAgo = now - lastShown;
+
+    if (msAgo >= NOTIFY_INTERVAL) {
+      // Enough time passed, show notification
+      setVisible(true);
+      window.sessionStorage.setItem("sales_notifs_last_time", now.toString());
+    } else {
+      // Not enough time, do not show now
+      setVisible(false);
+      // Schedule for when interval passes
+      const waitMs = NOTIFY_INTERVAL - msAgo;
+      timerRef.current = setTimeout(() => {
+        setVisible(true);
+        window.sessionStorage.setItem("sales_notifs_last_time", Date.now().toString());
+      }, waitMs);
+    }
+
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+    // eslint-disable-next-line
   }, [idx]);
 
+  // Hide notification after a few seconds, and increment to next notification (but only show after interval again)
   useEffect(() => {
-    if (!visible && idx < notifs.length - 1) {
-      timerRef.current = setTimeout(() => {
-        setIdx(i => i + 1);
-        setVisible(true);
-      }, timeoutHidden);
-      return () => { if (timerRef.current) clearTimeout(timerRef.current); };
-    }
-  }, [visible, idx, notifs.length]);
+    if (!visible) return;
+    timerRef.current = setTimeout(() => {
+      setVisible(false);
+      // Update index in sessionStorage
+      if (typeof window !== "undefined" && window.sessionStorage) {
+        const newIdx = idx + 1;
+        setIdx(newIdx);
+        window.sessionStorage.setItem("sales_notifs_idx", newIdx.toString());
+      } else {
+        setIdx(idx + 1);
+      }
+    }, 4600 + Math.random() * 600);
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+    // eslint-disable-next-line
+  }, [visible]);
 
   if (idx >= notifs.length) return null;
-
   const notification = notifs[idx];
 
   return (
@@ -197,7 +222,7 @@ export default function SalesNotifications() {
         <div className="bg-[#F5FAFF] p-2 rounded-full">{notification.icon}</div>
         <div>
           <div className="font-semibold text-[#007BFF] text-sm mb-0.5 flex items-center gap-1">
-            {notification.header}
+            Recent Sale
             <span className="inline-block w-1.5 h-1.5 bg-[#22C55E] rounded-full ml-1 animate-pulse" />
           </div>
           <div className="text-xs text-[#444] font-medium">{notification.location}</div>
