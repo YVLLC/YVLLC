@@ -7,6 +7,7 @@ import {
   UserCircle, LogOut, Instagram, Youtube, Music2, UserPlus, ThumbsUp, Eye, BarChart, List, CheckCircle, Loader2, BadgePercent, Menu, Tag
 } from "lucide-react";
 
+// --- Types ---
 type ServiceType = "Followers" | "Likes" | "Views" | "Subscribers";
 type Service = {
   type: ServiceType | string;
@@ -30,6 +31,7 @@ interface Order {
   created_at: string;
 }
 
+// --- Constants ---
 const COLORS = {
   primary: "#007BFF",
   primaryHover: "#005FCC",
@@ -631,9 +633,9 @@ export default function DashboardPage() {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      let meta = document.querySelector('meta[name="viewport"]');
+      let meta = document.querySelector('meta[name="viewport"]') as HTMLMetaElement | null;
       if (!meta) {
-        meta = document.createElement('meta');
+        meta = document.createElement('meta') as HTMLMetaElement;
         meta.name = "viewport";
         document.head.appendChild(meta);
       }
