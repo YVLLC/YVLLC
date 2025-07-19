@@ -7,7 +7,6 @@ import {
   UserCircle, LogOut, Instagram, Youtube, Music2, UserPlus, ThumbsUp, Eye, BarChart, List, CheckCircle, Loader2, BadgePercent, Menu, Tag
 } from "lucide-react";
 
-// --- Types ---
 type ServiceType = "Followers" | "Likes" | "Views" | "Subscribers";
 type Service = {
   type: ServiceType | string;
@@ -31,7 +30,6 @@ interface Order {
   created_at: string;
 }
 
-// --- Constants ---
 const COLORS = {
   primary: "#007BFF",
   primaryHover: "#005FCC",
@@ -181,7 +179,6 @@ export default function DashboardPage() {
     fetchUserAndOrders();
   }, [router]);
 
-  // Order stepper logic
   const orderPercent = (orderStep / (ORDER_STEPS.length - 1)) * 100;
   const { discount, discounted } = getDiscountedPrice(service.price);
 
@@ -223,7 +220,6 @@ export default function DashboardPage() {
     window.location.href = `https://checkout.yesviral.com/checkout?order=${orderString}`;
   }
 
-  // Tabs Content
   const TabContent = () => {
     if (loading)
       return <div className="flex justify-center items-center py-24"><Loader2 className="animate-spin mr-2" /> Loading...</div>;
@@ -231,7 +227,6 @@ export default function DashboardPage() {
     if (activeTab === "order") {
       return (
         <div className="max-w-2xl mx-auto">
-          {/* Stepper */}
           <div className="px-2 sm:px-6 pt-6 pb-2">
             <div className="relative mx-auto max-w-lg">
               <div className="relative flex items-center justify-between z-20 mb-4">
@@ -634,11 +629,25 @@ export default function DashboardPage() {
     return <div>Pick a tab…</div>;
   };
 
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      let meta = document.querySelector('meta[name="viewport"]');
+      if (!meta) {
+        meta = document.createElement('meta');
+        meta.name = "viewport";
+        document.head.appendChild(meta);
+      }
+      meta.setAttribute(
+        "content",
+        "width=device-width, initial-scale=1"
+      );
+    }
+  }, []);
+
   return (
     <main className="min-h-screen bg-[#F9FAFB]">
       <Toaster position="top-right" />
       <div className="max-w-7xl mx-auto px-2 sm:px-4 py-6">
-        {/* HEADER */}
         <div className="flex flex-wrap sm:flex-nowrap items-center justify-between mb-6 gap-3">
           <div className="flex items-center gap-2">
             <button
@@ -658,9 +667,7 @@ export default function DashboardPage() {
             <LogOut size={18} /> Log Out
           </button>
         </div>
-        {/* LAYOUT */}
         <div className="flex flex-col md:flex-row gap-5 relative">
-          {/* SIDEBAR */}
           <aside className={`fixed top-0 left-0 z-30 bg-white border-r border-[#CFE4FF] shadow-md h-full w-60 transform md:static md:translate-x-0 transition-transform duration-200
             rounded-none md:rounded-2xl p-5 md:w-60 md:block
             ${sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}>
@@ -683,9 +690,7 @@ export default function DashboardPage() {
               </button>
             ))}
           </aside>
-          {/* Overlay for mobile nav */}
           {sidebarOpen && <div className="fixed inset-0 bg-black/40 z-20 md:hidden" onClick={() => setSidebarOpen(false)}></div>}
-          {/* MAIN CONTENT */}
           <section className="flex-1 bg-white border border-[#CFE4FF] rounded-2xl shadow-sm p-4 sm:p-8 min-h-[440px]">
             <TabContent />
           </section>
@@ -697,31 +702,15 @@ export default function DashboardPage() {
           50% { background: #d9ecff; color: #005FCC;}
         }
         .animate-flashSale { animation: flashSale 2.5s infinite; }
-        /* --- Responsive tweaks --- */
         @media (max-width: 900px) {
-          .max-w-7xl { padding: 0 0vw; }
-          .flex-wrap, .sm\\:flex-nowrap { flex-wrap: wrap !important; }
-          .min-h-screen { min-height: 100vh !important; }
-        }
-        @media (max-width: 750px) {
-          aside { position:static !important; width:100vw !important; min-height:0 !important; max-width:100vw !important; border-radius:0 !important; }
-          section { border-radius:0 !important; min-height:0 !important; padding:8px !important; }
           .max-w-7xl { padding: 0 0vw; }
         }
         @media (max-width: 600px) {
           .max-w-7xl { padding: 0 1vw; }
-          aside, section { padding: 5px !important; }
-          h2, .text-2xl { font-size: 1.14rem !important; }
-          th, td { font-size: 0.97rem !important; }
-        }
-        @media (max-width: 510px) {
-          aside { padding: 2px !important; }
-          section { padding: 2px !important; }
-        }
-        @media (max-width: 400px) {
-          .max-w-7xl { padding: 0 0vw; }
-          .text-2xl, h2 { font-size: 1rem !important; }
-          th, td { font-size: 0.93rem !important; }
+          aside, section { padding: 12px !important; }
+          h2 { font-size: 1.1rem !important; }
+          th, td { font-size: 0.98rem; }
+          .text-2xl { font-size: 1.3rem !important; }
         }
         table { width: 100%; }
         th, td { white-space: nowrap; }
