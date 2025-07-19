@@ -1,6 +1,7 @@
 import { Instagram, Music2, Youtube } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 
+// -- Data Lists --
 const US_CITIES = [
   "New York, NY", "Los Angeles, CA", "Chicago, IL", "Houston, TX", "Phoenix, AZ", "Philadelphia, PA", "San Antonio, TX",
   "San Diego, CA", "Dallas, TX", "San Jose, CA", "Austin, TX", "Jacksonville, FL", "Fort Worth, TX", "Columbus, OH",
@@ -19,6 +20,7 @@ const TIMEAGO = [
   "a month ago", "5 weeks ago"
 ];
 
+// -- Services --
 const SERVICES = [
   {
     platform: "Instagram",
@@ -85,6 +87,7 @@ const SERVICES = [
   },
 ];
 
+// -- Utility --
 function shuffle<T>(arr: T[]): T[] {
   const a = arr.slice();
   for (let i = a.length - 1; i > 0; i--) {
@@ -94,7 +97,6 @@ function shuffle<T>(arr: T[]): T[] {
   return a;
 }
 
-// Only store serializable data (no JSX) in sessionStorage
 type NotificationData = {
   location: string;
   platform: string;
@@ -233,6 +235,7 @@ export default function SalesNotifications() {
           willChange: "opacity,transform",
           fontFamily: "inherit"
         }}
+        aria-live="polite"
       >
         <div className="bg-[#F5FAFF] p-2 rounded-full">{icon}</div>
         <div>
