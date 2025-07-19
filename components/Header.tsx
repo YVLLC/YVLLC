@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import {
@@ -72,10 +72,14 @@ const MEGA_MENUS = {
   ]
 };
 
+type MegaKey = keyof typeof MEGA_MENUS;
+
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
-  const [hoverTab, setHoverTab] = useState<string | null>(null);
-  const [hoveredMenu, setHoveredMenu] = useState<string | null>(null);
+  const [hoverTab, setHoverTab] = useState<MegaKey | null>(null);
+  const [hoveredMenu, setHoveredMenu] = useState<MegaKey | null>(null);
+  const hoverTimeout = useRef<NodeJS.Timeout | null>(null);
+
   const [user, setUser] = useState<any>(null);
   const router = useRouter();
 
@@ -121,6 +125,23 @@ export default function Header() {
     router.push("/");
   };
 
+  // --- Bulletproof hover logic ---
+  function startMenuHover(key: MegaKey) {
+    if (hoverTimeout.current) clearTimeout(hoverTimeout.current);
+    setHoverTab(key);
+    setHoveredMenu(key);
+  }
+  function scheduleMenuClose() {
+    if (hoverTimeout.current) clearTimeout(hoverTimeout.current);
+    hoverTimeout.current = setTimeout(() => {
+      setHoveredMenu(null);
+      setHoverTab(null);
+    }, 160);
+  }
+  function cancelMenuClose() {
+    if (hoverTimeout.current) clearTimeout(hoverTimeout.current);
+  }
+
   return (
     <header className="bg-white border-b border-[#CFE4FF] sticky top-0 z-50 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-8 py-3 flex items-center justify-between min-h-[72px]">
@@ -145,8 +166,8 @@ export default function Header() {
             <div
               key={tab.key}
               className="relative flex items-center h-full"
-              onMouseEnter={() => { setHoverTab(tab.key); setHoveredMenu(tab.key); }}
-              onMouseLeave={() => { setHoveredMenu(null); setTimeout(() => setHoverTab(null), 120); }}
+              onMouseEnter={() => startMenuHover(tab.key as MegaKey)}
+              onMouseLeave={scheduleMenuClose}
             >
               <button
                 className={`
@@ -155,8 +176,8 @@ export default function Header() {
                   ${hoverTab === tab.key ? "text-[#007BFF]" : "text-[#1A1A1A]"}
                 `}
                 type="button"
-                onFocus={() => setHoverTab(tab.key)}
-                onBlur={() => setHoverTab(null)}
+                onFocus={() => startMenuHover(tab.key as MegaKey)}
+                onBlur={scheduleMenuClose}
               >
                 {tab.icon}
                 <span>{tab.label}</span>
@@ -164,16 +185,16 @@ export default function Header() {
               </button>
               <div
                 className={`
-                  absolute left-0 top-[110%] w-80 bg-white rounded-xl border border-[#CFE4FF] shadow-2xl z-50 py-3 
+                  absolute left-0 top-[110%] w-80 bg-white rounded-xl border border-[#CFE4FF] shadow-2xl z-50 py-3
                   ${hoveredMenu === tab.key ? "opacity-100 pointer-events-auto translate-y-0" : "opacity-0 pointer-events-none translate-y-2"}
-                  transition-all duration-220
+                  transition-all duration-200
                 `}
-                onMouseEnter={() => setHoveredMenu(tab.key)}
-                onMouseLeave={() => { setHoveredMenu(null); setTimeout(() => setHoverTab(null), 120); }}
+                onMouseEnter={cancelMenuClose}
+                onMouseLeave={scheduleMenuClose}
                 style={{ transitionTimingFunction: "cubic-bezier(.45,1.8,.25,.99)" }}
               >
                 <div className="flex flex-col gap-1">
-                  {MEGA_MENUS[tab.key as keyof typeof MEGA_MENUS].map(item => (
+                  {MEGA_MENUS[tab.key as MegaKey].map(item => (
                     <button
                       type="button"
                       key={item.name}
@@ -210,7 +231,6 @@ export default function Header() {
             </Link>
           ))}
 
-          {/* Auth Buttons */}
           {!user ? (
             <>
               <Link href="/login" className="ml-4">
@@ -262,7 +282,7 @@ export default function Header() {
                 <ChevronDown className="ml-auto w-4 h-4 transition-transform group-open:rotate-180" />
               </summary>
               <div className="ml-6 my-1 flex flex-col gap-1">
-                {MEGA_MENUS[tab.key as keyof typeof MEGA_MENUS].map(item => (
+                {MEGA_MENUS[tab.key as MegaKey].map(item => (
                   <button
                     type="button"
                     key={item.name}
