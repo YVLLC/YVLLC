@@ -1,7 +1,6 @@
 import { Instagram, Music2, Youtube } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 
-// -- Data Lists --
 const US_CITIES = [
   "New York, NY", "Los Angeles, CA", "Chicago, IL", "Houston, TX", "Phoenix, AZ", "Philadelphia, PA", "San Antonio, TX",
   "San Diego, CA", "Dallas, TX", "San Jose, CA", "Austin, TX", "Jacksonville, FL", "Fort Worth, TX", "Columbus, OH",
@@ -207,12 +206,14 @@ export default function SalesNotifications() {
       setVisible(false);
       // After fade animation (0.7s), increment idx and schedule next notification
       setTimeout(() => {
+        let newIdx: number;
         if (typeof window !== "undefined" && window.sessionStorage) {
-          const newIdx = idx + 1;
+          newIdx = idx + 1;
           setIdx(newIdx);
           window.sessionStorage.setItem("sales_notifs_idx", newIdx.toString());
         } else {
-          setIdx(idx + 1);
+          newIdx = idx + 1;
+          setIdx(newIdx);
         }
         // Only show next if there are more notifications
         if (notifs && newIdx < notifs.length) {
