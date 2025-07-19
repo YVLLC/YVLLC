@@ -7,7 +7,7 @@ import {
   UserPlus, ThumbsUp, Eye, LogOut
 } from "lucide-react";
 import { supabase } from "../lib/supabaseClient";
-import { useOrderModal } from "@/context/OrderModalContext"; // <<<<<< ADD THIS
+import { useOrderModal } from "@/context/OrderModalContext";
 
 const MEGA_MENUS = {
   instagram: [
@@ -75,10 +75,11 @@ const MEGA_MENUS = {
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [hoverTab, setHoverTab] = useState<string | null>(null);
+  const [hoveredMenu, setHoveredMenu] = useState<string | null>(null);
   const [user, setUser] = useState<any>(null);
   const router = useRouter();
 
-  const { openOrderModal } = useOrderModal(); // <<<<<<<< INJECT CONTEXT
+  const { openOrderModal } = useOrderModal();
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -144,8 +145,8 @@ export default function Header() {
             <div
               key={tab.key}
               className="relative flex items-center h-full"
-              onMouseEnter={() => setHoverTab(tab.key)}
-              onMouseLeave={() => setHoverTab(null)}
+              onMouseEnter={() => { setHoverTab(tab.key); setHoveredMenu(tab.key); }}
+              onMouseLeave={() => { setHoveredMenu(null); setTimeout(() => setHoverTab(null), 120); }}
             >
               <button
                 className={`
@@ -154,34 +155,44 @@ export default function Header() {
                   ${hoverTab === tab.key ? "text-[#007BFF]" : "text-[#1A1A1A]"}
                 `}
                 type="button"
+                onFocus={() => setHoverTab(tab.key)}
+                onBlur={() => setHoverTab(null)}
               >
                 {tab.icon}
                 <span>{tab.label}</span>
                 <ChevronDown className={`w-4 h-4 ml-1 transition-transform duration-150 ${hoverTab === tab.key ? "rotate-180" : ""}`} />
               </button>
-              {hoverTab === tab.key && (
-                <div className="absolute left-0 top-[110%] w-80 bg-white rounded-xl border border-[#CFE4FF] shadow-2xl z-50 py-3 animate-fadeInFast">
-                  <div className="flex flex-col gap-1">
-                    {MEGA_MENUS[tab.key as keyof typeof MEGA_MENUS].map(item => (
-                      <button
-                        type="button"
-                        key={item.name}
-                        className="flex items-center gap-3 px-5 py-3 rounded-lg hover:bg-[#F5FAFF] transition group w-full text-left"
-                        onClick={() => {
-                          openOrderModal(item.service.platform, item.service.type);
-                          setHoverTab(null);
-                        }}
-                      >
-                        <span>{item.icon}</span>
-                        <span>
-                          <span className="font-semibold text-[#007BFF] group-hover:underline">{item.name}</span>
-                          <div className="text-xs text-[#444]">{item.desc}</div>
-                        </span>
-                      </button>
-                    ))}
-                  </div>
+              <div
+                className={`
+                  absolute left-0 top-[110%] w-80 bg-white rounded-xl border border-[#CFE4FF] shadow-2xl z-50 py-3 
+                  ${hoveredMenu === tab.key ? "opacity-100 pointer-events-auto translate-y-0" : "opacity-0 pointer-events-none translate-y-2"}
+                  transition-all duration-220
+                `}
+                onMouseEnter={() => setHoveredMenu(tab.key)}
+                onMouseLeave={() => { setHoveredMenu(null); setTimeout(() => setHoverTab(null), 120); }}
+                style={{ transitionTimingFunction: "cubic-bezier(.45,1.8,.25,.99)" }}
+              >
+                <div className="flex flex-col gap-1">
+                  {MEGA_MENUS[tab.key as keyof typeof MEGA_MENUS].map(item => (
+                    <button
+                      type="button"
+                      key={item.name}
+                      className="flex items-center gap-3 px-5 py-3 rounded-lg hover:bg-[#F5FAFF] transition group w-full text-left"
+                      onClick={() => {
+                        openOrderModal(item.service.platform, item.service.type);
+                        setHoverTab(null);
+                        setHoveredMenu(null);
+                      }}
+                    >
+                      <span>{item.icon}</span>
+                      <span>
+                        <span className="font-semibold text-[#007BFF] group-hover:underline">{item.name}</span>
+                        <div className="text-xs text-[#444]">{item.desc}</div>
+                      </span>
+                    </button>
+                  ))}
                 </div>
-              )}
+              </div>
             </div>
           ))}
 
