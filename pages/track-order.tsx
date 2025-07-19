@@ -192,7 +192,7 @@ export default function TrackOrderPage() {
 
       {/* Support CTA */}
       <div className="w-full max-w-xl mx-auto mt-8 text-center">
-        <Link href="/support">
+        <Link href="/contact">
           <button className="inline-flex items-center gap-2 bg-white border border-[#CFE4FF] text-[#007BFF] px-5 py-2.5 rounded-full shadow hover:bg-[#F2F9FF] font-semibold transition">
             <MessageCircle size={18} /> Need more help? Chat with our support team
           </button>
