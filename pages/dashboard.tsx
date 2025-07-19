@@ -212,7 +212,6 @@ export default function DashboardPage() {
     setOrderError("");
     setOrderLoading(true);
 
-    // Only pass NON-sensitive info needed for fulfillment, DO NOT use dangerous keywords
     const order = {
       platform: platform.name,
       service: service.type,
@@ -229,7 +228,6 @@ export default function DashboardPage() {
     if (loading)
       return <div className="flex justify-center items-center py-24"><Loader2 className="animate-spin mr-2" /> Loading...</div>;
 
-    // ORDER TAB
     if (activeTab === "order") {
       return (
         <div className="max-w-2xl mx-auto">
@@ -273,7 +271,6 @@ export default function DashboardPage() {
                   </div>
                 ))}
               </div>
-              {/* Blue Progress Bar */}
               <div className="relative w-full h-[5px] rounded-full bg-[#E6F0FF] z-0">
                 <div
                   className="absolute top-0 left-0 h-[5px] rounded-full z-10"
@@ -286,7 +283,6 @@ export default function DashboardPage() {
               </div>
             </div>
           </div>
-          {/* Step Forms */}
           <div className="bg-white border border-[#CFE4FF] rounded-2xl shadow-xl px-5 py-8 mb-6 mt-5">
             {orderStep === 0 && (
               <>
@@ -495,7 +491,6 @@ export default function DashboardPage() {
       );
     }
 
-    // --- ALL YOUR TABS AS ORIGINAL ---
     if (activeTab === "orders") {
       const inProgress = orders.filter(o => o.status !== "Completed");
       return (
@@ -702,15 +697,31 @@ export default function DashboardPage() {
           50% { background: #d9ecff; color: #005FCC;}
         }
         .animate-flashSale { animation: flashSale 2.5s infinite; }
+        /* --- Responsive tweaks --- */
         @media (max-width: 900px) {
+          .max-w-7xl { padding: 0 0vw; }
+          .flex-wrap, .sm\\:flex-nowrap { flex-wrap: wrap !important; }
+          .min-h-screen { min-height: 100vh !important; }
+        }
+        @media (max-width: 750px) {
+          aside { position:static !important; width:100vw !important; min-height:0 !important; max-width:100vw !important; border-radius:0 !important; }
+          section { border-radius:0 !important; min-height:0 !important; padding:8px !important; }
           .max-w-7xl { padding: 0 0vw; }
         }
         @media (max-width: 600px) {
           .max-w-7xl { padding: 0 1vw; }
-          aside, section { padding: 12px !important; }
-          h2 { font-size: 1.1rem !important; }
-          th, td { font-size: 0.98rem; }
-          .text-2xl { font-size: 1.3rem !important; }
+          aside, section { padding: 5px !important; }
+          h2, .text-2xl { font-size: 1.14rem !important; }
+          th, td { font-size: 0.97rem !important; }
+        }
+        @media (max-width: 510px) {
+          aside { padding: 2px !important; }
+          section { padding: 2px !important; }
+        }
+        @media (max-width: 400px) {
+          .max-w-7xl { padding: 0 0vw; }
+          .text-2xl, h2 { font-size: 1rem !important; }
+          th, td { font-size: 0.93rem !important; }
         }
         table { width: 100%; }
         th, td { white-space: nowrap; }
