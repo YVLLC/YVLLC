@@ -153,8 +153,10 @@ export default function SalesNotifications() {
   const [notifs, setNotifs] = useState<NotificationData[] | null>(null);
   const [idx, setIdx] = useState(0);
   const [visible, setVisible] = useState(false);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const fadeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const showTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
+  // Setup notifications data and initial idx
   useEffect(() => {
     if (typeof window === "undefined") return;
     let notifications: NotificationData[];
@@ -176,6 +178,7 @@ export default function SalesNotifications() {
     setNotifs(notifications);
     setIdx(idxInit);
 
+    // Show notification after interval (or immediately if time has passed)
     const now = Date.now();
     const lastShownRaw = window.sessionStorage.getItem("sales_notifs_last_time");
     const lastShown = lastShownRaw ? parseInt(lastShownRaw, 10) : 0;
@@ -185,39 +188,50 @@ export default function SalesNotifications() {
       window.sessionStorage.setItem("sales_notifs_last_time", now.toString());
     } else {
       setVisible(false);
-      const waitMs = NOTIFY_INTERVAL - msAgo;
-      timerRef.current = setTimeout(() => {
+      showTimeoutRef.current = setTimeout(() => {
         setVisible(true);
         window.sessionStorage.setItem("sales_notifs_last_time", Date.now().toString());
-      }, waitMs);
+      }, NOTIFY_INTERVAL - msAgo);
     }
     return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
+      if (fadeTimeoutRef.current) clearTimeout(fadeTimeoutRef.current);
+      if (showTimeoutRef.current) clearTimeout(showTimeoutRef.current);
     };
-    // eslint-disable-next-line
   }, []);
 
+  // Fade out and schedule next notification
   useEffect(() => {
     if (!visible) return;
-    timerRef.current = setTimeout(() => {
+    // Show notification for ~5s, then fade out
+    fadeTimeoutRef.current = setTimeout(() => {
       setVisible(false);
-      if (typeof window !== "undefined" && window.sessionStorage) {
-        const newIdx = idx + 1;
-        setIdx(newIdx);
-        window.sessionStorage.setItem("sales_notifs_idx", newIdx.toString());
-      } else {
-        setIdx(idx + 1);
-      }
+      // After fade animation (0.7s), increment idx and schedule next notification
+      setTimeout(() => {
+        if (typeof window !== "undefined" && window.sessionStorage) {
+          const newIdx = idx + 1;
+          setIdx(newIdx);
+          window.sessionStorage.setItem("sales_notifs_idx", newIdx.toString());
+        } else {
+          setIdx(idx + 1);
+        }
+        // Only show next if there are more notifications
+        if (notifs && newIdx < notifs.length) {
+          showTimeoutRef.current = setTimeout(() => {
+            setVisible(true);
+            window.sessionStorage.setItem("sales_notifs_last_time", Date.now().toString());
+          }, NOTIFY_INTERVAL);
+        }
+      }, 700); // matches fade-out duration
     }, 4800 + Math.random() * 600);
     return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
+      if (fadeTimeoutRef.current) clearTimeout(fadeTimeoutRef.current);
+      if (showTimeoutRef.current) clearTimeout(showTimeoutRef.current);
     };
     // eslint-disable-next-line
-  }, [visible]);
+  }, [visible, idx, notifs]);
 
   if (!notifs || idx >= notifs.length) return null;
   const notification = notifs[idx];
-
   const icon = getServiceIcon(notification.platform);
   const label = getServiceLabel(notification.platform, notification.type, notification.amount);
 
@@ -227,8 +241,8 @@ export default function SalesNotifications() {
         className={`
           fixed z-[60] bottom-7 left-4 sm:left-8 md:left-12
           max-w-xs sm:max-w-sm bg-white border-2 border-[#CFE4FF] rounded-2xl shadow-2xl flex items-center gap-3 px-4 py-3
-          animate-notify-in transition-all duration-500
-          ${visible ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 translate-y-6 pointer-events-none"}
+          transition-all duration-700
+          ${visible ? "opacity-100 translate-y-0 pointer-events-auto animate-notify-in" : "opacity-0 translate-y-8 pointer-events-none"}
         `}
         style={{
           minWidth: 235,
