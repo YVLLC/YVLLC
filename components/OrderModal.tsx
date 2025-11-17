@@ -108,6 +108,7 @@ function getStealthPackage(platform: Platform, service: Service): StealthPackage
 function getQuickAmounts(platform: Platform, service: Service) {
   const type = service.type.toString().toLowerCase();
   const key = platform.key;
+
   if (key === "instagram" && type === "views") return [500, 2000, 5000, 10000, 20000, 50000];
   if (key === "instagram" && type === "followers")
     return [100, 200, 350, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000];
@@ -355,6 +356,29 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
   }
 
   // ==============================
+  // SERVICE SUMMARY (concise, above Amount)
+  // ==============================
+  function ServiceSummary() {
+    return (
+      <div
+        className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs font-semibold"
+        style={{ borderColor: COLORS.border, background: "#F7FBFF" }}
+        aria-live="polite"
+      >
+        <span className="inline-flex items-center justify-center w-5 h-5 rounded-full" style={{ background: COLORS.accentBg }}>
+          {platform.icon}
+        </span>
+        <span className="text-[#0B63E6]">{platform.name}</span>
+        <span className="opacity-40">•</span>
+        <span className="inline-flex items-center gap-1 text-[#334155]">
+          {service.icon}
+          {service.type}
+        </span>
+      </div>
+    );
+  }
+
+  // ==============================
   // AMOUNT SELECTOR — SIMPLE, PREMIUM
   // ==============================
   function Pill({
@@ -392,14 +416,23 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
   function AmountSelector() {
     const options = getQuickAmounts(platform, service);
     const toLabel = (v: number) => (v >= 1000 ? `${v / 1000}K` : `${v}`);
+    const ariaService = `${platform.name} ${service.type}`;
 
     return (
       <div className="w-full max-w-[640px]">
+        {/* Dynamic callout: "How many Instagram Followers?" */}
+        <div className="flex items-center justify-between mb-2">
+          <h4 className="text-sm font-extrabold text-[#0B63E6]">
+            How many {platform.name} {service.type}?
+          </h4>
+          <ServiceSummary />
+        </div>
+
         {/* Mobile: horizontal scroll pills */}
         <div
           className="sm:hidden flex overflow-x-auto gap-2 pb-1 snap-x snap-mandatory"
           role="radiogroup"
-          aria-label="Select amount"
+          aria-label={`Select amount of ${ariaService}`}
         >
           {options.map((v) => (
             <div key={v} className="snap-start">
@@ -407,7 +440,7 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
                 label={toLabel(v)}
                 selected={quantity === v}
                 onClick={() => setQuantity(v)}
-                ariaLabel={`${v} selected amount`}
+                ariaLabel={`${v} ${ariaService}`}
               />
             </div>
           ))}
@@ -417,7 +450,7 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
         <div
           className="hidden sm:grid grid-cols-3 md:grid-cols-4 gap-2"
           role="radiogroup"
-          aria-label="Select amount"
+          aria-label={`Select amount of ${ariaService}`}
         >
           {options.map((v) => (
             <Pill
@@ -425,7 +458,7 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
               label={toLabel(v)}
               selected={quantity === v}
               onClick={() => setQuantity(v)}
-              ariaLabel={`${v} selected amount`}
+              ariaLabel={`${v} ${ariaService}`}
             />
           ))}
         </div>
@@ -659,39 +692,38 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
           {step === 2 && (
             <div>
               <h3 className="font-black text-2xl mb-7 text-[#111111] text-center">Order Details</h3>
-              <div className="space-y-8">
-                <div className="flex flex-col gap-6">
-                  {/* TARGET INPUT */}
-                  <div className="flex flex-col">
-                    <label className="block font-semibold text-[#007BFF] mb-2 text-lg">{getTargetLabel()}</label>
-                    <input
-                      type="text"
-                      autoFocus
-                      value={target}
-                      onChange={(e) => setTarget(e.target.value)}
-                      className="w-full border border-[#CFE4FF] rounded-xl px-4 py-3 text-base font-medium outline-none bg-white/90 shadow focus:border-[#007BFF] focus:ring-2 focus:ring-[#E6F0FF] transition"
-                      placeholder={getTargetPlaceholder()}
-                    />
-                    <span className="mt-2 text-xs text-[#777]">
-                      {isContentEngagement
-                        ? "For likes / views, you must paste the full post or video URL."
-                        : "For followers / subscribers, you can use a username or full profile URL."}
-                    </span>
-                  </div>
-
-                  {/* AMOUNT SELECTOR — SIMPLE PILLS */}
-                  <div className="flex flex-col items-center gap-3 w-full">
-                    <span className="text-[#111] text-base font-semibold">Amount</span>
-                    <AmountSelector />
-                    <span className="font-bold text-[#007BFF] text-xl mt-2">
-                      Total: <span className="text-[#007BFF]">${(discounted * quantity).toFixed(2)}</span>
-                      <span className="ml-2 text-sm text-[#c7c7c7] line-through">${(service.price * quantity).toFixed(2)}</span>
-                    </span>
-                  </div>
-
-                  {error && <div className="mt-2 text-[#EF4444] text-center text-sm">{error}</div>}
+            <div className="space-y-8">
+              <div className="flex flex-col gap-6">
+                {/* TARGET INPUT */}
+                <div className="flex flex-col">
+                  <label className="block font-semibold text-[#007BFF] mb-2 text-lg">{getTargetLabel()}</label>
+                  <input
+                    type="text"
+                    autoFocus
+                    value={target}
+                    onChange={(e) => setTarget(e.target.value)}
+                    className="w-full border border-[#CFE4FF] rounded-xl px-4 py-3 text-base font-medium outline-none bg-white/90 shadow focus:border-[#007BFF] focus:ring-2 focus:ring-[#E6F0FF] transition"
+                    placeholder={getTargetPlaceholder()}
+                  />
+                  <span className="mt-2 text-xs text-[#777]">
+                    {isContentEngagement
+                      ? "For likes / views, you must paste the full post or video URL."
+                      : "For followers / subscribers, you can use a username or full profile URL."}
+                  </span>
                 </div>
+
+                {/* AMOUNT SELECTOR — SIMPLE PILLS + SERVICE SUMMARY */}
+                <div className="flex flex-col items-center gap-3 w-full">
+                  <AmountSelector />
+                  <span className="font-bold text-[#007BFF] text-xl mt-2">
+                    Total: <span className="text-[#007BFF]">${(discounted * quantity).toFixed(2)}</span>
+                    <span className="ml-2 text-sm text-[#c7c7c7] line-through">${(service.price * quantity).toFixed(2)}</span>
+                  </span>
+                </div>
+
+                {error && <div className="mt-2 text-[#EF4444] text-center text-sm">{error}</div>}
               </div>
+            </div>
 
               <div className="flex justify-between mt-8">
                 <button
@@ -747,7 +779,7 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
                 <button
                   type="button"
                   className="px-6 py-3 rounded-xl font-bold bg-[#E6F0FF] text-[#007BFF] border border-[#CFE4FF] hover:bg-[#d7eafd] shadow transition text-lg"
-                  onClick={handleBack}
+                  onClick={onClickBackSafe(handleBack)}
                 >
                   Back
                 </button>
@@ -770,4 +802,7 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
       `}</style>
     </div>
   );
+
+  // Avoid TS complaining if used above as callback
+  function onClickBackSafe(fn: () => void) { return fn; }
 }
