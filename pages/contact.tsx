@@ -42,7 +42,7 @@ export default function Contact() {
             <div className="flex-1 min-w-[200px] flex items-center justify-center gap-2 bg-[#F5FAFF] rounded-xl px-4 py-3 text-[#007BFF] text-sm font-semibold shadow text-center whitespace-nowrap">
               <Mail size={18} />
               <a href="mailto:support@yesviral.com" className="underline break-all">
-                support@yesviral.com
+                Support@YesViral.com
               </a>
             </div>
             <div className="flex-1 min-w-[200px] flex items-center justify-center gap-2 bg-[#F5FAFF] rounded-xl px-4 py-3 text-[#007BFF] text-sm font-semibold shadow text-center whitespace-nowrap">
