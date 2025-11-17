@@ -97,7 +97,7 @@ export default function Contact() {
               Fastest responses: <span className="font-medium text-[#005FCC]">10am – 10pm (GMT+4)</span>
             </div>
             <div className="text-xs text-[#888]">
-              All queries answered within 24 hours. Order-related? Please include your <span className="font-medium text-[#007BFF]">Order ID</span> for the fastest help.
+              All queries answered within 48 hours. Order-related? Please include your <span className="font-medium text-[#007BFF]">Order ID</span> for the fastest help.
             </div>
           </div>
         </div>
