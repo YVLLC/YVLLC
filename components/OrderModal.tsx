@@ -108,7 +108,6 @@ function getStealthPackage(platform: Platform, service: Service): StealthPackage
 function getQuickAmounts(platform: Platform, service: Service) {
   const type = service.type.toString().toLowerCase();
   const key = platform.key;
-
   if (key === "instagram" && type === "views") return [500, 2000, 5000, 10000, 20000, 50000];
   if (key === "instagram" && type === "followers")
     return [100, 200, 350, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000];
@@ -356,114 +355,83 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
   }
 
   // ==============================
-  // AMOUNT — BUZZOID STYLE
+  // AMOUNT SELECTOR — SIMPLE, PREMIUM
   // ==============================
-  function getAmountBadge(val: number, arr: number[]) {
-    const max = arr[arr.length - 1];
-    if (val === max) return "Best value";
-    if ([1000, 5000, 10000].includes(val)) return "Popular";
-    return "";
-  }
-  const handleArrowNav = (arr: number[], dir: -1 | 1) => {
-    const i = arr.findIndex((v) => v === quantity);
-    const ni = Math.min(arr.length - 1, Math.max(0, i + dir));
-    setQuantity(arr[ni]);
-  };
-  const AmountCard = ({
-    val,
+  function Pill({
+    label,
     selected,
-    onSelect,
-    accent,
-    perUnit,
+    onClick,
+    ariaLabel,
   }: {
-    val: number;
+    label: string;
     selected: boolean;
-    onSelect: () => void;
-    accent: string;
-    perUnit: number;
-  }) => {
-    const label = val >= 1000 ? `${val / 1000}K` : `${val}`;
-    const total = (perUnit * val).toFixed(0);
+    onClick: () => void;
+    ariaLabel: string;
+  }) {
     return (
       <button
         type="button"
-        onClick={onSelect}
-        role="option"
-        aria-selected={selected}
+        role="radio"
+        aria-checked={selected}
+        aria-label={ariaLabel}
+        onClick={onClick}
         className={[
-          "group relative rounded-2xl border-2 px-4 py-3 text-left transition-all",
+          "flex-none h-12 min-w-[88px] px-4 rounded-full border text-sm font-bold tracking-tight",
+          "transition-all select-none",
           "focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-0 focus-visible:ring-[#BFD9FF]",
           selected
-            ? "bg-white border-[#7FB5FF] shadow-[0_10px_24px_rgba(0,123,255,.18)]"
-            : "bg-white/90 border-[#E5F0FF] hover:border-[#9CC5FF] hover:shadow-[0_10px_20px_rgba(0,123,255,.14)]",
+            ? "bg-[#007BFF] text-white border-[#007BFF] shadow-[0_8px_18px_rgba(0,123,255,.25)]"
+            : "bg-white text-[#0B63E6] border-[#DCEBFF] hover:border-[#7FB5FF] hover:bg-[#F6FAFF]",
         ].join(" ")}
-        style={{ backdropFilter: "saturate(110%) blur(2px)" }}
-        title={`~$${total} total • $${perUnit.toFixed(3)}/ea`}
       >
-        {/* Accent rail */}
-        <span
-          aria-hidden
-          className="absolute left-0 top-0 w-full h-1.5 rounded-t-2xl"
-          style={{
-            background: `linear-gradient(90deg, ${accent} 0%, ${COLORS.primary} 100%)`,
-            boxShadow: selected ? "0 4px 14px rgba(0,123,255,.25)" : undefined,
-          }}
-        />
-        {/* Badge */}
-        <span
-          className={[
-            "absolute -top-2 -right-2 text-[10px] font-bold px-1.5 py-0.5 rounded-full shadow transition",
-            selected ? "opacity-100" : "opacity-90",
-          ].join(" ")}
-          style={{
-            color: "#0B63E6",
-            background: "#EAF3FF",
-            border: "1px solid #D5E8FF",
-          }}
-        >
-          {getAmountBadge(val, getQuickAmounts(platform, service))}
-        </span>
-
-        <div className="flex items-center gap-3">
-          {/* Qty bubble */}
-          <div
-            className={[
-              "grid place-items-center h-10 w-10 rounded-xl font-extrabold tracking-tight",
-              selected ? "text-white" : "text-[#0B63E6]",
-            ].join(" ")}
-            style={{
-              background: selected
-                ? `linear-gradient(135deg, ${accent}, ${COLORS.primary})`
-                : "#EEF5FF",
-              boxShadow: selected ? "0 8px 18px rgba(0,123,255,.25)" : "inset 0 0 0 1px #DCEBFF",
-            }}
-          >
-            {label}
-          </div>
-
-          {/* Texts */}
-          <div className="flex flex-col leading-tight">
-            <span className="text-sm font-black text-[#0B63E6]">{val.toLocaleString()}</span>
-            <span className="text-[11px] font-semibold text-[#5B6E93]">
-              ~${total} • ${perUnit.toFixed(3)}/ea
-            </span>
-          </div>
-
-          {/* Check glow */}
-          {selected && (
-            <span
-              aria-hidden
-              className="ml-auto h-5 w-5 rounded-full"
-              style={{
-                background: `conic-gradient(from 0deg, ${accent}, ${COLORS.primary})`,
-                boxShadow: "0 0 0 2px #fff, 0 6px 18px rgba(0,123,255,.25)",
-              }}
-            />
-          )}
-        </div>
+        {label}
       </button>
     );
-  };
+  }
+
+  function AmountSelector() {
+    const options = getQuickAmounts(platform, service);
+    const toLabel = (v: number) => (v >= 1000 ? `${v / 1000}K` : `${v}`);
+
+    return (
+      <div className="w-full max-w-[640px]">
+        {/* Mobile: horizontal scroll pills */}
+        <div
+          className="sm:hidden flex overflow-x-auto gap-2 pb-1 snap-x snap-mandatory"
+          role="radiogroup"
+          aria-label="Select amount"
+        >
+          {options.map((v) => (
+            <div key={v} className="snap-start">
+              <Pill
+                label={toLabel(v)}
+                selected={quantity === v}
+                onClick={() => setQuantity(v)}
+                ariaLabel={`${v} selected amount`}
+              />
+            </div>
+          ))}
+        </div>
+
+        {/* Desktop: tidy grid */}
+        <div
+          className="hidden sm:grid grid-cols-3 md:grid-cols-4 gap-2"
+          role="radiogroup"
+          aria-label="Select amount"
+        >
+          {options.map((v) => (
+            <Pill
+              key={v}
+              label={toLabel(v)}
+              selected={quantity === v}
+              onClick={() => setQuantity(v)}
+              ariaLabel={`${v} selected amount`}
+            />
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   // ==============================
   // PREVIEW MINI (Review-only, small)
@@ -493,7 +461,7 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
           </div>
         </div>
 
-        {/* Media */}
+        {/* Media: SMALL 4:3 thumbnail, capped height */}
         <div className="relative w-full bg-[#DAE6FF]">
           <div className="relative w-full" style={{ paddingTop: "75%", maxHeight: 140 }}>
             {previewLoading && <div className="absolute inset-0 animate-pulse bg-gradient-to-br from-[#EAF2FF] via-[#F5FAFF] to-white" />}
@@ -615,7 +583,7 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
 
         {/* Content */}
         <div className="flex-1 overflow-y-auto px-5 sm:px-8 py-7 rounded-b-3xl" style={{ background: COLORS.background }}>
-          {/* STEP 0 */}
+          {/* STEP 0: PLATFORM */}
           {step === 0 && (
             <div>
               <h3 className="font-black text-2xl mb-7 text-[#111111] text-center tracking-tight">Choose Platform</h3>
@@ -642,7 +610,7 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
             </div>
           )}
 
-          {/* STEP 1 */}
+          {/* STEP 1: SERVICE */}
           {step === 1 && (
             <div>
               <h3 className="font-black text-2xl mb-7 text-[#111111] text-center">
@@ -687,7 +655,7 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
             </div>
           )}
 
-          {/* STEP 2 (NO PREVIEW) */}
+          {/* STEP 2: DETAILS (NO PREVIEW) */}
           {step === 2 && (
             <div>
               <h3 className="font-black text-2xl mb-7 text-[#111111] text-center">Order Details</h3>
@@ -711,34 +679,11 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
                     </span>
                   </div>
 
-                  {/* AMOUNT SELECTOR — BUZZOID */}
+                  {/* AMOUNT SELECTOR — SIMPLE PILLS */}
                   <div className="flex flex-col items-center gap-3 w-full">
                     <span className="text-[#111] text-base font-semibold">Amount</span>
-
-                    <div
-                      className="grid grid-cols-2 sm:grid-cols-3 gap-3 w-full max-w-[620px]"
-                      role="listbox"
-                      aria-label="Select amount"
-                      onKeyDown={(e) => {
-                        const arr = getQuickAmounts(platform, service);
-                        if (e.key === "ArrowRight") handleArrowNav(arr, 1);
-                        if (e.key === "ArrowLeft") handleArrowNav(arr, -1);
-                      }}
-                      tabIndex={0}
-                    >
-                      {getQuickAmounts(platform, service).map((val) => (
-                        <AmountCard
-                          key={val}
-                          val={val}
-                          selected={quantity === val}
-                          onSelect={() => setQuantity(val)}
-                          accent={platform.color}
-                          perUnit={discounted}
-                        />
-                      ))}
-                    </div>
-
-                    <span className="font-extrabold text-[#007BFF] text-xl mt-2">
+                    <AmountSelector />
+                    <span className="font-bold text-[#007BFF] text-xl mt-2">
                       Total: <span className="text-[#007BFF]">${(discounted * quantity).toFixed(2)}</span>
                       <span className="ml-2 text-sm text-[#c7c7c7] line-through">${(service.price * quantity).toFixed(2)}</span>
                     </span>
@@ -762,11 +707,12 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
             </div>
           )}
 
-          {/* STEP 3 (Preview small) */}
+          {/* STEP 3: REVIEW (Preview lives here, SMALL) */}
           {step === 3 && (
             <form onSubmit={handleSecureCheckout}>
               <h3 className="font-black text-2xl mb-5 text-[#111] text-center">Review & Secure Checkout</h3>
 
+              {/* REVIEW SUMMARY */}
               <div className="bg-[#F5FAFF] border border-[#CFE4FF] rounded-xl px-6 py-7 mb-6 space-y-4">
                 <div className="flex items-center gap-2 mb-2">
                   {platform.icon}
@@ -790,6 +736,7 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
                 <div className="mt-2 font-extrabold text-lg text-[#007BFF]">Total: ${(discounted * quantity).toFixed(2)}</div>
               </div>
 
+              {/* SMALL PREVIEW */}
               <div className="mb-6">
                 <PreviewMini />
               </div>
