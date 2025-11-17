@@ -10,23 +10,21 @@ import {
   X,
   CheckCircle,
   Tag,
-  AlertTriangle,
   Play,
-  RefreshCcw,
 } from "lucide-react";
 
-/* ==============================
-   TYPES
-============================== */
+// ==============================
+// TYPES
+// ==============================
 type ServiceType = "Followers" | "Likes" | "Views" | "Subscribers";
 type Service = { type: ServiceType | string; price: number; icon: JSX.Element };
 type Platform = { key: string; name: string; color: string; icon: JSX.Element; services: Service[] };
 type StealthPackageResult = { pkg: string; type: string };
 type PreviewData = { ok: boolean; type?: string; image?: string | null; error?: string };
 
-/* ==============================
-   COLOR PALETTE
-============================== */
+// ==============================
+// COLOR PALETTE
+// ==============================
 const COLORS = {
   primary: "#007BFF",
   primaryHover: "#005FCC",
@@ -36,15 +34,11 @@ const COLORS = {
   muted: "#888888",
   accentBg: "#E6F0FF",
   border: "#CFE4FF",
-  success: "#22C55E",
-  error: "#EF4444",
-  warning: "#FACC15",
-  focus: "#0056B3",
 };
 
-/* ==============================
-   PLATFORM DATA
-============================== */
+// ==============================
+// PLATFORM DATA
+// ==============================
 const PLATFORMS: Platform[] = [
   {
     key: "instagram",
@@ -83,17 +77,17 @@ const PLATFORMS: Platform[] = [
 
 const steps = [{ label: "Platform" }, { label: "Service" }, { label: "Details" }, { label: "Review" }];
 
-/* ==============================
-   DISCOUNT CALC
-============================== */
+// ==============================
+// DISCOUNT CALC
+// ==============================
 function getDiscountedPrice(price: number) {
   const discount = 0.02 + Math.random() * 0.02;
   return { discount: Math.round(discount * 100), discounted: Number((price * (1 - discount)).toFixed(3)) };
 }
 
-/* ==============================
-   PACKAGE TYPE PREP
-============================== */
+// ==============================
+// PACKAGE TYPE PREP
+// ==============================
 function getStealthPackage(platform: Platform, service: Service): StealthPackageResult {
   let pkg = "Premium Package";
   let type = "Standard";
@@ -108,12 +102,13 @@ function getStealthPackage(platform: Platform, service: Service): StealthPackage
   return { pkg, type };
 }
 
-/* ==============================
-   QUICK AMOUNTS
-============================== */
+// ==============================
+// QUICK AMOUNTS
+// ==============================
 function getQuickAmounts(platform: Platform, service: Service) {
   const type = service.type.toString().toLowerCase();
   const key = platform.key;
+
   if (key === "instagram" && type === "views") return [500, 2000, 5000, 10000, 20000, 50000];
   if (key === "instagram" && type === "followers")
     return [100, 200, 350, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000];
@@ -126,9 +121,9 @@ function getQuickAmounts(platform: Platform, service: Service) {
   return [100, 500, 1000, 2000, 5000, 10000, 25000, 50000];
 }
 
-/* ==============================
-   LIVE PREVIEW FETCHER
-============================== */
+// ==============================
+// LIVE PREVIEW FETCHER
+// ==============================
 async function fetchPreview(platform: string, target: string): Promise<PreviewData> {
   try {
     const res = await fetch(`/api/preview?platform=${platform}&target=${encodeURIComponent(target)}`);
@@ -138,9 +133,9 @@ async function fetchPreview(platform: string, target: string): Promise<PreviewDa
   }
 }
 
-/* ==============================
-   UTILS
-============================== */
+// ==============================
+// UTILS
+// ==============================
 const isLink = (t: string) => /^https?:\/\//i.test(t.trim());
 function normalizeHandle(platform: Platform, target: string) {
   const raw = target.trim();
@@ -156,9 +151,9 @@ function hashToHsl(seed: string, s = 65, l = 58) {
   return `hsl(${h % 360} ${s}% ${l}%)`;
 }
 
-/* ==============================
-   ImageSafe (tiny, robust)
-============================== */
+// ==============================
+// ImageSafe (tiny, no controls)
+// ==============================
 function ImageSafe({ src, alt }: { src: string; alt: string }) {
   const [loaded, setLoaded] = useState(false);
   const [failed, setFailed] = useState(false);
@@ -178,9 +173,9 @@ function ImageSafe({ src, alt }: { src: string; alt: string }) {
   );
 }
 
-/* ==============================
-   PROPS
-============================== */
+// ==============================
+// PROPS
+// ==============================
 type OrderModalProps = {
   open: boolean;
   onClose: () => void;
@@ -188,9 +183,9 @@ type OrderModalProps = {
   initialService?: string;
 };
 
-/* ==============================
-   COMPONENT
-============================== */
+// ==============================
+// COMPONENT
+// ==============================
 export default function OrderModal({ open, onClose, initialPlatform, initialService }: OrderModalProps) {
   const [step, setStep] = useState(0);
   const [platform, setPlatform] = useState<Platform>(PLATFORMS[0]);
@@ -202,7 +197,7 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
   const [preview, setPreview] = useState<PreviewData | null>(null);
   const [previewLoading, setPreviewLoading] = useState(false);
 
-  /* Lock scroll */
+  // Lock scroll
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
     return () => {
@@ -210,9 +205,10 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
     };
   }, [open]);
 
-  /* Init from props */
+  // Init state
   useEffect(() => {
     if (!open) return;
+
     let selectedPlatform = PLATFORMS[0];
     let selectedService = PLATFORMS[0].services[0];
     let stepToSet = 0;
@@ -252,9 +248,9 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
   const isContentEngagement = service.type === "Likes" || service.type === "Views";
   const isVideo = useMemo(() => isContentEngagement && isLink(target), [isContentEngagement, target]);
 
-  /* Preview: ONLY in Review step */
+  // Preview: ONLY in Review step
   const doFetchPreview = useCallback(
-    async (force = false) => {
+    async () => {
       if (!open || step !== 3) return;
       const trimmed = target.trim();
       if (!trimmed) {
@@ -262,8 +258,7 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
         setPreviewLoading(false);
         return;
       }
-      if (!force && isContentEngagement && !isLink(trimmed)) {
-        // WHY: Likes/Views require URL
+      if (isContentEngagement && !isLink(trimmed)) {
         setPreview({ ok: false, error: "Post / video URL required for preview." });
         return;
       }
@@ -277,7 +272,7 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
 
   useEffect(() => {
     if (step !== 3) return;
-    const id = setTimeout(() => doFetchPreview(false), 200);
+    const id = setTimeout(() => void doFetchPreview(), 150);
     return () => clearTimeout(id);
   }, [doFetchPreview, step]);
 
@@ -294,9 +289,9 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
     total: Number((discounted * quantity).toFixed(2)),
   };
 
-  /* ==============================
-     VALIDATION & NAVIGATION
-  ============================== */
+  // ==============================
+  // VALIDATION & NAVIGATION
+  // ==============================
   function handleBack() {
     setError("");
     setStep((prev) => Math.max(0, prev - 1));
@@ -304,6 +299,7 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
 
   function handleNextFromDetails() {
     const trimmed = target.trim();
+
     if (!trimmed) {
       setError(isContentEngagement ? "Paste the full post / video link." : "Paste your profile link or username.");
       return;
@@ -316,6 +312,7 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
       setError("Select a valid amount.");
       return;
     }
+
     setError("");
     setStep(3);
   }
@@ -331,18 +328,20 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
       setError("For likes / views, please paste a full post or video URL.");
       return;
     }
+
     setError("");
     const orderString = btoa(unescape(encodeURIComponent(JSON.stringify(orderToSend))));
     window.location.href = "https://checkout.yesviral.com/checkout?order=" + orderString;
   }
 
-  /* ==============================
-     TARGET LABEL & PLACEHOLDER
-  ============================== */
+  // ==============================
+  // TARGET LABEL & PLACEHOLDER
+  // ==============================
   function getTargetLabel() {
     if (service.type === "Followers" || service.type === "Subscribers") return "Profile or Username";
     return "Post / Video Link";
   }
+
   function getTargetPlaceholder() {
     if (service.type === "Followers" || service.type === "Subscribers") {
       if (platform.key === "instagram") return "e.g. @yourusername or instagram.com/yourusername";
@@ -356,99 +355,60 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
     return "Paste your post / video link";
   }
 
-  /* ==============================
-     PREVIEW CARD (Review-only, responsive)
-  ============================== */
-  function PreviewCard() {
+  // ==============================
+  // PREVIEW MINI (Review-only, small)
+  // ==============================
+  function PreviewMini() {
     const hasImg = !!(preview && preview.ok && preview.image);
-    const failed = !!(preview && preview.ok === false);
     const normalized = normalizeHandle(platform, target || "");
     const avatarHue = hashToHsl(normalized || platform.name);
 
     return (
       <div
-        className="w-full rounded-2xl border bg-white shadow-sm overflow-hidden"
+        className="w-full max-w-sm rounded-xl border bg-white shadow-sm overflow-hidden mx-auto"
         style={{ borderColor: COLORS.border }}
       >
         {/* Header */}
-        <div className="flex items-center gap-3 px-4 py-3 border-b bg-white/80" style={{ borderColor: "#E0ECFF" }}>
-          <div className="flex items-center justify-center w-9 h-9 rounded-full" style={{ background: COLORS.accentBg }}>
+        <div className="flex items-center gap-2 px-3 py-2 border-b bg-white/80" style={{ borderColor: "#E0ECFF" }}>
+          <div className="flex items-center justify-center w-7 h-7 rounded-full" style={{ background: COLORS.accentBg }}>
             {platform.icon}
           </div>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-black uppercase tracking-wider" style={{ color: COLORS.primary }}>
-                Preview
-              </span>
-              {previewLoading && (
-                <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-[#EAF2FF] text-[#3B82F6]">Loading…</span>
-              )}
-              {!previewLoading && hasImg && (
-                <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-[#ECFDF5] text-[#16A34A]">Ready</span>
-              )}
-              {!previewLoading && failed && (
-                <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-[#FEF2F2] text-[#DC2626]">Unavailable</span>
-              )}
-            </div>
-            <span className="text-[11px] text-[#6B7280]">
-              {isContentEngagement ? "Post / video preview" : "Profile preview (when available)"}
+          <div className="min-w-0">
+            <span className="text-[11px] font-bold" style={{ color: COLORS.primary }}>
+              Preview
             </span>
+            <div className="text-[10px] text-[#6B7280]">
+              {isContentEngagement ? "Post / video" : "Profile"}
+            </div>
           </div>
         </div>
 
-        {/* Media: fully responsive, capped height on tiny screens */}
+        {/* Media: SMALL 4:3 thumbnail, capped height */}
         <div className="relative w-full bg-[#DAE6FF]">
-          <div className="relative w-full aspect-video max-h-[38vh]">
+          <div className="relative w-full" style={{ paddingTop: "75%", maxHeight: 140 }}>
             {previewLoading && <div className="absolute inset-0 animate-pulse bg-gradient-to-br from-[#EAF2FF] via-[#F5FAFF] to-white" />}
 
             {!previewLoading && hasImg && (
               <>
                 <ImageSafe src={preview!.image as string} alt="Content preview" />
-                <div className="absolute top-2 left-2 px-2 py-1 text-[10px] font-semibold rounded-full bg-black/50 text-white backdrop-blur">
-                  {platform.name}
-                </div>
                 {isVideo && (
-                  <div className="absolute bottom-2 right-2 flex items-center gap-1 px-2 py-1 rounded-full bg-black/55 text-white text-[10px] backdrop-blur">
-                    <Play size={12} />
+                  <div className="absolute bottom-1.5 right-1.5 flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-black/60 text-white text-[9px]">
+                    <Play size={10} />
                     Video
                   </div>
                 )}
               </>
             )}
 
-            {!previewLoading && !hasImg && normalized && (
+            {!previewLoading && !hasImg && (
               <div className="absolute inset-0 grid place-items-center">
                 <div
-                  className="w-[56%] max-w-[220px] aspect-square rounded-2xl shadow-xl grid place-items-center text-white font-extrabold text-2xl"
+                  className="w-[52%] max-w-[120px] aspect-square rounded-xl shadow grid place-items-center text-white font-extrabold text-xl"
                   style={{
                     background: `linear-gradient(135deg, ${avatarHue}, ${avatarHue.replace("% 58%)", "% 42%)")})`,
                   }}
                 >
-                  {normalized.replace(/^@/, "").slice(0, 2).toUpperCase()}
-                </div>
-              </div>
-            )}
-
-            {!previewLoading && failed && (
-              <div className="absolute inset-0 grid place-items-center">
-                <div
-                  className="mx-4 rounded-xl border bg-white/95 backdrop-blur px-4 py-3 text-center shadow"
-                  style={{ borderColor: "#FEE2E2" }}
-                >
-                  <div className="flex items-center justify-center gap-2 text-[#DC2626] font-semibold text-sm mb-1">
-                    <AlertTriangle size={16} /> Preview unavailable
-                  </div>
-                  <p className="text-[12px] text-[#6B7280]">
-                    {preview?.error || "We couldn’t fetch a preview for this target."}
-                  </p>
-                  <button
-                    type="button"
-                    onClick={() => doFetchPreview(true)}
-                    className="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-[12px] font-semibold bg-[#FFF] hover:bg-[#FAFAFA]"
-                    style={{ borderColor: COLORS.border, color: COLORS.primary }}
-                  >
-                    <RefreshCcw size={14} /> Retry
-                  </button>
+                  {normalized.replace(/^@/, "").slice(0, 2).toUpperCase() || platform.name.slice(0, 2).toUpperCase()}
                 </div>
               </div>
             )}
@@ -456,16 +416,16 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
         </div>
 
         {/* Footer */}
-        <div className="px-4 py-3 bg-white flex items-center justify-between">
+        <div className="px-3 py-2 bg-white flex items-center justify-between">
           <div className="min-w-0">
-            <span className="block text-xs font-semibold text-[#111] truncate max-w-[70vw] sm:max-w-[420px]">
-              {normalized || "No target provided"}
+            <span className="block text-[11px] font-semibold text-[#111] truncate max-w-[220px]">
+              {normalized || "—"}
             </span>
-            <span className="text-[11px] text-[#6B7280]">Visual preview only. Delivery unaffected.</span>
+            <span className="text-[10px] text-[#6B7280]">Visual only</span>
           </div>
           <span
-            className="text-[11px] font-semibold px-2 py-1 rounded-full"
-            style={{ color: platform.color, background: `${platform.color}1A`, border: `1px solid ${platform.color}33` }}
+            className="text-[10px] font-semibold px-2 py-0.5 rounded-full"
+            style={{ color: platform.color, background: `${platform.color}14`, border: `1px solid ${platform.color}26` }}
           >
             {platform.name}
           </span>
@@ -474,18 +434,18 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
     );
   }
 
-  /* ==============================
-     RENDER
-  ============================== */
+  // ==============================
+  // RENDER
+  // ==============================
   return (
     <div className="fixed z-[9999] inset-0 flex items-center justify-center bg-black/85 backdrop-blur-[2.5px]">
       <div
-        className="relative w-[min(92vw,720px)] mx-auto bg-white rounded-3xl border-2 shadow-[0_6px_48px_0_rgba(0,123,255,0.13)] flex flex-col"
+        className="relative w-full max-w-lg mx-auto bg-white rounded-3xl border-2 shadow-[0_6px_48px_0_rgba(0,123,255,0.13)] flex flex-col"
         style={{ minHeight: 0, maxHeight: "94vh" }}
       >
         {/* Header */}
         <div
-          className="w-full px-4 sm:px-6 pt-6 pb-4 rounded-t-3xl border-b flex flex-col gap-2"
+          className="w-full px-6 pt-6 pb-4 rounded-t-3xl border-b flex flex-col gap-2"
           style={{
             background: `linear-gradient(90deg, ${COLORS.accentBg} 0%, ${COLORS.background} 80%)`,
             borderColor: COLORS.border,
@@ -493,14 +453,14 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
           }}
         >
           <button
-            className="absolute top-5 right-5 sm:right-7 z-20 bg-white border border-[#e3edfc] shadow-lg rounded-full p-2 hover:bg-[#f8faff] transition"
+            className="absolute top-5 right-7 z-20 bg-white border border-[#e3edfc] shadow-lg rounded-full p-2 hover:bg-[#f8faff] transition"
             onClick={onClose}
             aria-label="Close"
           >
             <X size={22} className="text-[#007BFF]" />
           </button>
 
-          <div className="flex items-center gap-2 pr-12 sm:pr-14">
+          <div className="flex items-center gap-2 pr-14">
             {platform.icon}
             <span className="font-extrabold text-lg tracking-tight" style={{ color: platform.color }}>
               {platform.name}
@@ -508,7 +468,7 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
           </div>
 
           {/* Steps */}
-          <div className="relative w-full flex items-center justify-between mt-4 px-1 sm:px-2 z-10">
+          <div className="relative w-full flex items-center justify-between mt-4 px-2 z-10">
             {steps.map((s, i) => (
               <div key={s.label} className="flex flex-col items-center flex-1 min-w-0">
                 <div
@@ -523,18 +483,11 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
                 >
                   {i + 1}
                 </div>
-                <span
-                  className={`mt-2 text-[11px] sm:text-xs font-semibold whitespace-nowrap text-center ${
-                    step === i ? "text-[#007BFF]" : "text-[#888]"
-                  }`}
-                  style={{ width: "max-content" }}
-                >
-                  {s.label}
-                </span>
+                <span className={`mt-2 text-xs font-semibold ${step === i ? "text-[#007BFF]" : "text-[#888]"}`}>{s.label}</span>
               </div>
             ))}
           </div>
-          <div className="relative w-full h-3 mt-2 mb-[-8px] px-2 sm:px-3 flex items-center">
+          <div className="relative w-full h-3 mt-2 mb-[-8px] px-3 flex items-center">
             <div className="absolute left-0 top-1/2 w-full h-2 rounded-full" style={{ background: COLORS.accentBg, transform: "translateY(-50%)" }} />
             <div
               className="absolute left-0 top-1/2 h-2"
@@ -551,16 +504,16 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto px-4 sm:px-8 py-6 sm:py-7 rounded-b-3xl" style={{ background: COLORS.background }}>
+        <div className="flex-1 overflow-y-auto px-5 sm:px-8 py-7 rounded-b-3xl" style={{ background: COLORS.background }}>
           {/* STEP 0: PLATFORM */}
           {step === 0 && (
             <div>
               <h3 className="font-black text-2xl mb-7 text-[#111111] text-center tracking-tight">Choose Platform</h3>
-              <div className="flex justify-center gap-4 sm:gap-6 flex-wrap">
+              <div className="flex justify-center gap-5 sm:gap-8 flex-wrap">
                 {PLATFORMS.map((p) => (
                   <button
                     key={p.key}
-                    className={`rounded-xl flex flex-col items-center gap-1 px-5 py-4 border-2 font-bold text-sm shadow hover:shadow-lg transition ${
+                    className={`rounded-xl flex flex-col items-center gap-1 px-6 py-5 border-2 font-bold text-sm shadow hover:shadow-lg transition ${
                       platform.key === p.key ? "border-[#007BFF] bg-[#E6F0FF] text-[#007BFF] scale-105" : "border-[#CFE4FF] text-[#111111] bg-white"
                     }`}
                     style={{ minWidth: 110, minHeight: 90 }}
@@ -624,12 +577,12 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
             </div>
           )}
 
-          {/* STEP 2: DETAILS (NO PREVIEW HERE) */}
+          {/* STEP 2: DETAILS (NO PREVIEW) */}
           {step === 2 && (
             <div>
               <h3 className="font-black text-2xl mb-7 text-[#111111] text-center">Order Details</h3>
               <div className="space-y-8">
-                <div className="max-w-[720px] mx-auto">
+                <div className="flex flex-col gap-6">
                   {/* TARGET INPUT */}
                   <div className="flex flex-col">
                     <label className="block font-semibold text-[#007BFF] mb-2 text-lg">{getTargetLabel()}</label>
@@ -649,7 +602,7 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
                   </div>
 
                   {/* AMOUNT SELECTOR */}
-                  <div className="mt-6 flex flex-col items-center gap-3 w-full">
+                  <div className="flex flex-col items-center gap-3 w-full">
                     <span className="text-[#111] text-base font-semibold">Amount</span>
                     <div className="flex gap-2 flex-wrap justify-center w-full">
                       {getQuickAmounts(platform, service).map((val) => (
@@ -669,7 +622,6 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
                       Total: <span className="text-[#007BFF]">${(discounted * quantity).toFixed(2)}</span>
                       <span className="ml-2 text-sm text-[#c7c7c7] line-through">${(service.price * quantity).toFixed(2)}</span>
                     </span>
-                    <span className="text-xs text-[#007BFF] font-semibold mt-1">Flash Sale! {discount}% off for a limited time</span>
                   </div>
 
                   {error && <div className="mt-2 text-[#EF4444] text-center text-sm">{error}</div>}
@@ -690,13 +642,13 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
             </div>
           )}
 
-          {/* STEP 3: REVIEW (Preview lives here) */}
+          {/* STEP 3: REVIEW (Preview lives here, SMALL) */}
           {step === 3 && (
             <form onSubmit={handleSecureCheckout}>
               <h3 className="font-black text-2xl mb-5 text-[#111] text-center">Review & Secure Checkout</h3>
 
               {/* REVIEW SUMMARY */}
-              <div className="bg-[#F5FAFF] border border-[#CFE4FF] rounded-xl px-5 sm:px-6 py-6 sm:py-7 mb-6 space-y-4">
+              <div className="bg-[#F5FAFF] border border-[#CFE4FF] rounded-xl px-6 py-7 mb-6 space-y-4">
                 <div className="flex items-center gap-2 mb-2">
                   {platform.icon}
                   <span className="font-semibold text-lg">{platform.name}</span>
@@ -719,9 +671,9 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
                 <div className="mt-2 font-extrabold text-lg text-[#007BFF]">Total: ${(discounted * quantity).toFixed(2)}</div>
               </div>
 
-              {/* PREVIEW (REVIEW-ONLY) */}
+              {/* SMALL PREVIEW */}
               <div className="mb-6">
-                <PreviewCard />
+                <PreviewMini />
               </div>
 
               {error && <div className="mt-4 text-[#EF4444] text-center text-sm">{error}</div>}
@@ -748,28 +700,8 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
       </div>
 
       <style jsx global>{`
-        @keyframes flashSaleBlue {
-          0%,
-          100% {
-            background: #e6f0ff;
-            color: #007bff;
-          }
-          50% {
-            background: #d3e5ff;
-            color: #005fcc;
-          }
-        }
-        .animate-flashSale {
-          animation: flashSaleBlue 2.5s infinite;
-        }
-        ::-webkit-scrollbar {
-          width: 0.7em;
-          background: #f7f9ff;
-        }
-        ::-webkit-scrollbar-thumb {
-          background: #e6f0ff;
-          border-radius: 8px;
-        }
+        ::-webkit-scrollbar { width: 0.7em; background: #f7f9ff; }
+        ::-webkit-scrollbar-thumb { background: #e6f0ff; border-radius: 8px; }
       `}</style>
     </div>
   );
