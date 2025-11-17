@@ -1,12 +1,12 @@
 // path: pages/dashboard/index.tsx
-import { useEffect, useState, useMemo, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { supabase } from "@/lib/supabase";
 import Image from "next/image";
 import { Toaster, toast } from "react-hot-toast";
 import {
   UserCircle, LogOut, Instagram, Youtube, Music2, UserPlus, ThumbsUp, Eye,
-  BarChart, List, CheckCircle, Loader2, BadgePercent, Menu, Tag, Play
+  BarChart, List, CheckCircle, Loader2, BadgePercent, Menu, Tag
 } from "lucide-react";
 
 // --- Types ---
@@ -14,7 +14,6 @@ type ServiceType = "Followers" | "Likes" | "Views" | "Subscribers";
 type Service = { type: ServiceType | string; price: number; icon: React.ElementType; iconColor: string; };
 type Platform = { key: string; name: string; icon: React.ElementType; iconColor: string; services: Service[]; };
 interface Order { id: string; platform: string; service: string; quantity: number; status: string; created_at: string; }
-type PreviewData = { ok: boolean; type?: string; image?: string | null; error?: string };
 
 // --- Constants ---
 const COLORS = {
@@ -76,20 +75,30 @@ const NAV_TABS = [
   { key: "profile", label: "Account", icon: <UserCircle size={19} /> },
 ];
 
-const ORDER_STEPS = [{ label: "Platform" }, { label: "Service" }, { label: "Details" }, { label: "Review" }];
+const ORDER_STEPS = [
+  { label: "Platform" },
+  { label: "Service" },
+  { label: "Details" },
+  { label: "Review" }
+];
 
-// --- Pricing / Amounts ---
 function getQuickAmounts(platform: Platform, service: Service): number[] {
-  const t = service.type.toString().toLowerCase();
-  const k = platform.key;
-  if (k === "instagram" && t === "views") return [500, 2000, 5000, 10000, 20000, 50000];
-  if (k === "instagram" && t === "followers") return [100, 200, 350, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000];
-  if (k === "instagram" && t === "likes") return [50, 100, 300, 500, 1000, 2000, 5000, 10000, 20000];
-  if (k === "tiktok" && (t === "followers" || t === "likes")) return [100, 250, 500, 1000, 2000, 5000, 10000];
-  if (k === "tiktok" && t === "views") return [1000, 2000, 5000, 10000, 20000, 50000];
-  if (k === "youtube" && t === "views") return [200, 500, 1000, 2000, 5000, 10000];
-  if (k === "youtube" && t === "subscribers") return [200, 500, 1000, 2000, 5000, 10000];
-  if (k === "youtube" && t === "likes") return [250, 500, 1000, 2000, 5000, 10000];
+  if (platform.key === "instagram" && service.type.toLowerCase() === "views")
+    return [500, 2000, 5000, 10000, 20000, 50000];
+  if (platform.key === "instagram" && service.type.toLowerCase() === "followers")
+    return [100, 200, 350, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000];
+  if (platform.key === "instagram" && service.type.toLowerCase() === "likes")
+    return [50, 100, 300, 500, 1000, 2000, 5000, 10000, 20000];
+  if (platform.key === "tiktok" && (service.type.toLowerCase() === "followers" || service.type.toLowerCase() === "likes"))
+    return [100, 250, 500, 1000, 2000, 5000, 10000];
+  if (platform.key === "tiktok" && service.type.toLowerCase() === "views")
+    return [1000, 2000, 5000, 10000, 20000, 50000];
+  if (platform.key === "youtube" && service.type.toLowerCase() === "views")
+    return [200, 500, 1000, 2000, 5000, 10000];
+  if (platform.key === "youtube" && service.type.toLowerCase() === "subscribers")
+    return [200, 500, 1000, 2000, 5000, 10000];
+  if (platform.key === "youtube" && service.type.toLowerCase() === "likes")
+    return [250, 500, 1000, 2000, 5000, 10000];
   return [100, 500, 1000, 2000, 5000, 10000, 25000, 50000];
 }
 
@@ -99,69 +108,6 @@ function getDiscountedPrice(price: number) {
   return { discount: Math.round(discount * 100), discounted };
 }
 
-// --- Utils (match modal) ---
-const isLink = (t: string) => /^https?:\/\//i.test(t.trim());
-function getTargetLabel(service: Service) {
-  return service.type === "Followers" || service.type === "Subscribers" ? "Profile or Username" : "Post / Video Link";
-}
-function getTargetPlaceholder(platform: Platform, service: Service) {
-  const followersLike = service.type === "Followers" || service.type === "Subscribers";
-  if (followersLike) {
-    if (platform.key === "instagram") return "e.g. @yourusername or instagram.com/yourusername";
-    if (platform.key === "tiktok") return "e.g. @yourusername or tiktok.com/@yourusername";
-    if (platform.key === "youtube") return "e.g. Channel URL or @handle";
-    return "Profile link or username";
-  }
-  if (platform.key === "instagram") return "Paste your Instagram post / reel link";
-  if (platform.key === "tiktok") return "Paste your TikTok video link";
-  if (platform.key === "youtube") return "Paste your YouTube video link";
-  return "Paste your post / video link";
-}
-function normalizeHandle(platform: Platform, target: string) {
-  const raw = target.trim();
-  if (!raw) return "";
-  if (isLink(raw)) return raw.replace(/^https?:\/\//, "");
-  if (raw.startsWith("@")) return raw;
-  if (["instagram", "tiktok", "youtube"].includes(platform.key)) return `@${raw}`;
-  return raw;
-}
-function hashToHsl(seed: string, s = 65, l = 58) {
-  let h = 0;
-  for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) >>> 0;
-  return `hsl(${h % 360} ${s}% ${l}%)`;
-}
-
-// Image component used by PreviewMini
-function ImageSafe({ src, alt }: { src: string; alt: string }) {
-  const [loaded, setLoaded] = useState(false);
-  const [failed, setFailed] = useState(false);
-  return (
-    <div className="absolute inset-0">
-      {!loaded && !failed && <div className="absolute inset-0 animate-pulse bg-gradient-to-br from-[#EAF2FF] via-[#F5FAFF] to-white" />}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={src}
-        alt={alt}
-        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${loaded && !failed ? "opacity-100" : "opacity-0"}`}
-        onLoad={() => setLoaded(true)}
-        onError={() => setFailed(true)}
-      />
-      {failed && <div className="absolute inset-0 bg-[#EEF4FF]" />}
-    </div>
-  );
-}
-
-// --- API (match modal) ---
-async function fetchPreview(platform: string, target: string): Promise<PreviewData> {
-  try {
-    const res = await fetch(`/api/preview?platform=${platform}&target=${encodeURIComponent(target)}`);
-    return await res.json();
-  } catch {
-    return { ok: false, error: "Network error" };
-  }
-}
-
-// --- Component ---
 export default function DashboardPage() {
   const router = useRouter();
   const [userEmail, setUserEmail] = useState("");
@@ -175,7 +121,7 @@ export default function DashboardPage() {
   const [analytics, setAnalytics] = useState({ total: 0, completed: 0 });
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  // Order State
+  // Order Stepper State
   const [orderStep, setOrderStep] = useState(0);
   const [platform, setPlatform] = useState<Platform>(PLATFORMS[0]);
   const [service, setService] = useState<Service>(PLATFORMS[0].services[0]);
@@ -184,40 +130,13 @@ export default function DashboardPage() {
   const [orderError, setOrderError] = useState<string>("");
   const [orderLoading, setOrderLoading] = useState(false);
 
-  // Preview (Review step only)
-  const [preview, setPreview] = useState<PreviewData | null>(null);
-  const [previewLoading, setPreviewLoading] = useState(false);
-  const isContentEngagement = service.type === "Likes" || service.type === "Views";
-  const isVideo = useMemo(() => isContentEngagement && isLink(target), [isContentEngagement, target]);
-
-  const doFetchPreview = useCallback(async () => {
-    if (orderStep !== 3) return;
-    const trimmed = target.trim();
-    if (!trimmed) {
-      setPreview(null);
-      setPreviewLoading(false);
-      return;
-    }
-    if (isContentEngagement && !isLink(trimmed)) {
-      setPreview({ ok: false, error: "Post / video URL required for preview." });
-      return;
-    }
-    setPreviewLoading(true);
-    const data = await fetchPreview(platform.key, trimmed);
-    setPreview(data);
-    setPreviewLoading(false);
-  }, [orderStep, target, platform.key, isContentEngagement]);
-
-  useEffect(() => {
-    if (orderStep !== 3) return;
-    const id = setTimeout(() => void doFetchPreview(), 150);
-    return () => clearTimeout(id);
-  }, [doFetchPreview, orderStep]);
-
   useEffect(() => {
     const fetchUserAndOrders = async () => {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session || !session.user) { router.push("/login"); return; }
+      if (!session || !session.user) {
+        router.push("/login");
+        return;
+      }
       const email = session.user.email || "";
       setUserEmail(email);
       setUserId(session.user.id);
@@ -244,31 +163,26 @@ export default function DashboardPage() {
 
   function handleOrderNext() {
     if (orderStep === 2) {
-      const trimmed = target.trim();
-      if (!trimmed) {
-        setOrderError(isContentEngagement ? "Paste the full post / video link." : "Paste your profile link or username.");
+      if (!target.trim()) {
+        setOrderError("Paste your profile link or username.");
         return;
       }
-      if (isContentEngagement && !isLink(trimmed)) {
-        setOrderError("For likes / views, please paste a full post or video URL.");
+      if (!quantity || quantity < 1) {
+        setOrderError("Enter a valid quantity.");
         return;
       }
-      if (!quantity || quantity < 1) { setOrderError("Enter a valid quantity."); return; }
     }
     setOrderError("");
     setOrderStep(orderStep + 1);
   }
-  function handleOrderBack() { setOrderError(""); setOrderStep(orderStep - 1); }
-
+  function handleOrderBack() {
+    setOrderError("");
+    setOrderStep(orderStep - 1);
+  }
   function handleSecureCheckout(e: React.FormEvent) {
     e.preventDefault();
-    const trimmed = target.trim();
-    if (!trimmed) {
-      setOrderError(isContentEngagement ? "Paste the full post / video link." : "Paste your profile link or username.");
-      return;
-    }
-    if (isContentEngagement && !isLink(trimmed)) {
-      setOrderError("For likes / views, please paste a full post or video URL.");
+    if (!target.trim()) {
+      setOrderError("Paste your profile link or username.");
       return;
     }
     setOrderError("");
@@ -285,156 +199,50 @@ export default function DashboardPage() {
     window.location.href = `https://checkout.yesviral.com/checkout?order=${orderString}`;
   }
 
-  // ---------- Amount selector (same pills as modal) ----------
-  function ServiceSummary() {
-    const PlatformIcon = platform.icon;
-    const ServiceIcon = service.icon;
-    return (
-      <div
-        className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs font-semibold"
-        style={{ borderColor: COLORS.border, background: "#F7FBFF" }}
-        aria-live="polite"
-      >
-        <span className="inline-flex items-center justify-center w-5 h-5 rounded-full" style={{ background: COLORS.accentBg }}>
-          <PlatformIcon size={12} style={{ color: platform.iconColor }} />
-        </span>
-        <span className="text-[#0B63E6]">{platform.name}</span>
-        <span className="opacity-40">•</span>
-        <span className="inline-flex items-center gap-1 text-[#334155]">
-          <ServiceIcon size={12} style={{ color: service.iconColor }} />
-          {service.type}
-        </span>
-      </div>
-    );
+  // ========= REAL AUTH UPDATE HANDLERS =========
+  async function handleChangeEmail(newEmailVal: string) {
+    if (!newEmailVal) {
+      toast.error("Enter a valid email.");
+      return;
+    }
+    try {
+      const { error } = await supabase.auth.updateUser({ email: newEmailVal });
+      if (error) throw error;
+      toast.success("Check your NEW email inbox to confirm the change.");
+      setNewEmail("");
+    } catch (e: any) {
+      toast.error(e?.message || "Failed to start email change.");
+    }
   }
 
-  function Pill({
-    label, selected, onClick, ariaLabel,
-  }: { label: string; selected: boolean; onClick: () => void; ariaLabel: string; }) {
-    return (
-      <button
-        type="button"
-        role="radio"
-        aria-checked={selected}
-        aria-label={ariaLabel}
-        onClick={onClick}
-        className={[
-          "flex-none h-12 min-w-[88px] px-4 rounded-full border text-sm font-bold tracking-tight",
-          "transition-all select-none",
-          "focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-0 focus-visible:ring-[#BFD9FF]",
-          selected
-            ? "bg-[#007BFF] text-white border-[#007BFF] shadow-[0_8px_18px_rgba(0,123,255,.25)]"
-            : "bg-white text-[#0B63E6] border-[#DCEBFF] hover:border-[#7FB5FF] hover:bg-[#F6FAFF]",
-        ].join(" ")}
-      >
-        {label}
-      </button>
-    );
+  async function handleChangePassword(currentPwd: string, newPwd: string) {
+    if (!newPwd || newPwd.length < 6) {
+      toast.error("Password must be at least 6 characters.");
+      return;
+    }
+    try {
+      // Why: verify current password to give clear error if wrong
+      const { error: reauthErr } = await supabase.auth.signInWithPassword({
+        email: profileEmail,
+        password: currentPwd,
+      });
+      if (reauthErr) {
+        toast.error("Current password is incorrect.");
+        return;
+      }
+      const { error } = await supabase.auth.updateUser({ password: newPwd });
+      if (error) throw error;
+      toast.success("Password updated.");
+      setPasswordData({ current: "", new: "" });
+    } catch (e: any) {
+      toast.error(e?.message || "Failed to update password.");
+    }
   }
-
-  function AmountSelector() {
-    const options = getQuickAmounts(platform, service);
-    const toLabel = (v: number) => (v >= 1000 ? `${v / 1000}K` : `${v}`);
-    const ariaService = `${platform.name} ${service.type}`;
-    return (
-      <div className="w-full max-w-[640px]">
-        <div className="flex items-center justify-between mb-2">
-          <h4 className="text-sm font-extrabold text-[#0B63E6]">
-            How many {platform.name} {service.type}?
-          </h4>
-          <ServiceSummary />
-        </div>
-        <div
-          className="sm:hidden flex overflow-x-auto gap-2 pb-1 snap-x snap-mandatory"
-          role="radiogroup"
-          aria-label={`Select amount of ${ariaService}`}
-        >
-          {options.map((v) => (
-            <div key={v} className="snap-start">
-              <Pill label={toLabel(v)} selected={quantity === v} onClick={() => setQuantity(v)} ariaLabel={`${v} ${ariaService}`} />
-            </div>
-          ))}
-        </div>
-        <div
-          className="hidden sm:grid grid-cols-3 md:grid-cols-4 gap-2"
-          role="radiogroup"
-          aria-label={`Select amount of ${ariaService}`}
-        >
-          {options.map((v) => (
-            <Pill key={v} label={toLabel(v)} selected={quantity === v} onClick={() => setQuantity(v)} ariaLabel={`${v} ${ariaService}`} />
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  // ---------- PreviewMini (same as modal; review-only, small) ----------
-  function PreviewMini() {
-    const hasImg = !!(preview && preview.ok && preview.image);
-    const normalized = normalizeHandle(platform, target || "");
-    const avatarHue = hashToHsl(normalized || platform.name);
-
-    return (
-      <div className="w-full max-w-sm rounded-xl border bg-white shadow-sm overflow-hidden mx-auto" style={{ borderColor: COLORS.border }}>
-        <div className="flex items-center gap-2 px-3 py-2 border-b bg-white/80" style={{ borderColor: "#E0ECFF" }}>
-          <div className="flex items-center justify-center w-7 h-7 rounded-full" style={{ background: COLORS.accentBg }}>
-            {(() => { const I = platform.icon; return <I size={14} style={{ color: platform.iconColor }} />; })()}
-          </div>
-          <div className="min-w-0">
-            <span className="text-[11px] font-bold" style={{ color: COLORS.primary }}>Preview</span>
-            <div className="text-[10px] text-[#6B7280]">{isContentEngagement ? "Post / video" : "Profile"}</div>
-          </div>
-        </div>
-
-        <div className="relative w-full bg-[#DAE6FF]">
-          <div className="relative w-full" style={{ paddingTop: "75%", maxHeight: 140 }}>
-            {previewLoading && <div className="absolute inset-0 animate-pulse bg-gradient-to-br from-[#EAF2FF] via-[#F5FAFF] to-white" />}
-
-            {!previewLoading && hasImg && (
-              <>
-                <ImageSafe src={preview!.image as string} alt="Content preview" />
-                {isContentEngagement && isLink(target) && (
-                  <div className="absolute bottom-1.5 right-1.5 flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-black/60 text-white text-[9px]">
-                    <Play size={10} />
-                    Video
-                  </div>
-                )}
-              </>
-            )}
-
-            {!previewLoading && !hasImg && (
-              <div className="absolute inset-0 grid place-items-center">
-                <div
-                  className="w-[52%] max-w-[120px] aspect-square rounded-xl shadow grid place-items-center text-white font-extrabold text-xl"
-                  style={{ background: `linear-gradient(135deg, ${avatarHue}, ${avatarHue.replace("% 58%)", "% 42%)")})` }}
-                >
-                  {normalized.replace(/^@/, "").slice(0, 2).toUpperCase() || platform.name.slice(0, 2).toUpperCase()}
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-
-        <div className="px-3 py-2 bg-white flex items-center justify-between">
-          <div className="min-w-0">
-            <span className="block text-[11px] font-semibold text-[#111] truncate max-w-[220px]">
-              {normalized || "—"}
-            </span>
-            <span className="text-[10px] text-[#6B7280]">Visual only</span>
-          </div>
-          <span
-            className="text-[10px] font-semibold px-2 py-0.5 rounded-full"
-            style={{ color: platform.iconColor, background: `${platform.iconColor}14`, border: `1px solid ${platform.iconColor}26` }}
-          >
-            {platform.name}
-          </span>
-        </div>
-      </div>
-    );
-  }
+  // =============================================
 
   const TabContent = () => {
-    if (loading) return <div className="flex justify-center items-center py-24"><Loader2 className="animate-spin mr-2" /> Loading...</div>;
+    if (loading)
+      return <div className="flex justify-center items-center py-24"><Loader2 className="animate-spin mr-2" /> Loading...</div>;
 
     if (activeTab === "order") {
       return (
@@ -445,17 +253,33 @@ export default function DashboardPage() {
                 {ORDER_STEPS.map((s, i) => (
                   <div key={s.label} className="flex flex-col items-center flex-1 min-w-0">
                     <div
-                      className={`flex items-center justify-center w-9 h-9 font-extrabold text-base border-2 transition
-                        ${orderStep === i ? "bg-[#007BFF] text-white border-[#007BFF] shadow-lg scale-110"
-                          : orderStep > i ? "bg-[#007BFF] text-white border-[#007BFF]"
-                          : "bg-[#E6F0FF] text-[#888] border-[#E6F0FF]"}`}
-                      style={{ marginBottom: 3, borderRadius: "1.5rem", boxShadow: orderStep === i ? "0 2px 10px #007bff22" : undefined }}
+                      className={`
+                        flex items-center justify-center w-9 h-9 font-extrabold text-base border-2 transition
+                        ${orderStep === i
+                          ? "bg-[#007BFF] text-white border-[#007BFF] shadow-lg scale-110"
+                          : orderStep > i
+                          ? "bg-[#007BFF] text-white border-[#007BFF]"
+                          : "bg-[#E6F0FF] text-[#888] border-[#E6F0FF]"}
+                      `}
+                      style={{
+                        marginBottom: 3,
+                        borderRadius: "1.5rem",
+                        boxShadow: orderStep === i ? "0 2px 10px #007bff22" : undefined
+                      }}
                     >
                       {i + 1}
                     </div>
                     <span
-                      className="text-xs font-bold text-center whitespace-nowrap mt-1 transition"
-                      style={{ color: orderStep >= i ? COLORS.primary : COLORS.muted, textShadow: orderStep === i ? "0 1px 0 #fff" : "none" }}
+                      className={`text-xs font-bold text-center whitespace-nowrap mt-1 transition`}
+                      style={{
+                        color:
+                          orderStep === i
+                            ? COLORS.primary
+                            : orderStep > i
+                            ? COLORS.primary
+                            : COLORS.muted,
+                        textShadow: orderStep === i ? "0 1px 0 #fff" : "none"
+                      }}
                     >
                       {s.label}
                     </span>
@@ -465,12 +289,15 @@ export default function DashboardPage() {
               <div className="relative w-full h-[5px] rounded-full bg-[#E6F0FF] z-0">
                 <div
                   className="absolute top-0 left-0 h-[5px] rounded-full z-10"
-                  style={{ width: `${(orderStep / (ORDER_STEPS.length - 1)) * 100}%`, background: `linear-gradient(90deg, ${COLORS.primary} 0%, ${COLORS.primaryHover} 100%)`, transition: "width .38s cubic-bezier(.51,1.15,.67,.97)" }}
+                  style={{
+                    width: `${orderPercent}%`,
+                    background: `linear-gradient(90deg, ${COLORS.primary} 0%, ${COLORS.primaryHover} 100%)`,
+                    transition: "width .38s cubic-bezier(.51,1.15,.67,.97)"
+                  }}
                 />
               </div>
             </div>
           </div>
-
           <div className="bg-white border border-[#CFE4FF] rounded-2xl shadow-xl px-5 py-8 mb-6 mt-5">
             {orderStep === 0 && (
               <>
@@ -479,10 +306,14 @@ export default function DashboardPage() {
                   {PLATFORMS.map((p) => {
                     const Icon = p.icon;
                     return (
-                      <button
-                        key={p.key}
-                        className={`flex flex-col items-center gap-1 px-7 py-5 rounded-xl border-2 font-bold text-base shadow hover:shadow-lg transition
-                          ${platform.key === p.key ? "border-[#007BFF] bg-[#E6F0FF] text-[#007BFF] scale-105" : "border-[#CFE4FF] text-[#111111] bg-white"}`}
+                      <button key={p.key}
+                        className={`
+                          flex flex-col items-center gap-1 px-7 py-5 rounded-xl border-2 font-bold text-base shadow hover:shadow-lg transition
+                          ${platform.key === p.key
+                            ? "border-[#007BFF] bg-[#E6F0FF] text-[#007BFF] scale-105"
+                            : "border-[#CFE4FF] text-[#111111] bg-white"
+                          }
+                        `}
                         style={{ minWidth: 120, minHeight: 90 }}
                         onClick={() => {
                           setPlatform(p);
@@ -497,13 +328,15 @@ export default function DashboardPage() {
                   })}
                 </div>
                 <div className="flex justify-end mt-8">
-                  <button className="px-6 py-3 rounded-xl font-bold bg-[#007BFF] text-white hover:bg-[#005FCC] shadow transition text-lg" onClick={handleOrderNext}>
+                  <button
+                    className="px-6 py-3 rounded-xl font-bold bg-[#007BFF] text-white hover:bg-[#005FCC] shadow transition text-lg"
+                    onClick={handleOrderNext}
+                  >
                     Next
                   </button>
                 </div>
               </>
             )}
-
             {orderStep === 1 && (
               <>
                 <h3 className="font-black text-2xl mb-8 text-[#111] text-center">
@@ -515,12 +348,17 @@ export default function DashboardPage() {
                 <div className="flex flex-wrap gap-5 justify-center mb-8">
                   {platform.services.map((s) => {
                     const SIcon = s.icon;
-                    const { discount } = getDiscountedPrice(s.price);
+                    const { discount, discounted } = getDiscountedPrice(s.price);
                     return (
                       <button
                         key={s.type}
-                        className={`flex flex-col items-center gap-1 px-7 py-5 rounded-xl border-2 font-bold text-base shadow hover:shadow-lg transition
-                          ${service.type === s.type ? "border-[#007BFF] bg-[#E6F0FF] text-[#007BFF] scale-105" : "border-[#CFE4FF] text-[#111111] bg-white"}`}
+                        className={`
+                          flex flex-col items-center gap-1 px-7 py-5 rounded-xl border-2 font-bold text-base shadow hover:shadow-lg transition
+                          ${service.type === s.type
+                            ? "border-[#007BFF] bg-[#E6F0FF] text-[#007BFF] scale-105"
+                            : "border-[#CFE4FF] text-[#111111] bg-white"
+                          }
+                        `}
                         onClick={() => {
                           setService(s);
                           setQuantity(getQuickAmounts(platform, s)[0]);
@@ -539,65 +377,87 @@ export default function DashboardPage() {
                   })}
                 </div>
                 <div className="flex justify-between mt-8">
-                  <button className="px-6 py-3 rounded-xl font-bold bg-[#E6F0FF] text-[#007BFF] border border-[#CFE4FF] hover:bg-[#d7eafd] shadow transition text-lg" onClick={handleOrderBack}>
+                  <button
+                    className="px-6 py-3 rounded-xl font-bold bg-[#E6F0FF] text-[#007BFF] border border-[#CFE4FF] hover:bg-[#d7eafd] shadow transition text-lg"
+                    onClick={handleOrderBack}
+                  >
                     Back
                   </button>
-                  <button className="px-6 py-3 rounded-xl font-bold bg-[#007BFF] text-white hover:bg-[#005FCC] shadow transition text-lg" onClick={handleOrderNext}>
+                  <button
+                    className="px-6 py-3 rounded-xl font-bold bg-[#007BFF] text-white hover:bg-[#005FCC] shadow transition text-lg"
+                    onClick={handleOrderNext}
+                  >
                     Next
                   </button>
                 </div>
               </>
             )}
-
             {orderStep === 2 && (
               <>
                 <h3 className="font-black text-2xl mb-8 text-[#111] text-center">Order Details</h3>
                 <div className="flex flex-col gap-6 max-w-sm mx-auto mb-8">
                   <label className="font-semibold text-[#007BFF] text-lg">
-                    {getTargetLabel(service)}
+                    Profile or Link
                     <input
                       type="text"
                       autoFocus
                       className="w-full border border-[#CFE4FF] rounded-xl px-4 py-3 mt-2 text-base font-medium outline-[#007BFF] bg-white shadow focus:border-[#007BFF] focus:ring-2 focus:ring-[#E6F0FF] transition"
-                      placeholder={getTargetPlaceholder(platform, service)}
+                      placeholder="Paste your link or username here"
                       value={target}
                       onChange={e => setTarget(e.target.value)}
                     />
                   </label>
-
-                  <div className="flex flex-col items-center gap-3 w-full">
-                    <AmountSelector />
-                    <div className="flex justify-between items-center mt-2 w-full max-w-[640px]">
-                      <span className="text-sm text-[#888]">Total:</span>
-                      <span className="font-bold text-[#007BFF] text-xl">
-                        ${(getDiscountedPrice(service.price).discounted * quantity).toFixed(2)}
-                        <span className="ml-2 text-sm text-[#c7c7c7] line-through">
-                          ${(service.price * quantity).toFixed(2)}
-                        </span>
-                      </span>
+                  <label className="font-semibold text-[#007BFF] text-lg">
+                    Amount
+                    <div className="flex gap-2 flex-wrap mt-2">
+                      {getQuickAmounts(platform, service).map(val => (
+                        <button
+                          key={val}
+                          type="button"
+                          className={`
+                            rounded-full px-5 py-2 font-bold border text-sm shadow
+                            ${quantity === val ? "bg-[#007BFF] text-white border-[#007BFF]" : "bg-[#E6F0FF] text-[#007BFF] border-[#CFE4FF]"}
+                            hover:bg-[#E6F0FF] hover:border-[#007BFF] transition
+                          `}
+                          onClick={() => setQuantity(val)}
+                        >
+                          {val >= 1000 ? `${val/1000}K` : val}
+                        </button>
+                      ))}
                     </div>
+                  </label>
+                  <div className="flex justify-between items-center mt-2">
+                    <span className="text-sm text-[#888]">Total:</span>
+                    <span className="font-bold text-[#007BFF] text-xl">
+                      ${(discounted * quantity).toFixed(2)}
+                      <span className="ml-2 text-sm text-[#c7c7c7] line-through">${(service.price * quantity).toFixed(2)}</span>
+                    </span>
                   </div>
-
                   <span className="text-xs text-[#007BFF] font-semibold animate-flashSale">
                     Flash Sale! {discount}% off for a limited time
                   </span>
                   {orderError && <div className="mt-1 text-[#EF4444] text-center">{orderError}</div>}
                 </div>
                 <div className="flex justify-between mt-8">
-                  <button className="px-6 py-3 rounded-xl font-bold bg-[#E6F0FF] text-[#007BFF] border border-[#CFE4FF] hover:bg-[#d7eafd] shadow transition text-lg" onClick={handleOrderBack}>
+                  <button
+                    className="px-6 py-3 rounded-xl font-bold bg-[#E6F0FF] text-[#007BFF] border border-[#CFE4FF] hover:bg-[#d7eafd] shadow transition text-lg"
+                    onClick={handleOrderBack}
+                  >
                     Back
                   </button>
-                  <button className="px-6 py-3 rounded-xl font-bold bg-[#007BFF] text-white hover:bg-[#005FCC] shadow transition text-lg" onClick={handleOrderNext}>
+                  <button
+                    className="px-6 py-3 rounded-xl font-bold bg-[#007BFF] text-white hover:bg-[#005FCC] shadow transition text-lg"
+                    onClick={handleOrderNext}
+                  >
                     Review
                   </button>
                 </div>
               </>
             )}
-
             {orderStep === 3 && (
               <form onSubmit={handleSecureCheckout}>
                 <h3 className="font-black text-2xl mb-5 text-[#111] text-center">Review & Secure Checkout</h3>
-                <div className="bg-[#F5FAFF] border border-[#CFE4FF] rounded-xl px-6 py-7 mb-6">
+                <div className="bg-[#F5FAFF] border border-[#CFE4FF] rounded-xl px-6 py-7 mb-7">
                   <div className="flex items-center gap-2 mb-2">
                     {(() => { const I = platform.icon; return <I size={24} style={{ color: platform.iconColor }} />; })()}
                     <span className="font-semibold text-lg">{platform.name}</span>
@@ -605,21 +465,11 @@ export default function DashboardPage() {
                   </div>
                   <div className="text-[#444] mb-1"><b>Target:</b> {target}</div>
                   <div className="text-[#444] mb-1"><b>Amount:</b> {quantity}</div>
-                  <div className="text-[#444] mb-1">
-                    <b>Unit:</b> ${discounted}/ea <span className="text-[#c7c7c7] line-through">${service.price}/ea</span>
-                  </div>
+                  <div className="text-[#444] mb-1"><b>Unit:</b> ${discounted}/ea <span className="text-[#c7c7c7] line-through">${service.price}/ea</span></div>
                   <div className="mt-2 font-extrabold text-lg text-[#007BFF]">
                     Total: ${(discounted * quantity).toFixed(2)}
                   </div>
                 </div>
-
-                {/* SMALL PREVIEW — EXACTLY LIKE MODAL */}
-                <div className="mb-6">
-                  <PreviewMini />
-                </div>
-
-                {orderError && <div className="mt-4 text-[#EF4444] text-center text-sm">{orderError}</div>}
-
                 <div className="flex justify-between mt-7">
                   <button
                     type="button"
@@ -634,7 +484,7 @@ export default function DashboardPage() {
                     disabled={orderLoading}
                   >
                     {orderLoading ? (
-                      <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden>
+                      <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24" fill="none">
                         <circle cx="12" cy="12" r="10" stroke="#E6F0FF" strokeWidth="4" />
                         <path d="M22 12A10 10 0 0 1 12 22" stroke="#007BFF" strokeWidth="4" strokeLinecap="round" />
                       </svg>
@@ -647,7 +497,6 @@ export default function DashboardPage() {
               </form>
             )}
           </div>
-
           <style jsx global>{`
             @keyframes flashSale {
               0%,100% { background: #e7f7f0; color: #007BFF;}
@@ -770,30 +619,60 @@ export default function DashboardPage() {
       return (
         <div className="space-y-7">
           <h2 className="text-2xl font-extrabold mb-2 flex items-center gap-2"><UserCircle size={22} /> Account</h2>
-          <div>
-            <label className="block text-[#111] font-bold mb-1">Email</label>
-            <input
-              type="email"
-              className="border px-3 py-2 rounded-md mr-2 w-full max-w-xs"
-              value={newEmail || profileEmail}
-              onChange={e => setNewEmail(e.target.value)}
-            />
-            <button onClick={() => toast.success("Email updated (demo)!")} className="bg-[#007BFF] text-white px-4 py-2 rounded mt-2">
-              Update Email
-            </button>
+
+          {/* Email */}
+          <div className="max-w-md">
+            <label className="block text-[#111] font-bold mb-2">Email</label>
+            <div className="flex gap-2 items-center">
+              <input
+                type="email"
+                className="border border-[#CFE4FF] px-3 py-2 rounded-md w-full"
+                placeholder={profileEmail || "you@example.com"}
+                value={newEmail}
+                onChange={(e) => setNewEmail(e.target.value)}
+              />
+              <button
+                onClick={() => handleChangeEmail(newEmail.trim())}
+                className="bg-[#007BFF] hover:bg-[#005FCC] text-white px-4 py-2 rounded font-bold"
+              >
+                Update
+              </button>
+            </div>
+            <p className="text-xs text-[#555] mt-1">
+              A confirmation link will be sent to the new email. Your login email changes after you confirm.
+            </p>
           </div>
-          <div>
-            <label className="block text-[#111] font-bold mb-1">Change Password</label>
-            <input
-              type="password"
-              placeholder="New Password"
-              value={passwordData.new}
-              onChange={e => setPasswordData({ ...passwordData, new: e.target.value })}
-              className="border px-3 py-2 rounded-md mr-2 w-full max-w-xs"
-            />
-            <button onClick={() => toast.success("Password updated (demo)!")} className="bg-[#007BFF] text-white px-4 py-2 rounded mt-2">
-              Update Password
-            </button>
+
+          {/* Password */}
+          <div className="max-w-md">
+            <label className="block text-[#111] font-bold mb-2">Change Password</label>
+            <div className="flex flex-col gap-2">
+              <input
+                type="password"
+                placeholder="Current password"
+                value={passwordData.current}
+                onChange={(e) => setPasswordData({ ...passwordData, current: e.target.value })}
+                className="border border-[#CFE4FF] px-3 py-2 rounded-md w-full"
+              />
+              <input
+                type="password"
+                placeholder="New password (6+ chars)"
+                value={passwordData.new}
+                onChange={(e) => setPasswordData({ ...passwordData, new: e.target.value })}
+                className="border border-[#CFE4FF] px-3 py-2 rounded-md w-full"
+              />
+              <div>
+                <button
+                  onClick={() => handleChangePassword(passwordData.current, passwordData.new)}
+                  className="bg-[#007BFF] hover:bg-[#005FCC] text-white px-4 py-2 rounded font-bold"
+                >
+                  Update Password
+                </button>
+              </div>
+            </div>
+            <p className="text-xs text-[#555] mt-1">
+              You’ll stay signed in on this device. Re-login may be required on other devices.
+            </p>
           </div>
         </div>
       );
@@ -820,7 +699,11 @@ export default function DashboardPage() {
       <div className="max-w-7xl mx-auto px-2 sm:px-4 py-6">
         <div className="flex flex-wrap sm:flex-nowrap items-center justify-between mb-6 gap-3">
           <div className="flex items-center gap-2">
-            <button className="block md:hidden p-2" onClick={() => setSidebarOpen(!sidebarOpen)} aria-label="Open Navigation">
+            <button
+              className="block md:hidden p-2"
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              aria-label="Open Navigation"
+            >
               <Menu size={28} className="text-[#007BFF]" />
             </button>
             <Image src="/logo.png" alt="YesViral Logo" width={38} height={38} />
@@ -848,7 +731,8 @@ export default function DashboardPage() {
                 key={tab.key}
                 onClick={() => { setActiveTab(tab.key); setSidebarOpen(false); }}
                 className={`flex items-center gap-3 px-4 py-3 rounded-lg font-semibold transition text-base w-full
-                  ${activeTab === tab.key ? "bg-[#007BFF] text-white shadow" : "hover:bg-[#F5FAFF] text-[#111]"}`}
+                  ${activeTab === tab.key ? "bg-[#007BFF] text-white shadow" : "hover:bg-[#F5FAFF] text-[#111]"}
+                `}
               >
                 {tab.icon}
                 {tab.label}
@@ -856,7 +740,7 @@ export default function DashboardPage() {
             ))}
           </aside>
           {sidebarOpen && <div className="fixed inset-0 bg-black/40 z-20 md:hidden" onClick={() => setSidebarOpen(false)}></div>}
-          <section className="flex-1 bg-white border border-[#CFE4FF] rounded-2xl shadow-sm p-4 sm:p-8 min-h=[440px]">
+          <section className="flex-1 bg-white border border-[#CFE4FF] rounded-2xl shadow-sm p-4 sm:p-8 min-h-[440px]">
             <TabContent />
           </section>
         </div>
