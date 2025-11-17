@@ -1,3 +1,4 @@
+// path: pages/terms.tsx
 import Head from "next/head";
 import { FileText, Ban, ShieldCheck, CreditCard, Globe, RefreshCw, MessageCircle, ExternalLink } from "lucide-react";
 
@@ -107,8 +108,8 @@ export default function Terms() {
               <Globe className="text-[#007BFF]" size={20} /> Law, Jurisdiction & Updates
             </h2>
             <ul className="list-disc pl-6">
-              <li>Terms governed by the laws of the United Arab Emirates.</li>
-              <li>Legal disputes handled in UAE courts, in English.</li>
+              <li>Terms governed by the laws of the United States of America.</li>
+              <li>Legal disputes handled in the courts of the United States of America, in English.</li>
               <li>We may update these Terms at any time. Continued use after updates = acceptance.</li>
             </ul>
           </div>

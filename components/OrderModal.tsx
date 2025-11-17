@@ -355,6 +355,14 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
     return "Paste your post / video link";
   }
 
+  // Helper: badge label for some presets (visual only)
+  function getAmountBadge(val: number, arr: number[]) {
+    const max = arr[arr.length - 1];
+    if (val === max) return "Best value";
+    if (val === 1000 || val === 5000 || val === 10000) return "Popular";
+    return "";
+  }
+
   // ==============================
   // PREVIEW MINI (Review-only, small)
   // ==============================
@@ -391,7 +399,7 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
             {!previewLoading && hasImg && (
               <>
                 <ImageSafe src={preview!.image as string} alt="Content preview" />
-                {isVideo && (
+                {isContentEngagement && isLink(target) && (
                   <div className="absolute bottom-1.5 right-1.5 flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-black/60 text-white text-[9px]">
                     <Play size={10} />
                     Video
@@ -601,23 +609,72 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
                     </span>
                   </div>
 
-                  {/* AMOUNT SELECTOR */}
+                  {/* AMOUNT SELECTOR — UPGRADED VISUALS ONLY */}
                   <div className="flex flex-col items-center gap-3 w-full">
                     <span className="text-[#111] text-base font-semibold">Amount</span>
-                    <div className="flex gap-2 flex-wrap justify-center w-full">
-                      {getQuickAmounts(platform, service).map((val) => (
-                        <button
-                          key={val}
-                          type="button"
-                          className={`rounded-full px-5 py-2 font-bold border text-sm shadow transition ${
-                            quantity === val ? "bg-[#007BFF] text-white border-[#007BFF]" : "bg-[#E6F0FF] text-[#007BFF] border-[#CFE4FF] hover:bg-[#E0ECFF] hover:border-[#007BFF]"
-                          }`}
-                          onClick={() => setQuantity(val)}
-                        >
-                          {val >= 1000 ? `${val / 1000}K` : val}
-                        </button>
-                      ))}
+
+                    <div
+                      className="grid grid-cols-3 sm:grid-cols-4 gap-2 w-full max-w-[560px]"
+                      role="listbox"
+                      aria-label="Select amount"
+                    >
+                      {getQuickAmounts(platform, service).map((val, idx, arr) => {
+                        const selected = quantity === val;
+                        const label = val >= 1000 ? `${val / 1000}K` : `${val}`;
+                        const badge = getAmountBadge(val, arr);
+                        const est = (discounted * val).toFixed(0);
+
+                        return (
+                          <button
+                            key={val}
+                            type="button"
+                            role="option"
+                            aria-selected={selected}
+                            className={[
+                              "group relative rounded-2xl border-2 px-4 py-3 text-sm font-extrabold transition-all",
+                              "focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-0 focus-visible:ring-[#BFD9FF]",
+                              selected
+                                ? "bg-gradient-to-br from-[#E6F0FF] to-white text-[#0B63E6] border-[#7FB5FF] shadow-[0_6px_20px_rgba(0,123,255,.15)]"
+                                : "bg-white text-[#0B63E6] border-[#DCEBFF] hover:border-[#7FB5FF] hover:shadow-[0_6px_16px_rgba(0,123,255,.12)]"
+                            ].join(" ")}
+                            onClick={() => setQuantity(val)}
+                          >
+                            {/* badge */}
+                            {badge && (
+                              <span
+                                className="absolute -top-2 -right-2 text-[10px] font-bold px-1.5 py-0.5 rounded-full shadow"
+                                style={{
+                                  color: "#0B63E6",
+                                  background: "#EAF3FF",
+                                  border: "1px solid #D5E8FF",
+                                }}
+                              >
+                                {badge}
+                              </span>
+                            )}
+
+                            <div className="flex flex-col items-center leading-tight">
+                              <span className="tracking-tight">
+                                {label}
+                              </span>
+                              <span className="mt-0.5 text-[10px] font-semibold text-[#5573A6]">
+                                ${est}
+                              </span>
+                            </div>
+
+                            {/* selection glow */}
+                            {selected && (
+                              <span
+                                aria-hidden
+                                className="pointer-events-none absolute inset-0 rounded-2xl"
+                                style={{ boxShadow: "inset 0 0 0 1px #7FB5FF, 0 8px 24px rgba(0,123,255,.10)" }}
+                              />
+                            )}
+                          </button>
+                        );
+                      })}
                     </div>
+
                     <span className="font-bold text-[#007BFF] text-xl mt-2">
                       Total: <span className="text-[#007BFF]">${(discounted * quantity).toFixed(2)}</span>
                       <span className="ml-2 text-sm text-[#c7c7c7] line-through">${(service.price * quantity).toFixed(2)}</span>
