@@ -1,83 +1,113 @@
-// pages/api/preview.ts
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as cheerio from "cheerio";
+
+const HEADERS = {
+  "User-Agent":
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36",
+  "Accept-Language": "en-US,en;q=0.9",
+};
+
+async function safeFetch(url: string) {
+  try {
+    const res = await fetch(url, { headers: HEADERS });
+    if (!res.ok) return null;
+    const html = await res.text();
+    return html;
+  } catch (e) {
+    return null;
+  }
+}
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
     const { platform, target } = req.query;
 
     if (!platform || !target)
-      return res.status(400).json({ error: "Missing platform or target" });
+      return res.status(400).json({ ok: false, error: "Missing platform or target" });
 
     const decoded = decodeURIComponent(target as string);
 
     // ---------------------------
-    // YOUTUBE (thumbnail easy)
+    // YOUTUBE THUMBNAIL
     // ---------------------------
     if (platform === "youtube") {
-      const id = decoded.match(/v=([^&]+)/)?.[1];
-      if (!id) return res.status(400).json({ error: "Invalid YouTube link" });
+      const id =
+        decoded.match(/v=([^&]+)/)?.[1] ||
+        decoded.match(/youtu\.be\/([^?]+)/)?.[1];
+
+      if (!id) return res.json({ ok: false });
 
       return res.json({
         ok: true,
         type: "video",
-        image: `https://img.youtube.com/vi/${id}/hqdefault.jpg`,
+        image: `https://img.youtube.com/vi/${id}/maxresdefault.jpg`,
       });
     }
 
     // ---------------------------
-    // INSTAGRAM SCRAPER
+    // INSTAGRAM
     // ---------------------------
     if (platform === "instagram") {
-      if (decoded.includes("instagram.com/p/")) {
-        // POST THUMBNAIL
-        const html = await fetch(decoded).then((r) => r.text());
-        const $ = cheerio.load(html);
-        const json = $('script[type="application/ld+json"]').first().html();
-        if (!json) return res.json({ ok: false });
+      // INSTAGRAM POST
+      if (decoded.includes("instagram.com/p/") || decoded.includes("instagram.com/reel/")) {
+        const html = await safeFetch(decoded);
+        if (!html) return res.json({ ok: false });
 
-        const data = JSON.parse(json);
+        const $ = cheerio.load(html);
+        const og = $('meta[property="og:image"]').attr("content");
+
         return res.json({
           ok: true,
           type: "post",
-          image: data.thumbnailUrl || data.image || null,
+          image: og || null,
         });
-      } else {
-        // PROFILE IMAGE
-        const profileUrl = `https://www.instagram.com/${decoded}/`;
-        const html = await fetch(profileUrl).then((r) => r.text());
-        const $ = cheerio.load(html);
+      }
 
-        const scripts: string[] = [];
-        $("script").each((_, el) => {
-          const content = $(el).html();
-          if (content?.includes("profile_pic_url_hd")) scripts.push(content);
-        });
+      // INSTAGRAM PROFILE
+      const url = `https://www.instagram.com/${decoded}/`;
+      const html = await safeFetch(url);
+      if (!html) return res.json({ ok: false });
 
-        if (!scripts.length) return res.json({ ok: false });
+      const $ = cheerio.load(html);
 
-        const jsonStr = scripts[0].match(/{.*}/s)?.[0];
-        if (!jsonStr) return res.json({ ok: false });
-
-        const data = JSON.parse(jsonStr);
-        const image = data?.entry_data?.ProfilePage?.[0]?.graphql?.user?.profile_pic_url_hd;
-
+      // Try normal meta
+      const ogImg = $('meta[property="og:image"]').attr("content");
+      if (ogImg)
         return res.json({
           ok: true,
           type: "profile",
-          image: image || null,
+          image: ogImg,
         });
+
+      // Try embedded JSON
+      const script = $('script[type="application/ld+json"]').html();
+      if (script) {
+        try {
+          const json = JSON.parse(script);
+          return res.json({
+            ok: true,
+            type: "profile",
+            image: json.image || null,
+          });
+        } catch {}
       }
+
+      return res.json({ ok: false });
     }
 
     // ---------------------------
-    // TIKTOK SCRAPER (videos only)
+    // TIKTOK THUMBNAIL
     // ---------------------------
     if (platform === "tiktok") {
-      const html = await fetch(decoded).then((r) => r.text());
+      const html = await safeFetch(decoded);
+      if (!html) return res.json({ ok: false });
+
       const $ = cheerio.load(html);
 
-      const ogImg = $('meta[property="og:image"]').attr("content");
+      const ogImg =
+        $('meta[property="og:image"]').attr("content") ||
+        $('meta[property="twitter:image"]').attr("content");
+
       return res.json({
         ok: true,
         type: "video",
@@ -85,9 +115,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
     }
 
-    return res.status(400).json({ error: "Invalid platform" });
+    return res.json({ ok: false, error: "Unsupported platform" });
   } catch (err) {
-    console.log("SCRAPER ERROR:", err);
-    return res.status(500).json({ ok: false, error: "Failed to scrape" });
+    console.log("PREVIEW ERROR:", err);
+    return res.json({ ok: false });
   }
 }
