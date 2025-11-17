@@ -166,8 +166,10 @@ export default function DashboardPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [profileEmail, setProfileEmail] = useState("");
+  // IMPORTANT: make inputs fully controlled; initialize once from profile
   const [newEmail, setNewEmail] = useState("");
   const [passwordData, setPasswordData] = useState({ current: "", new: "" });
+
   const [analytics, setAnalytics] = useState({ total: 0, completed: 0 });
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -186,6 +188,7 @@ export default function DashboardPage() {
   const isContentEngagement = service.type === "Likes" || service.type === "Views";
   const isVideo = useMemo(() => isContentEngagement && isLink(target), [isContentEngagement, target]);
 
+  // Fetch session/orders once
   useEffect(() => {
     const fetchUserAndOrders = async () => {
       const { data: { session } } = await supabase.auth.getSession();
@@ -194,6 +197,8 @@ export default function DashboardPage() {
       setUserEmail(email);
       setUserId(session.user.id);
       setProfileEmail(email);
+      // Initialize form inputs ONCE from profile values
+      setNewEmail(email);
 
       const { data: allOrders } = await supabase
         .from("orders")
@@ -265,7 +270,7 @@ export default function DashboardPage() {
       const { error } = await supabase.auth.updateUser({ email: newEmailVal });
       if (error) throw error;
       toast.success("Check your NEW email inbox to confirm the change.");
-      setNewEmail("");
+      // keep the field as-is; don't reset so user sees what they set
     } catch (e: any) { toast.error(e?.message || "Failed to start email change."); }
   }
   async function handleChangePassword(currentPwd: string, newPwd: string) {
@@ -420,12 +425,6 @@ export default function DashboardPage() {
             </span>
             <span className="text-[10px] text-[#6B7280]">Visual only</span>
           </div>
-          <span
-            className="text-[10px] font-semibold px-2 py-0.5 rounded-full"
-            style={{ color: platform.iconColor, background: `${platform.iconColor}14`, border: `1px solid ${platform.iconColor}26` }}
-          >
-            {platform.name}
-          </span>
         </div>
       </div>
     );
@@ -462,7 +461,7 @@ export default function DashboardPage() {
               </div>
               <div className="relative w-full h-[5px] rounded-full bg-[#E6F0FF] z-0">
                 <div className="absolute top-0 left-0 h-[5px] rounded-full z-10"
-                     style={{ width: `${orderPercent}%`, background: `linear-gradient(90deg, ${COLORS.primary} 0%, ${COLORS.primaryHover} 100%)`, transition: "width .38s cubic-bezier(.51,1.15,.67,.97)" }} />
+                     style={{ width: `${(orderStep / (ORDER_STEPS.length - 1)) * 100}%`, background: `linear-gradient(90deg, ${COLORS.primary} 0%, ${COLORS.primaryHover} 100%)`, transition: "width .38s cubic-bezier(.51,1.15,.67,.97)" }} />
               </div>
             </div>
           </div>
@@ -549,18 +548,28 @@ export default function DashboardPage() {
               <>
                 <h3 className="font-black text-2xl mb-8 text-[#111] text-center">Order Details</h3>
                 <div className="flex flex-col gap-6 max-w-sm mx-auto mb-8">
-                  <label className="font-semibold text-[#007BFF] text-lg">
-                    {getTargetLabel(service)}
+                  {/* Target */}
+                  <div>
+                    <label htmlFor="order-target" className="block font-semibold text-[#007BFF] text-lg mb-2">
+                      {getTargetLabel(service)}
+                    </label>
                     <input
+                      id="order-target"
                       type="text"
                       autoFocus
-                      className="w-full border border-[#CFE4FF] rounded-xl px-4 py-3 mt-2 text-base font-medium outline-[#007BFF] bg-white shadow focus:border-[#007BFF] focus:ring-2 focus:ring-[#E6F0FF] transition"
+                      className="w-full border border-[#CFE4FF] rounded-xl px-4 py-3 text-base font-medium outline-[#007BFF] bg-white shadow focus:border-[#007BFF] focus:ring-2 focus:ring-[#E6F0FF] transition"
                       placeholder={getTargetPlaceholder(platform, service)}
                       value={target}
                       onChange={(e) => setTarget(e.target.value)}
                     />
-                  </label>
+                    <span className="mt-2 block text-xs text-[#777]">
+                      {isContentEngagement
+                        ? "For likes / views, you must paste the full post or video URL."
+                        : "For followers / subscribers, you can use a username or full profile URL."}
+                    </span>
+                  </div>
 
+                  {/* Amount */}
                   <div className="flex flex-col items-center gap-3 w-full">
                     <AmountSelector />
                     <div className="flex justify-between items-center mt-2 w-full max-w-[640px]">
@@ -763,9 +772,10 @@ export default function DashboardPage() {
 
           {/* Email */}
           <div className="max-w-md">
-            <label className="block text-[#111] font-bold mb-2">Email</label>
+            <label htmlFor="email-input" className="block text-[#111] font-bold mb-2">Email</label>
             <div className="flex gap-2 items-center">
               <input
+                id="email-input"
                 type="email"
                 className="border border-[#CFE4FF] px-3 py-2 rounded-md w-full"
                 placeholder={profileEmail || "you@example.com"}
@@ -789,17 +799,19 @@ export default function DashboardPage() {
             <label className="block text-[#111] font-bold mb-2">Change Password</label>
             <div className="flex flex-col gap-2">
               <input
+                id="current-password"
                 type="password"
                 placeholder="Current password"
                 value={passwordData.current}
-                onChange={(e) => setPasswordData({ ...passwordData, current: e.target.value })}
+                onChange={(e) => setPasswordData((prev) => ({ ...prev, current: e.target.value }))}
                 className="border border-[#CFE4FF] px-3 py-2 rounded-md w-full"
               />
               <input
+                id="new-password"
                 type="password"
                 placeholder="New password (6+ chars)"
                 value={passwordData.new}
-                onChange={(e) => setPasswordData({ ...passwordData, new: e.target.value })}
+                onChange={(e) => setPasswordData((prev) => ({ ...prev, new: e.target.value }))}
                 className="border border-[#CFE4FF] px-3 py-2 rounded-md w-full"
               />
               <div>
