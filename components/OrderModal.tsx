@@ -12,7 +12,6 @@ import {
   Tag,
   AlertTriangle,
   Play,
-  ZoomIn,
   RefreshCcw,
 } from "lucide-react";
 
@@ -115,7 +114,6 @@ function getStealthPackage(platform: Platform, service: Service): StealthPackage
 function getQuickAmounts(platform: Platform, service: Service) {
   const type = service.type.toString().toLowerCase();
   const key = platform.key;
-
   if (key === "instagram" && type === "views") return [500, 2000, 5000, 10000, 20000, 50000];
   if (key === "instagram" && type === "followers")
     return [100, 200, 350, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000];
@@ -125,7 +123,6 @@ function getQuickAmounts(platform: Platform, service: Service) {
   if (key === "youtube" && type === "views") return [200, 500, 1000, 2000, 5000, 10000];
   if (key === "youtube" && type === "subscribers") return [200, 500, 1000, 2000, 5000, 10000];
   if (key === "youtube" && type === "likes") return [250, 500, 1000, 2000, 5000, 10000];
-
   return [100, 500, 1000, 2000, 5000, 10000, 25000, 50000];
 }
 
@@ -136,14 +133,13 @@ async function fetchPreview(platform: string, target: string): Promise<PreviewDa
   try {
     const res = await fetch(`/api/preview?platform=${platform}&target=${encodeURIComponent(target)}`);
     return await res.json();
-  } catch (err) {
-    console.error("Preview Fetch Error", err);
+  } catch {
     return { ok: false, error: "Network error" };
   }
 }
 
 /* ==============================
-   UTILS (WHY: consistent UX when preview fails)
+   UTILS
 ============================== */
 const isLink = (t: string) => /^https?:\/\//i.test(t.trim());
 function normalizeHandle(platform: Platform, target: string) {
@@ -151,9 +147,7 @@ function normalizeHandle(platform: Platform, target: string) {
   if (!raw) return "";
   if (isLink(raw)) return raw.replace(/^https?:\/\//, "");
   if (raw.startsWith("@")) return raw;
-  if (platform.key === "instagram") return raw.startsWith("@") ? raw : `@${raw}`;
-  if (platform.key === "tiktok") return raw.startsWith("@") ? raw : `@${raw}`;
-  if (platform.key === "youtube") return raw.startsWith("@") ? raw : `@${raw}`;
+  if (["instagram", "tiktok", "youtube"].includes(platform.key)) return `@${raw}`;
   return raw;
 }
 function hashToHsl(seed: string, s = 65, l = 58) {
@@ -161,99 +155,25 @@ function hashToHsl(seed: string, s = 65, l = 58) {
   for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) >>> 0;
   return `hsl(${h % 360} ${s}% ${l}%)`;
 }
-const brandGradient = (hex: string) =>
-  `linear-gradient(135deg, ${hex}22 0%, ${hex}11 25%, transparent 55%)`;
 
 /* ==============================
-   ImageSafe (WHY: avoid layout jump & broken images)
+   ImageSafe (tiny, robust)
 ============================== */
-function ImageSafe({
-  src,
-  alt,
-  onError,
-  onClick,
-}: {
-  src: string;
-  alt: string;
-  onError?: () => void;
-  onClick?: () => void;
-}) {
+function ImageSafe({ src, alt }: { src: string; alt: string }) {
   const [loaded, setLoaded] = useState(false);
   const [failed, setFailed] = useState(false);
-
   return (
     <div className="absolute inset-0">
-      {!loaded && !failed && (
-        <div className="absolute inset-0 animate-pulse bg-gradient-to-br from-[#EAF2FF] via-[#F5FAFF] to-white" />
-      )}
-      {!failed ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={src}
-          alt={alt}
-          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${
-            loaded ? "opacity-100" : "opacity-0"
-          }`}
-          onLoad={() => setLoaded(true)}
-          onError={() => {
-            setFailed(true);
-            onError?.();
-          }}
-          onClick={onClick}
-          role={onClick ? "button" : undefined}
-        />
-      ) : (
-        <div className="absolute inset-0 bg-[#EEF4FF]" />
-      )}
-      {!failed && (
-        <div
-          className={`pointer-events-none absolute inset-0 transition-opacity duration-500 ${
-            loaded ? "opacity-0" : "opacity-100"
-          }`}
-          style={{ backdropFilter: "blur(0px)" }}
-        />
-      )}
-    </div>
-  );
-}
-
-/* ==============================
-   Lightbox (WHY: users want to inspect the preview image)
-============================== */
-function Lightbox({
-  open,
-  onClose,
-  url,
-  brand,
-}: {
-  open: boolean;
-  onClose: () => void;
-  url: string;
-  brand: string;
-}) {
-  if (!open) return null;
-  return (
-    <div
-      className="fixed inset-0 z-[99999] bg-black/80 backdrop-blur-sm flex items-center justify-center"
-      onClick={onClose}
-      role="dialog"
-      aria-modal="true"
-    >
-      <div
-        className="relative max-w-3xl w-[92vw] aspect-video rounded-2xl overflow-hidden shadow-2xl"
-        style={{ border: `2px solid ${brand}33`, boxShadow: "0 10px 60px rgba(0,0,0,.35)" }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={url} alt="Preview zoom" className="w-full h-full object-contain bg-black" />
-        <button
-          onClick={onClose}
-          className="absolute top-3 right-3 bg-white/90 hover:bg-white rounded-full p-2 shadow"
-          aria-label="Close lightbox"
-        >
-          <X size={20} className="text-black" />
-        </button>
-      </div>
+      {!loaded && !failed && <div className="absolute inset-0 animate-pulse bg-gradient-to-br from-[#EAF2FF] via-[#F5FAFF] to-white" />}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={src}
+        alt={alt}
+        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${loaded && !failed ? "opacity-100" : "opacity-0"}`}
+        onLoad={() => setLoaded(true)}
+        onError={() => setFailed(true)}
+      />
+      {failed && <div className="absolute inset-0 bg-[#EEF4FF]" />}
     </div>
   );
 }
@@ -281,9 +201,8 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
 
   const [preview, setPreview] = useState<PreviewData | null>(null);
   const [previewLoading, setPreviewLoading] = useState(false);
-  const [lightboxOpen, setLightboxOpen] = useState(false);
 
-  /* Lock scroll when modal open */
+  /* Lock scroll */
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
     return () => {
@@ -291,10 +210,9 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
     };
   }, [open]);
 
-  /* Init state from initial props */
+  /* Init from props */
   useEffect(() => {
     if (!open) return;
-
     let selectedPlatform = PLATFORMS[0];
     let selectedService = PLATFORMS[0].services[0];
     let stepToSet = 0;
@@ -329,26 +247,26 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
     setStep(stepToSet);
     setPreview(null);
     setPreviewLoading(false);
-    setLightboxOpen(false);
   }, [open, initialPlatform, initialService]);
 
-  /* Derived flags */
   const isContentEngagement = service.type === "Likes" || service.type === "Views";
   const isVideo = useMemo(() => isContentEngagement && isLink(target), [isContentEngagement, target]);
 
-  /* Preview fetch effect (Details step only) */
+  /* Preview: ONLY in Review step */
   const doFetchPreview = useCallback(
     async (force = false) => {
-      if (!open || step !== 2) return;
+      if (!open || step !== 3) return;
       const trimmed = target.trim();
       if (!trimmed) {
         setPreview(null);
         setPreviewLoading(false);
         return;
       }
-      // WHY: avoid hammering API if user typed a handle without @/http for Views/Likes
-      if (!force && isContentEngagement && !isLink(trimmed)) return;
-
+      if (!force && isContentEngagement && !isLink(trimmed)) {
+        // WHY: Likes/Views require URL
+        setPreview({ ok: false, error: "Post / video URL required for preview." });
+        return;
+      }
       setPreviewLoading(true);
       const data = await fetchPreview(platform.key, trimmed);
       setPreview(data);
@@ -358,11 +276,10 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
   );
 
   useEffect(() => {
-    const id = setTimeout(() => doFetchPreview(false), 260); // WHY: debounce
+    if (step !== 3) return;
+    const id = setTimeout(() => doFetchPreview(false), 200);
     return () => clearTimeout(id);
-  }, [doFetchPreview]);
-
-  const retryPreview = useCallback(() => doFetchPreview(true), [doFetchPreview]);
+  }, [doFetchPreview, step]);
 
   if (!open) return null;
 
@@ -440,43 +357,37 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
   }
 
   /* ==============================
-     PREVIEW CARD (NEW Buzz•oid)
+     PREVIEW CARD (Review-only, responsive)
   ============================== */
-  function PreviewCard({ compact = false }: { compact?: boolean }) {
+  function PreviewCard() {
     const hasImg = !!(preview && preview.ok && preview.image);
-    const failed = !!(preview && preview.ok === false && preview.error);
+    const failed = !!(preview && preview.ok === false);
     const normalized = normalizeHandle(platform, target || "");
     const avatarHue = hashToHsl(normalized || platform.name);
 
     return (
       <div
-        className={
-          "w-full rounded-2xl border bg-white shadow-sm overflow-hidden flex flex-col" +
-          (compact ? " max-w-md mx-auto" : "")
-        }
-        style={{
-          borderColor: COLORS.border,
-          backgroundImage: brandGradient(platform.color),
-        }}
+        className="w-full rounded-2xl border bg-white shadow-sm overflow-hidden"
+        style={{ borderColor: COLORS.border }}
       >
         {/* Header */}
-        <div className="flex items-center gap-3 px-4 py-3 border-b bg-white/80 backdrop-blur-sm" style={{ borderColor: "#E0ECFF" }}>
+        <div className="flex items-center gap-3 px-4 py-3 border-b bg-white/80" style={{ borderColor: "#E0ECFF" }}>
           <div className="flex items-center justify-center w-9 h-9 rounded-full" style={{ background: COLORS.accentBg }}>
             {platform.icon}
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2">
               <span className="text-xs font-black uppercase tracking-wider" style={{ color: COLORS.primary }}>
-                Live Preview
+                Preview
               </span>
               {previewLoading && (
-                <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-[#EAF2FF] text-[#3B82F6]">Fetching…</span>
+                <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-[#EAF2FF] text-[#3B82F6]">Loading…</span>
               )}
               {!previewLoading && hasImg && (
                 <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-[#ECFDF5] text-[#16A34A]">Ready</span>
               )}
               {!previewLoading && failed && (
-                <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-[#FEF2F2] text-[#DC2626]">Issue</span>
+                <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-[#FEF2F2] text-[#DC2626]">Unavailable</span>
               )}
             </div>
             <span className="text-[11px] text-[#6B7280]">
@@ -485,120 +396,80 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
           </div>
         </div>
 
-        {/* Media */}
-        <div className="relative w-full">
-          <div className="relative w-full overflow-hidden bg-[#DAE6FF]">
-            <div className="relative w-full" style={{ paddingTop: "56.25%" }}>
-              {/* Shimmer */}
-              {previewLoading && (
-                <div className="absolute inset-0">
-                  <div className="absolute inset-0 animate-pulse bg-gradient-to-br from-[#EAF2FF] via-[#F5FAFF] to-white" />
-                </div>
-              )}
+        {/* Media: fully responsive, capped height on tiny screens */}
+        <div className="relative w-full bg-[#DAE6FF]">
+          <div className="relative w-full aspect-video max-h-[38vh]">
+            {previewLoading && <div className="absolute inset-0 animate-pulse bg-gradient-to-br from-[#EAF2FF] via-[#F5FAFF] to-white" />}
 
-              {/* Image */}
-              {!previewLoading && hasImg && (
-                <div className="absolute inset-0">
-                  <ImageSafe
-                    src={preview!.image as string}
-                    alt="Content preview"
-                    onError={() => void 0}
-                    onClick={() => setLightboxOpen(true)}
-                  />
-                  {/* Overlay chrome */}
-                  <div className="absolute inset-0 pointer-events-none">
-                    <div className="absolute top-2 left-2 px-2 py-1 text-[10px] font-semibold rounded-full bg-black/50 text-white backdrop-blur">
-                      {platform.name}
-                    </div>
-                    <div className="absolute bottom-2 right-2 flex items-center gap-2">
-                      {isVideo && (
-                        <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-black/55 text-white text-[10px] backdrop-blur">
-                          <Play size={12} />
-                          Video
-                        </div>
-                      )}
-                      <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-black/55 text-white text-[10px] backdrop-blur">
-                        <ZoomIn size={12} />
-                        Zoom
-                      </div>
-                    </div>
+            {!previewLoading && hasImg && (
+              <>
+                <ImageSafe src={preview!.image as string} alt="Content preview" />
+                <div className="absolute top-2 left-2 px-2 py-1 text-[10px] font-semibold rounded-full bg-black/50 text-white backdrop-blur">
+                  {platform.name}
+                </div>
+                {isVideo && (
+                  <div className="absolute bottom-2 right-2 flex items-center gap-1 px-2 py-1 rounded-full bg-black/55 text-white text-[10px] backdrop-blur">
+                    <Play size={12} />
+                    Video
                   </div>
-                </div>
-              )}
+                )}
+              </>
+            )}
 
-              {/* Avatar tile (username, no image) */}
-              {!previewLoading && !hasImg && !!normalized && (
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div
-                    className="w-[58%] max-w-xs aspect-square rounded-2xl shadow-xl flex items-center justify-center text-white font-extrabold text-2xl select-none"
-                    style={{
-                      background: `linear-gradient(135deg, ${avatarHue}, ${avatarHue.replace("% 58%)", "% 40%)")})`,
-                      letterSpacing: "0.3px",
-                    }}
+            {!previewLoading && !hasImg && normalized && (
+              <div className="absolute inset-0 grid place-items-center">
+                <div
+                  className="w-[56%] max-w-[220px] aspect-square rounded-2xl shadow-xl grid place-items-center text-white font-extrabold text-2xl"
+                  style={{
+                    background: `linear-gradient(135deg, ${avatarHue}, ${avatarHue.replace("% 58%)", "% 42%)")})`,
+                  }}
+                >
+                  {normalized.replace(/^@/, "").slice(0, 2).toUpperCase()}
+                </div>
+              </div>
+            )}
+
+            {!previewLoading && failed && (
+              <div className="absolute inset-0 grid place-items-center">
+                <div
+                  className="mx-4 rounded-xl border bg-white/95 backdrop-blur px-4 py-3 text-center shadow"
+                  style={{ borderColor: "#FEE2E2" }}
+                >
+                  <div className="flex items-center justify-center gap-2 text-[#DC2626] font-semibold text-sm mb-1">
+                    <AlertTriangle size={16} /> Preview unavailable
+                  </div>
+                  <p className="text-[12px] text-[#6B7280]">
+                    {preview?.error || "We couldn’t fetch a preview for this target."}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => doFetchPreview(true)}
+                    className="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-[12px] font-semibold bg-[#FFF] hover:bg-[#FAFAFA]"
+                    style={{ borderColor: COLORS.border, color: COLORS.primary }}
                   >
-                    {normalized.replace(/^@/, "").slice(0, 2).toUpperCase()}
-                  </div>
+                    <RefreshCcw size={14} /> Retry
+                  </button>
                 </div>
-              )}
-
-              {/* Empty State */}
-              {!previewLoading && !hasImg && !normalized && (
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="flex flex-col items-center text-center gap-3 px-5">
-                    <div className="w-12 h-12 rounded-2xl" style={{ background: COLORS.accentBg, display: "grid", placeItems: "center" }}>
-                      {platform.icon}
-                    </div>
-                    <p className="text-[13px] text-[#4B5563] font-medium">
-                      Paste a valid {isContentEngagement ? "post / video URL" : "profile URL or @handle"} to preview.
-                    </p>
-                  </div>
-                </div>
-              )}
-
-              {/* Error overlay */}
-              {!previewLoading && failed && (
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="mx-4 rounded-xl border bg-white/95 backdrop-blur px-4 py-3 text-center shadow"
-                       style={{ borderColor: "#FEE2E2" }}>
-                    <div className="flex items-center justify-center gap-2 text-[#DC2626] font-semibold text-sm mb-1">
-                      <AlertTriangle size={16} /> Preview unavailable
-                    </div>
-                    <p className="text-[12px] text-[#6B7280]">
-                      {preview?.error || "We couldn’t fetch a preview for this target."}
-                    </p>
-                    <button
-                      type="button"
-                      onClick={retryPreview}
-                      className="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-[12px] font-semibold bg-[#FFF] hover:bg-[#FAFAFA]"
-                      style={{ borderColor: COLORS.border, color: COLORS.primary }}
-                    >
-                      <RefreshCcw size={14} /> Retry
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </div>
 
         {/* Footer */}
         <div className="px-4 py-3 bg-white flex items-center justify-between">
           <div className="min-w-0">
-            <span className="block text-xs font-semibold text-[#111] truncate max-w-[220px]">
-              {normalized || "Waiting for your profile / link…"}
+            <span className="block text-xs font-semibold text-[#111] truncate max-w-[70vw] sm:max-w-[420px]">
+              {normalized || "No target provided"}
             </span>
             <span className="text-[11px] text-[#6B7280]">Visual preview only. Delivery unaffected.</span>
           </div>
-          <span className="text-[11px] font-semibold px-2 py-1 rounded-full"
-                style={{ color: platform.color, background: `${platform.color}1A`, border: `1px solid ${platform.color}33` }}>
+          <span
+            className="text-[11px] font-semibold px-2 py-1 rounded-full"
+            style={{ color: platform.color, background: `${platform.color}1A`, border: `1px solid ${platform.color}33` }}
+          >
             {platform.name}
           </span>
         </div>
-
-        {/* Lightbox */}
-        {hasImg && (
-          <Lightbox open={lightboxOpen} onClose={() => setLightboxOpen(false)} url={preview!.image as string} brand={platform.color} />
-        )}
       </div>
     );
   }
@@ -609,12 +480,12 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
   return (
     <div className="fixed z-[9999] inset-0 flex items-center justify-center bg-black/85 backdrop-blur-[2.5px]">
       <div
-        className="relative w-full max-w-lg mx-auto bg-white rounded-3xl border-2 shadow-[0_6px_48px_0_rgba(0,123,255,0.13)] flex flex-col"
+        className="relative w-[min(92vw,720px)] mx-auto bg-white rounded-3xl border-2 shadow-[0_6px_48px_0_rgba(0,123,255,0.13)] flex flex-col"
         style={{ minHeight: 0, maxHeight: "94vh" }}
       >
         {/* Header */}
         <div
-          className="w-full px-6 pt-6 pb-4 rounded-t-3xl border-b flex flex-col gap-2"
+          className="w-full px-4 sm:px-6 pt-6 pb-4 rounded-t-3xl border-b flex flex-col gap-2"
           style={{
             background: `linear-gradient(90deg, ${COLORS.accentBg} 0%, ${COLORS.background} 80%)`,
             borderColor: COLORS.border,
@@ -622,14 +493,14 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
           }}
         >
           <button
-            className="absolute top-5 right-7 z-20 bg-white border border-[#e3edfc] shadow-lg rounded-full p-2 hover:bg-[#f8faff] transition"
+            className="absolute top-5 right-5 sm:right-7 z-20 bg-white border border-[#e3edfc] shadow-lg rounded-full p-2 hover:bg-[#f8faff] transition"
             onClick={onClose}
             aria-label="Close"
           >
             <X size={22} className="text-[#007BFF]" />
           </button>
 
-          <div className="flex items-center gap-2 pr-14">
+          <div className="flex items-center gap-2 pr-12 sm:pr-14">
             {platform.icon}
             <span className="font-extrabold text-lg tracking-tight" style={{ color: platform.color }}>
               {platform.name}
@@ -637,7 +508,7 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
           </div>
 
           {/* Steps */}
-          <div className="relative w-full flex items-center justify-between mt-4 px-2 z-10">
+          <div className="relative w-full flex items-center justify-between mt-4 px-1 sm:px-2 z-10">
             {steps.map((s, i) => (
               <div key={s.label} className="flex flex-col items-center flex-1 min-w-0">
                 <div
@@ -653,7 +524,7 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
                   {i + 1}
                 </div>
                 <span
-                  className={`mt-2 text-xs font-semibold whitespace-nowrap text-center ${
+                  className={`mt-2 text-[11px] sm:text-xs font-semibold whitespace-nowrap text-center ${
                     step === i ? "text-[#007BFF]" : "text-[#888]"
                   }`}
                   style={{ width: "max-content" }}
@@ -663,7 +534,7 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
               </div>
             ))}
           </div>
-          <div className="relative w-full h-3 mt-2 mb-[-8px] px-3 flex items-center">
+          <div className="relative w-full h-3 mt-2 mb-[-8px] px-2 sm:px-3 flex items-center">
             <div className="absolute left-0 top-1/2 w-full h-2 rounded-full" style={{ background: COLORS.accentBg, transform: "translateY(-50%)" }} />
             <div
               className="absolute left-0 top-1/2 h-2"
@@ -680,16 +551,16 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto px-5 sm:px-8 py-7 rounded-b-3xl" style={{ background: COLORS.background }}>
+        <div className="flex-1 overflow-y-auto px-4 sm:px-8 py-6 sm:py-7 rounded-b-3xl" style={{ background: COLORS.background }}>
           {/* STEP 0: PLATFORM */}
           {step === 0 && (
             <div>
               <h3 className="font-black text-2xl mb-7 text-[#111111] text-center tracking-tight">Choose Platform</h3>
-              <div className="flex justify-center gap-5 sm:gap-8 flex-wrap">
+              <div className="flex justify-center gap-4 sm:gap-6 flex-wrap">
                 {PLATFORMS.map((p) => (
                   <button
                     key={p.key}
-                    className={`rounded-xl flex flex-col items-center gap-1 px-6 py-5 border-2 font-bold text-sm shadow hover:shadow-lg transition ${
+                    className={`rounded-xl flex flex-col items-center gap-1 px-5 py-4 border-2 font-bold text-sm shadow hover:shadow-lg transition ${
                       platform.key === p.key ? "border-[#007BFF] bg-[#E6F0FF] text-[#007BFF] scale-105" : "border-[#CFE4FF] text-[#111111] bg-white"
                     }`}
                     style={{ minWidth: 110, minHeight: 90 }}
@@ -753,62 +624,55 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
             </div>
           )}
 
-          {/* STEP 2: DETAILS */}
+          {/* STEP 2: DETAILS (NO PREVIEW HERE) */}
           {step === 2 && (
             <div>
               <h3 className="font-black text-2xl mb-7 text-[#111111] text-center">Order Details</h3>
               <div className="space-y-8">
-                <div className="flex flex-col md:flex-row md:items-start md:gap-6">
-                  <div className="md:w-1/2 w-full space-y-6">
-                    {/* TARGET INPUT */}
-                    <div className="flex flex-col">
-                      <label className="block font-semibold text-[#007BFF] mb-2 text-lg">{getTargetLabel()}</label>
-                      <input
-                        type="text"
-                        autoFocus
-                        value={target}
-                        onChange={(e) => setTarget(e.target.value)}
-                        className="w-full border border-[#CFE4FF] rounded-xl px-4 py-3 text-base font-medium outline-none bg-white/90 shadow focus:border-[#007BFF] focus:ring-2 focus:ring-[#E6F0FF] transition"
-                        placeholder={getTargetPlaceholder()}
-                      />
-                      <span className="mt-2 text-xs text-[#777]">
-                        {isContentEngagement
-                          ? "For likes / views, you must paste the full post or video URL."
-                          : "For followers / subscribers, you can use a username or full profile URL."}
-                      </span>
-                    </div>
-
-                    {/* AMOUNT SELECTOR */}
-                    <div className="flex flex-col items-center gap-3 w-full">
-                      <span className="text-[#111] text-base font-semibold">Amount</span>
-                      <div className="flex gap-2 flex-wrap justify-center w-full">
-                        {getQuickAmounts(platform, service).map((val) => (
-                          <button
-                            key={val}
-                            type="button"
-                            className={`rounded-full px-5 py-2 font-bold border text-sm shadow transition ${
-                              quantity === val ? "bg-[#007BFF] text-white border-[#007BFF]" : "bg-[#E6F0FF] text-[#007BFF] border-[#CFE4FF] hover:bg-[#E0ECFF] hover:border-[#007BFF]"
-                            }`}
-                            onClick={() => setQuantity(val)}
-                          >
-                            {val >= 1000 ? `${val / 1000}K` : val}
-                          </button>
-                        ))}
-                      </div>
-                      <span className="font-bold text-[#007BFF] text-xl mt-2">
-                        Total: <span className="text-[#007BFF]">${(discounted * quantity).toFixed(2)}</span>
-                        <span className="ml-2 text-sm text-[#c7c7c7] line-through">${(service.price * quantity).toFixed(2)}</span>
-                      </span>
-                      <span className="text-xs text-[#007BFF] font-semibold mt-1">Flash Sale! {discount}% off for a limited time</span>
-                    </div>
-
-                    {error && <div className="mt-2 text-[#EF4444] text-center text-sm">{error}</div>}
+                <div className="max-w-[720px] mx-auto">
+                  {/* TARGET INPUT */}
+                  <div className="flex flex-col">
+                    <label className="block font-semibold text-[#007BFF] mb-2 text-lg">{getTargetLabel()}</label>
+                    <input
+                      type="text"
+                      autoFocus
+                      value={target}
+                      onChange={(e) => setTarget(e.target.value)}
+                      className="w-full border border-[#CFE4FF] rounded-xl px-4 py-3 text-base font-medium outline-none bg-white/90 shadow focus:border-[#007BFF] focus:ring-2 focus:ring-[#E6F0FF] transition"
+                      placeholder={getTargetPlaceholder()}
+                    />
+                    <span className="mt-2 text-xs text-[#777]">
+                      {isContentEngagement
+                        ? "For likes / views, you must paste the full post or video URL."
+                        : "For followers / subscribers, you can use a username or full profile URL."}
+                    </span>
                   </div>
 
-                  {/* PREVIEW SIDE */}
-                  <div className="mt-8 md:mt-0 md:w-1/2 w-full">
-                    <PreviewCard />
+                  {/* AMOUNT SELECTOR */}
+                  <div className="mt-6 flex flex-col items-center gap-3 w-full">
+                    <span className="text-[#111] text-base font-semibold">Amount</span>
+                    <div className="flex gap-2 flex-wrap justify-center w-full">
+                      {getQuickAmounts(platform, service).map((val) => (
+                        <button
+                          key={val}
+                          type="button"
+                          className={`rounded-full px-5 py-2 font-bold border text-sm shadow transition ${
+                            quantity === val ? "bg-[#007BFF] text-white border-[#007BFF]" : "bg-[#E6F0FF] text-[#007BFF] border-[#CFE4FF] hover:bg-[#E0ECFF] hover:border-[#007BFF]"
+                          }`}
+                          onClick={() => setQuantity(val)}
+                        >
+                          {val >= 1000 ? `${val / 1000}K` : val}
+                        </button>
+                      ))}
+                    </div>
+                    <span className="font-bold text-[#007BFF] text-xl mt-2">
+                      Total: <span className="text-[#007BFF]">${(discounted * quantity).toFixed(2)}</span>
+                      <span className="ml-2 text-sm text-[#c7c7c7] line-through">${(service.price * quantity).toFixed(2)}</span>
+                    </span>
+                    <span className="text-xs text-[#007BFF] font-semibold mt-1">Flash Sale! {discount}% off for a limited time</span>
                   </div>
+
+                  {error && <div className="mt-2 text-[#EF4444] text-center text-sm">{error}</div>}
                 </div>
               </div>
 
@@ -826,13 +690,13 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
             </div>
           )}
 
-          {/* STEP 3: REVIEW */}
+          {/* STEP 3: REVIEW (Preview lives here) */}
           {step === 3 && (
             <form onSubmit={handleSecureCheckout}>
               <h3 className="font-black text-2xl mb-5 text-[#111] text-center">Review & Secure Checkout</h3>
 
               {/* REVIEW SUMMARY */}
-              <div className="bg-[#F5FAFF] border border-[#CFE4FF] rounded-xl px-6 py-7 mb-7 space-y-4">
+              <div className="bg-[#F5FAFF] border border-[#CFE4FF] rounded-xl px-5 sm:px-6 py-6 sm:py-7 mb-6 space-y-4">
                 <div className="flex items-center gap-2 mb-2">
                   {platform.icon}
                   <span className="font-semibold text-lg">{platform.name}</span>
@@ -855,12 +719,14 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
                 <div className="mt-2 font-extrabold text-lg text-[#007BFF]">Total: ${(discounted * quantity).toFixed(2)}</div>
               </div>
 
-              {/* PREVIEW AGAIN - COMPACT */}
-              <PreviewCard compact />
+              {/* PREVIEW (REVIEW-ONLY) */}
+              <div className="mb-6">
+                <PreviewCard />
+              </div>
 
               {error && <div className="mt-4 text-[#EF4444] text-center text-sm">{error}</div>}
 
-              <div className="flex justify-between mt-7">
+              <div className="flex justify-between mt-6">
                 <button
                   type="button"
                   className="px-6 py-3 rounded-xl font-bold bg-[#E6F0FF] text-[#007BFF] border border-[#CFE4FF] hover:bg-[#d7eafd] shadow transition text-lg"
