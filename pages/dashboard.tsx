@@ -1,10 +1,12 @@
+// path: pages/dashboard/index.tsx
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { supabase } from "@/lib/supabase";
 import Image from "next/image";
 import { Toaster, toast } from "react-hot-toast";
 import {
-  UserCircle, LogOut, Instagram, Youtube, Music2, UserPlus, ThumbsUp, Eye, BarChart, List, CheckCircle, Loader2, BadgePercent, Menu, Tag
+  UserCircle, LogOut, Instagram, Youtube, Music2, UserPlus, ThumbsUp, Eye,
+  BarChart, List, CheckCircle, Loader2, BadgePercent, Menu, Tag
 } from "lucide-react";
 
 // --- Types ---
@@ -222,6 +224,114 @@ export default function DashboardPage() {
     window.location.href = `https://checkout.yesviral.com/checkout?order=${orderString}`;
   }
 
+  // ---------- Amount Selector (dashboard version, same style as modal) ----------
+  function ServiceSummary() {
+    const PlatformIcon = platform.icon;
+    const ServiceIcon = service.icon;
+    return (
+      <div
+        className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs font-semibold"
+        style={{ borderColor: COLORS.border, background: "#F7FBFF" }}
+        aria-live="polite"
+      >
+        <span className="inline-flex items-center justify-center w-5 h-5 rounded-full" style={{ background: COLORS.accentBg }}>
+          <PlatformIcon size={12} style={{ color: platform.iconColor }} />
+        </span>
+        <span className="text-[#0B63E6]">{platform.name}</span>
+        <span className="opacity-40">•</span>
+        <span className="inline-flex items-center gap-1 text-[#334155]">
+          <ServiceIcon size={12} style={{ color: service.iconColor }} />
+          {service.type}
+        </span>
+      </div>
+    );
+  }
+
+  function Pill({
+    label,
+    selected,
+    onClick,
+    ariaLabel,
+  }: {
+    label: string;
+    selected: boolean;
+    onClick: () => void;
+    ariaLabel: string;
+  }) {
+    return (
+      <button
+        type="button"
+        role="radio"
+        aria-checked={selected}
+        aria-label={ariaLabel}
+        onClick={onClick}
+        className={[
+          "flex-none h-12 min-w-[88px] px-4 rounded-full border text-sm font-bold tracking-tight",
+          "transition-all select-none",
+          "focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-0 focus-visible:ring-[#BFD9FF]",
+          selected
+            ? "bg-[#007BFF] text-white border-[#007BFF] shadow-[0_8px_18px_rgba(0,123,255,.25)]"
+            : "bg-white text-[#0B63E6] border-[#DCEBFF] hover:border-[#7FB5FF] hover:bg-[#F6FAFF]",
+        ].join(" ")}
+      >
+        {label}
+      </button>
+    );
+  }
+
+  function AmountSelector() {
+    const options = getQuickAmounts(platform, service);
+    const toLabel = (v: number) => (v >= 1000 ? `${v / 1000}K` : `${v}`);
+    const ariaService = `${platform.name} ${service.type}`;
+
+    return (
+      <div className="w-full max-w-[640px]">
+        <div className="flex items-center justify-between mb-2">
+          <h4 className="text-sm font-extrabold text-[#0B63E6]">
+            How many {platform.name} {service.type}?
+          </h4>
+          <ServiceSummary />
+        </div>
+
+        {/* Mobile: horizontal scroll pills */}
+        <div
+          className="sm:hidden flex overflow-x-auto gap-2 pb-1 snap-x snap-mandatory"
+          role="radiogroup"
+          aria-label={`Select amount of ${ariaService}`}
+        >
+          {options.map((v) => (
+            <div key={v} className="snap-start">
+              <Pill
+                label={toLabel(v)}
+                selected={quantity === v}
+                onClick={() => setQuantity(v)}
+                ariaLabel={`${v} ${ariaService}`}
+              />
+            </div>
+          ))}
+        </div>
+
+        {/* Desktop: tidy grid */}
+        <div
+          className="hidden sm:grid grid-cols-3 md:grid-cols-4 gap-2"
+          role="radiogroup"
+          aria-label={`Select amount of ${ariaService}`}
+        >
+          {options.map((v) => (
+            <Pill
+              key={v}
+              label={toLabel(v)}
+              selected={quantity === v}
+              onClick={() => setQuantity(v)}
+              ariaLabel={`${v} ${ariaService}`}
+            />
+          ))}
+        </div>
+      </div>
+    );
+  }
+  // ---------------------------------------------------------------------------
+
   const TabContent = () => {
     if (loading)
       return <div className="flex justify-center items-center py-24"><Loader2 className="animate-spin mr-2" /> Loading...</div>;
@@ -322,8 +432,12 @@ export default function DashboardPage() {
             {orderStep === 1 && (
               <>
                 <h3 className="font-black text-2xl mb-8 text-[#111] text-center">
-                  <platform.icon size={27} style={{ color: platform.iconColor, marginRight: 7, display: "inline-block", verticalAlign: "middle" }} />
-                  {platform.name} Services
+                  {/* Keep heading structure the same */}
+                  <span className="inline-flex items-center gap-2">
+                    {/* Using Icon inline to avoid JSX lowercase component */}
+                    {(() => { const I = platform.icon; return <I size={27} style={{ color: platform.iconColor }} />; })()}
+                    {platform.name} Services
+                  </span>
                 </h3>
                 <div className="flex flex-wrap gap-5 justify-center mb-8">
                   {platform.services.map((s) => {
@@ -387,32 +501,21 @@ export default function DashboardPage() {
                       onChange={e => setTarget(e.target.value)}
                     />
                   </label>
-                  <label className="font-semibold text-[#007BFF] text-lg">
-                    Amount
-                    <div className="flex gap-2 flex-wrap mt-2">
-                      {getQuickAmounts(platform, service).map(val => (
-                        <button
-                          key={val}
-                          type="button"
-                          className={`
-                            rounded-full px-5 py-2 font-bold border text-sm shadow
-                            ${quantity === val ? "bg-[#007BFF] text-white border-[#007BFF]" : "bg-[#E6F0FF] text-[#007BFF] border-[#CFE4FF]"}
-                            hover:bg-[#E6F0FF] hover:border-[#007BFF] transition
-                          `}
-                          onClick={() => setQuantity(val)}
-                        >
-                          {val >= 1000 ? `${val/1000}K` : val}
-                        </button>
-                      ))}
+
+                  {/* Amount selector now matches modal style and clarifies service */}
+                  <div className="flex flex-col items-center gap-3 w-full">
+                    <AmountSelector />
+                    <div className="flex justify-between items-center mt-2 w-full max-w-[640px]">
+                      <span className="text-sm text-[#888]">Total:</span>
+                      <span className="font-bold text-[#007BFF] text-xl">
+                        ${(discounted * quantity).toFixed(2)}
+                        <span className="ml-2 text-sm text-[#c7c7c7] line-through">
+                          ${(service.price * quantity).toFixed(2)}
+                        </span>
+                      </span>
                     </div>
-                  </label>
-                  <div className="flex justify-between items-center mt-2">
-                    <span className="text-sm text-[#888]">Total:</span>
-                    <span className="font-bold text-[#007BFF] text-xl">
-                      ${(discounted * quantity).toFixed(2)}
-                      <span className="ml-2 text-sm text-[#c7c7c7] line-through">${(service.price * quantity).toFixed(2)}</span>
-                    </span>
                   </div>
+
                   <span className="text-xs text-[#007BFF] font-semibold animate-flashSale">
                     Flash Sale! {discount}% off for a limited time
                   </span>
@@ -439,13 +542,15 @@ export default function DashboardPage() {
                 <h3 className="font-black text-2xl mb-5 text-[#111] text-center">Review & Secure Checkout</h3>
                 <div className="bg-[#F5FAFF] border border-[#CFE4FF] rounded-xl px-6 py-7 mb-7">
                   <div className="flex items-center gap-2 mb-2">
-                    <platform.icon size={24} style={{ color: platform.iconColor }} />
+                    {(() => { const I = platform.icon; return <I size={24} style={{ color: platform.iconColor }} />; })()}
                     <span className="font-semibold text-lg">{platform.name}</span>
                     <span className="ml-3 px-3 py-1 rounded-full bg-[#E6F0FF] text-[#007BFF] font-semibold text-xs">{service.type}</span>
                   </div>
                   <div className="text-[#444] mb-1"><b>Target:</b> {target}</div>
                   <div className="text-[#444] mb-1"><b>Amount:</b> {quantity}</div>
-                  <div className="text-[#444] mb-1"><b>Unit:</b> ${discounted}/ea <span className="text-[#c7c7c7] line-through">${service.price}/ea</span></div>
+                  <div className="text-[#444] mb-1">
+                    <b>Unit:</b> ${discounted}/ea <span className="text-[#c7c7c7] line-through">${service.price}/ea</span>
+                  </div>
                   <div className="mt-2 font-extrabold text-lg text-[#007BFF]">
                     Total: ${(discounted * quantity).toFixed(2)}
                   </div>
@@ -464,7 +569,7 @@ export default function DashboardPage() {
                     disabled={orderLoading}
                   >
                     {orderLoading ? (
-                      <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24" fill="none">
+                      <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden>
                         <circle cx="12" cy="12" r="10" stroke="#E6F0FF" strokeWidth="4" />
                         <path d="M22 12A10 10 0 0 1 12 22" stroke="#007BFF" strokeWidth="4" strokeLinecap="round" />
                       </svg>
@@ -639,10 +744,7 @@ export default function DashboardPage() {
         meta.name = "viewport";
         document.head.appendChild(meta);
       }
-      meta.setAttribute(
-        "content",
-        "width=device-width, initial-scale=1"
-      );
+      meta.setAttribute("content","width=device-width, initial-scale=1");
     }
   }, []);
 
