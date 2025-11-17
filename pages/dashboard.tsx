@@ -1,5 +1,5 @@
 // path: pages/dashboard/index.tsx
-import { useEffect, useMemo, useState, useCallback } from "react";
+import React, { useEffect, useMemo, useState, useCallback, memo } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import { Toaster, toast } from "react-hot-toast";
@@ -9,14 +9,14 @@ import {
   BarChart, List, CheckCircle, Loader2, BadgePercent, Menu, Tag, Play
 } from "lucide-react";
 
-// ===== Types =====
+/* ============================ Types ============================ */
 type ServiceType = "Followers" | "Likes" | "Views" | "Subscribers";
 type Service = { type: ServiceType | string; price: number; icon: React.ElementType; iconColor: string; };
 type Platform = { key: string; name: string; icon: React.ElementType; iconColor: string; services: Service[]; };
 interface Order { id: string; platform: string; service: string; quantity: number; status: string; created_at: string; }
 type PreviewData = { ok: boolean; type?: string; image?: string | null; error?: string };
 
-// ===== Theme =====
+/* ============================ Theme ============================ */
 const COLORS = {
   primary: "#007BFF",
   primaryHover: "#005FCC",
@@ -28,7 +28,7 @@ const COLORS = {
   border: "#CFE4FF",
 };
 
-// ===== Platforms =====
+/* ========================== Platforms ========================== */
 const PLATFORMS: Platform[] = [
   {
     key: "instagram",
@@ -75,7 +75,7 @@ const NAV_TABS = [
 
 const ORDER_STEPS = [{ label: "Platform" }, { label: "Service" }, { label: "Details" }, { label: "Review" }];
 
-// ===== Helpers =====
+/* =========================== Helpers ========================== */
 function getQuickAmounts(platform: Platform, service: Service): number[] {
   const t = service.type.toString().toLowerCase();
   const k = platform.key;
@@ -125,7 +125,7 @@ function hashToHsl(seed: string, s = 65, l = 58) {
   return `hsl(${h % 360} ${s}% ${l}%)`;
 }
 
-// ===== ImageSafe =====
+/* ========================= ImageSafe ========================== */
 function ImageSafe({ src, alt }: { src: string; alt: string }) {
   const [loaded, setLoaded] = useState(false);
   const [failed, setFailed] = useState(false);
@@ -145,7 +145,7 @@ function ImageSafe({ src, alt }: { src: string; alt: string }) {
   );
 }
 
-// ===== API: preview =====
+/* ====================== API: preview mock ===================== */
 async function fetchPreview(platform: string, target: string): Promise<PreviewData> {
   try {
     const res = await fetch(`/api/preview?platform=${platform}&target=${encodeURIComponent(target)}`);
@@ -155,21 +155,111 @@ async function fetchPreview(platform: string, target: string): Promise<PreviewDa
   }
 }
 
-// ===== Page =====
+/* ====================== ProfileForm (isolated) =================
+   WHY: Memoized to prevent remounts while typing. No autoFocus.
+=================================================================*/
+type ProfileFormProps = {
+  initialEmail: string;
+};
+const ProfileForm = memo(function ProfileForm({ initialEmail }: ProfileFormProps) {
+  const [newEmail, setNewEmail] = useState(initialEmail || "");
+  const [passwordCurrent, setPasswordCurrent] = useState("");
+  const [passwordNew, setPasswordNew] = useState("");
+
+  useEffect(() => {
+    // Only set on first mount when initialEmail arrives
+    if (initialEmail && !newEmail) setNewEmail(initialEmail);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialEmail]);
+
+  const onUpdateEmail = async () => {
+    const email = newEmail.trim();
+    if (!email) return toast.error("Enter a valid email.");
+    const { error } = await supabase.auth.updateUser({ email });
+    if (error) return toast.error(error.message);
+    toast.success("Check your NEW email inbox to confirm the change.");
+  };
+
+  const onUpdatePassword = async () => {
+    if (!passwordNew || passwordNew.length < 6) return toast.error("Password must be at least 6 characters.");
+    const session = await supabase.auth.getSession();
+    const email = session.data.session?.user?.email;
+    if (!email) return toast.error("Not signed in.");
+    const { error: reauthErr } = await supabase.auth.signInWithPassword({ email, password: passwordCurrent });
+    if (reauthErr) return toast.error("Current password is incorrect.");
+    const { error } = await supabase.auth.updateUser({ password: passwordNew });
+    if (error) return toast.error(error.message);
+    toast.success("Password updated.");
+    setPasswordCurrent("");
+    setPasswordNew("");
+  };
+
+  return (
+    <div className="space-y-7">
+      <h2 className="text-2xl font-extrabold mb-2 flex items-center gap-2"><UserCircle size={22} /> Account</h2>
+
+      {/* Email */}
+      <div className="max-w-md">
+        <label htmlFor="email-input" className="block text-[#111] font-bold mb-2">Email</label>
+        <div className="flex gap-2 items-center">
+          <input
+            id="email-input"
+            type="email"
+            className="border border-[#CFE4FF] px-3 py-2 rounded-md w-full"
+            placeholder="you@example.com"
+            value={newEmail}
+            onChange={(e) => setNewEmail(e.currentTarget.value)}
+          />
+          <button onClick={onUpdateEmail} className="bg-[#007BFF] hover:bg-[#005FCC] text-white px-4 py-2 rounded font-bold">
+            Update
+          </button>
+        </div>
+        <p className="text-xs text-[#555] mt-1">
+          A confirmation link will be sent to the new email. Your login email changes after you confirm.
+        </p>
+      </div>
+
+      {/* Password */}
+      <div className="max-w-md">
+        <label className="block text-[#111] font-bold mb-2">Change Password</label>
+        <div className="flex flex-col gap-2">
+          <input
+            id="current-password"
+            type="password"
+            placeholder="Current password"
+            value={passwordCurrent}
+            onChange={(e) => setPasswordCurrent(e.currentTarget.value)}
+            className="border border-[#CFE4FF] px-3 py-2 rounded-md w-full"
+          />
+          <input
+            id="new-password"
+            type="password"
+            placeholder="New password (6+ chars)"
+            value={passwordNew}
+            onChange={(e) => setPasswordNew(e.currentTarget.value)}
+            className="border border-[#CFE4FF] px-3 py-2 rounded-md w-full"
+          />
+          <div>
+            <button onClick={onUpdatePassword} className="bg-[#007BFF] hover:bg-[#005FCC] text-white px-4 py-2 rounded font-bold">
+              Update Password
+            </button>
+          </div>
+        </div>
+        <p className="text-xs text-[#555] mt-1">You’ll stay signed in on this device.</p>
+      </div>
+    </div>
+  );
+});
+
+/* =========================== Page ============================ */
 export default function DashboardPage() {
   const router = useRouter();
 
   // Session / profile
-  const [userEmail, setUserEmail] = useState("");
-  const [userId, setUserId] = useState("");
   const [activeTab, setActiveTab] = useState("order");
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [profileEmail, setProfileEmail] = useState("");
-  // IMPORTANT: make inputs fully controlled; initialize once from profile
-  const [newEmail, setNewEmail] = useState("");
-  const [passwordData, setPasswordData] = useState({ current: "", new: "" });
-
   const [analytics, setAnalytics] = useState({ total: 0, completed: 0 });
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -188,17 +278,12 @@ export default function DashboardPage() {
   const isContentEngagement = service.type === "Likes" || service.type === "Views";
   const isVideo = useMemo(() => isContentEngagement && isLink(target), [isContentEngagement, target]);
 
-  // Fetch session/orders once
   useEffect(() => {
     const fetchUserAndOrders = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session || !session.user) { router.push("/login"); return; }
       const email = session.user.email || "";
-      setUserEmail(email);
-      setUserId(session.user.id);
       setProfileEmail(email);
-      // Initialize form inputs ONCE from profile values
-      setNewEmail(email);
 
       const { data: allOrders } = await supabase
         .from("orders")
@@ -219,7 +304,7 @@ export default function DashboardPage() {
   const orderPercent = (orderStep / (ORDER_STEPS.length - 1)) * 100;
   const { discount, discounted } = getDiscountedPrice(service.price);
 
-  // ===== Order handlers =====
+  /* ===================== Order handlers ===================== */
   function handleOrderNext() {
     if (orderStep === 2) {
       const trimmed = target.trim();
@@ -263,29 +348,7 @@ export default function DashboardPage() {
     window.location.href = `https://checkout.yesviral.com/checkout?order=${orderString}`;
   }
 
-  // ===== Auth update handlers (real) =====
-  async function handleChangeEmail(newEmailVal: string) {
-    if (!newEmailVal) { toast.error("Enter a valid email."); return; }
-    try {
-      const { error } = await supabase.auth.updateUser({ email: newEmailVal });
-      if (error) throw error;
-      toast.success("Check your NEW email inbox to confirm the change.");
-      // keep the field as-is; don't reset so user sees what they set
-    } catch (e: any) { toast.error(e?.message || "Failed to start email change."); }
-  }
-  async function handleChangePassword(currentPwd: string, newPwd: string) {
-    if (!newPwd || newPwd.length < 6) { toast.error("Password must be at least 6 characters."); return; }
-    try {
-      const { error: reauthErr } = await supabase.auth.signInWithPassword({ email: profileEmail, password: currentPwd });
-      if (reauthErr) { toast.error("Current password is incorrect."); return; }
-      const { error } = await supabase.auth.updateUser({ password: newPwd });
-      if (error) throw error;
-      toast.success("Password updated.");
-      setPasswordData({ current: "", new: "" });
-    } catch (e: any) { toast.error(e?.message || "Failed to update password."); }
-  }
-
-  // ===== Preview fetch (Review-only) =====
+  /* ==================== Preview fetch (review-only) ==================== */
   const doFetchPreview = useCallback(async () => {
     if (orderStep !== 3) return;
     const trimmed = target.trim();
@@ -303,7 +366,7 @@ export default function DashboardPage() {
     return () => clearTimeout(id);
   }, [doFetchPreview, orderStep]);
 
-  // ===== UI bits reused =====
+  /* ===================== UI bits reused ===================== */
   function ServiceSummary() {
     const PlatformIcon = platform.icon;
     const ServiceIcon = service.icon;
@@ -430,11 +493,12 @@ export default function DashboardPage() {
     );
   }
 
-  // ===== Tabs =====
+  /* ============================ Tabs ============================ */
   const TabContent = () => {
     if (loading) return <div className="flex justify-center items-center py-24"><Loader2 className="animate-spin mr-2" /> Loading...</div>;
 
     if (activeTab === "order") {
+      const orderPercent = (orderStep / (ORDER_STEPS.length - 1)) * 100;
       return (
         <div className="max-w-2xl mx-auto">
           {/* Stepper */}
@@ -461,7 +525,7 @@ export default function DashboardPage() {
               </div>
               <div className="relative w-full h-[5px] rounded-full bg-[#E6F0FF] z-0">
                 <div className="absolute top-0 left-0 h-[5px] rounded-full z-10"
-                     style={{ width: `${(orderStep / (ORDER_STEPS.length - 1)) * 100}%`, background: `linear-gradient(90deg, ${COLORS.primary} 0%, ${COLORS.primaryHover} 100%)`, transition: "width .38s cubic-bezier(.51,1.15,.67,.97)" }} />
+                     style={{ width: `${orderPercent}%`, background: `linear-gradient(90deg, ${COLORS.primary} 0%, ${COLORS.primaryHover} 100%)`, transition: "width .38s cubic-bezier(.51,1.15,.67,.97)" }} />
               </div>
             </div>
           </div>
@@ -479,11 +543,7 @@ export default function DashboardPage() {
                         className={`flex flex-col items-center gap-1 px-7 py-5 rounded-xl border-2 font-bold text-base shadow hover:shadow-lg transition
                           ${platform.key === p.key ? "border-[#007BFF] bg-[#E6F0FF] text-[#007BFF] scale-105" : "border-[#CFE4FF] text-[#111111] bg-white"}`}
                         style={{ minWidth: 120, minHeight: 90 }}
-                        onClick={() => {
-                          setPlatform(p);
-                          setService(p.services[0]);
-                          setQuantity(getQuickAmounts(p, p.services[0])[0]);
-                        }}
+                        onClick={() => { setPlatform(p); setService(p.services[0]); setQuantity(getQuickAmounts(p, p.services[0])[0]); }}
                       >
                         <Icon size={30} style={{ color: p.iconColor }} />
                         <span>{p.name}</span>
@@ -516,10 +576,7 @@ export default function DashboardPage() {
                         key={s.type}
                         className={`flex flex-col items-center gap-1 px-7 py-5 rounded-xl border-2 font-bold text-base shadow hover:shadow-lg transition
                           ${service.type === s.type ? "border-[#007BFF] bg-[#E6F0FF] text-[#007BFF] scale-105" : "border-[#CFE4FF] text-[#111111] bg-white"}`}
-                        onClick={() => {
-                          setService(s);
-                          setQuantity(getQuickAmounts(platform, s)[0]);
-                        }}
+                        onClick={() => { setService(s); setQuantity(getQuickAmounts(platform, s)[0]); }}
                       >
                         <SIcon size={22} style={{ color: s.iconColor }} />
                         <span>{s.type}</span>
@@ -548,7 +605,7 @@ export default function DashboardPage() {
               <>
                 <h3 className="font-black text-2xl mb-8 text-[#111] text-center">Order Details</h3>
                 <div className="flex flex-col gap-6 max-w-sm mx-auto mb-8">
-                  {/* Target */}
+                  {/* Target input — NO autoFocus to avoid focus stealing */}
                   <div>
                     <label htmlFor="order-target" className="block font-semibold text-[#007BFF] text-lg mb-2">
                       {getTargetLabel(service)}
@@ -556,11 +613,10 @@ export default function DashboardPage() {
                     <input
                       id="order-target"
                       type="text"
-                      autoFocus
                       className="w-full border border-[#CFE4FF] rounded-xl px-4 py-3 text-base font-medium outline-[#007BFF] bg-white shadow focus:border-[#007BFF] focus:ring-2 focus:ring-[#E6F0FF] transition"
                       placeholder={getTargetPlaceholder(platform, service)}
                       value={target}
-                      onChange={(e) => setTarget(e.target.value)}
+                      onChange={(e) => setTarget(e.currentTarget.value)}
                     />
                     <span className="mt-2 block text-xs text-[#777]">
                       {isContentEngagement
@@ -766,67 +822,8 @@ export default function DashboardPage() {
     }
 
     if (activeTab === "profile") {
-      return (
-        <div className="space-y-7">
-          <h2 className="text-2xl font-extrabold mb-2 flex items-center gap-2"><UserCircle size={22} /> Account</h2>
-
-          {/* Email */}
-          <div className="max-w-md">
-            <label htmlFor="email-input" className="block text-[#111] font-bold mb-2">Email</label>
-            <div className="flex gap-2 items-center">
-              <input
-                id="email-input"
-                type="email"
-                className="border border-[#CFE4FF] px-3 py-2 rounded-md w-full"
-                placeholder={profileEmail || "you@example.com"}
-                value={newEmail}
-                onChange={(e) => setNewEmail(e.target.value)}
-              />
-              <button
-                onClick={() => handleChangeEmail(newEmail.trim())}
-                className="bg-[#007BFF] hover:bg-[#005FCC] text-white px-4 py-2 rounded font-bold"
-              >
-                Update
-              </button>
-            </div>
-            <p className="text-xs text-[#555] mt-1">
-              A confirmation link will be sent to the new email. Your login email changes after you confirm.
-            </p>
-          </div>
-
-          {/* Password */}
-          <div className="max-w-md">
-            <label className="block text-[#111] font-bold mb-2">Change Password</label>
-            <div className="flex flex-col gap-2">
-              <input
-                id="current-password"
-                type="password"
-                placeholder="Current password"
-                value={passwordData.current}
-                onChange={(e) => setPasswordData((prev) => ({ ...prev, current: e.target.value }))}
-                className="border border-[#CFE4FF] px-3 py-2 rounded-md w-full"
-              />
-              <input
-                id="new-password"
-                type="password"
-                placeholder="New password (6+ chars)"
-                value={passwordData.new}
-                onChange={(e) => setPasswordData((prev) => ({ ...prev, new: e.target.value }))}
-                className="border border-[#CFE4FF] px-3 py-2 rounded-md w-full"
-              />
-              <div>
-                <button
-                  onClick={() => handleChangePassword(passwordData.current, passwordData.new)}
-                  className="bg-[#007BFF] hover:bg-[#005FCC] text-white px-4 py-2 rounded font-bold"
-                >
-                  Update Password
-                </button>
-              </div>
-            </div>
-            <p className="text-xs text-[#555] mt-1">You’ll stay signed in on this device.</p>
-          </div>
-        </div>
-      );
+      // Render memoized ProfileForm; parent re-renders won't remount it
+      return <ProfileForm initialEmail={profileEmail} />;
     }
 
     return <div>Pick a tab…</div>;
@@ -918,6 +915,7 @@ export default function DashboardPage() {
   );
 }
 
+/* ========================= Stat Card ========================= */
 function DashboardStat({ label, value, color }: { label: string, value: any, color: string }) {
   const textColor = color === "blue" ? "text-[#007BFF]" : color === "green" ? "text-green-500" : color === "yellow" ? "text-yellow-500" : "";
   return (
