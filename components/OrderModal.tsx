@@ -91,14 +91,35 @@ function getDiscountedPrice(price: number) {
 function getStealthPackage(platform: Platform, service: Service): StealthPackageResult {
   let pkg = "Premium Package";
   let type = "Standard";
-  if (platform.key === "instagram" && service.type === "Followers") pkg = "Insta Growth";
-  if (platform.key === "instagram" && service.type === "Likes") pkg = "Insta Engage";
-  if (platform.key === "tiktok") pkg = "TikTok Turbo";
-  if (platform.key === "youtube") pkg = "YouTube Boost";
+
+  // INSTAGRAM
+  if (platform.key === "instagram" && service.type === "Followers") 
+    pkg = "High-Quality Instagram Followers";
+  if (platform.key === "instagram" && service.type === "Likes") 
+    pkg = "Premium Instagram Likes";
+  if (platform.key === "instagram" && service.type === "Views") 
+    pkg = "High-Retention Instagram Views";
+
+  // TIKTOK
+  if (platform.key === "tiktok" && service.type === "Followers") 
+    pkg = "High-Quality TikTok Followers";
+  if (platform.key === "tiktok" && service.type === "Likes") 
+    pkg = "Premium TikTok Likes";
+  if (platform.key === "tiktok" && service.type === "Views") 
+    pkg = "High-Retention TikTok Views";
+
+  // YOUTUBE
+  if (platform.key === "youtube" && service.type === "Subscribers") 
+    pkg = "High-Quality YouTube Subscribers";
+  if (platform.key === "youtube" && service.type === "Likes") 
+    pkg = "Premium YouTube Likes";
+  if (platform.key === "youtube" && service.type === "Views") 
+    pkg = "High-Retention YouTube Views";
 
   if (service.type === "Followers" || service.type === "Subscribers") type = "Growth";
   if (service.type === "Likes") type = "Engagement";
   if (service.type === "Views") type = "Boost";
+
   return { pkg, type };
 }
 
