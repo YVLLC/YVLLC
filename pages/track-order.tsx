@@ -4,7 +4,7 @@ import {
   Search, CheckCircle, AlertTriangle, RefreshCw, MessageCircle, Home, ChevronDown, Repeat
 } from "lucide-react";
 import Link from "next/link";
-import OrderModal from "@/components/OrderModal"; // <--- Import your OrderModal
+import OrderModal from "@/components/OrderModal";
 
 // --- STATUS & FAQS ---
 const STATUS_ICONS: Record<string, JSX.Element> = {
@@ -56,9 +56,14 @@ export default function TrackOrderPage() {
     setStatus("");
     setError("");
     setLoading(true);
+
     try {
       const res = await axios.post("/api/track", { orderId });
-      setStatus(res.data.status?.toLowerCase() || "unknown");
+
+      // ⭐ FIXED FOR FOLLOWIZ (RES.DATA.DATA.STATUS)
+      const followizStatus = res.data.data?.status?.toLowerCase() || "unknown";
+      setStatus(followizStatus);
+
     } catch {
       setError("Could not find order. Make sure the ID is correct.");
       setStatus("error");
@@ -70,10 +75,13 @@ export default function TrackOrderPage() {
   const statusKey =
     loading ? "searching" :
     status === "delivered" || status === "completed" ? "delivered" :
-    status === "in_progress" || status === "pending" ? "in_progress" :
-    status === "error" || error ? "error" :
-    status === "unknown" ? "unknown" :
-    "";
+    status === "in progress" || status === "processing" || status === "pending" || status === "in_progress"
+      ? "in_progress"
+      : status === "error" || error
+      ? "error"
+      : status === "unknown"
+      ? "unknown"
+      : "";
 
   return (
     <main className="min-h-screen w-full bg-gradient-to-br from-[#f4f9ff] to-[#e6f0ff] flex flex-col items-center px-2 py-8 sm:py-16">
@@ -123,11 +131,11 @@ export default function TrackOrderPage() {
             </div>
             {status && !error && (
               <p className="text-[#333] text-base text-center">
-                {status === "delivered" || status === "completed"
-                  ? "Your order was completed! If you don't see results, please refresh your platform or reach out to our support team."
-                  : status === "in_progress" || status === "pending"
+                {statusKey === "delivered"
+                  ? "Your order was completed!"
+                  : statusKey === "in_progress"
                   ? "Your order is processing. You'll receive your results soon!"
-                  : status === "unknown"
+                  : statusKey === "unknown"
                   ? "Order not found. Please check your ID and try again."
                   : null}
               </p>
@@ -147,7 +155,6 @@ export default function TrackOrderPage() {
           </Link>
           <button
             className="w-full flex items-center gap-2 bg-[#007BFF] text-white font-semibold px-6 py-2.5 rounded-xl hover:bg-[#005FCC] transition justify-center"
-            style={{ minWidth: 0 }}
             onClick={() => setShowOrderModal(true)}
             type="button"
           >
@@ -165,26 +172,17 @@ export default function TrackOrderPage() {
               key={i}
               className={`border border-[#CFE4FF] rounded-xl p-4 bg-[#F9FAFF] cursor-pointer transition-all ${showFaq === i ? "shadow-xl scale-[1.02]" : ""}`}
               onClick={() => setShowFaq(showFaq === i ? null : i)}
-              tabIndex={0}
-              onKeyDown={e => { if (e.key === "Enter") setShowFaq(showFaq === i ? null : i); }}
             >
               <div className="flex justify-between items-center select-none">
                 <span className="font-semibold text-[#007BFF]">{item.q}</span>
                 <ChevronDown
-                  className={`w-5 h-5 transition-transform ${showFaq === i ? "rotate-180" : "rotate-0"}`}
+                  className={`w-5 h-5 transition-transform ${showFaq === i ? "rotate-180" : ""}`}
                 />
               </div>
-              <div
-                style={{
-                  maxHeight: showFaq === i ? 200 : 0,
-                  overflow: "hidden",
-                  transition: "max-height 0.4s cubic-bezier(.55,0,.1,1)"
-                }}
-              >
-                {showFaq === i && (
-                  <p className="mt-3 text-[#444] text-sm">{item.a}</p>
-                )}
-              </div>
+
+              {showFaq === i && (
+                <p className="mt-3 text-[#444] text-sm">{item.a}</p>
+              )}
             </div>
           ))}
         </div>
@@ -203,13 +201,7 @@ export default function TrackOrderPage() {
         .glass-card {
           background: rgba(255,255,255,0.87);
           backdrop-filter: blur(6px);
-          -webkit-backdrop-filter: blur(6px);
         }
-        @media (max-width: 540px) {
-          .glass-card { padding-left: 0.6rem !important; padding-right: 0.6rem !important;}
-        }
-        ::-webkit-scrollbar { width: 0.6em; background: #eaf4ff;}
-        ::-webkit-scrollbar-thumb { background: #e6f0ff; border-radius: 10px; }
       `}</style>
     </main>
   );
