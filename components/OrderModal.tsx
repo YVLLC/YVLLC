@@ -281,13 +281,18 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
   const { pkg, type } = getStealthPackage(platform, service);
   const { discount, discounted } = getDiscountedPrice(service.price);
 
-  const orderToSend = {
-    package: pkg,
-    type,
-    amount: quantity,
-    reference: target,
-    total: Number((discounted * quantity).toFixed(2)),
-  };
+const orderToSend = {
+  package: pkg,
+  type,
+  amount: quantity,
+  reference: target,
+  total: Number((discounted * quantity).toFixed(2)),
+
+  // 👇 ADDED (required for Stripe metadata → Followiz webhook)
+  platform: platform.key,
+  service: service.type.toString(),
+};
+
 
   // ==============================
   // VALIDATION & NAVIGATION

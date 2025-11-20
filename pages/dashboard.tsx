@@ -323,30 +323,34 @@ export default function DashboardPage() {
   }
   function handleOrderBack() { setOrderError(""); setOrderStep(orderStep - 1); }
 
-  function handleSecureCheckout(e: React.FormEvent) {
-    e.preventDefault();
-    const trimmed = target.trim();
-    if (!trimmed) {
-      setOrderError(isContentEngagement ? "Paste the full post / video link." : "Paste your profile link or username.");
-      return;
-    }
-    if (isContentEngagement && !isLink(trimmed)) {
-      setOrderError("For likes / views, please paste a full post or video URL.");
-      return;
-    }
-    setOrderError("");
-    setOrderLoading(true);
+function handleSecureCheckout(e: React.FormEvent) {
+  e.preventDefault();
 
-    const order = {
-      platform: platform.name,
-      service: service.type,
-      amount: quantity,
-      reference: target,
-      total: Number((discounted * quantity).toFixed(2)),
-    };
-    const orderString = btoa(unescape(encodeURIComponent(JSON.stringify(order))));
-    window.location.href = `https://checkout.yesviral.com/checkout?order=${orderString}`;
+  const trimmed = target.trim();
+  if (!trimmed) {
+    setOrderError(isContentEngagement ? "Paste the full post / video link." : "Paste your profile link or username.");
+    return;
   }
+  if (isContentEngagement && !isLink(trimmed)) {
+    setOrderError("For likes / views, please paste a full post or video URL.");
+    return;
+  }
+
+  setOrderError("");
+  setOrderLoading(true);
+
+  const order = {
+    package: platform.name,
+    platform: platform.key,
+    service: service.type,
+    amount: quantity,
+    reference: target,
+    total: Number((discounted * quantity).toFixed(2)),
+  };
+
+  const orderString = btoa(unescape(encodeURIComponent(JSON.stringify(order))));
+  window.location.href = `https://checkout.yesviral.com/checkout?order=${orderString}`;
+}
 
   /* ==================== Preview fetch (review-only) ==================== */
   const doFetchPreview = useCallback(async () => {
