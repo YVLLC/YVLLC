@@ -306,7 +306,7 @@ const orderToSend = {
   package: pkg,
   type,
   amount: quantity,
-  reference: target,
+  Username/Link: target,
   total: Number((discounted * quantity).toFixed(2)),
 
   // 👇 ADDED (required for Stripe metadata → Followiz webhook)
