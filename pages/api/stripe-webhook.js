@@ -5,7 +5,7 @@ export const config = {
   api: { bodyParser: false },
 };
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: "2023-10-16" });
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: "2023-10-16" });
 
 const FOLLOWIZ_API_KEY = process.env.FOLLOWIZ_API_KEY;
 
