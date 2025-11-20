@@ -306,7 +306,7 @@ const orderToSend = {
   package: pkg,
   type,
   amount: quantity,
-  Username/Link: target,
+  reference: target,
   total: Number((discounted * quantity).toFixed(2)),
 
   // 👇 ADDED (required for Stripe metadata → Followiz webhook)
@@ -781,7 +781,7 @@ const orderToSend = {
                   <b>Package:</b> {pkg} ({type})
                 </div>
                 <div className="text-[#444] text-sm">
-                  <b>Target:</b> {target}
+                  <b>Username / Link:</b> {target}
                 </div>
                 <div className="text-[#444] text-sm">
                   <b>Amount:</b> {quantity.toLocaleString()}
