@@ -963,14 +963,14 @@ useEffect(() => {
                   <div className="flex flex-col items-center gap-3 w-full">
                     <AmountSelector />
                     <div className="flex justify-between items-center mt-2 w-full max-w-[640px]">
-                      <span className="text-sm text-[#888]">Total:</span>
-                      <span className="font-bold text-[#007BFF] text-xl">
-                        {(discounted * quantity).toFixed(2)}
-                        <span className="ml-2 text-sm text-[#c7c7c7] line-through">
-                          {(service.price * quantity).toFixed(2)}
-                        </span>
-                      </span>
-                    </div>
+  <span className="text-sm text-[#888]">Total:</span>
+  <span className="font-bold text-[#007BFF] text-xl">
+    {(discounted * quantity).toFixed(2)}
+    <span className="ml-2 text-sm text-[#c7c7c7] line-through">
+      {(service.price * quantity).toFixed(2)}
+    </span>
+  </span>
+</div>
                   </div>
 
                   <span className="text-xs text-[#007BFF] font-semibold animate-flashSale">
