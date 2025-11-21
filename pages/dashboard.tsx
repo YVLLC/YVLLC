@@ -75,7 +75,7 @@ const NAV_TABS = [
 
 const ORDER_STEPS = [{ label: "Platform" }, { label: "Service" }, { label: "Details" }, { label: "Review" }];
 
-function getStealthPackage(platform: Platform, service: Service): StealthPackageResult {
+function getStealthPackage(platform: Platform, service: Service) {
   let pkg = "Premium Package";
   let type = "Standard";
 
