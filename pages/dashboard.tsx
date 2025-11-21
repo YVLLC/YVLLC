@@ -525,29 +525,35 @@ export default function DashboardPage() {
   }
 
   /* ==================== Preview fetch (review-only) ==================== */
-  const doFetchPreview = useCallback(async () => {
-    if (orderStep !== 3) return;
-    const trimmed = target.trim();
-    if (!trimmed) {
-      setPreview(null);
-      setPreviewLoading(false);
-      return;
-    }
-    if (isContentEngagement && !isLink(trimmed)) {
-      setPreview({ ok: false, error: "Post / video URL required for preview." });
-      return;
-    }
-    setPreviewLoading(true);
-    const data = await fetchPreview(platform.key, trimmed);
-    setPreview(data);
+const doFetchPreview = useCallback(async (finalTarget: string) => {
+  if (orderStep !== 3) return;
+  if (!finalTarget.trim()) {
+    setPreview(null);
     setPreviewLoading(false);
-  }, [orderStep, target, platform.key, isContentEngagement]);
+    return;
+  }
+  if (isContentEngagement && !isLink(finalTarget)) {
+    setPreview({ ok: false, error: "Post / video URL required for preview." });
+    return;
+  }
 
-  useEffect(() => {
-    if (orderStep !== 3) return;
-    const id = setTimeout(() => void doFetchPreview(), 150);
-    return () => clearTimeout(id);
-  }, [doFetchPreview, orderStep]);
+  setPreviewLoading(true);
+  const data = await fetchPreview(platform.key, finalTarget);
+  setPreview(data);
+  setPreviewLoading(false);
+}, [orderStep, platform.key, isContentEngagement]);
+
+useEffect(() => {
+  if (orderStep !== 3) return;
+
+  const trimmed = target.trim();
+
+  const id = setTimeout(() => {
+    doFetchPreview(trimmed);
+  }, 500); // MUCH SMOOTHER & DOESN’T INTERRUPT TYPING
+
+  return () => clearTimeout(id);
+}, [target, orderStep]);
 
   /* ===================== UI bits reused ===================== */
   function ServiceSummary() {
