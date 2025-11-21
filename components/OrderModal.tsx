@@ -117,7 +117,7 @@ function getStealthPackage(platform: Platform, service: Service): StealthPackage
     pkg = "High-Retention YouTube Views";
 
   if (service.type === "Followers" || service.type === "Subscribers") type = "High-Quality";
-  if (service.type === "Likes") type = "Premuim";
+  if (service.type === "Likes") type = "Premium";
   if (service.type === "Views") type = "High-Retention";
 
   return { pkg, type };
