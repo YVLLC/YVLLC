@@ -338,7 +338,7 @@ const ProfileForm = memo(function ProfileForm({
           </button>
         </div>
         <p className="text-xs text-[#555] mt-1">
-          A confirmation link will be sent to the new email. Your login email
+          A confirmation link will be sent to the new email
           changes after you confirm.
         </p>
       </div>
@@ -405,7 +405,7 @@ export default function DashboardPage() {
   const [orderError, setOrderError] = useState<string>("");
   const [orderLoading, setOrderLoading] = useState(false);
 
-  // Locked discount for selected service (Option B)
+  // Locked discount for selected service
   const [priceState, setPriceState] = useState(() =>
     getDiscountedPrice(PLATFORMS[0].services[0].price)
   );
@@ -452,7 +452,7 @@ export default function DashboardPage() {
     fetchUserAndOrders();
   }, [router]);
 
-  // Re-lock discount whenever platform or service changes
+  // re-lock discount when service/platform changes
   useEffect(() => {
     setPriceState(getDiscountedPrice(service.price));
   }, [service, platform]);
@@ -470,7 +470,7 @@ export default function DashboardPage() {
         return;
       }
       if (isContentEngagement && !isLink(trimmed)) {
-        setOrderError("For likes / views, please paste a full post or video URL.");
+        setOrderError("For likes / views, please paste a full post / video URL.");
         return;
       }
       if (!quantity || quantity < 1) {
@@ -499,7 +499,7 @@ export default function DashboardPage() {
       return;
     }
     if (isContentEngagement && !isLink(trimmed)) {
-      setOrderError("For likes / views, please paste a full post or video URL.");
+      setOrderError("For likes / views, please paste a full post / video URL.");
       return;
     }
 
@@ -525,35 +525,42 @@ export default function DashboardPage() {
   }
 
   /* ==================== Preview fetch (review-only) ==================== */
-const doFetchPreview = useCallback(async (finalTarget: string) => {
-  if (orderStep !== 3) return;
-  if (!finalTarget.trim()) {
-    setPreview(null);
-    setPreviewLoading(false);
-    return;
-  }
-  if (isContentEngagement && !isLink(finalTarget)) {
-    setPreview({ ok: false, error: "Post / video URL required for preview." });
-    return;
-  }
+  const doFetchPreview = useCallback(
+    async (value: string) => {
+      const trimmed = value.trim();
+      if (!trimmed) {
+        setPreview(null);
+        setPreviewLoading(false);
+        return;
+      }
+      if (isContentEngagement && !isLink(trimmed)) {
+        setPreview({ ok: false, error: "Post / video URL required for preview." });
+        return;
+      }
+      setPreviewLoading(true);
+      const data = await fetchPreview(platform.key, trimmed);
+      setPreview(data);
+      setPreviewLoading(false);
+    },
+    [platform.key, isContentEngagement]
+  );
 
-  setPreviewLoading(true);
-  const data = await fetchPreview(platform.key, finalTarget);
-  setPreview(data);
-  setPreviewLoading(false);
-}, [orderStep, platform.key, isContentEngagement]);
+  useEffect(() => {
+    if (orderStep !== 3) return;
 
-useEffect(() => {
-  if (orderStep !== 3) return;
+    const currentTarget = target;
+    if (!currentTarget.trim()) {
+      setPreview(null);
+      setPreviewLoading(false);
+      return;
+    }
 
-  const trimmed = target.trim();
+    const id = setTimeout(() => {
+      void doFetchPreview(currentTarget);
+    }, 200);
 
-  const id = setTimeout(() => {
-    doFetchPreview(trimmed);
-  }, 500); // MUCH SMOOTHER & DOESN’T INTERRUPT TYPING
-
-  return () => clearTimeout(id);
-}, [target, orderStep]);
+    return () => clearTimeout(id);
+  }, [orderStep, target, doFetchPreview]);
 
   /* ===================== UI bits reused ===================== */
   function ServiceSummary() {
