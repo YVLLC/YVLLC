@@ -525,42 +525,38 @@ export default function DashboardPage() {
   }
 
   /* ==================== Preview fetch (review-only) ==================== */
-  const doFetchPreview = useCallback(
-    async (value: string) => {
-      const trimmed = value.trim();
-      if (!trimmed) {
-        setPreview(null);
-        setPreviewLoading(false);
-        return;
-      }
-      if (isContentEngagement && !isLink(trimmed)) {
-        setPreview({ ok: false, error: "Post / video URL required for preview." });
-        return;
-      }
-      setPreviewLoading(true);
-      const data = await fetchPreview(platform.key, trimmed);
-      setPreview(data);
-      setPreviewLoading(false);
-    },
-    [platform.key, isContentEngagement]
-  );
+  
+const doFetchPreview = useCallback(async () => {
+  // Only run on Step 3
+  if (orderStep !== 3) return;
 
-  useEffect(() => {
-    if (orderStep !== 3) return;
+  const trimmed = target.trim();
+  if (!trimmed) {
+    setPreview(null);
+    return;
+  }
 
-    const currentTarget = target;
-    if (!currentTarget.trim()) {
-      setPreview(null);
-      setPreviewLoading(false);
-      return;
-    }
+  // Followers/subscribers allow @username or link
+  // Likes/views require a link
+  if (isContentEngagement && !isLink(trimmed)) {
+    setPreview({ ok: false, error: "Post / video URL required for preview." });
+    return;
+  }
 
-    const id = setTimeout(() => {
-      void doFetchPreview(currentTarget);
-    }, 200);
+  const data = await fetchPreview(platform.key, trimmed);
+  setPreview(data);
+}, [orderStep, platform.key, isContentEngagement]);
 
-    return () => clearTimeout(id);
-  }, [orderStep, target, doFetchPreview]);
+useEffect(() => {
+  if (orderStep !== 3) return;
+
+  // Slight delay to avoid triggering during transition
+  const id = setTimeout(() => {
+    doFetchPreview();  
+  }, 300);
+
+  return () => clearTimeout(id);
+}, [orderStep, doFetchPreview]);
 
   /* ===================== UI bits reused ===================== */
   function ServiceSummary() {
