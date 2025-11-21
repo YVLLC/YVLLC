@@ -5,16 +5,53 @@ import Image from "next/image";
 import { Toaster, toast } from "react-hot-toast";
 import { supabase } from "@/lib/supabase";
 import {
-  UserCircle, LogOut, Instagram, Youtube, Music2, UserPlus, ThumbsUp, Eye,
-  BarChart, List, CheckCircle, Loader2, BadgePercent, Menu, Tag, Play
+  UserCircle,
+  LogOut,
+  Instagram,
+  Youtube,
+  Music2,
+  UserPlus,
+  ThumbsUp,
+  Eye,
+  BarChart,
+  List,
+  CheckCircle,
+  Loader2,
+  BadgePercent,
+  Menu,
+  Tag,
+  Play,
 } from "lucide-react";
 
 /* ============================ Types ============================ */
 type ServiceType = "Followers" | "Likes" | "Views" | "Subscribers";
-type Service = { type: ServiceType | string; price: number; icon: React.ElementType; iconColor: string; };
-type Platform = { key: string; name: string; icon: React.ElementType; iconColor: string; services: Service[]; };
-interface Order { id: string; platform: string; service: string; quantity: number; status: string; created_at: string; }
-type PreviewData = { ok: boolean; type?: string; image?: string | null; error?: string };
+type Service = {
+  type: ServiceType | string;
+  price: number;
+  icon: React.ElementType;
+  iconColor: string;
+};
+type Platform = {
+  key: string;
+  name: string;
+  icon: React.ElementType;
+  iconColor: string;
+  services: Service[];
+};
+interface Order {
+  id: string;
+  platform: string;
+  service: string;
+  quantity: number;
+  status: string;
+  created_at: string;
+}
+type PreviewData = {
+  ok: boolean;
+  type?: string;
+  image?: string | null;
+  error?: string;
+};
 
 /* ============================ Theme ============================ */
 const COLORS = {
@@ -47,7 +84,7 @@ const PLATFORMS: Platform[] = [
     icon: Music2,
     iconColor: "#00F2EA",
     services: [
-      { type: "Followers", price: 0.10, icon: UserPlus, iconColor: "#00F2EA" },
+      { type: "Followers", price: 0.1, icon: UserPlus, iconColor: "#00F2EA" },
       { type: "Likes", price: 0.08, icon: ThumbsUp, iconColor: "#00F2EA" },
       { type: "Views", price: 0.06, icon: Eye, iconColor: "#00F2EA" },
     ],
@@ -73,37 +110,43 @@ const NAV_TABS = [
   { key: "profile", label: "Account", icon: <UserCircle size={19} /> },
 ];
 
-const ORDER_STEPS = [{ label: "Platform" }, { label: "Service" }, { label: "Details" }, { label: "Review" }];
+const ORDER_STEPS = [
+  { label: "Platform" },
+  { label: "Service" },
+  { label: "Details" },
+  { label: "Review" },
+];
 
 function getStealthPackage(platform: Platform, service: Service) {
   let pkg = "Premium Package";
   let type = "Standard";
 
   // INSTAGRAM
-  if (platform.key === "instagram" && service.type === "Followers") 
+  if (platform.key === "instagram" && service.type === "Followers")
     pkg = "High-Quality Instagram Followers";
-  if (platform.key === "instagram" && service.type === "Likes") 
+  if (platform.key === "instagram" && service.type === "Likes")
     pkg = "Premium Instagram Likes";
-  if (platform.key === "instagram" && service.type === "Views") 
+  if (platform.key === "instagram" && service.type === "Views")
     pkg = "High-Retention Instagram Views";
 
   // TIKTOK
-  if (platform.key === "tiktok" && service.type === "Followers") 
+  if (platform.key === "tiktok" && service.type === "Followers")
     pkg = "High-Quality TikTok Followers";
-  if (platform.key === "tiktok" && service.type === "Likes") 
+  if (platform.key === "tiktok" && service.type === "Likes")
     pkg = "Premium TikTok Likes";
-  if (platform.key === "tiktok" && service.type === "Views") 
+  if (platform.key === "tiktok" && service.type === "Views")
     pkg = "High-Retention TikTok Views";
 
   // YOUTUBE
-  if (platform.key === "youtube" && service.type === "Subscribers") 
+  if (platform.key === "youtube" && service.type === "Subscribers")
     pkg = "High-Quality YouTube Subscribers";
-  if (platform.key === "youtube" && service.type === "Likes") 
+  if (platform.key === "youtube" && service.type === "Likes")
     pkg = "Premium YouTube Likes";
-  if (platform.key === "youtube" && service.type === "Views") 
+  if (platform.key === "youtube" && service.type === "Views")
     pkg = "High-Retention YouTube Views";
 
-  if (service.type === "Followers" || service.type === "Subscribers") type = "High-Quality";
+  if (service.type === "Followers" || service.type === "Subscribers")
+    type = "High-Quality";
   if (service.type === "Likes") type = "Premium";
   if (service.type === "Views") type = "High-Retention";
 
@@ -114,34 +157,54 @@ function getStealthPackage(platform: Platform, service: Service) {
 function getQuickAmounts(platform: Platform, service: Service): number[] {
   const t = service.type.toString().toLowerCase();
   const k = platform.key;
-  if (k === "instagram" && t === "views") return [500, 2000, 5000, 10000, 20000, 50000];
-  if (k === "instagram" && t === "followers") return [100, 200, 350, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000];
-  if (k === "instagram" && t === "likes") return [50, 100, 300, 500, 1000, 2000, 5000, 10000, 20000];
-  if (k === "tiktok" && (t === "followers" || t === "likes")) return [100, 250, 500, 1000, 2000, 5000, 10000];
-  if (k === "tiktok" && t === "views") return [1000, 2000, 5000, 10000, 20000, 50000];
-  if (k === "youtube" && t === "views") return [200, 500, 1000, 2000, 5000, 10000];
-  if (k === "youtube" && t === "subscribers") return [200, 500, 1000, 2000, 5000, 10000];
-  if (k === "youtube" && t === "likes") return [250, 500, 1000, 2000, 5000, 10000];
+  if (k === "instagram" && t === "views")
+    return [500, 2000, 5000, 10000, 20000, 50000];
+  if (k === "instagram" && t === "followers")
+    return [
+      100, 200, 350, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000,
+    ];
+  if (k === "instagram" && t === "likes")
+    return [50, 100, 300, 500, 1000, 2000, 5000, 10000, 20000];
+  if (k === "tiktok" && (t === "followers" || t === "likes"))
+    return [100, 250, 500, 1000, 2000, 5000, 10000];
+  if (k === "tiktok" && t === "views")
+    return [1000, 2000, 5000, 10000, 20000, 50000];
+  if (k === "youtube" && t === "views")
+    return [200, 500, 1000, 2000, 5000, 10000];
+  if (k === "youtube" && t === "subscribers")
+    return [200, 500, 1000, 2000, 5000, 10000];
+  if (k === "youtube" && t === "likes")
+    return [250, 500, 1000, 2000, 5000, 10000];
   return [100, 500, 1000, 2000, 5000, 10000, 25000, 50000];
 }
 function getDiscountedPrice(price: number) {
   const discount = 0.02 + Math.random() * 0.02;
-  const discounted = Math.max(0.01, Number((price * (1 - discount)).toFixed(3)));
+  const discounted = Math.max(
+    0.01,
+    Number((price * (1 - discount)).toFixed(3))
+  );
   return { discount: Math.round(discount * 100), discounted };
 }
 const isLink = (t: string) => /^https?:\/\//i.test(t.trim());
 function getTargetLabel(service: Service) {
-  return service.type === "Followers" || service.type === "Subscribers" ? "Profile or Username" : "Post / Video Link";
+  return service.type === "Followers" || service.type === "Subscribers"
+    ? "Profile or Username"
+    : "Post / Video Link";
 }
 function getTargetPlaceholder(platform: Platform, service: Service) {
-  const isFollow = service.type === "Followers" || service.type === "Subscribers";
+  const isFollow =
+    service.type === "Followers" || service.type === "Subscribers";
   if (isFollow) {
-    if (platform.key === "instagram") return "e.g. @yourusername or instagram.com/yourusername";
-    if (platform.key === "tiktok") return "e.g. @yourusername or tiktok.com/@yourusername";
-    if (platform.key === "youtube") return "e.g. Channel URL or @handle";
+    if (platform.key === "instagram")
+      return "e.g. @yourusername or instagram.com/yourusername";
+    if (platform.key === "tiktok")
+      return "e.g. @yourusername or tiktok.com/@yourusername";
+    if (platform.key === "youtube")
+      return "e.g. Channel URL or @handle";
     return "Profile link or username";
   }
-  if (platform.key === "instagram") return "Paste your Instagram post / reel link";
+  if (platform.key === "instagram")
+    return "Paste your Instagram post / reel link";
   if (platform.key === "tiktok") return "Paste your TikTok video link";
   if (platform.key === "youtube") return "Paste your YouTube video link";
   return "Paste your post / video link";
@@ -156,7 +219,8 @@ function normalizeHandle(platform: Platform, target: string) {
 }
 function hashToHsl(seed: string, s = 65, l = 58) {
   let h = 0;
-  for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) >>> 0;
+  for (let i = 0; i < seed.length; i++)
+    h = (h * 31 + seed.charCodeAt(i)) >>> 0;
   return `hsl(${h % 360} ${s}% ${l}%)`;
 }
 
@@ -166,12 +230,16 @@ function ImageSafe({ src, alt }: { src: string; alt: string }) {
   const [failed, setFailed] = useState(false);
   return (
     <div className="absolute inset-0">
-      {!loaded && !failed && <div className="absolute inset-0 animate-pulse bg-gradient-to-br from-[#EAF2FF] via-[#F5FAFF] to-white" />}
+      {!loaded && !failed && (
+        <div className="absolute inset-0 animate-pulse bg-gradient-to-br from-[#EAF2FF] via-[#F5FAFF] to-white" />
+      )}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={src}
         alt={alt}
-        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${loaded && !failed ? "opacity-100" : "opacity-0"}`}
+        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${
+          loaded && !failed ? "opacity-100" : "opacity-0"
+        }`}
         onLoad={() => setLoaded(true)}
         onError={() => setFailed(true)}
       />
@@ -181,9 +249,14 @@ function ImageSafe({ src, alt }: { src: string; alt: string }) {
 }
 
 /* ====================== API: preview mock ===================== */
-async function fetchPreview(platform: string, target: string): Promise<PreviewData> {
+async function fetchPreview(
+  platform: string,
+  target: string
+): Promise<PreviewData> {
   try {
-    const res = await fetch(`/api/preview?platform=${platform}&target=${encodeURIComponent(target)}`);
+    const res = await fetch(
+      `/api/preview?platform=${platform}&target=${encodeURIComponent(target)}`
+    );
     return await res.json();
   } catch {
     return { ok: false, error: "Network error" };
@@ -196,13 +269,14 @@ async function fetchPreview(platform: string, target: string): Promise<PreviewDa
 type ProfileFormProps = {
   initialEmail: string;
 };
-const ProfileForm = memo(function ProfileForm({ initialEmail }: ProfileFormProps) {
+const ProfileForm = memo(function ProfileForm({
+  initialEmail,
+}: ProfileFormProps) {
   const [newEmail, setNewEmail] = useState(initialEmail || "");
   const [passwordCurrent, setPasswordCurrent] = useState("");
   const [passwordNew, setPasswordNew] = useState("");
 
   useEffect(() => {
-    // Only set on first mount when initialEmail arrives
     if (initialEmail && !newEmail) setNewEmail(initialEmail);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialEmail]);
@@ -216,11 +290,15 @@ const ProfileForm = memo(function ProfileForm({ initialEmail }: ProfileFormProps
   };
 
   const onUpdatePassword = async () => {
-    if (!passwordNew || passwordNew.length < 6) return toast.error("Password must be at least 6 characters.");
+    if (!passwordNew || passwordNew.length < 6)
+      return toast.error("Password must be at least 6 characters.");
     const session = await supabase.auth.getSession();
     const email = session.data.session?.user?.email;
     if (!email) return toast.error("Not signed in.");
-    const { error: reauthErr } = await supabase.auth.signInWithPassword({ email, password: passwordCurrent });
+    const { error: reauthErr } = await supabase.auth.signInWithPassword({
+      email,
+      password: passwordCurrent,
+    });
     if (reauthErr) return toast.error("Current password is incorrect.");
     const { error } = await supabase.auth.updateUser({ password: passwordNew });
     if (error) return toast.error(error.message);
@@ -231,11 +309,18 @@ const ProfileForm = memo(function ProfileForm({ initialEmail }: ProfileFormProps
 
   return (
     <div className="space-y-7">
-      <h2 className="text-2xl font-extrabold mb-2 flex items-center gap-2"><UserCircle size={22} /> Account</h2>
+      <h2 className="text-2xl font-extrabold mb-2 flex items-center gap-2">
+        <UserCircle size={22} /> Account
+      </h2>
 
       {/* Email */}
       <div className="max-w-md">
-        <label htmlFor="email-input" className="block text-[#111] font-bold mb-2">Email</label>
+        <label
+          htmlFor="email-input"
+          className="block text-[#111] font-bold mb-2"
+        >
+          Email
+        </label>
         <div className="flex gap-2 items-center">
           <input
             id="email-input"
@@ -245,18 +330,24 @@ const ProfileForm = memo(function ProfileForm({ initialEmail }: ProfileFormProps
             value={newEmail}
             onChange={(e) => setNewEmail(e.currentTarget.value)}
           />
-          <button onClick={onUpdateEmail} className="bg-[#007BFF] hover:bg-[#005FCC] text-white px-4 py-2 rounded font-bold">
+          <button
+            onClick={onUpdateEmail}
+            className="bg-[#007BFF] hover:bg-[#005FCC] text-white px-4 py-2 rounded font-bold"
+          >
             Update
           </button>
         </div>
         <p className="text-xs text-[#555] mt-1">
-          A confirmation link will be sent to the new email. Your login email changes after you confirm.
+          A confirmation link will be sent to the new email. Your login email
+          changes after you confirm.
         </p>
       </div>
 
       {/* Password */}
       <div className="max-w-md">
-        <label className="block text-[#111] font-bold mb-2">Change Password</label>
+        <label className="block text-[#111] font-bold mb-2">
+          Change Password
+        </label>
         <div className="flex flex-col gap-2">
           <input
             id="current-password"
@@ -275,12 +366,17 @@ const ProfileForm = memo(function ProfileForm({ initialEmail }: ProfileFormProps
             className="border border-[#CFE4FF] px-3 py-2 rounded-md w-full"
           />
           <div>
-            <button onClick={onUpdatePassword} className="bg-[#007BFF] hover:bg-[#005FCC] text-white px-4 py-2 rounded font-bold">
+            <button
+              onClick={onUpdatePassword}
+              className="bg-[#007BFF] hover:bg-[#005FCC] text-white px-4 py-2 rounded font-bold"
+            >
               Update Password
             </button>
           </div>
         </div>
-        <p className="text-xs text-[#555] mt-1">You’ll stay signed in on this device.</p>
+        <p className="text-xs text-[#555] mt-1">
+          You’ll stay signed in on this device.
+        </p>
       </div>
     </div>
   );
@@ -302,21 +398,39 @@ export default function DashboardPage() {
   const [orderStep, setOrderStep] = useState(0);
   const [platform, setPlatform] = useState<Platform>(PLATFORMS[0]);
   const [service, setService] = useState<Service>(PLATFORMS[0].services[0]);
-  const [quantity, setQuantity] = useState<number>(getQuickAmounts(PLATFORMS[0], PLATFORMS[0].services[0])[0]);
+  const [quantity, setQuantity] = useState<number>(
+    getQuickAmounts(PLATFORMS[0], PLATFORMS[0].services[0])[0]
+  );
   const [target, setTarget] = useState<string>("");
   const [orderError, setOrderError] = useState<string>("");
   const [orderLoading, setOrderLoading] = useState(false);
 
+  // Locked discount for selected service (Option B)
+  const [priceState, setPriceState] = useState(() =>
+    getDiscountedPrice(PLATFORMS[0].services[0].price)
+  );
+  const discount = priceState.discount;
+  const discounted = priceState.discounted;
+
   // Review preview-only
   const [preview, setPreview] = useState<PreviewData | null>(null);
   const [previewLoading, setPreviewLoading] = useState(false);
-  const isContentEngagement = service.type === "Likes" || service.type === "Views";
-  const isVideo = useMemo(() => isContentEngagement && isLink(target), [isContentEngagement, target]);
+  const isContentEngagement =
+    service.type === "Likes" || service.type === "Views";
+  const isVideo = useMemo(
+    () => isContentEngagement && isLink(target),
+    [isContentEngagement, target]
+  );
 
   useEffect(() => {
     const fetchUserAndOrders = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session || !session.user) { router.push("/login"); return; }
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      if (!session || !session.user) {
+        router.push("/login");
+        return;
+      }
       const email = session.user.email || "";
       setProfileEmail(email);
 
@@ -328,7 +442,9 @@ export default function DashboardPage() {
 
       if (allOrders) {
         setOrders(allOrders as Order[]);
-        const completed = allOrders.filter((o: Order) => o.status === "Completed");
+        const completed = allOrders.filter(
+          (o: Order) => o.status === "Completed"
+        );
         setAnalytics({ total: allOrders.length, completed: completed.length });
       }
       setLoading(false);
@@ -336,34 +452,50 @@ export default function DashboardPage() {
     fetchUserAndOrders();
   }, [router]);
 
-  const orderPercent = (orderStep / (ORDER_STEPS.length - 1)) * 100;
-  const { discount, discounted } = getDiscountedPrice(service.price);
+  // Re-lock discount whenever platform or service changes
+  useEffect(() => {
+    setPriceState(getDiscountedPrice(service.price));
+  }, [service, platform]);
 
   /* ===================== Order handlers ===================== */
   function handleOrderNext() {
     if (orderStep === 2) {
       const trimmed = target.trim();
       if (!trimmed) {
-        setOrderError(isContentEngagement ? "Paste the full post / video link." : "Paste your profile link or username.");
+        setOrderError(
+          isContentEngagement
+            ? "Paste the full post / video link."
+            : "Paste your profile link or username."
+        );
         return;
       }
       if (isContentEngagement && !isLink(trimmed)) {
         setOrderError("For likes / views, please paste a full post or video URL.");
         return;
       }
-      if (!quantity || quantity < 1) { setOrderError("Enter a valid quantity."); return; }
+      if (!quantity || quantity < 1) {
+        setOrderError("Enter a valid quantity.");
+        return;
+      }
     }
     setOrderError("");
     setOrderStep(orderStep + 1);
   }
-  function handleOrderBack() { setOrderError(""); setOrderStep(orderStep - 1); }
+  function handleOrderBack() {
+    setOrderError("");
+    setOrderStep(orderStep - 1);
+  }
 
   function handleSecureCheckout(e: React.FormEvent) {
     e.preventDefault();
 
     const trimmed = target.trim();
     if (!trimmed) {
-      setOrderError(isContentEngagement ? "Paste the full post / video link." : "Paste your profile link or username.");
+      setOrderError(
+        isContentEngagement
+          ? "Paste the full post / video link."
+          : "Paste your profile link or username."
+      );
       return;
     }
     if (isContentEngagement && !isLink(trimmed)) {
@@ -386,7 +518,9 @@ export default function DashboardPage() {
       total: Number((discounted * quantity).toFixed(2)),
     };
 
-    const orderString = btoa(unescape(encodeURIComponent(JSON.stringify(order))));
+    const orderString = btoa(
+      unescape(encodeURIComponent(JSON.stringify(order)))
+    );
     window.location.href = `https://checkout.yesviral.com/checkout?order=${orderString}`;
   }
 
@@ -394,8 +528,15 @@ export default function DashboardPage() {
   const doFetchPreview = useCallback(async () => {
     if (orderStep !== 3) return;
     const trimmed = target.trim();
-    if (!trimmed) { setPreview(null); setPreviewLoading(false); return; }
-    if (isContentEngagement && !isLink(trimmed)) { setPreview({ ok: false, error: "Post / video URL required for preview." }); return; }
+    if (!trimmed) {
+      setPreview(null);
+      setPreviewLoading(false);
+      return;
+    }
+    if (isContentEngagement && !isLink(trimmed)) {
+      setPreview({ ok: false, error: "Post / video URL required for preview." });
+      return;
+    }
     setPreviewLoading(true);
     const data = await fetchPreview(platform.key, trimmed);
     setPreview(data);
@@ -413,9 +554,15 @@ export default function DashboardPage() {
     const PlatformIcon = platform.icon;
     const ServiceIcon = service.icon;
     return (
-      <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs font-semibold"
-           style={{ borderColor: COLORS.border, background: "#F7FBFF" }} aria-live="polite">
-        <span className="inline-flex items-center justify-center w-5 h-5 rounded-full" style={{ background: COLORS.accentBg }}>
+      <div
+        className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs font-semibold"
+        style={{ borderColor: COLORS.border, background: "#F7FBFF" }}
+        aria-live="polite"
+      >
+        <span
+          className="inline-flex items-center justify-center w-5 h-5 rounded-full"
+          style={{ background: COLORS.accentBg }}
+        >
           <PlatformIcon size={12} style={{ color: platform.iconColor }} />
         </span>
         <span className="text-[#0B63E6]">{platform.name}</span>
@@ -428,7 +575,17 @@ export default function DashboardPage() {
     );
   }
 
-  function Pill({ label, selected, onClick, ariaLabel }: { label: string; selected: boolean; onClick: () => void; ariaLabel: string; }) {
+  function Pill({
+    label,
+    selected,
+    onClick,
+    ariaLabel,
+  }: {
+    label: string;
+    selected: boolean;
+    onClick: () => void;
+    ariaLabel: string;
+  }) {
     return (
       <button
         type="button"
@@ -462,16 +619,35 @@ export default function DashboardPage() {
           </h4>
           <ServiceSummary />
         </div>
-        <div className="sm:hidden flex overflow-x-auto gap-2 pb-1 snap-x snap-mandatory" role="radiogroup" aria-label={`Select amount of ${ariaService}`}>
+        <div
+          className="sm:hidden flex overflow-x-auto gap-2 pb-1 snap-x snap-mandatory"
+          role="radiogroup"
+          aria-label={`Select amount of ${ariaService}`}
+        >
           {options.map((v) => (
             <div key={v} className="snap-start">
-              <Pill label={toLabel(v)} selected={quantity === v} onClick={() => setQuantity(v)} ariaLabel={`${v} ${ariaService}`} />
+              <Pill
+                label={toLabel(v)}
+                selected={quantity === v}
+                onClick={() => setQuantity(v)}
+                ariaLabel={`${v} ${ariaService}`}
+              />
             </div>
           ))}
         </div>
-        <div className="hidden sm:grid grid-cols-3 md:grid-cols-4 gap-2" role="radiogroup" aria-label={`Select amount of ${ariaService}`}>
+        <div
+          className="hidden sm:grid grid-cols-3 md:grid-cols-4 gap-2"
+          role="radiogroup"
+          aria-label={`Select amount of ${ariaService}`}
+        >
           {options.map((v) => (
-            <Pill key={v} label={toLabel(v)} selected={quantity === v} onClick={() => setQuantity(v)} ariaLabel={`${v} ${ariaService}`} />
+            <Pill
+              key={v}
+              label={toLabel(v)}
+              selected={quantity === v}
+              onClick={() => setQuantity(v)}
+              ariaLabel={`${v} ${ariaService}`}
+            />
           ))}
         </div>
       </div>
@@ -484,24 +660,51 @@ export default function DashboardPage() {
     const avatarHue = hashToHsl(normalized || platform.name);
 
     return (
-      <div className="w-full max-w-sm rounded-xl border bg-white shadow-sm overflow-hidden mx-auto" style={{ borderColor: COLORS.border }}>
-        <div className="flex items-center gap-2 px-3 py-2 border-b bg-white/80" style={{ borderColor: "#E0ECFF" }}>
-          <div className="flex items-center justify-center w-7 h-7 rounded-full" style={{ background: COLORS.accentBg }}>
-            {(() => { const I = platform.icon; return <I size={14} style={{ color: platform.iconColor }} />; })()}
+      <div
+        className="w-full max-w-sm rounded-xl border bg-white shadow-sm overflow-hidden mx-auto"
+        style={{ borderColor: COLORS.border }}
+      >
+        <div
+          className="flex items-center gap-2 px-3 py-2 border-b bg-white/80"
+          style={{ borderColor: "#E0ECFF" }}
+        >
+          <div
+            className="flex items-center justify-center w-7 h-7 rounded-full"
+            style={{ background: COLORS.accentBg }}
+          >
+            {(() => {
+              const I = platform.icon;
+              return <I size={14} style={{ color: platform.iconColor }} />;
+            })()}
           </div>
           <div className="min-w-0">
-            <span className="text-[11px] font-bold" style={{ color: COLORS.primary }}>Preview</span>
-            <div className="text-[10px] text-[#6B7280]">{isContentEngagement ? "Post / video" : "Profile"}</div>
+            <span
+              className="text-[11px] font-bold"
+              style={{ color: COLORS.primary }}
+            >
+              Preview
+            </span>
+            <div className="text-[10px] text-[#6B7280]">
+              {isContentEngagement ? "Post / video" : "Profile"}
+            </div>
           </div>
         </div>
 
         <div className="relative w-full bg-[#DAE6FF]">
-          <div className="relative w-full" style={{ paddingTop: "75%", maxHeight: 140 }}>
-            {previewLoading && <div className="absolute inset-0 animate-pulse bg-gradient-to-br from-[#EAF2FF] via-[#F5FAFF] to-white" />}
+          <div
+            className="relative w-full"
+            style={{ paddingTop: "75%", maxHeight: 140 }}
+          >
+            {previewLoading && (
+              <div className="absolute inset-0 animate-pulse bg-gradient-to-br from-[#EAF2FF] via-[#F5FAFF] to-white" />
+            )}
 
             {!previewLoading && hasImg && (
               <>
-                <ImageSafe src={preview!.image as string} alt="Content preview" />
+                <ImageSafe
+                  src={preview!.image as string}
+                  alt="Content preview"
+                />
                 {isContentEngagement && isLink(target) && (
                   <div className="absolute bottom-1.5 right-1.5 flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-black/60 text-white text-[9px]">
                     <Play size={10} /> Video
@@ -514,9 +717,15 @@ export default function DashboardPage() {
               <div className="absolute inset-0 grid place-items-center">
                 <div
                   className="w-[52%] max-w-[120px] aspect-square rounded-xl shadow grid place-items-center text-white font-extrabold text-xl"
-                  style={{ background: `linear-gradient(135deg, ${avatarHue}, ${avatarHue.replace("% 58%)", "% 42%)")})` }}
+                  style={{
+                    background: `linear-gradient(135deg, ${avatarHue}, ${avatarHue.replace(
+                      "% 58%)",
+                      "% 42%)"
+                    )})`,
+                  }}
                 >
-                  {normalized.replace(/^@/, "").slice(0, 2).toUpperCase() || platform.name.slice(0, 2).toUpperCase()}
+                  {normalized.replace(/^@/, "").slice(0, 2).toUpperCase() ||
+                    platform.name.slice(0, 2).toUpperCase()}
                 </div>
               </div>
             )}
@@ -537,10 +746,16 @@ export default function DashboardPage() {
 
   /* ============================ Tabs ============================ */
   const TabContent = () => {
-    if (loading) return <div className="flex justify-center items-center py-24"><Loader2 className="animate-spin mr-2" /> Loading...</div>;
+    if (loading)
+      return (
+        <div className="flex justify-center items-center py-24">
+          <Loader2 className="animate-spin mr-2" /> Loading...
+        </div>
+      );
 
     if (activeTab === "order") {
-      const orderPercent = (orderStep / (ORDER_STEPS.length - 1)) * 100;
+      const orderPercent =
+        (orderStep / (ORDER_STEPS.length - 1)) * 100;
       return (
         <div className="max-w-2xl mx-auto">
           {/* Stepper */}
@@ -548,26 +763,54 @@ export default function DashboardPage() {
             <div className="relative mx-auto max-w-lg">
               <div className="relative flex items-center justify-between z-20 mb-4">
                 {ORDER_STEPS.map((s, i) => (
-                  <div key={s.label} className="flex flex-col items-center flex-1 min-w-0">
+                  <div
+                    key={s.label}
+                    className="flex flex-col items-center flex-1 min-w-0"
+                  >
                     <div
                       className={`flex items-center justify-center w-9 h-9 font-extrabold text-base border-2 transition
-                        ${orderStep === i ? "bg-[#007BFF] text-white border-[#007BFF] shadow-lg scale-110"
-                          : orderStep > i ? "bg-[#007BFF] text-white border-[#007BFF]"
-                          : "bg-[#E6F0FF] text-[#888] border-[#E6F0FF]"}`}
-                      style={{ marginBottom: 3, borderRadius: "1.5rem", boxShadow: orderStep === i ? "0 2px 10px #007bff22" : undefined }}
+                        ${
+                          orderStep === i
+                            ? "bg-[#007BFF] text-white border-[#007BFF] shadow-lg scale-110"
+                            : orderStep > i
+                            ? "bg-[#007BFF] text-white border-[#007BFF]"
+                            : "bg-[#E6F0FF] text-[#888] border-[#E6F0FF]"
+                        }`}
+                      style={{
+                        marginBottom: 3,
+                        borderRadius: "1.5rem",
+                        boxShadow:
+                          orderStep === i
+                            ? "0 2px 10px #007bff22"
+                            : undefined,
+                      }}
                     >
                       {i + 1}
                     </div>
-                    <span className="text-xs font-bold text-center whitespace-nowrap mt-1 transition"
-                          style={{ color: orderStep >= i ? COLORS.primary : COLORS.muted, textShadow: orderStep === i ? "0 1px 0 #fff" : "none" }}>
+                    <span
+                      className="text-xs font-bold text-center whitespace-nowrap mt-1 transition"
+                      style={{
+                        color:
+                          orderStep >= i ? COLORS.primary : COLORS.muted,
+                        textShadow:
+                          orderStep === i ? "0 1px 0 #fff" : "none",
+                      }}
+                    >
                       {s.label}
                     </span>
                   </div>
                 ))}
               </div>
               <div className="relative w-full h-[5px] rounded-full bg-[#E6F0FF] z-0">
-                <div className="absolute top-0 left-0 h-[5px] rounded-full z-10"
-                     style={{ width: `${orderPercent}%`, background: `linear-gradient(90deg, ${COLORS.primary} 0%, ${COLORS.primaryHover} 100%)`, transition: "width .38s cubic-bezier(.51,1.15,.67,.97)" }} />
+                <div
+                  className="absolute top-0 left-0 h-[5px] rounded-full z-10"
+                  style={{
+                    width: `${orderPercent}%`,
+                    background: `linear-gradient(90deg, ${COLORS.primary} 0%, ${COLORS.primaryHover} 100%)`,
+                    transition:
+                      "width .38s cubic-bezier(.51,1.15,.67,.97)",
+                  }}
+                />
               </div>
             </div>
           </div>
@@ -576,16 +819,27 @@ export default function DashboardPage() {
           <div className="bg-white border border-[#CFE4FF] rounded-2xl shadow-xl px-5 py-8 mb-6 mt-5">
             {orderStep === 0 && (
               <>
-                <h3 className="font-black text-2xl mb-8 text-[#111] text-center tracking-tight">Choose Platform</h3>
+                <h3 className="font-black text-2xl mb-8 text-[#111] text-center tracking-tight">
+                  Choose Platform
+                </h3>
                 <div className="flex justify-center gap-5 flex-wrap mb-8">
                   {PLATFORMS.map((p) => {
                     const Icon = p.icon;
                     return (
-                      <button key={p.key}
+                      <button
+                        key={p.key}
                         className={`flex flex-col items-center gap-1 px-7 py-5 rounded-xl border-2 font-bold text-base shadow hover:shadow-lg transition
-                          ${platform.key === p.key ? "border-[#007BFF] bg-[#E6F0FF] text-[#007BFF] scale-105" : "border-[#CFE4FF] text-[#111111] bg-white"}`}
+                          ${
+                            platform.key === p.key
+                              ? "border-[#007BFF] bg-[#E6F0FF] text-[#007BFF] scale-105"
+                              : "border-[#CFE4FF] text-[#111111] bg-white"
+                          }`}
                         style={{ minWidth: 120, minHeight: 90 }}
-                        onClick={() => { setPlatform(p); setService(p.services[0]); setQuantity(getQuickAmounts(p, p.services[0])[0]); }}
+                        onClick={() => {
+                          setPlatform(p);
+                          setService(p.services[0]);
+                          setQuantity(getQuickAmounts(p, p.services[0])[0]);
+                        }}
                       >
                         <Icon size={30} style={{ color: p.iconColor }} />
                         <span>{p.name}</span>
@@ -594,7 +848,10 @@ export default function DashboardPage() {
                   })}
                 </div>
                 <div className="flex justify-end mt-8">
-                  <button className="px-6 py-3 rounded-xl font-bold bg-[#007BFF] text-white hover:bg-[#005FCC] shadow transition text-lg" onClick={handleOrderNext}>
+                  <button
+                    className="px-6 py-3 rounded-xl font-bold bg-[#007BFF] text-white hover:bg-[#005FCC] shadow transition text-lg"
+                    onClick={handleOrderNext}
+                  >
                     Next
                   </button>
                 </div>
@@ -605,27 +862,42 @@ export default function DashboardPage() {
               <>
                 <h3 className="font-black text-2xl mb-8 text-[#111] text-center">
                   <span className="inline-flex items-center gap-2">
-                    {(() => { const I = platform.icon; return <I size={27} style={{ color: platform.iconColor }} />; })()}
+                    {(() => {
+                      const I = platform.icon;
+                      return (
+                        <I size={27} style={{ color: platform.iconColor }} />
+                      );
+                    })()}
                     {platform.name} Services
                   </span>
                 </h3>
                 <div className="flex flex-wrap gap-5 justify-center mb-8">
                   {platform.services.map((s) => {
                     const SIcon = s.icon;
-                    const { discount } = getDiscountedPrice(s.price);
+                    const isSelected = service.type === s.type;
                     return (
                       <button
                         key={s.type}
                         className={`flex flex-col items-center gap-1 px-7 py-5 rounded-xl border-2 font-bold text-base shadow hover:shadow-lg transition
-                          ${service.type === s.type ? "border-[#007BFF] bg-[#E6F0FF] text-[#007BFF] scale-105" : "border-[#CFE4FF] text-[#111111] bg-white"}`}
-                        onClick={() => { setService(s); setQuantity(getQuickAmounts(platform, s)[0]); }}
+                          ${
+                            isSelected
+                              ? "border-[#007BFF] bg-[#E6F0FF] text-[#007BFF] scale-105"
+                              : "border-[#CFE4FF] text-[#111111] bg-white"
+                          }`}
+                        onClick={() => {
+                          setService(s);
+                          setQuantity(getQuickAmounts(platform, s)[0]);
+                        }}
                       >
                         <SIcon size={22} style={{ color: s.iconColor }} />
                         <span>{s.type}</span>
-                        <span className="text-xs text-[#888]">${s.price}/ea</span>
-                        {discount > 0 && (
+                        <span className="text-xs text-[#888]">
+                          ${s.price}/ea
+                        </span>
+                        {isSelected && (
                           <span className="mt-1 px-2 py-0.5 rounded-full bg-[#e7f7f0] text-[#007BFF] text-xs font-bold flex items-center gap-1 animate-flashSale">
-                            <Tag size={14} className="mr-0.5" />-{discount}%
+                            <Tag size={14} className="mr-0.5" />
+                            -{discount}% Flash Sale
                           </span>
                         )}
                       </button>
@@ -633,10 +905,16 @@ export default function DashboardPage() {
                   })}
                 </div>
                 <div className="flex justify-between mt-8">
-                  <button className="px-6 py-3 rounded-xl font-bold bg-[#E6F0FF] text-[#007BFF] border border-[#CFE4FF] hover:bg-[#d7eafd] shadow transition text-lg" onClick={handleOrderBack}>
+                  <button
+                    className="px-6 py-3 rounded-xl font-bold bg-[#E6F0FF] text-[#007BFF] border border-[#CFE4FF] hover:bg-[#d7eafd] shadow transition text-lg"
+                    onClick={handleOrderBack}
+                  >
                     Back
                   </button>
-                  <button className="px-6 py-3 rounded-xl font-bold bg-[#007BFF] text-white hover:bg-[#005FCC] shadow transition text-lg" onClick={handleOrderNext}>
+                  <button
+                    className="px-6 py-3 rounded-xl font-bold bg-[#007BFF] text-white hover:bg-[#005FCC] shadow transition text-lg"
+                    onClick={handleOrderNext}
+                  >
                     Next
                   </button>
                 </div>
@@ -645,11 +923,16 @@ export default function DashboardPage() {
 
             {orderStep === 2 && (
               <>
-                <h3 className="font-black text-2xl mb-8 text-[#111] text-center">Order Details</h3>
+                <h3 className="font-black text-2xl mb-8 text-[#111] text-center">
+                  Order Details
+                </h3>
                 <div className="flex flex-col gap-6 max-w-sm mx-auto mb-8">
-                  {/* Target input — NO autoFocus to avoid focus stealing */}
+                  {/* Target input */}
                   <div>
-                    <label htmlFor="order-target" className="block font-semibold text-[#007BFF] text-lg mb-2">
+                    <label
+                      htmlFor="order-target"
+                      className="block font-semibold text-[#007BFF] text-lg mb-2"
+                    >
                       {getTargetLabel(service)}
                     </label>
                     <input
@@ -673,7 +956,7 @@ export default function DashboardPage() {
                     <div className="flex justify-between items-center mt-2 w-full max-w-[640px]">
                       <span className="text-sm text-[#888]">Total:</span>
                       <span className="font-bold text-[#007BFF] text-xl">
-                        {(getDiscountedPrice(service.price).discounted * quantity).toFixed(2)}
+                        {(discounted * quantity).toFixed(2)}
                         <span className="ml-2 text-sm text-[#c7c7c7] line-through">
                           {(service.price * quantity).toFixed(2)}
                         </span>
@@ -684,14 +967,24 @@ export default function DashboardPage() {
                   <span className="text-xs text-[#007BFF] font-semibold animate-flashSale">
                     Flash Sale! {discount}% off for a limited time
                   </span>
-                  {orderError && <div className="mt-1 text-[#EF4444] text-center">{orderError}</div>}
+                  {orderError && (
+                    <div className="mt-1 text-[#EF4444] text-center">
+                      {orderError}
+                    </div>
+                  )}
                 </div>
 
                 <div className="flex justify-between mt-8">
-                  <button className="px-6 py-3 rounded-xl font-bold bg-[#E6F0FF] text-[#007BFF] border border-[#CFE4FF] hover:bg-[#d7eafd] shadow transition text-lg" onClick={handleOrderBack}>
+                  <button
+                    className="px-6 py-3 rounded-xl font-bold bg-[#E6F0FF] text-[#007BFF] border border-[#CFE4FF] hover:bg-[#d7eafd] shadow transition text-lg"
+                    onClick={handleOrderBack}
+                  >
                     Back
                   </button>
-                  <button className="px-6 py-3 rounded-xl font-bold bg-[#007BFF] text-white hover:bg-[#005FCC] shadow transition text-lg" onClick={handleOrderNext}>
+                  <button
+                    className="px-6 py-3 rounded-xl font-bold bg-[#007BFF] text-white hover:bg-[#005FCC] shadow transition text-lg"
+                    onClick={handleOrderNext}
+                  >
                     Review
                   </button>
                 </div>
@@ -700,18 +993,34 @@ export default function DashboardPage() {
 
             {orderStep === 3 && (
               <form onSubmit={handleSecureCheckout}>
-                <h3 className="font-black text-2xl mb-5 text-[#111] text-center">Review & Secure Checkout</h3>
+                <h3 className="font-black text-2xl mb-5 text-[#111] text-center">
+                  Review & Secure Checkout
+                </h3>
 
                 <div className="bg-[#F5FAFF] border border-[#CFE4FF] rounded-xl px-6 py-7 mb-6">
                   <div className="flex items-center gap-2 mb-2">
-                    {(() => { const I = platform.icon; return <I size={24} style={{ color: platform.iconColor }} />; })()}
-                    <span className="font-semibold text-lg">{platform.name}</span>
-                    <span className="ml-3 px-3 py-1 rounded-full bg-[#E6F0FF] text-[#007BFF] font-semibold text-xs">{service.type}</span>
+                    {(() => {
+                      const I = platform.icon;
+                      return <I size={24} style={{ color: platform.iconColor }} />;
+                    })()}
+                    <span className="font-semibold text-lg">
+                      {platform.name}
+                    </span>
+                    <span className="ml-3 px-3 py-1 rounded-full bg-[#E6F0FF] text-[#007BFF] font-semibold text-xs">
+                      {service.type}
+                    </span>
                   </div>
-                  <div className="text-[#444] mb-1"><b>Username / Link:</b> {target}</div>
-                  <div className="text-[#444] mb-1"><b>Amount:</b> {quantity}</div>
                   <div className="text-[#444] mb-1">
-                    <b>Unit:</b> ${discounted}/ea <span className="text-[#c7c7c7] line-through">${service.price}/ea</span>
+                    <b>Username / Link:</b> {target}
+                  </div>
+                  <div className="text-[#444] mb-1">
+                    <b>Amount:</b> {quantity}
+                  </div>
+                  <div className="text-[#444] mb-1">
+                    <b>Unit:</b> ${discounted}/ea{" "}
+                    <span className="text-[#c7c7c7] line-through">
+                      ${service.price}/ea
+                    </span>
                   </div>
                   <div className="mt-2 font-extrabold text-lg text-[#007BFF]">
                     Total: ${(discounted * quantity).toFixed(2)}
@@ -723,17 +1032,45 @@ export default function DashboardPage() {
                   <PreviewMini />
                 </div>
 
-                {orderError && <div className="mt-4 text-[#EF4444] text-center text-sm">{orderError}</div>}
+                {orderError && (
+                  <div className="mt-4 text-[#EF4444] text-center text-sm">
+                    {orderError}
+                  </div>
+                )}
 
                 <div className="flex justify-between mt-7">
-                  <button type="button" className="px-6 py-3 rounded-xl font-bold bg-[#E6F0FF] text-[#007BFF] border border-[#CFE4FF] hover:bg-[#d7eafd] shadow transition text-lg" onClick={handleOrderBack}>
+                  <button
+                    type="button"
+                    className="px-6 py-3 rounded-xl font-bold bg-[#E6F0FF] text-[#007BFF] border border-[#CFE4FF] hover:bg-[#d7eafd] shadow transition text-lg"
+                    onClick={handleOrderBack}
+                  >
                     Back
                   </button>
-                  <button type="submit" className="px-6 py-3 rounded-xl font-bold bg-gradient-to-br from-[#007BFF] to-[#005FCC] hover:from-[#005FCC] hover:to-[#007BFF] text-white shadow-lg transition text-lg flex items-center gap-2" disabled={orderLoading}>
+                  <button
+                    type="submit"
+                    className="px-6 py-3 rounded-xl font-bold bg-gradient-to-br from-[#007BFF] to-[#005FCC] hover:from-[#005FCC] hover:to-[#007BFF] text-white shadow-lg transition text-lg flex items-center gap-2"
+                    disabled={orderLoading}
+                  >
                     {orderLoading ? (
-                      <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden>
-                        <circle cx="12" cy="12" r="10" stroke="#E6F0FF" strokeWidth="4" />
-                        <path d="M22 12A10 10 0 0 1 12 22" stroke="#007BFF" strokeWidth="4" strokeLinecap="round" />
+                      <svg
+                        className="animate-spin h-5 w-5"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        aria-hidden
+                      >
+                        <circle
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="#E6F0FF"
+                          strokeWidth="4"
+                        />
+                        <path
+                          d="M22 12A10 10 0 0 1 12 22"
+                          stroke="#007BFF"
+                          strokeWidth="4"
+                          strokeLinecap="round"
+                        />
                       </svg>
                     ) : (
                       <CheckCircle size={20} />
@@ -745,20 +1082,42 @@ export default function DashboardPage() {
             )}
           </div>
 
-          {/* NOTE: removed the nested <style jsx global> here to prevent input blur */}
+          <style jsx global>{`
+            @keyframes flashSale {
+              0%,
+              100% {
+                background: #e7f7f0;
+                color: #007bff;
+              }
+              50% {
+                background: #d9ecff;
+                color: #005fcc;
+              }
+            }
+            .animate-flashSale {
+              animation: flashSale 2.5s infinite;
+            }
+          `}</style>
         </div>
       );
     }
 
     if (activeTab === "orders") {
-      const inProgress = orders.filter(o => o.status !== "Completed");
+      const inProgress = orders.filter((o) => o.status !== "Completed");
       return (
         <div>
-          <h2 className="text-2xl font-extrabold mb-4 flex items-center gap-2"><List size={22} /> Current Orders</h2>
+          <h2 className="text-2xl font-extrabold mb-4 flex items-center gap-2">
+            <List size={22} /> Current Orders
+          </h2>
           {inProgress.length === 0 ? (
-            <div className="text-[#888] py-16 text-center">No current orders. Place your first order above!</div>
+            <div className="text-[#888] py-16 text-center">
+              No current orders. Place your first order above!
+            </div>
           ) : (
-            <div className="overflow-x-auto" style={{ WebkitOverflowScrolling: "touch" }}>
+            <div
+              className="overflow-x-auto"
+              style={{ WebkitOverflowScrolling: "touch" }}
+            >
               <table className="min-w-full text-sm">
                 <thead>
                   <tr className="bg-[#F5FAFF]">
@@ -771,14 +1130,18 @@ export default function DashboardPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {inProgress.map(order => (
+                  {inProgress.map((order) => (
                     <tr key={order.id} className="border-t">
                       <td className="p-3">{order.id.slice(0, 6)}...</td>
                       <td className="p-3">{order.platform}</td>
                       <td className="p-3">{order.service}</td>
                       <td className="p-3">{order.quantity}</td>
-                      <td className="p-3 font-bold text-[#007BFF]">{order.status}</td>
-                      <td className="p-3">{new Date(order.created_at).toLocaleString()}</td>
+                      <td className="p-3 font-bold text-[#007BFF]">
+                        {order.status}
+                      </td>
+                      <td className="p-3">
+                        {new Date(order.created_at).toLocaleString()}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -790,14 +1153,21 @@ export default function DashboardPage() {
     }
 
     if (activeTab === "completed") {
-      const completed = orders.filter(o => o.status === "Completed");
+      const completed = orders.filter((o) => o.status === "Completed");
       return (
         <div>
-          <h2 className="text-2xl font-extrabold mb-4 flex items-center gap-2"><CheckCircle size={22} /> Completed Orders</h2>
+          <h2 className="text-2xl font-extrabold mb-4 flex items-center gap-2">
+            <CheckCircle size={22} /> Completed Orders
+          </h2>
           {completed.length === 0 ? (
-            <div className="text-[#888] py-16 text-center">No completed orders yet.</div>
+            <div className="text-[#888] py-16 text-center">
+              No completed orders yet.
+            </div>
           ) : (
-            <div className="overflow-x-auto" style={{ WebkitOverflowScrolling: "touch" }}>
+            <div
+              className="overflow-x-auto"
+              style={{ WebkitOverflowScrolling: "touch" }}
+            >
               <table className="min-w-full text-sm">
                 <thead>
                   <tr className="bg-[#F5FAFF]">
@@ -810,14 +1180,18 @@ export default function DashboardPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {completed.map(order => (
+                  {completed.map((order) => (
                     <tr key={order.id} className="border-t">
                       <td className="p-3">{order.id.slice(0, 6)}...</td>
                       <td className="p-3">{order.platform}</td>
                       <td className="p-3">{order.service}</td>
                       <td className="p-3">{order.quantity}</td>
-                      <td className="p-3 font-bold text-[#007BFF]">{order.status}</td>
-                      <td className="p-3">{new Date(order.created_at).toLocaleString()}</td>
+                      <td className="p-3 font-bold text-[#007BFF]">
+                        {order.status}
+                      </td>
+                      <td className="p-3">
+                        {new Date(order.created_at).toLocaleString()}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -831,10 +1205,16 @@ export default function DashboardPage() {
     if (activeTab === "analytics") {
       return (
         <div>
-          <h2 className="text-2xl font-extrabold mb-4 flex items-center gap-2"><BarChart size={22} /> Analytics</h2>
+          <h2 className="text-2xl font-extrabold mb-4 flex items-center gap-2">
+            <BarChart size={22} /> Analytics
+          </h2>
           <div className="grid grid-cols-2 gap-5 sm:grid-cols-4 mb-10">
             <DashboardStat label="Orders" value={analytics.total} color="blue" />
-            <DashboardStat label="Completed" value={analytics.completed} color="blue" />
+            <DashboardStat
+              label="Completed"
+              value={analytics.completed}
+              color="blue"
+            />
             <DashboardStat
               label="Spent"
               value={
@@ -844,21 +1224,26 @@ export default function DashboardPage() {
                     (sum, o) =>
                       sum +
                       o.quantity *
-                        (PLATFORMS.find((p) => p.name === o.platform)?.services.find((s) => s.type === o.service)?.price || 0),
+                        (PLATFORMS.find((p) => p.name === o.platform)?.services.find(
+                          (s) => s.type === o.service
+                        )?.price || 0),
                     0
                   )
                   .toFixed(2)
               }
               color="blue"
             />
-            <DashboardStat label="Refill Eligible" value={orders.filter(o => o.status === "Completed").length} color="blue" />
+            <DashboardStat
+              label="Refill Eligible"
+              value={orders.filter((o) => o.status === "Completed").length}
+              color="blue"
+            />
           </div>
         </div>
       );
     }
 
     if (activeTab === "profile") {
-      // Render memoized ProfileForm; parent re-renders won't remount it
       return <ProfileForm initialEmail={profileEmail} />;
     }
 
@@ -867,13 +1252,15 @@ export default function DashboardPage() {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      let meta = document.querySelector('meta[name="viewport"]') as HTMLMetaElement | null;
+      let meta = document.querySelector(
+        'meta[name="viewport"]'
+      ) as HTMLMetaElement | null;
       if (!meta) {
-        meta = document.createElement('meta') as HTMLMetaElement;
+        meta = document.createElement("meta") as HTMLMetaElement;
         meta.name = "viewport";
         document.head.appendChild(meta);
       }
-      meta.setAttribute("content","width=device-width, initial-scale=1");
+      meta.setAttribute("content", "width=device-width, initial-scale=1");
     }
   }, []);
 
@@ -883,14 +1270,28 @@ export default function DashboardPage() {
       <div className="max-w-7xl mx-auto px-2 sm:px-4 py-6">
         <div className="flex flex-wrap sm:flex-nowrap items-center justify-between mb-6 gap-3">
           <div className="flex items-center gap-2">
-            <button className="block md:hidden p-2" onClick={() => setSidebarOpen(!sidebarOpen)} aria-label="Open Navigation">
+            <button
+              className="block md:hidden p-2"
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              aria-label="Open Navigation"
+            >
               <Menu size={28} className="text-[#007BFF]" />
             </button>
-            <Image src="/logo.png" alt="YesViral Logo" width={38} height={38} />
-            <span className="text-2xl font-extrabold text-[#007BFF] tracking-tight">Dashboard</span>
+            <Image
+              src="/logo.png"
+              alt="YesViral Logo"
+              width={38}
+              height={38}
+            />
+            <span className="text-2xl font-extrabold text-[#007BFF] tracking-tight">
+              Dashboard
+            </span>
           </div>
           <button
-            onClick={async () => { await supabase.auth.signOut(); router.push("/login"); }}
+            onClick={async () => {
+              await supabase.auth.signOut();
+              router.push("/login");
+            }}
             className="flex items-center gap-2 bg-[#EF4444] hover:bg-red-600 text-white px-4 py-2 rounded-xl font-bold shadow"
           >
             <LogOut size={18} /> Log Out
@@ -898,21 +1299,39 @@ export default function DashboardPage() {
         </div>
 
         <div className="flex flex-col md:flex-row gap-5 relative">
-          <aside className={`fixed top-0 left-0 z-30 bg-white border-r border-[#CFE4FF] shadow-md h-full w-60 transform md:static md:translate-x-0 transition-transform duration-200
+          <aside
+            className={`fixed top-0 left-0 z-30 bg-white border-r border-[#CFE4FF] shadow-md h-full w-60 transform md:static md:translate-x-0 transition-transform duration-200
             rounded-none md:rounded-2xl p-5 md:w-60 md:block
-            ${sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}>
+            ${
+              sidebarOpen
+                ? "translate-x-0"
+                : "-translate-x-full md:translate-x-0"
+            }`}
+          >
             <div className="flex justify-between items-center mb-8 md:hidden">
-              <span className="font-extrabold text-lg text-[#007BFF]">Menu</span>
-              <button onClick={() => setSidebarOpen(false)} className="p-2 rounded hover:bg-[#F5FAFF]">
+              <span className="font-extrabold text-lg text-[#007BFF]">
+                Menu
+              </span>
+              <button
+                onClick={() => setSidebarOpen(false)}
+                className="p-2 rounded hover:bg-[#F5FAFF]"
+              >
                 <LogOut size={22} className="text-[#007BFF]" />
               </button>
             </div>
-            {NAV_TABS.map(tab => (
+            {NAV_TABS.map((tab) => (
               <button
                 key={tab.key}
-                onClick={() => { setActiveTab(tab.key); setSidebarOpen(false); }}
+                onClick={() => {
+                  setActiveTab(tab.key);
+                  setSidebarOpen(false);
+                }}
                 className={`flex items-center gap-3 px-4 py-3 rounded-lg font-semibold transition text-base w-full
-                  ${activeTab === tab.key ? "bg-[#007BFF] text-white shadow" : "hover:bg-[#F5FAFF] text-[#111]"}
+                  ${
+                    activeTab === tab.key
+                      ? "bg-[#007BFF] text-white shadow"
+                      : "hover:bg-[#F5FAFF] text-[#111]"
+                  }
                 `}
               >
                 {tab.icon}
@@ -920,7 +1339,12 @@ export default function DashboardPage() {
               </button>
             ))}
           </aside>
-          {sidebarOpen && <div className="fixed inset-0 bg-black/40 z-20 md:hidden" onClick={() => setSidebarOpen(false)}></div>}
+          {sidebarOpen && (
+            <div
+              className="fixed inset-0 bg-black/40 z-20 md:hidden"
+              onClick={() => setSidebarOpen(false)}
+            ></div>
+          )}
 
           <section className="flex-1 bg-white border border-[#CFE4FF] rounded-2xl shadow-sm p-4 sm:p-8 min-h-[440px]">
             <TabContent />
@@ -930,33 +1354,78 @@ export default function DashboardPage() {
 
       <style jsx global>{`
         @keyframes flashSale {
-          0%,100% { background: #e7f7f0; color: #007BFF;}
-          50% { background: #d9ecff; color: #005FCC;}
+          0%,
+          100% {
+            background: #e7f7f0;
+            color: #007bff;
+          }
+          50% {
+            background: #d9ecff;
+            color: #005fcc;
+          }
         }
-        .animate-flashSale { animation: flashSale 2.5s infinite; }
+        .animate-flashSale {
+          animation: flashSale 2.5s infinite;
+        }
         @media (max-width: 900px) {
-          .max-w-7xl { padding: 0 0vw; }
+          .max-w-7xl {
+            padding: 0 0vw;
+          }
         }
         @media (max-width: 600px) {
-          .max-w-7xl { padding: 0 1vw; }
-          aside, section { padding: 12px !important; }
-          h2 { font-size: 1.1rem !important; }
-          th, td { font-size: 0.98rem; }
-          .text-2xl { font-size: 1.3rem !important; }
+          .max-w-7xl {
+            padding: 0 1vw;
+          }
+          aside,
+          section {
+            padding: 12px !important;
+          }
+          h2 {
+            font-size: 1.1rem !important;
+          }
+          th,
+          td {
+            font-size: 0.98rem;
+          }
+          .text-2xl {
+            font-size: 1.3rem !important;
+          }
         }
-        table { width: 100%; }
-        th, td { white-space: nowrap; }
+        table {
+          width: 100%;
+        }
+        th,
+        td {
+          white-space: nowrap;
+        }
       `}</style>
     </main>
   );
 }
 
 /* ========================= Stat Card ========================= */
-function DashboardStat({ label, value, color }: { label: string, value: any, color: string }) {
-  const textColor = color === "blue" ? "text-[#007BFF]" : color === "green" ? "text-green-500" : color === "yellow" ? "text-yellow-500" : "";
+function DashboardStat({
+  label,
+  value,
+  color,
+}: {
+  label: string;
+  value: any;
+  color: string;
+}) {
+  const textColor =
+    color === "blue"
+      ? "text-[#007BFF]"
+      : color === "green"
+      ? "text-green-500"
+      : color === "yellow"
+      ? "text-yellow-500"
+      : "";
   return (
     <div className={`p-4 rounded-xl bg-[#F5FAFF] border border-[#CFE4FF] text-center shadow`}>
-      <span className={`block text-sm font-semibold mb-1 ${textColor}`}>{label}</span>
+      <span className={`block text-sm font-semibold mb-1 ${textColor}`}>
+        {label}
+      </span>
       <span className="text-2xl font-extrabold">{value}</span>
     </div>
   );
