@@ -79,17 +79,29 @@ function getStealthPackage(platform: Platform, service: Service) {
   let pkg = "Premium Package";
   let type = "Standard";
 
-  if (platform.key === "instagram" && service.type === "Followers") pkg = "High-Quality Instagram Followers";
-  if (platform.key === "instagram" && service.type === "Likes") pkg = "Premium Instagram Likes";
-  if (platform.key === "instagram" && service.type === "Views") pkg = "High-Retention Instagram Views";
+  // INSTAGRAM
+  if (platform.key === "instagram" && service.type === "Followers") 
+    pkg = "High-Quality Instagram Followers";
+  if (platform.key === "instagram" && service.type === "Likes") 
+    pkg = "Premium Instagram Likes";
+  if (platform.key === "instagram" && service.type === "Views") 
+    pkg = "High-Retention Instagram Views";
 
-  if (platform.key === "tiktok" && service.type === "Followers") pkg = "High-Quality TikTok Followers";
-  if (platform.key === "tiktok" && service.type === "Likes") pkg = "Premium TikTok Likes";
-  if (platform.key === "tiktok" && service.type === "Views") pkg = "High-Retention TikTok Views";
+  // TIKTOK
+  if (platform.key === "tiktok" && service.type === "Followers") 
+    pkg = "High-Quality TikTok Followers";
+  if (platform.key === "tiktok" && service.type === "Likes") 
+    pkg = "Premium TikTok Likes";
+  if (platform.key === "tiktok" && service.type === "Views") 
+    pkg = "High-Retention TikTok Views";
 
-  if (platform.key === "youtube" && service.type === "Subscribers") pkg = "High-Quality YouTube Subscribers";
-  if (platform.key === "youtube" && service.type === "Likes") pkg = "Premium YouTube Likes";
-  if (platform.key === "youtube" && service.type === "Views") pkg = "High-Retention YouTube Views";
+  // YOUTUBE
+  if (platform.key === "youtube" && service.type === "Subscribers") 
+    pkg = "High-Quality YouTube Subscribers";
+  if (platform.key === "youtube" && service.type === "Likes") 
+    pkg = "Premium YouTube Likes";
+  if (platform.key === "youtube" && service.type === "Views") 
+    pkg = "High-Retention YouTube Views";
 
   if (service.type === "Followers" || service.type === "Subscribers") type = "High-Quality";
   if (service.type === "Likes") type = "Premium";
@@ -178,14 +190,19 @@ async function fetchPreview(platform: string, target: string): Promise<PreviewDa
   }
 }
 
-/* ====================== ProfileForm (isolated) ================= */
-type ProfileFormProps = { initialEmail: string; };
+/* ====================== ProfileForm (isolated) =================
+   WHY: Memoized to prevent remounts while typing. No autoFocus.
+=================================================================*/
+type ProfileFormProps = {
+  initialEmail: string;
+};
 const ProfileForm = memo(function ProfileForm({ initialEmail }: ProfileFormProps) {
   const [newEmail, setNewEmail] = useState(initialEmail || "");
   const [passwordCurrent, setPasswordCurrent] = useState("");
   const [passwordNew, setPasswordNew] = useState("");
 
   useEffect(() => {
+    // Only set on first mount when initialEmail arrives
     if (initialEmail && !newEmail) setNewEmail(initialEmail);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialEmail]);
@@ -216,6 +233,7 @@ const ProfileForm = memo(function ProfileForm({ initialEmail }: ProfileFormProps
     <div className="space-y-7">
       <h2 className="text-2xl font-extrabold mb-2 flex items-center gap-2"><UserCircle size={22} /> Account</h2>
 
+      {/* Email */}
       <div className="max-w-md">
         <label htmlFor="email-input" className="block text-[#111] font-bold mb-2">Email</label>
         <div className="flex gap-2 items-center">
@@ -236,6 +254,7 @@ const ProfileForm = memo(function ProfileForm({ initialEmail }: ProfileFormProps
         </p>
       </div>
 
+      {/* Password */}
       <div className="max-w-md">
         <label className="block text-[#111] font-bold mb-2">Change Password</label>
         <div className="flex flex-col gap-2">
@@ -318,12 +337,7 @@ export default function DashboardPage() {
   }, [router]);
 
   const orderPercent = (orderStep / (ORDER_STEPS.length - 1)) * 100;
-
-  /* ---- stabilize discount so renders don’t churn DOM ---- */
-  const { discount, discounted } = useMemo(
-    () => getDiscountedPrice(service.price),
-    [service.price]
-  );
+  const { discount, discounted } = getDiscountedPrice(service.price);
 
   /* ===================== Order handlers ===================== */
   function handleOrderNext() {
@@ -471,7 +485,7 @@ export default function DashboardPage() {
 
     return (
       <div className="w-full max-w-sm rounded-xl border bg-white shadow-sm overflow-hidden mx-auto" style={{ borderColor: COLORS.border }}>
-        <div className="flex items_center gap-2 px-3 py-2 border-b bg-white/80" style={{ borderColor: "#E0ECFF" }}>
+        <div className="flex items-center gap-2 px-3 py-2 border-b bg-white/80" style={{ borderColor: "#E0ECFF" }}>
           <div className="flex items-center justify-center w-7 h-7 rounded-full" style={{ background: COLORS.accentBg }}>
             {(() => { const I = platform.icon; return <I size={14} style={{ color: platform.iconColor }} />; })()}
           </div>
@@ -509,7 +523,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        <div className="px-3 py-2 bg_white flex items-center justify-between">
+        <div className="px-3 py-2 bg-white flex items-center justify-between">
           <div className="min-w-0">
             <span className="block text-[11px] font-semibold text-[#111] truncate max-w-[220px]">
               {normalized || "—"}
@@ -618,7 +632,7 @@ export default function DashboardPage() {
                     );
                   })}
                 </div>
-                <div className="flex justify_between mt-8">
+                <div className="flex justify-between mt-8">
                   <button className="px-6 py-3 rounded-xl font-bold bg-[#E6F0FF] text-[#007BFF] border border-[#CFE4FF] hover:bg-[#d7eafd] shadow transition text-lg" onClick={handleOrderBack}>
                     Back
                   </button>
@@ -633,6 +647,7 @@ export default function DashboardPage() {
               <>
                 <h3 className="font-black text-2xl mb-8 text-[#111] text-center">Order Details</h3>
                 <div className="flex flex-col gap-6 max-w-sm mx-auto mb-8">
+                  {/* Target input — NO autoFocus to avoid focus stealing */}
                   <div>
                     <label htmlFor="order-target" className="block font-semibold text-[#007BFF] text-lg mb-2">
                       {getTargetLabel(service)}
@@ -652,12 +667,13 @@ export default function DashboardPage() {
                     </span>
                   </div>
 
+                  {/* Amount */}
                   <div className="flex flex-col items-center gap-3 w-full">
                     <AmountSelector />
-                    <div className="flex justify-between items-center mt-2 w-full max-w_[640px]">
+                    <div className="flex justify-between items-center mt-2 w-full max-w-[640px]">
                       <span className="text-sm text-[#888]">Total:</span>
                       <span className="font-bold text-[#007BFF] text-xl">
-                        {(discounted * quantity).toFixed(2)}
+                        {(getDiscountedPrice(service.price).discounted * quantity).toFixed(2)}
                         <span className="ml-2 text-sm text-[#c7c7c7] line-through">
                           {(service.price * quantity).toFixed(2)}
                         </span>
@@ -702,6 +718,7 @@ export default function DashboardPage() {
                   </div>
                 </div>
 
+                {/* REVIEW-ONLY PREVIEW */}
                 <div className="mb-6">
                   <PreviewMini />
                 </div>
@@ -728,7 +745,7 @@ export default function DashboardPage() {
             )}
           </div>
 
-          {/* IMPORTANT: removed nested <style jsx global> here */}
+          {/* NOTE: removed the nested <style jsx global> here to prevent input blur */}
         </div>
       );
     }
@@ -841,6 +858,7 @@ export default function DashboardPage() {
     }
 
     if (activeTab === "profile") {
+      // Render memoized ProfileForm; parent re-renders won't remount it
       return <ProfileForm initialEmail={profileEmail} />;
     }
 
