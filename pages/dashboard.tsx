@@ -523,31 +523,38 @@ export default function DashboardPage() {
     );
     window.location.href = `https://checkout.yesviral.com/checkout?order=${orderString}`;
   }
-  
-/* ==================== FIXED PREVIEW FETCH ==================== */
-const doFetchPreview = useCallback(async () => {
-  if (orderStep !== 3) return;
 
-  const trimmed = target.trim();
-  if (!trimmed) {
-    setPreview(null);
-    return;
-  }
+  /* ==================== Preview fetch (review-only) ==================== */
+  const doFetchPreview = useCallback(
+    async () => {
+      if (orderStep !== 3) return;
 
-  if (isContentEngagement && !isLink(trimmed)) {
-    setPreview({ ok: false, error: "Post / video URL required for preview." });
-    return;
-  }
+      const trimmed = target.trim();
+      if (!trimmed) {
+        setPreview(null);
+        setPreviewLoading(false);
+        return;
+      }
 
-  const data = await fetchPreview(platform.key, trimmed);
-  setPreview(data);
-}, [orderStep, target, platform.key, isContentEngagement]);
+      if (isContentEngagement && !isLink(trimmed)) {
+        setPreview({ ok: false, error: "Post / video URL required for preview." });
+        return;
+      }
 
-useEffect(() => {
-  if (orderStep !== 3) return;
-  const id = setTimeout(() => doFetchPreview(), 250);
-  return () => clearTimeout(id);
-}, [orderStep, target, doFetchPreview]);
+      setPreviewLoading(true);
+      const data = await fetchPreview(platform.key, trimmed);
+      setPreview(data);
+      setPreviewLoading(false);
+    },
+    [orderStep, target, platform.key, isContentEngagement]
+  );
+
+  useEffect(() => {
+    if (orderStep !== 3) return;
+
+    const id = setTimeout(() => void doFetchPreview(), 150);
+    return () => clearTimeout(id);
+  }, [orderStep, doFetchPreview]);
 
   /* ===================== UI bits reused ===================== */
   function ServiceSummary() {
@@ -745,7 +752,7 @@ useEffect(() => {
   }
 
   /* ============================ Tabs ============================ */
-  const TabContent = () => {
+  const renderTabContent = () => {
     if (loading)
       return (
         <div className="flex justify-center items-center py-24">
@@ -954,14 +961,14 @@ useEffect(() => {
                   <div className="flex flex-col items-center gap-3 w-full">
                     <AmountSelector />
                     <div className="flex justify-between items-center mt-2 w-full max-w-[640px]">
-  <span className="text-sm text-[#888]">Total:</span>
-  <span className="font-bold text-[#007BFF] text-xl">
-    {(discounted * quantity).toFixed(2)}
-    <span className="ml-2 text-sm text-[#c7c7c7] line-through">
-      {(service.price * quantity).toFixed(2)}
-    </span>
-  </span>
-</div>
+                      <span className="text-sm text-[#888]">Total:</span>
+                      <span className="font-bold text-[#007BFF] text-xl">
+                        {(discounted * quantity).toFixed(2)}
+                        <span className="ml-2 text-sm text-[#c7c7c7] line-through">
+                          {(service.price * quantity).toFixed(2)}
+                        </span>
+                      </span>
+                    </div>
                   </div>
 
                   <span className="text-xs text-[#007BFF] font-semibold animate-flashSale">
@@ -1347,7 +1354,7 @@ useEffect(() => {
           )}
 
           <section className="flex-1 bg-white border border-[#CFE4FF] rounded-2xl shadow-sm p-4 sm:p-8 min-h-[440px]">
-            <TabContent />
+            {renderTabContent()}
           </section>
         </div>
       </div>
