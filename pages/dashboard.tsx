@@ -523,11 +523,9 @@ export default function DashboardPage() {
     );
     window.location.href = `https://checkout.yesviral.com/checkout?order=${orderString}`;
   }
-
-  /* ==================== Preview fetch (review-only) ==================== */
   
+/* ==================== FIXED PREVIEW FETCH ==================== */
 const doFetchPreview = useCallback(async () => {
-  // Only run on Step 3
   if (orderStep !== 3) return;
 
   const trimmed = target.trim();
@@ -536,8 +534,6 @@ const doFetchPreview = useCallback(async () => {
     return;
   }
 
-  // Followers/subscribers allow @username or link
-  // Likes/views require a link
   if (isContentEngagement && !isLink(trimmed)) {
     setPreview({ ok: false, error: "Post / video URL required for preview." });
     return;
@@ -545,18 +541,13 @@ const doFetchPreview = useCallback(async () => {
 
   const data = await fetchPreview(platform.key, trimmed);
   setPreview(data);
-}, [orderStep, platform.key, isContentEngagement]);
+}, [orderStep, target, platform.key, isContentEngagement]);
 
 useEffect(() => {
   if (orderStep !== 3) return;
-
-  // Slight delay to avoid triggering during transition
-  const id = setTimeout(() => {
-    doFetchPreview();  
-  }, 300);
-
+  const id = setTimeout(() => doFetchPreview(), 250);
   return () => clearTimeout(id);
-}, [orderStep, doFetchPreview]);
+}, [orderStep, target, doFetchPreview]);
 
   /* ===================== UI bits reused ===================== */
   function ServiceSummary() {
