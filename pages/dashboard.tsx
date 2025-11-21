@@ -75,6 +75,41 @@ const NAV_TABS = [
 
 const ORDER_STEPS = [{ label: "Platform" }, { label: "Service" }, { label: "Details" }, { label: "Review" }];
 
+function getStealthPackage(platform: Platform, service: Service): StealthPackageResult {
+  let pkg = "Premium Package";
+  let type = "Standard";
+
+  // INSTAGRAM
+  if (platform.key === "instagram" && service.type === "Followers") 
+    pkg = "High-Quality Instagram Followers";
+  if (platform.key === "instagram" && service.type === "Likes") 
+    pkg = "Premium Instagram Likes";
+  if (platform.key === "instagram" && service.type === "Views") 
+    pkg = "High-Retention Instagram Views";
+
+  // TIKTOK
+  if (platform.key === "tiktok" && service.type === "Followers") 
+    pkg = "High-Quality TikTok Followers";
+  if (platform.key === "tiktok" && service.type === "Likes") 
+    pkg = "Premium TikTok Likes";
+  if (platform.key === "tiktok" && service.type === "Views") 
+    pkg = "High-Retention TikTok Views";
+
+  // YOUTUBE
+  if (platform.key === "youtube" && service.type === "Subscribers") 
+    pkg = "High-Quality YouTube Subscribers";
+  if (platform.key === "youtube" && service.type === "Likes") 
+    pkg = "Premium YouTube Likes";
+  if (platform.key === "youtube" && service.type === "Views") 
+    pkg = "High-Retention YouTube Views";
+
+  if (service.type === "Followers" || service.type === "Subscribers") type = "Growth";
+  if (service.type === "Likes") type = "Engagement";
+  if (service.type === "Views") type = "Boost";
+
+  return { pkg, type };
+}
+
 /* =========================== Helpers ========================== */
 function getQuickAmounts(platform: Platform, service: Service): number[] {
   const t = service.type.toString().toLowerCase();
@@ -339,14 +374,17 @@ function handleSecureCheckout(e: React.FormEvent) {
   setOrderError("");
   setOrderLoading(true);
 
-  const order = {
-    package: platform.name,
-    platform: platform.key,
-    service: service.type,
-    amount: quantity,
-    reference: target,
-    total: Number((discounted * quantity).toFixed(2)),
-  };
+const { pkg, type } = getStealthPackage(platform, service);
+
+const order = {
+  package: pkg,
+  type,
+  platform: platform.key,
+  service: service.type,
+  amount: quantity,
+  reference: target,
+  total: Number((discounted * quantity).toFixed(2)),
+};
 
   const orderString = btoa(unescape(encodeURIComponent(JSON.stringify(order))));
   window.location.href = `https://checkout.yesviral.com/checkout?order=${orderString}`;
@@ -670,7 +708,7 @@ function handleSecureCheckout(e: React.FormEvent) {
                     <span className="font-semibold text-lg">{platform.name}</span>
                     <span className="ml-3 px-3 py-1 rounded-full bg-[#E6F0FF] text-[#007BFF] font-semibold text-xs">{service.type}</span>
                   </div>
-                  <div className="text-[#444] mb-1"><b>Target:</b> {target}</div>
+                  <div className="text-[#444] mb-1"><b>Username / Link:</b> {target}</div>
                   <div className="text-[#444] mb-1"><b>Amount:</b> {quantity}</div>
                   <div className="text-[#444] mb-1">
                     <b>Unit:</b> ${discounted}/ea <span className="text-[#c7c7c7] line-through">${service.price}/ea</span>
