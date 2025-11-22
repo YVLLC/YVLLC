@@ -129,49 +129,50 @@ export default function Home() {
 
       <main className="px-4 sm:px-6 max-w-7xl mx-auto py-4 sm:py-8 space-y-6 md:space-y-10 select-none">
         {/* HERO SECTION */}
-        <section className="flex flex-col-reverse md:grid md:grid-cols-2 md:gap-12 items-center pt-6 md:pt-10">
-          <div className="w-full flex flex-col items-center md:items-start space-y-7 text-center md:text-left mt-0">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#E8F1FF] rounded-full mb-2 mt-6 sm:mt-0 text-xs font-bold text-[#007BFF] tracking-wide shadow-sm">
-              <Star size={18} className="text-yellow-400 star-animate" />
-              Trusted by 100,000+ Creators
-            </div>
+        
+       <section className="flex flex-col-reverse md:grid md:grid-cols-2 md:gap-12 items-center pt-0 md:pt-0">
+  <div className="w-full flex flex-col items-center md:items-start space-y-7 text-center md:text-left mt-0">
+    <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#E8F1FF] rounded-full mb-2 mt-6 sm:mt-0 text-xs font-bold text-[#007BFF] tracking-wide shadow-sm">
+      <Star size={18} className="text-yellow-400 star-animate" />
+      Trusted by 100,000+ Creators
+    </div>
 
-            <h1 className="text-4xl sm:text-5xl font-extrabold text-[#007BFF] leading-tight drop-shadow-sm">
-              Blow Up Your Socials. <br className="hidden sm:block" />
-              <span className="text-[#005FCC]">Real Growth.</span> No Waiting.
-            </h1>
+    <h1 className="text-4xl sm:text-5xl font-extrabold text-[#007BFF] leading-tight drop-shadow-sm">
+      Blow Up Your Socials. <br className="hidden sm:block" />
+      <span className="text-[#005FCC]">Real Growth.</span> No Waiting.
+    </h1>
 
-            <p className="text-[#444] text-base sm:text-lg max-w-md sm:max-w-xl mx-auto md:mx-0 font-medium">
-              Unlock Social Growth with YesViral — Trusted by Creators and Brands for High-Quality Followers, Likes, & Views powered by Exclusive Private Networks built for Speed, Trust, and Results.
-            </p>
+    <p className="text-[#444] text-base sm:text-lg max-w-md sm:max-w-xl mx-auto md:mx-0 font-medium">
+      Unlock Social Growth with YesViral — Trusted by Creators and Brands for High-Quality Followers, Likes, & Views powered by Exclusive Private Networks built for Speed, Trust, and Results.
+    </p>
 
-            <div className="flex flex-col xs:flex-row gap-3 w-full sm:w-auto justify-center md:justify-start">
-              <button
-                className="bg-[#007BFF] text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:bg-[#005FCC] transition text-base sm:text-lg w-full xs:w-auto"
-                onClick={openOrderModalPlatform}
-              >
-                Order Now
-              </button>
-            </div>
+    <div className="flex flex-col xs:flex-row gap-3 w-full sm:w-auto justify-center md:justify-start">
+      <button
+        className="bg-[#007BFF] text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:bg-[#005FCC] transition text-base sm:text-lg w-full xs:w-auto"
+        onClick={openOrderModalPlatform}
+      >
+        Order Now
+      </button>
+    </div>
 
-            <span className="text-xs text-[#555] font-medium mt-2">
-              Trusted by 100K+ Creators · 100% Secure Payments · High Quality Growth
-            </span>
-          </div>
+    <span className="text-xs text-[#555] font-medium mt-2">
+      Trusted by 100K+ Creators · 100% Secure Payments · High Quality Growth
+    </span>
+  </div>
 
-          <div className="w-full hidden md:flex justify-center mb-0">
-            <Image
-              src="/hero-illustration.png"
-              alt="Social Media Growth"
-              width={340}
-              height={260}
-              className="w-full max-w-[340px] sm:max-w-[420px] h-auto object-contain drop-shadow-2xl"
-              draggable={false}
-              unselectable="on"
-              priority
-            />
-          </div>
-        </section>
+  <div className="w-full hidden md:flex justify-center mb-0">
+    <Image
+      src="/mnt/data/A_flat-style_digital_illustration_features_a_smart.png"
+      alt="YesViral Notifications Illustration"
+      width={420}
+      height={320}
+      className="w-full max-w-[420px] h-auto object-contain drop-shadow-2xl m-0 p-0"
+      draggable={false}
+      unselectable="on"
+      priority
+    />
+  </div>
+</section>
 
         {/* SERVICES SECTION */}
         <section id="order" className="space-y-7 py-8 md:py-14">
