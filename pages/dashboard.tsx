@@ -613,53 +613,47 @@ export default function DashboardPage() {
       </button>
     );
   }
+  
+function AmountSelector() {
+  const options = getQuickAmounts(platform, service);
+  const toLabel = (v: number) => (v >= 1000 ? `${v / 1000}K` : `${v}`);
+  const ariaService = `${platform.name} ${service.type}`;
 
-  function AmountSelector() {
-    const options = getQuickAmounts(platform, service);
-    const toLabel = (v: number) => (v >= 1000 ? `${v / 1000}K` : `${v}`);
-    const ariaService = `${platform.name} ${service.type}`;
-    return (
-      <div className="w-full max-w-[640px]">
-        <div className="flex items-center justify-between mb-2">
-          <h4 className="text-sm font-extrabold text-[#0B63E6]">
-            How many {platform.name} {service.type}?
-          </h4>
-          <ServiceSummary />
-        </div>
-        <div
-          className="sm:hidden flex overflow-x-auto gap-2 pb-1 snap-x snap-mandatory"
-          role="radiogroup"
-          aria-label={`Select amount of ${ariaService}`}
-        >
-          {options.map((v) => (
-            <div key={v} className="snap-start">
-              <Pill
-                label={toLabel(v)}
-                selected={quantity === v}
-                onClick={() => setQuantity(v)}
-                ariaLabel={`${v} ${ariaService}`}
-              />
-            </div>
-          ))}
-        </div>
-        <div
-          className="hidden sm:grid grid-cols-3 md:grid-cols-4 gap-2"
-          role="radiogroup"
-          aria-label={`Select amount of ${ariaService}`}
-        >
-          {options.map((v) => (
-            <Pill
-              key={v}
-              label={toLabel(v)}
-              selected={quantity === v}
-              onClick={() => setQuantity(v)}
-              ariaLabel={`${v} ${ariaService}`}
-            />
-          ))}
-        </div>
+  return (
+    <div className="w-full max-w-[640px]">
+      <div className="flex items-center justify-between mb-2">
+        <h4 className="text-sm font-extrabold text-[#0B63E6]">
+          How many {platform.name} {service.type}?
+        </h4>
+        <ServiceSummary />
       </div>
-    );
-  }
+
+      {/* FIXED GRID — NO SCROLLING */}
+      <div 
+        className="
+          grid 
+          grid-cols-3 
+          sm:grid-cols-4 
+          md:grid-cols-5 
+          gap-2 
+          w-full
+        "
+        role="radiogroup"
+        aria-label={`Select amount of ${ariaService}`}
+      >
+        {options.map((v) => (
+          <Pill
+            key={v}
+            label={toLabel(v)}
+            selected={quantity === v}
+            onClick={() => setQuantity(v)}
+            ariaLabel={`${v} ${ariaService}`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
 
   function PreviewMini() {
     const hasImg = !!(preview && preview.ok && preview.image);
