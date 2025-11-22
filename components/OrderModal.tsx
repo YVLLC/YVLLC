@@ -370,9 +370,9 @@ const orderToSend = {
 
   function getTargetPlaceholder() {
     if (service.type === "Followers" || service.type === "Subscribers") {
-      if (platform.key === "instagram") return "e.g. @yourusername or instagram.com/yourusername";
-      if (platform.key === "tiktok") return "e.g. @yourusername or tiktok.com/@yourusername";
-      if (platform.key === "youtube") return "e.g. Channel URL or @handle";
+      if (platform.key === "instagram") return "@yourusername or instagram.com/yourusername";
+      if (platform.key === "tiktok") return "@yourusername or tiktok.com/@yourusername";
+      if (platform.key === "youtube") return "Channel URL or @handle";
       return "Profile link or username";
     }
     if (platform.key === "instagram") return "Paste your Instagram post / reel link";

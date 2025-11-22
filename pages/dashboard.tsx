@@ -196,11 +196,11 @@ function getTargetPlaceholder(platform: Platform, service: Service) {
     service.type === "Followers" || service.type === "Subscribers";
   if (isFollow) {
     if (platform.key === "instagram")
-      return "e.g. @yourusername or instagram.com/yourusername";
+      return "@yourusername or instagram.com/yourusername";
     if (platform.key === "tiktok")
-      return "e.g. @yourusername or tiktok.com/@yourusername";
+      return "@yourusername or tiktok.com/@yourusername";
     if (platform.key === "youtube")
-      return "e.g. Channel URL or @handle";
+      return "Channel URL or @handle";
     return "Profile link or username";
   }
   if (platform.key === "instagram")
@@ -613,7 +613,7 @@ export default function DashboardPage() {
       </button>
     );
   }
-  
+
 function AmountSelector() {
   const options = getQuickAmounts(platform, service);
   const toLabel = (v: number) => (v >= 1000 ? `${v / 1000}K` : `${v}`);
