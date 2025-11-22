@@ -137,11 +137,10 @@ export default function Home() {
               Trusted by 100,000+ Creators
             </div>
 
-            <h1 className="text-4xl sm:text-5xl font-extrabold text-[#007BFF] leading-tight drop-shadow-sm">
-              Blow Up Your Socials. <br className="hidden sm:block" />
-              <span className="text-[#005FCC]">Real Growth.</span> No Waiting.
-            </h1>
-
+<h1 className="text-4xl sm:text-5xl font-extrabold text-[#007BFF] leading-tight drop-shadow-sm">
+  Premium Social Growth.<br className="hidden sm:block" />
+  <span className="text-[#005FCC]">Real Results.</span> Delivered Fast.
+</h1>
             <p className="text-[#444] text-base sm:text-lg max-w-md sm:max-w-xl mx-auto md:mx-0 font-medium">
               Unlock Social Growth with YesViral — Trusted by Creators and Brands for High-Quality Followers, Likes, & Views powered by Exclusive Private Networks built for Speed, Trust, and Results.
             </p>
