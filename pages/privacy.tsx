@@ -13,7 +13,7 @@ export default function Privacy() {
           <ShieldCheck className="text-[#007BFF]" size={40} />
           <h1 className="text-4xl sm:text-5xl font-extrabold text-[#007BFF] mt-3 mb-1 text-center">Privacy Policy</h1>
           <div className="flex flex-wrap gap-2 items-center text-xs mt-1 text-[#444]">
-            <span className="bg-[#E8F1FF] text-[#007BFF] px-2 py-1 rounded-full font-bold">Published: May 21st, 2021</span>
+            <span className="bg-[#E8F1FF] text-[#007BFF] px-2 py-1 rounded-full font-bold">Published: May 21st, 2024</span>
             <span className="bg-[#F2F9FF] text-[#005FCC] px-2 py-1 rounded-full font-semibold">Last Updated: February 8th, 2025</span>
           </div>
         </div>
@@ -78,7 +78,7 @@ export default function Privacy() {
               <Globe className="text-[#007BFF]" size={20} /> Law & Updates
             </h2>
             <ul className="list-disc pl-6">
-              <li>This Policy is governed by the laws of the United Arab Emirates.</li>
+              <li>This Policy is governed by the laws of the United States of America.</li>
               <li>We update this policy as needed. Major changes will be posted here—keep an eye on the <span className="font-semibold text-[#007BFF]">Last Updated</span> date above.</li>
             </ul>
           </div>

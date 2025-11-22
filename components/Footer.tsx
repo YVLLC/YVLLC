@@ -116,9 +116,9 @@ export default function Footer({ onServiceOrder }: FooterProps) {
             Trusted by 100,000+ creators & businesses. YesViral helps you get real followers, views & engagement on Instagram, TikTok & YouTube—fast, safe, and guaranteed.
           </p>
           <div className="flex items-center gap-2 mt-4">
-            <Link href="/tools/free-likes">
+            <Link href="/track-order">
               <button className="bg-[#007BFF] text-white text-xs px-4 py-2 rounded-lg shadow hover:bg-[#005FCC] font-semibold transition">
-                Try Free Likes
+                Track Order
               </button>
             </Link>
             <Link href="/contact">
@@ -240,21 +240,6 @@ export default function Footer({ onServiceOrder }: FooterProps) {
             <li>
               <Link className="hover:text-[#005FCC]" href="/contact">
                 Contact Us
-              </Link>
-            </li>
-            <li>
-              <Link className="hover:text-[#005FCC]" href="/ig-downloader">
-                IG Video Downloader
-              </Link>
-            </li>
-            <li>
-              <Link className="hover:text-[#005FCC]" href="/tools/free-likes">
-                Free Likes Trial
-              </Link>
-            </li>
-            <li>
-              <Link className="hover:text-[#005FCC]" href="/tools/free-followers">
-                Free Followers Trial
               </Link>
             </li>
           </ul>
