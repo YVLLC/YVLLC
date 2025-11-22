@@ -128,51 +128,51 @@ export default function Home() {
       />
 
       <main className="px-4 sm:px-6 max-w-7xl mx-auto py-4 sm:py-8 space-y-6 md:space-y-10 select-none">
+
         {/* HERO SECTION */}
+        <section className="flex flex-col-reverse md:grid md:grid-cols-2 md:gap-12 items-center pt-0 md:pt-0">
+          <div className="w-full flex flex-col items-center md:items-start space-y-7 text-center md:text-left mt-0">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#E8F1FF] rounded-full mb-2 mt-6 sm:mt-0 text-xs font-bold text-[#007BFF] tracking-wide shadow-sm">
+              <Star size={18} className="text-yellow-400 star-animate" />
+              Trusted by 100,000+ Creators
+            </div>
 
-       <section className="flex flex-col-reverse md:grid md:grid-cols-2 md:gap-12 items-center pt-0 md:pt-0">
-  <div className="w-full flex flex-col items-center md:items-start space-y-7 text-center md:text-left mt-0">
-    <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#E8F1FF] rounded-full mb-2 mt-6 sm:mt-0 text-xs font-bold text-[#007BFF] tracking-wide shadow-sm">
-      <Star size={18} className="text-yellow-400 star-animate" />
-      Trusted by 100,000+ Creators
-    </div>
+            <h1 className="text-4xl sm:text-5xl font-extrabold text-[#007BFF] leading-tight drop-shadow-sm">
+              Blow Up Your Socials. <br className="hidden sm:block" />
+              <span className="text-[#005FCC]">Real Growth.</span> No Waiting.
+            </h1>
 
-    <h1 className="text-4xl sm:text-5xl font-extrabold text-[#007BFF] leading-tight drop-shadow-sm">
-      Blow Up Your Socials. <br className="hidden sm:block" />
-      <span className="text-[#005FCC]">Real Growth.</span> No Waiting.
-    </h1>
+            <p className="text-[#444] text-base sm:text-lg max-w-md sm:max-w-xl mx-auto md:mx-0 font-medium">
+              Unlock Social Growth with YesViral — Trusted by Creators and Brands for High-Quality Followers, Likes, & Views powered by Exclusive Private Networks built for Speed, Trust, and Results.
+            </p>
 
-    <p className="text-[#444] text-base sm:text-lg max-w-md sm:max-w-xl mx-auto md:mx-0 font-medium">
-      Unlock Social Growth with YesViral — Trusted by Creators and Brands for High-Quality Followers, Likes, & Views powered by Exclusive Private Networks built for Speed, Trust, and Results.
-    </p>
+            <div className="flex flex-col xs:flex-row gap-3 w-full sm:w-auto justify-center md:justify-start">
+              <button
+                className="bg-[#007BFF] text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:bg-[#005FCC] transition text-base sm:text-lg w-full xs:w-auto"
+                onClick={openOrderModalPlatform}
+              >
+                Order Now
+              </button>
+            </div>
 
-    <div className="flex flex-col xs:flex-row gap-3 w-full sm:w-auto justify-center md:justify-start">
-      <button
-        className="bg-[#007BFF] text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:bg-[#005FCC] transition text-base sm:text-lg w-full xs:w-auto"
-        onClick={openOrderModalPlatform}
-      >
-        Order Now
-      </button>
-    </div>
+            <span className="text-xs text-[#555] font-medium mt-2">
+              Trusted by 100K+ Creators · 100% Secure Payments · High Quality Growth
+            </span>
+          </div>
 
-    <span className="text-xs text-[#555] font-medium mt-2">
-      Trusted by 100K+ Creators · 100% Secure Payments · High Quality Growth
-    </span>
-  </div>
-
-  <div className="w-full hidden md:flex justify-center mb-0">
-    <Image
-      src="/hero-illustration.png"
-      alt="YesViral Notifications Illustration"
-      width={420}
-      height={320}
-      className="w-full max-w-[420px] h-auto object-contain drop-shadow-2xl m-0 p-0"
-      draggable={false}
-      unselectable="on"
-      priority
-    />
-  </div>
-</section>
+          <div className="w-full hidden md:flex justify-center mb-0">
+            <Image
+              src="/hero-illustration.png"
+              alt="YesViral Notifications Illustration"
+              width={420}
+              height={320}
+              className="w-full max-w-[420px] h-auto object-contain drop-shadow-2xl m-0 p-0"
+              draggable={false}
+              unselectable="on"
+              priority
+            />
+          </div>
+        </section>
 
         {/* SERVICES SECTION */}
         <section id="order" className="space-y-7 py-8 md:py-14">
@@ -181,6 +181,17 @@ export default function Home() {
             Choose your service — No logins needed, No Hassle.{" "}
             <span className="font-semibold text-[#007BFF]">Instant delivery starts within minutes.</span>
           </p>
+
+          {/* ⭐⭐⭐⭐⭐ YESVIRAL RATING (4.8/5) — ADDED */}
+          <div className="flex items-center justify-center gap-1 mb-6 mt-1">
+            {[1, 2, 3, 4].map((_, i) => (
+              <Star key={i} size={20} className="text-[#007BFF] fill-[#007BFF]" />
+            ))}
+            <Star size={20} className="text-[#007BFF] fill-[#007BFF] opacity-50" />
+            <span className="ml-2 font-semibold text-[#007BFF] text-sm">
+              4.8 / 5 rating
+            </span>
+          </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {SERVICES.map(({ name, price, description, icon, tag, count, key }, idx) => (
@@ -234,8 +245,8 @@ export default function Home() {
 
             <div className="flex flex-col items-center max-w-[170px]">
               <UserCheck className="text-[#007BFF]" size={32} />
-              <span className="font-semibold mt-2">Quality Users</span>
-              <span className="text-sm text-[#444]">100% High Quality, Rated a 4.8/5</span>
+              <span className="font-semibold mt-2">Quality Results</span>
+              <span className="text-sm text-[#444]">100% High Quality</span>
             </div>
 
             <div className="flex flex-col items-center max-w-[170px]">
