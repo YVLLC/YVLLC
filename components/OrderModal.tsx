@@ -546,7 +546,7 @@ function AmountSelector() {
             <span className="block text-[11px] font-semibold text-[#111] truncate max-w-[220px]">
               {normalized || "—"}
             </span>
-            <span className="text-[10px] text-[#6B7280]">Visual only</span>
+            <span className="text-[10px] text-[#6B7280]">For display purposes only — Not a real-time account preview</span>
           </div>
           <span
             className="text-[10px] font-semibold px-2 py-0.5 rounded-full"
