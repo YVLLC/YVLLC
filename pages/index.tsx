@@ -129,7 +129,7 @@ export default function Home() {
 
       <main className="px-4 sm:px-6 max-w-7xl mx-auto py-4 sm:py-8 space-y-6 md:space-y-10 select-none">
         {/* HERO SECTION */}
-        
+
        <section className="flex flex-col-reverse md:grid md:grid-cols-2 md:gap-12 items-center pt-0 md:pt-0">
   <div className="w-full flex flex-col items-center md:items-start space-y-7 text-center md:text-left mt-0">
     <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#E8F1FF] rounded-full mb-2 mt-6 sm:mt-0 text-xs font-bold text-[#007BFF] tracking-wide shadow-sm">
@@ -162,7 +162,7 @@ export default function Home() {
 
   <div className="w-full hidden md:flex justify-center mb-0">
     <Image
-      src="/mnt/data/A_flat-style_digital_illustration_features_a_smart.png"
+      src="/hero-illustration.png"
       alt="YesViral Notifications Illustration"
       width={420}
       height={320}
