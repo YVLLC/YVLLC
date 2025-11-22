@@ -234,8 +234,8 @@ export default function Home() {
 
             <div className="flex flex-col items-center max-w-[170px]">
               <UserCheck className="text-[#007BFF]" size={32} />
-              <span className="font-semibold mt-2">Real Users</span>
-              <span className="text-sm text-[#444]">100% High Quality, lasting</span>
+              <span className="font-semibold mt-2">Quality Users</span>
+              <span className="text-sm text-[#444]">100% High Quality, Rated a 4.8/5</span>
             </div>
 
             <div className="flex flex-col items-center max-w-[170px]">

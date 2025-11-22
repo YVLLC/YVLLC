@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { Instagram, Youtube, Music2, Briefcase, CheckCircle } from "lucide-react";
+import { Instagram, Youtube, Music2, Briefcase, CheckCircle, Star } from "lucide-react";
 
 const testimonials = [
   {
@@ -46,9 +46,24 @@ export default function TestimonialsPage() {
         <h1 className="text-3xl font-extrabold text-[#007BFF] text-center mb-2">
           Real Customer Reviews
         </h1>
-        <p className="text-center text-[#444] mb-10">
+        <p className="text-center text-[#444] mb-3">
           Genuine feedback from Creators, Business Owners, and Artists who trust YesViral.
         </p>
+
+        {/* ⭐⭐⭐⭐⭐ RATING STARS — ADDED BELOW */}
+        <div className="flex items-center justify-center gap-1 mb-10">
+          {/* 4 full stars */}
+          {[1,2,3,4].map((_, i) => (
+            <Star key={i} size={20} className="text-[#007BFF] fill-[#007BFF]" />
+          ))}
+          {/* half star (using opacity) */}
+          <Star size={20} className="text-[#007BFF] fill-[#007BFF] opacity-50" />
+          
+          <span className="ml-2 font-semibold text-[#007BFF] text-sm">
+            4.8 / 5 rating
+          </span>
+        </div>
+
         <div className="grid md:grid-cols-2 gap-7">
           {testimonials.map((t, i) => (
             <div
