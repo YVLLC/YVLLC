@@ -138,7 +138,7 @@ export default function Home() {
             </div>
 
 <h1 className="text-4xl sm:text-5xl font-extrabold text-[#007BFF] leading-tight drop-shadow-sm">
-  Premium Social Growth.<br className="hidden sm:block" />
+  Premium Social Growth. <br className="hidden sm:block" />
   <span className="text-[#005FCC]">Real Results.</span> Delivered Fast.
 </h1>
             <p className="text-[#444] text-base sm:text-lg max-w-md sm:max-w-xl mx-auto md:mx-0 font-medium">
@@ -155,7 +155,7 @@ export default function Home() {
             </div>
 
             <span className="text-xs text-[#555] font-medium mt-2">
-              Trusted by 100K+ Creators · 100% Secure Payments · High Quality Growth
+              Trusted by 100K+ Creators · 100% Secure Payments · High Quality
             </span>
           </div>
 

@@ -370,8 +370,8 @@ const orderToSend = {
 
   function getTargetPlaceholder() {
     if (service.type === "Followers" || service.type === "Subscribers") {
-      if (platform.key === "instagram") return "@yourusername or instagram.com/yourusername";
-      if (platform.key === "tiktok") return "@yourusername or tiktok.com/@yourusername";
+      if (platform.key === "instagram") return "@username or instagram.com/username";
+      if (platform.key === "tiktok") return "@username or tiktok.com/@username";
       if (platform.key === "youtube") return "Channel URL or @handle";
       return "Profile link or username";
     }

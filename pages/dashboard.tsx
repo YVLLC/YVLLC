@@ -196,9 +196,9 @@ function getTargetPlaceholder(platform: Platform, service: Service) {
     service.type === "Followers" || service.type === "Subscribers";
   if (isFollow) {
     if (platform.key === "instagram")
-      return "@yourusername or instagram.com/yourusername";
+      return "@username or instagram.com/username";
     if (platform.key === "tiktok")
-      return "@yourusername or tiktok.com/@yourusername";
+      return "@username or tiktok.com/@username";
     if (platform.key === "youtube")
       return "Channel URL or @handle";
     return "Profile link or username";
