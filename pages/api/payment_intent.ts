@@ -1,3 +1,4 @@
+// path: pages/api/payment_intent.ts
 import Stripe from "stripe";
 import type { NextApiRequest, NextApiResponse } from "next";
 
@@ -5,9 +6,26 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2023-08-16",
 });
 
+// 🔥 IMPORTANT — Allow checkout.yesviral.com to call this API
+function allowCors(res: NextApiResponse) {
+  res.setHeader("Access-Control-Allow-Origin", "https://checkout.yesviral.com");
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+}
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== "POST")
+  // Enable CORS FIRST
+  allowCors(res);
+
+  // Handle CORS preflight
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
+  }
+
+  // Only allow POST
+  if (req.method !== "POST") {
     return res.status(405).json({ error: "Method Not Allowed" });
+  }
 
   const { amount, metadata } = req.body;
 
@@ -21,19 +39,4 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       currency: "usd",
       automatic_payment_methods: { enabled: true },
 
-      // SAVE ENCODED ORDER DATA HERE
-      metadata: {
-        yesviral_order: metadata?.order || "",
-      },
-    });
-
-    return res.status(200).json({
-      clientSecret: paymentIntent.client_secret,
-    });
-  } catch (e: any) {
-    return res.status(500).json({
-      error: e.message || "Failed to create payment intent.",
-      type: e.type || "stripe_error",
-    });
-  }
-}
+      // SAVE
