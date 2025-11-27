@@ -38,3 +38,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       amount,
       currency: "usd",
       automatic_payment_methods: { enabled: true },
+
+      // SAVE ENCODED ORDER DATA HERE
+      metadata: {
+        yesviral_order: metadata?.order || "",
+      },
+    });
+
+    return res.status(200).json({
+      clientSecret: paymentIntent.client_secret,
+    });
+  } catch (e: any) {
+    console.error("Stripe PaymentIntent Error:", e);
+    return res.status(500).json({
+      error: e.message || "Failed to create payment intent.",
+      type: e.type || "stripe_error",
+    });
+  }
+}
