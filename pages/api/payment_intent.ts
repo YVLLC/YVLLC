@@ -38,5 +38,3 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       amount,
       currency: "usd",
       automatic_payment_methods: { enabled: true },
-
-      // SAVE
