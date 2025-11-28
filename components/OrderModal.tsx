@@ -187,7 +187,7 @@ function ImageSafe({ src, alt }: { src: string; alt: string }) {
       <img
         src={src}
         alt={alt}
-        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${
+        className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${
           loaded && !failed ? "opacity-100" : "opacity-0"
         }`}
         onLoad={() => setLoaded(true)}
@@ -240,7 +240,9 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
 
     if (initialPlatform) {
       const foundPlat = PLATFORMS.find(
-        (p) => p.key === initialPlatform.toLowerCase() || p.name.toLowerCase() === initialPlatform.toLowerCase()
+        (p) =>
+          p.key === initialPlatform.toLowerCase() ||
+          p.name.toLowerCase() === initialPlatform.toLowerCase()
       );
       if (foundPlat) {
         selectedPlatform = foundPlat;
@@ -317,6 +319,7 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
     amount: quantity,
     reference: target,
     total: Number((discounted * quantity).toFixed(2)),
+
     // 👇 ADDED (required for Stripe metadata → Followiz webhook)
     platform: platform.key,
     service: service.type.toString(),
@@ -371,15 +374,19 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
     }
 
     setError("");
-    const orderString = btoa(unescape(encodeURIComponent(JSON.stringify(orderToSend))));
-    window.location.href = "https://checkout.yesviral.com/checkout?order=" + orderString;
+    const orderString = btoa(
+      unescape(encodeURIComponent(JSON.stringify(orderToSend)))
+    );
+    window.location.href =
+      "https://checkout.yesviral.com/checkout?order=" + orderString;
   }
 
   // ==============================
   // TARGET LABEL & PLACEHOLDER
   // ==============================
   function getTargetLabel() {
-    if (service.type === "Followers" || service.type === "Subscribers") return "Profile or Username";
+    if (service.type === "Followers" || service.type === "Subscribers")
+      return "Profile or Username";
     return "Post / Video Link";
   }
 
@@ -402,12 +409,12 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
   function ServiceSummary() {
     return (
       <div
-        className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs font-semibold shadow-sm bg-white/90"
-        style={{ borderColor: COLORS.border }}
+        className="inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[11px] font-semibold tracking-tight"
+        style={{ borderColor: COLORS.border, background: "#F7FBFF" }}
         aria-live="polite"
       >
         <span
-          className="inline-flex items-center justify-center w-5 h-5 rounded-full"
+          className="inline-flex h-5 w-5 items-center justify-center rounded-full"
           style={{ background: COLORS.accentBg }}
         >
           {platform.icon}
@@ -423,7 +430,7 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
   }
 
   // ==============================
-  // AMOUNT SELECTOR
+  // AMOUNT SELECTOR — SIMPLE, PREMIUM
   // ==============================
   function Pill({
     label,
@@ -444,11 +451,11 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
         aria-label={ariaLabel}
         onClick={onClick}
         className={[
-          "flex-none h-11 min-w-[80px] px-3.5 rounded-full border text-xs sm:text-sm font-bold tracking-tight",
+          "flex-none h-10 min-w-[78px] px-3 rounded-full border text-[12px] font-bold tracking-tight",
           "transition-all select-none",
-          "focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-[#BFD9FF]",
+          "focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#BFD9FF] focus-visible:ring-offset-white",
           selected
-            ? "bg-[#007BFF] text-white border-[#007BFF] shadow-[0_10px_30px_rgba(0,123,255,0.35)] scale-[1.02]"
+            ? "bg-[#007BFF] text-white border-[#007BFF] shadow-[0_10px_30px_rgba(0,123,255,.30)]"
             : "bg-white text-[#0B63E6] border-[#DCEBFF] hover:border-[#7FB5FF] hover:bg-[#F6FAFF]",
         ].join(" ")}
       >
@@ -463,16 +470,30 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
     const ariaService = `${platform.name} ${service.type}`;
 
     return (
-      <div className="w-full max-w-[640px]">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3">
-          <h4 className="text-sm font-extrabold text-[#0B63E6]">
+      <div className="w-full max-w-[640px] mx-auto">
+        <div className="mb-3 flex items-center justify-between gap-3">
+          <h4 className="text-[13px] font-extrabold uppercase tracking-[0.08em] text-[#0B63E6]">
             How many {platform.name} {service.type}?
           </h4>
+          <div className="hidden sm:block">
+            <ServiceSummary />
+          </div>
+        </div>
+
+        <div className="mb-3 sm:hidden">
           <ServiceSummary />
         </div>
 
+        {/* GRID — MOBILE FRIENDLY */}
         <div
-          className="grid grid-cols-3 xs:grid-cols-4 sm:grid-cols-5 gap-2.5 w-full"
+          className="
+            grid 
+            grid-cols-3 
+            sm:grid-cols-4 
+            md:grid-cols-5 
+            gap-2 
+            w-full
+          "
           role="radiogroup"
           aria-label={`Select amount of ${ariaService}`}
         >
@@ -491,7 +512,7 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
   }
 
   // ==============================
-  // PREVIEW MINI
+  // PREVIEW MINI (Review-only, small)
   // ==============================
   function PreviewMini() {
     const hasImg = !!(preview && preview.ok && preview.image);
@@ -500,22 +521,25 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
 
     return (
       <div
-        className="w-full max-w-sm rounded-2xl border bg-white shadow-[0_16px_60px_rgba(15,23,42,0.12)] overflow-hidden mx-auto"
+        className="mx-auto w-full max-w-sm overflow-hidden rounded-2xl border bg-white shadow-[0_18px_55px_rgba(15,23,42,0.12)]"
         style={{ borderColor: COLORS.border }}
       >
         {/* Header */}
         <div
-          className="flex items-center gap-2 px-3 py-2 border-b bg-gradient-to-r from-[#F5FAFF] to-white"
+          className="flex items-center gap-2 border-b bg-white/90 px-3 py-2.5"
           style={{ borderColor: "#E0ECFF" }}
         >
           <div
-            className="flex items-center justify-center w-7 h-7 rounded-full"
+            className="flex h-7 w-7 items-center justify-center rounded-full"
             style={{ background: COLORS.accentBg }}
           >
             {platform.icon}
           </div>
           <div className="min-w-0">
-            <span className="text-[11px] font-bold" style={{ color: COLORS.primary }}>
+            <span
+              className="block text-[11px] font-bold uppercase tracking-[0.16em]"
+              style={{ color: COLORS.primary }}
+            >
               Preview
             </span>
             <div className="text-[10px] text-[#6B7280]">
@@ -534,10 +558,10 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
             {!previewLoading && hasImg && (
               <>
                 <ImageSafe src={preview!.image as string} alt="Content preview" />
-                {isContentEngagement && isLink(target) && isVideo && (
-                  <div className="absolute bottom-1.5 right-1.5 flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-black/60 text-white text-[9px] backdrop-blur">
+                {isContentEngagement && isLink(target) && (
+                  <div className="absolute bottom-1.5 right-1.5 flex items-center gap-1 rounded-full bg-black/65 px-1.5 py-0.5 text-[9px] text-white backdrop-blur">
                     <Play size={10} />
-                    Video
+                    {isVideo ? "Video" : "Post"}
                   </div>
                 )}
               </>
@@ -546,7 +570,7 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
             {!previewLoading && !hasImg && (
               <div className="absolute inset-0 grid place-items-center">
                 <div
-                  className="w-[52%] max-w-[120px] aspect-square rounded-2xl shadow-xl grid place-items-center text-white font-extrabold text-xl"
+                  className="grid aspect-square w-[52%] max-w-[120px] place-items-center rounded-2xl text-xl font-extrabold text-white shadow-lg"
                   style={{
                     background: `linear-gradient(135deg, ${avatarHue}, ${avatarHue.replace(
                       "% 58%)",
@@ -554,10 +578,8 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
                     )})`,
                   }}
                 >
-                  {normalized
-                    .replace(/^@/, "")
-                    .slice(0, 2)
-                    .toUpperCase() || platform.name.slice(0, 2).toUpperCase()}
+                  {normalized.replace(/^@/, "").slice(0, 2).toUpperCase() ||
+                    platform.name.slice(0, 2).toUpperCase()}
                 </div>
               </div>
             )}
@@ -565,9 +587,9 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
         </div>
 
         {/* Footer */}
-        <div className="px-3 py-2 bg-white flex items-center justify-between gap-2">
-          <div className="min-w-0">
-            <span className="block text-[11px] font-semibold text-[#111] truncate max-w-[220px]">
+        <div className="flex items-center justify-between bg-white px-3 py-2.5">
+          <div className="min-w-0 pr-2">
+            <span className="block max-w-[220px] truncate text-[11px] font-semibold text-[#111]">
               {normalized || "—"}
             </span>
             <span className="text-[10px] text-[#6B7280]">
@@ -575,11 +597,11 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
             </span>
           </div>
           <span
-            className="text-[10px] font-semibold px-2 py-0.5 rounded-full border"
+            className="rounded-full border px-2 py-0.5 text-[10px] font-semibold"
             style={{
               color: platform.color,
               background: `${platform.color}14`,
-              borderColor: `${platform.color}40`,
+              borderColor: `${platform.color}26`,
             }}
           >
             {platform.name}
@@ -593,85 +615,118 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
   // RENDER
   // ==============================
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-sm px-3 sm:px-4">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 px-3 py-6 sm:px-4 sm:py-8 backdrop-blur-md">
+      {/* Modal Container */}
       <div
-        className="relative w-full max-w-lg sm:max-w-xl lg:max-w-3xl bg-white rounded-3xl border border-[#E2ECFF] shadow-[0_30px_120px_rgba(15,23,42,0.55)] flex flex-col overflow-hidden max-h-[min(700px,calc(100vh-32px))]"
+        className="
+          relative 
+          mx-auto 
+          flex 
+          w-full 
+          max-w-xl 
+          flex-col 
+          overflow-hidden 
+          rounded-3xl 
+          border 
+          border-[#D6E4FF] 
+          bg-white 
+          shadow-[0_32px_85px_rgba(15,23,42,0.60)]
+        "
+        style={{ maxHeight: "94vh" }}
       >
-        {/* Close Button */}
-        <button
-          className="absolute top-4 right-4 z-20 bg-white/95 border border-[#e3edfc] shadow-md rounded-full p-2 hover:bg-[#f8faff] transition"
-          onClick={onClose}
-          aria-label="Close"
-        >
-          <X size={20} className="text-[#0F172A]" />
-        </button>
-
         {/* Header */}
         <div
-          className="w-full px-5 sm:px-8 pt-5 pb-4 border-b bg-gradient-to-r from-[#E6F0FF] via-white to-[#F5FAFF]"
-          style={{ borderColor: COLORS.border }}
+          className="
+            relative 
+            w-full 
+            border-b 
+            px-4 
+            pb-3 
+            pt-5 
+            sm:px-6 
+            sm:pb-4 
+            sm:pt-6
+          "
+          style={{
+            background:
+              "linear-gradient(120deg, #E6F0FF 0%, #FFFFFF 40%, #E6F0FF 100%)",
+            borderColor: COLORS.border,
+            boxShadow: "0 2px 18px 0 rgba(16, 51, 115, 0.12)",
+          }}
         >
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between pr-6 sm:pr-10">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white shadow-inner border border-[#D1E2FF]">
-                {platform.icon}
-              </div>
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#64748B]">
-                  Secure Social Boost
-                </p>
-                <div className="flex items-center gap-2">
-                  <span
-                    className="font-black text-lg sm:text-xl tracking-tight"
-                    style={{ color: platform.color }}
-                  >
-                    {platform.name} Order
-                  </span>
-                  <span className="rounded-full bg-white/80 border border-[#D1E2FF] px-2 py-0.5 text-[10px] font-semibold text-[#0F172A]">
-                    Encrypted Checkout
-                  </span>
-                </div>
-              </div>
-            </div>
+          {/* Close Button */}
+          <button
+            className="
+              absolute 
+              right-3 
+              top-3 
+              inline-flex 
+              h-9 
+              w-9 
+              items-center 
+              justify-center 
+              rounded-full 
+              border 
+              border-[#E3EDFC] 
+              bg-white 
+              text-[#0B63E6] 
+              shadow-[0_10px_25px_rgba(15,23,42,0.12)] 
+              transition 
+              hover:bg-[#F8FAFF] 
+              active:scale-95
+              focus:outline-none
+              focus-visible:ring-2
+              focus-visible:ring-[#007BFF]
+              focus-visible:ring-offset-2
+              focus-visible:ring-offset-white
+            "
+            onClick={onClose}
+            aria-label="Close order modal"
+          >
+            <X size={20} />
+          </button>
 
-            <div className="flex flex-col items-start sm:items-end gap-1 text-[11px] text-[#64748B]">
-              <span className="inline-flex items-center gap-1.5">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#22C55E]" />
-                Active delivery network
-              </span>
-              <span>Real-time processing after payment — no login required.</span>
+          {/* Platform / Title */}
+          <div className="flex items-center gap-2 pr-10">
+            <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-white shadow-[0_8px_20px_rgba(15,23,42,0.18)]">
+              {platform.icon}
+            </div>
+            <div className="min-w-0">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#2563EB]">
+                YesViral • Secure Order
+              </p>
+              <p className="truncate text-sm font-semibold text-[#111827]">
+                {platform.name} {service.type}
+              </p>
             </div>
           </div>
 
           {/* Steps */}
-          <div className="mt-4">
-            <div className="relative flex items-center justify-between gap-3">
-              {/* Track */}
-              <div className="absolute left-3 right-3 top-1/2 h-1.5 rounded-full bg-[#DDE9FF]" />
-              <div
-                className="absolute left-3 top-1/2 h-1.5 rounded-full bg-gradient-to-r from-[#007BFF] to-[#005FCC] shadow-[0_0_18px_rgba(37,99,235,0.7)] transition-[width]"
-                style={{
-                  width: `${(step / (steps.length - 1)) * 100}%`,
-                  transform: "translateY(-50%)",
-                }}
-              />
+          <div className="mt-4 space-y-2">
+            <div className="flex w-full items-center justify-between gap-1">
               {steps.map((s, i) => (
-                <div key={s.label} className="relative flex flex-1 flex-col items-center min-w-0">
+                <div
+                  key={s.label}
+                  className="flex min-w-0 flex-1 flex-col items-center"
+                >
                   <div
-                    className={`flex items-center justify-center rounded-full border-2 text-xs font-bold transition-all duration-300 ${
+                    className={`flex h-8 w-8 items-center justify-center rounded-full border-4 text-[11px] font-bold transition-all duration-300 ${
                       step === i
-                        ? "bg-[#0F172A] text-white border-[#0F172A] shadow-[0_8px_20px_rgba(15,23,42,0.45)] scale-110"
+                        ? "border-[#007BFF] bg-[#007BFF] text-white shadow-[0_0_0_1px_rgba(255,255,255,0.6)]"
                         : step > i
-                        ? "bg-white text-[#007BFF] border-[#007BFF] shadow-sm"
-                        : "bg-white text-[#94A3B8] border-[#E2ECFF]"
+                        ? "border-[#007BFF] bg-[#E6F0FF] text-[#007BFF]"
+                        : "border-[#E6F0FF] bg-[#E6F0FF] text-[#9CA3AF]"
                     }`}
-                    style={{ width: 28, height: 28, zIndex: 2 }}
+                    style={{
+                      boxShadow:
+                        step === i ? "0 4px 15px rgba(37, 99, 235, 0.4)" : undefined,
+                    }}
                   >
                     {i + 1}
                   </div>
                   <span
-                    className={`mt-2 text-[11px] font-semibold tracking-tight ${
-                      step === i ? "text-[#0F172A]" : "text-[#94A3B8]"
+                    className={`mt-1.5 truncate text-[10px] font-semibold tracking-tight ${
+                      step === i ? "text-[#1D4ED8]" : "text-[#9CA3AF]"
                     }`}
                   >
                     {s.label}
@@ -679,202 +734,286 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
                 </div>
               ))}
             </div>
+            {/* Progress bar */}
+            <div className="relative mt-1 flex h-2 w-full items-center px-2">
+              <div
+                className="absolute left-0 h-1 w-full rounded-full"
+                style={{
+                  background: COLORS.accentBg,
+                  boxShadow: "inset 0 1px 2px rgba(15,23,42,0.08)",
+                }}
+              />
+              <div
+                className="absolute left-0 h-1 rounded-full"
+                style={{
+                  width: `${(step / (steps.length - 1)) * 100}%`,
+                  background: "linear-gradient(90deg, #007BFF 0%, #005FCC 100%)",
+                  boxShadow: "0 0 14px rgba(37,99,235,0.65)",
+                  transition: "width 0.35s cubic-bezier(0.4,0,0.2,1)",
+                }}
+              />
+            </div>
           </div>
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto bg-[#F8FBFF] px-4 sm:px-7 py-6">
+        <div
+          className="flex-1 overflow-y-auto bg-[#F9FBFF] px-4 py-5 sm:px-7 sm:py-7"
+          style={{ backgroundImage: "radial-gradient(circle at top, #E8F1FF 0, transparent 58%)" }}
+        >
           {/* STEP 0: PLATFORM */}
           {step === 0 && (
-            <div className="max-w-3xl mx-auto">
-              <h3 className="font-black text-xl sm:text-2xl mb-2 text-[#0F172A] text-center tracking-tight">
+            <div className="space-y-6">
+              <h3 className="text-center text-[1.35rem] font-black tracking-tight text-[#0F172A] sm:text-[1.5rem]">
                 Choose your platform
               </h3>
-              <p className="text-xs sm:text-sm text-[#64748B] text-center mb-6">
-                Pick where you want to grow. You can always change this before checkout.
+              <p className="mx-auto max-w-md text-center text-[13px] text-[#64748B]">
+                Pick where you want your
+                <span className="font-semibold text-[#0B63E6]">&nbsp;YesViral boost</span> —
+                we&apos;ll keep it safe, discreet, and optimized for growth.
               </p>
-
-              <div className="grid grid-cols-1 xs:grid-cols-3 gap-3 sm:gap-5">
-                {PLATFORMS.map((p) => (
-                  <button
-                    key={p.key}
-                    className={`group rounded-2xl flex flex-col items-center gap-2 px-5 py-4 border text-sm font-semibold shadow-sm hover:shadow-xl transition-transform duration-200 ${
-                      platform.key === p.key
-                        ? "border-[#007BFF] bg-white text-[#0F172A] scale-[1.03]"
-                        : "border-[#DFE9FF] bg-white/90 text-[#0F172A] hover:border-[#B3CCFF]"
-                    }`}
-                    onClick={() => {
-                      setPlatform(p);
-                      setService(p.services[0]);
-                      setStep(1);
-                      setError("");
-                    }}
-                  >
-                    <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#F1F5FF] group-hover:bg-[#E3EEFF]">
-                      {p.icon}
-                    </div>
-                    <span className="text-sm font-bold">{p.name}</span>
-                    <span className="text-[10px] text-[#94A3B8]">
-                      Optimized packages for {p.name} growth
-                    </span>
-                  </button>
-                ))}
+              <div className="mt-2 flex flex-wrap items-stretch justify-center gap-3 sm:gap-4">
+                {PLATFORMS.map((p) => {
+                  const isActive = platform.key === p.key;
+                  return (
+                    <button
+                      key={p.key}
+                      className={[
+                        "group flex w-full max-w-[180px] flex-col items-center justify-between rounded-2xl border px-4 py-4 text-sm font-semibold shadow-sm transition",
+                        "focus:outline-none focus-visible:ring-2 focus-visible:ring-[#007BFF] focus-visible:ring-offset-2 focus-visible:ring-offset-[#F9FBFF]",
+                        isActive
+                          ? "border-[#007BFF] bg-white text-[#0B63E6] shadow-[0_16px_40px_rgba(15,23,42,0.18)] scale-[1.02]"
+                          : "border-[#D1E2FF] bg-white/90 text-[#0F172A] hover:border-[#7FB5FF] hover:shadow-[0_10px_28px_rgba(15,23,42,0.08)]",
+                      ].join(" ")}
+                      style={{ minHeight: 104 }}
+                      onClick={() => {
+                        setPlatform(p);
+                        setService(p.services[0]);
+                        setStep(1);
+                        setError("");
+                      }}
+                    >
+                      <div className="mb-2 flex h-11 w-11 items-center justify-center rounded-2xl bg-[#EFF4FF] shadow-[0_8px_18px_rgba(15,23,42,0.14)]">
+                        {p.icon}
+                      </div>
+                      <span className="mb-1 text-[14px] font-bold tracking-tight">
+                        {p.name}
+                      </span>
+                      <span className="text-[11px] text-[#94A3B8]">
+                        Followers • Likes • Views
+                      </span>
+                    </button>
+                  );
+                })}
               </div>
             </div>
           )}
 
           {/* STEP 1: SERVICE */}
           {step === 1 && (
-            <div className="max-w-3xl mx-auto">
-              <h3 className="font-black text-xl sm:text-2xl mb-2 text-[#0F172A] text-center tracking-tight">
-                {platform.name} Services
+            <div className="space-y-6">
+              <h3 className="text-center text-[1.35rem] font-black tracking-tight text-[#0F172A] sm:text-[1.5rem]">
+                {platform.name} services
               </h3>
-              <p className="text-xs sm:text-sm text-[#64748B] text-center mb-6">
-                Select what you want to boost. Pricing is per unit, with automatic volume discounts.
+              <p className="mx-auto max-w-md text-center text-[13px] text-[#64748B]">
+                Select exactly what you want to boost. Pricing is
+                <span className="font-semibold text-[#0B63E6]">&nbsp;live-discounted</span>
+                &nbsp;for YesViral customers.
               </p>
-
-              <div className="flex flex-col gap-3 sm:gap-4">
+              <div className="space-y-3">
                 {platform.services.map((s) => {
-                  const { discount: disc, discounted: discPrice } = getDiscountedPrice(s.price);
-                  const selected = service.type === s.type;
+                  const { discount: disc, discounted: discPrice } =
+                    getDiscountedPrice(s.price);
+                  const isActive = service.type === s.type;
                   return (
                     <button
                       key={s.type}
-                      className={`rounded-2xl flex items-center justify-between px-4 sm:px-6 py-3.5 sm:py-4 border text-sm sm:text-base font-semibold shadow-sm hover:shadow-xl transition-transform duration-150 ${
-                        selected
-                          ? "border-[#007BFF] bg-white text-[#0F172A] scale-[1.02]"
-                          : "border-[#DCE6FF] bg-white/95 text-[#0F172A] hover:border-[#B3C9FF]"
-                      }`}
+                      className={[
+                        "group flex w-full items-center justify-between rounded-2xl border px-4 py-4 text-[15px] font-semibold shadow-sm transition sm:px-5 sm:py-4.5",
+                        "focus:outline-none focus-visible:ring-2 focus-visible:ring-[#007BFF] focus-visible:ring-offset-2 focus-visible:ring-offset-[#F9FBFF]",
+                        isActive
+                          ? "border-[#007BFF] bg-white shadow-[0_20px_45px_rgba(15,23,42,0.2)] scale-[1.01]"
+                          : "border-[#D1E2FF] bg-white/95 hover:border-[#7FB5FF] hover:shadow-[0_12px_30px_rgba(15,23,42,0.10)]",
+                      ].join(" ")}
                       onClick={() => {
                         setService(s);
                         setStep(2);
                         setError("");
                       }}
                     >
-                      <div className="flex items-center gap-2.5">
-                        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#F1F5FF]">
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-[#EFF4FF]">
                           {s.icon}
                         </div>
                         <div className="flex flex-col items-start">
-                          <span className="text-sm sm:text-base font-bold">{s.type}</span>
-                          <span className="text-[11px] text-[#94A3B8]">
-                            {s.type === "Followers" || s.type === "Subscribers"
-                              ? "High-retention, realistic delivery"
-                              : "Boost engagement for existing content"}
+                          <span
+                            className={
+                              isActive
+                                ? "text-[#0B63E6]"
+                                : "text-[#0F172A]"
+                            }
+                          >
+                            {s.type}
+                          </span>
+                          <span className="text-[11px] font-normal text-[#94A3B8]">
+                            High quality • Safe delivery • Real engagement
                           </span>
                         </div>
                         {disc > 0 && (
-                          <span className="ml-1 px-2 py-0.5 rounded-full bg-[#E6F0FF] text-[#007BFF] text-[10px] font-bold inline-flex items-center gap-1 border border-[#C5DAFF]">
-                            <Tag size={12} className="text-[#007BFF]" />
-                            -{disc}% today
+                          <span className="ml-2 inline-flex items-center gap-1 rounded-full bg-[#E6F0FF] px-2 py-0.5 text-[11px] font-bold text-[#007BFF]">
+                            <Tag size={13} className="text-[#007BFF]" />
+                            -{disc}%
                           </span>
                         )}
                       </div>
-                      <div className="flex flex-col items-end text-right gap-0.5">
-                        <span className="text-[11px] text-[#94A3B8]">From</span>
-                        <div className="flex items-center gap-2">
-                          <span className="line-through text-[11px] text-[#CBD5F0]">
-                            ${s.price.toFixed(2)}
+                      <div className="flex flex-col items-end text-[13px]">
+                        <span className="flex items-center gap-1 text-[#9CA3AF] line-through">
+                          ${s.price.toFixed(2)}
+                        </span>
+                        <span className="text-[13px] font-bold text-[#007BFF]">
+                          ${discPrice.toFixed(2)}
+                          <span className="text-[11px] font-normal text-[#64748B]">
+                            &nbsp;/ 1000
                           </span>
-                          <span className="font-extrabold text-sm sm:text-base text-[#007BFF]">
-                            ${discPrice.toFixed(2)}/ea
-                          </span>
-                        </div>
+                        </span>
                       </div>
                     </button>
                   );
                 })}
               </div>
-
-              <div className="flex justify-center mt-6">
+              <div className="mt-4 flex justify-center">
                 <button
-                  className="text-xs sm:text-sm text-[#007BFF] hover:text-[#005FCC] font-semibold"
+                  className="text-[13px] font-medium text-[#2563EB] underline-offset-2 hover:underline"
                   onClick={handleBack}
                 >
-                  ← Back to platforms
+                  ← Back
                 </button>
               </div>
             </div>
           )}
 
-          {/* STEP 2: DETAILS */}
+          {/* STEP 2: DETAILS (NO PREVIEW) */}
           {step === 2 && (
-            <div className="max-w-3xl mx-auto">
-              <h3 className="font-black text-xl sm:text-2xl mb-2 text-[#0F172A] text-center tracking-tight">
+            <div className="space-y-6">
+              <h3 className="text-center text-[1.35rem] font-black tracking-tight text-[#0F172A] sm:text-[1.5rem]">
                 Order details
               </h3>
-              <p className="text-xs sm:text-sm text-[#64748B] text-center mb-7">
-                We never ask for your password. Just your profile or post link so our delivery network
-                knows where to send your order.
+              <p className="mx-auto max-w-md text-center text-[13px] text-[#64748B]">
+                Add your
+                <span className="font-semibold text-[#0B63E6]">
+                  &nbsp;profile or post
+                </span>{" "}
+                and choose how strong you want your boost. No password required.
               </p>
 
-              <div className="space-y-7">
+              <div className="mx-auto flex w-full max-w-lg flex-col gap-6">
                 {/* TARGET INPUT */}
-                <div className="flex flex-col gap-2.5">
-                  <label className="block font-semibold text-[13px] sm:text-sm text-[#0F172A]">
+                <div className="flex flex-col">
+                  <label className="mb-2 text-[13px] font-semibold uppercase tracking-[0.18em] text-[#2563EB]">
                     {getTargetLabel()}
                   </label>
-                  <div className="relative">
-                    <input
-                      type="text"
-                      autoFocus
-                      value={target}
-                      onChange={(e) => setTarget(e.target.value)}
-                      className="w-full border border-[#CFE4FF] rounded-2xl px-3.5 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base font-medium outline-none bg-white/95 shadow-[0_8px_30px_rgba(148,163,184,0.12)] focus:border-[#007BFF] focus:ring-2 focus:ring-[#E0EDFF] focus:ring-offset-0 transition"
-                      placeholder={getTargetPlaceholder()}
-                    />
-                    <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center">
-                      <span className="inline-flex items-center gap-1 rounded-full bg-[#EEF3FF] px-2 py-0.5 text-[10px] text-[#64748B] border border-[#D7E2FF]">
-                        <span className="h-1.5 w-1.5 rounded-full bg-[#22C55E]" />
-                        No password required
-                      </span>
-                    </div>
-                  </div>
-                  <span className="mt-1 text-[11px] sm:text-xs text-[#6B7280]">
+                  <input
+                    type="text"
+                    autoFocus
+                    value={target}
+                    onChange={(e) => setTarget(e.target.value)}
+                    className="
+                      w-full 
+                      rounded-2xl 
+                      border 
+                      border-[#CFE4FF] 
+                      bg-white/95 
+                      px-4 
+                      py-3 
+                      text-[14px] 
+                      font-medium 
+                      text-[#0F172A] 
+                      shadow-sm
+                      placeholder:text-[#A0AEC0]
+                      outline-none 
+                      transition 
+                      focus:border-[#007BFF] 
+                      focus:ring-2 
+                      focus:ring-[#E6F0FF]
+                    "
+                    placeholder={getTargetPlaceholder()}
+                  />
+                  <span className="mt-2 text-[11px] leading-relaxed text-[#8691A6]">
                     {isContentEngagement
-                      ? "For likes / views, paste the full post or video URL from your browser or share link."
-                      : "For followers / subscribers, you can use a username or full profile URL."}
+                      ? "For likes / views, paste the full post or video URL (no private or deleted posts)."
+                      : "For followers / subscribers, you can use a username or full profile URL. Make sure your account is set to public during delivery."}
                   </span>
                 </div>
 
-                {/* AMOUNT SELECTOR + TOTAL */}
-                <div className="flex flex-col gap-3 items-center sm:items-start">
+                {/* AMOUNT SELECTOR */}
+                <div className="flex flex-col items-center gap-3">
                   <AmountSelector />
-                  <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between w-full max-w-[640px] gap-1 mt-1">
-                    <span className="font-extrabold text-lg sm:text-xl text-[#0F172A]">
-                      Total:
-                      <span className="ml-1 text-[#007BFF]">
-                        ${(discounted * quantity).toFixed(2)}
-                      </span>
+                  <div className="mt-2 text-center text-[14px] font-semibold text-[#007BFF]">
+                    Total:&nbsp;
+                    <span className="text-[18px] font-extrabold">
+                      ${(discounted * quantity).toFixed(2)}
                     </span>
-                    <span className="text-[11px] sm:text-xs text-[#94A3B8]">
-                      Base:
-                      <span className="ml-1 line-through text-[#CBD5F0]">
-                        ${(service.price * quantity).toFixed(2)}
-                      </span>
-                      <span className="ml-2 text-[#22C55E] font-semibold">
-                        You save {discount}%
-                      </span>
+                    <span className="ml-2 text-[12px] font-normal text-[#CBD5E1] line-through">
+                      ${(service.price * quantity).toFixed(2)}
                     </span>
                   </div>
                 </div>
 
                 {error && (
-                  <div className="mt-1 text-[#EF4444] text-xs sm:text-sm text-center sm:text-left">
+                  <div className="mt-1 text-center text-[13px] font-medium text-[#EF4444]">
                     {error}
                   </div>
                 )}
               </div>
 
-              <div className="flex flex-col sm:flex-row justify-between gap-3 mt-7">
+              <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <button
-                  className="w-full sm:w-auto px-5 sm:px-6 py-2.5 sm:py-3 rounded-2xl font-semibold bg-white text-[#007BFF] border border-[#CFE4FF] hover:bg-[#E6F0FF] shadow-sm transition text-sm sm:text-base"
+                  className="
+                    inline-flex 
+                    w-full 
+                    items-center 
+                    justify-center 
+                    rounded-2xl 
+                    border 
+                    border-[#CFE4FF] 
+                    bg-[#E6F0FF] 
+                    px-5 
+                    py-3 
+                    text-[14px] 
+                    font-semibold 
+                    text-[#007BFF] 
+                    shadow-sm 
+                    transition 
+                    hover:bg-[#d7eafd]
+                    active:scale-[0.98]
+                    sm:w-auto
+                  "
                   onClick={handleBack}
                 >
                   Back
                 </button>
                 <button
-                  className="w-full sm:w-auto px-5 sm:px-6 py-2.5 sm:py-3 rounded-2xl font-semibold bg-[#007BFF] text-white hover:bg-[#005FCC] shadow-[0_14px_45px_rgba(37,99,235,0.65)] transition text-sm sm:text-base"
+                  className="
+                    inline-flex 
+                    w-full 
+                    items-center 
+                    justify-center 
+                    rounded-2xl 
+                    bg-gradient-to-br 
+                    from-[#007BFF] 
+                    to-[#005FCC] 
+                    px-6 
+                    py-3 
+                    text-[14px] 
+                    font-semibold 
+                    text-white 
+                    shadow-[0_18px_45px_rgba(37,99,235,0.65)] 
+                    transition 
+                    hover:from-[#005FCC] 
+                    hover:to-[#007BFF]
+                    active:scale-[0.98]
+                    sm:w-auto
+                  "
                   onClick={handleNextFromDetails}
                 >
                   Review order
@@ -883,125 +1022,147 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
             </div>
           )}
 
-          {/* STEP 3: REVIEW */}
+          {/* STEP 3: REVIEW (with Preview) */}
           {step === 3 && (
-            <form onSubmit={handleSecureCheckout} className="max-w-3xl mx-auto">
-              <h3 className="font-black text-xl sm:text-2xl mb-2 text-[#0F172A] text-center tracking-tight">
+            <form onSubmit={handleSecureCheckout} className="space-y-6">
+              <h3 className="text-center text-[1.35rem] font-black tracking-tight text-[#0F172A] sm:text-[1.5rem]">
                 Review & secure checkout
               </h3>
-              <p className="text-xs sm:text-sm text-[#64748B] text-center mb-6">
-                Double-check your details. Your order is processed automatically the moment payment clears.
-              </p>
 
-              <div className="grid gap-5 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] items-start">
-                {/* REVIEW SUMMARY */}
-                <div className="bg-white border border-[#CFE4FF] rounded-2xl px-4 sm:px-6 py-5 sm:py-7 shadow-[0_18px_70px_rgba(15,23,42,0.18)] space-y-3">
-                  <div className="flex items-center justify-between gap-2 mb-2">
-                    <div className="flex items-center gap-2.5">
-                      <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#F1F5FF] border border-[#D5E3FF]">
-                        {platform.icon}
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="text-sm font-semibold text-[#0F172A]">
-                          {platform.name}
-                        </span>
-                        <span className="text-[11px] text-[#94A3B8]">
-                          {service.type} package
-                        </span>
-                      </div>
-                    </div>
-                    <span className="ml-1 px-3 py-1 rounded-full bg-[#E6F0FF] text-[#007BFF] text-[11px] font-bold border border-[#C5DAFF]">
+              {/* REVIEW SUMMARY */}
+              <div className="rounded-2xl border border-[#CFE4FF] bg-white/95 px-5 py-5 shadow-[0_18px_45px_rgba(15,23,42,0.14)]">
+                <div className="mb-4 flex items-center gap-2">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-[#EFF4FF]">
+                    {platform.icon}
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-sm font-semibold text-[#0F172A]">
+                      {platform.name}
+                    </span>
+                    <span className="text-[11px] font-medium text-[#2563EB]">
                       {service.type}
                     </span>
                   </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm text-[#334155]">
-                    <div className="space-y-1.5">
-                      <div>
-                        <span className="font-semibold">Package:</span>{" "}
-                        <span className="text-[#0F172A]">
-                          {pkg} ({type})
-                        </span>
-                      </div>
-                      <div>
-                        <span className="font-semibold">Amount:</span>{" "}
-                        <span>{quantity.toLocaleString()}</span>
-                      </div>
-                    </div>
-                    <div className="space-y-1.5">
-                      <div className="break-all">
-                        <span className="font-semibold">Username / Link:</span>{" "}
-                        <span>{target}</span>
-                      </div>
-                      <div>
-                        <span className="font-semibold">Unit price:</span>{" "}
-                        <span className="text-[#007BFF] font-semibold">
-                          ${discounted.toFixed(3)}/ea
-                        </span>{" "}
-                        <span className="text-[#CBD5F0] line-through">
-                          ${service.price.toFixed(3)}/ea
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="pt-3 border-t border-dashed border-[#E2ECFF] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                    <div className="flex flex-col gap-0.5 text-[11px] sm:text-xs text-[#64748B]">
-                      <span className="inline-flex items-center gap-1">
-                        <span className="h-1.5 w-1.5 rounded-full bg-[#22C55E]" />
-                        Instant processing after payment
-                      </span>
-                      <span>No login required. We never store your credentials.</span>
-                    </div>
-                    <div className="flex flex-col items-end">
-                      <span className="text-[11px] text-[#94A3B8]">Total payable</span>
-                      <span className="font-black text-lg sm:text-xl text-[#0F172A]">
-                        ${(discounted * quantity).toFixed(2)}
-                      </span>
-                    </div>
-                  </div>
+                  <span className="ml-auto rounded-full bg-[#E6F0FF] px-3 py-1 text-[11px] font-semibold text-[#007BFF]">
+                    {type}
+                  </span>
                 </div>
 
-                {/* PREVIEW + BADGES */}
-                <div className="space-y-4">
-                  <PreviewMini />
-
-                  <div className="bg-white/90 border border-[#E1EBFF] rounded-2xl px-4 py-3 shadow-sm space-y-2">
-                    <div className="flex items-center gap-2 text-xs text-[#0F172A]">
-                      <CheckCircle size={16} className="text-[#22C55E]" />
-                      <span className="font-semibold">Bank-grade encrypted checkout</span>
-                    </div>
-                    <ul className="text-[11px] text-[#6B7280] list-disc list-inside space-y-0.5">
-                      <li>Processed by Stripe & YesViral’s delivery network</li>
-                      <li>Real-time status tracking via your order ID</li>
-                      <li>24/7 automatic delivery — even while you sleep</li>
-                    </ul>
+                <dl className="space-y-1.5 text-[13px] text-[#475569]">
+                  <div className="flex items-start justify-between gap-4">
+                    <dt className="font-semibold text-[#0F172A]">Package</dt>
+                    <dd className="text-right">{pkg}</dd>
                   </div>
+                  <div className="flex items-start justify-between gap-4">
+                    <dt className="font-semibold text-[#0F172A]">
+                      Username / Link
+                    </dt>
+                    <dd className="max-w-[240px] text-right break-words text-[#0F172A]">
+                      {target}
+                    </dd>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <dt className="font-semibold text-[#0F172A]">Amount</dt>
+                    <dd className="font-semibold text-[#0F172A]">
+                      {quantity.toLocaleString()}
+                    </dd>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <dt className="font-semibold text-[#0F172A]">Price</dt>
+                    <dd className="flex flex-col items-end">
+                      <span className="text-[13px] font-semibold text-[#007BFF]">
+                        ${discounted.toFixed(3)}
+                        <span className="text-[11px] font-normal text-[#6B7280]">
+                          &nbsp;/ unit
+                        </span>
+                      </span>
+                      <span className="text-[11px] text-[#CBD5E1] line-through">
+                        ${service.price.toFixed(3)}/unit
+                      </span>
+                    </dd>
+                  </div>
+                </dl>
+
+                <div className="mt-4 flex items-baseline justify-between border-t border-dashed border-[#D1E2FF] pt-3">
+                  <span className="text-[13px] font-semibold text-[#0F172A]">
+                    Estimated total
+                  </span>
+                  <span className="text-[20px] font-black text-[#007BFF]">
+                    ${(discounted * quantity).toFixed(2)}
+                  </span>
                 </div>
               </div>
 
+              {/* PREVIEW */}
+              <PreviewMini />
+
               {error && (
-                <div className="mt-4 text-[#EF4444] text-xs sm:text-sm text-center">
+                <div className="mt-2 text-center text-[13px] font-medium text-[#EF4444]">
                   {error}
                 </div>
               )}
 
-              <div className="flex flex-col sm:flex-row justify-between gap-3 mt-6">
+              <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <button
                   type="button"
-                  className="w-full sm:w-auto px-5 sm:px-6 py-2.5 sm:py-3 rounded-2xl font-semibold bg-white text-[#007BFF] border border-[#CFE4FF] hover:bg-[#E6F0FF] shadow-sm transition text-sm sm:text-base"
+                  className="
+                    inline-flex 
+                    w-full 
+                    items-center 
+                    justify-center 
+                    rounded-2xl 
+                    border 
+                    border-[#CFE4FF] 
+                    bg-[#E6F0FF] 
+                    px-5 
+                    py-3 
+                    text-[14px] 
+                    font-semibold 
+                    text-[#007BFF] 
+                    shadow-sm 
+                    transition 
+                    hover:bg-[#d7eafd]
+                    active:scale-[0.98]
+                    sm:w-auto
+                  "
                   onClick={onClickBackSafe(handleBack)}
                 >
                   Back
                 </button>
                 <button
                   type="submit"
-                  className="w-full sm:w-auto px-5 sm:px-6 py-2.5 sm:py-3 rounded-2xl font-semibold bg-gradient-to-br from-[#007BFF] to-[#005FCC] hover:from-[#005FCC] hover:to-[#007BFF] text-white shadow-[0_18px_70px_rgba(37,99,235,0.85)] transition text-sm sm:text-base flex items-center justify-center gap-2"
+                  className="
+                    inline-flex 
+                    w-full 
+                    items-center 
+                    justify-center 
+                    gap-2 
+                    rounded-2xl 
+                    bg-gradient-to-br 
+                    from-[#007BFF] 
+                    to-[#005FCC] 
+                    px-6 
+                    py-3 
+                    text-[14px] 
+                    font-semibold 
+                    text-white 
+                    shadow-[0_20px_55px_rgba(37,99,235,0.75)] 
+                    transition 
+                    hover:from-[#005FCC] 
+                    hover:to-[#007BFF]
+                    active:scale-[0.98]
+                    sm:w-auto
+                  "
                 >
-                  <CheckCircle size={18} />
+                  <CheckCircle size={20} />
                   Secure checkout
                 </button>
               </div>
+
+              <p className="mt-2 text-center text-[11px] text-[#94A3B8]">
+                Encrypted checkout via Stripe • No password required •
+                Discreet billing descriptor
+              </p>
             </form>
           )}
         </div>
@@ -1010,10 +1171,10 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
       <style jsx global>{`
         ::-webkit-scrollbar {
           width: 0.6em;
-          background: #eef3ff;
+          background: #f3f6ff;
         }
         ::-webkit-scrollbar-thumb {
-          background: #c7d8ff;
+          background: #d6e4ff;
           border-radius: 999px;
         }
       `}</style>
