@@ -1,19 +1,3 @@
-Here’s the **full updated `pages/dashboard/index.tsx`** with:
-
-* ✅ No random question-mark icon anywhere in the order flow
-* ✅ Header text driven by **step**, not just service
-
-  * Step 0 → **“Choose Platform”**
-  * Step 1 → **`Instagram` / `TikTok` / `YouTube`**
-  * Step 2 & 3 → **`Instagram Followers`**, `TikTok Likes`, etc.
-* ✅ Going **back** from Details → Service or Service → Platform updates the header correctly (it does **NOT** stay stuck on “Instagram Followers”)
-* ✅ Rest of the dashboard (sidebar, analytics, orders, profile, etc.) untouched
-
-You can **copy-paste this entire file** over your existing `pages/dashboard/index.tsx`.
-
----
-
-```tsx
 // path: pages/dashboard/index.tsx
 import React, { useEffect, useMemo, useState, useCallback, memo } from "react";
 import { useRouter } from "next/router";
