@@ -43,7 +43,7 @@ const COLORS = {
 ======================================================== */
 const PLATFORMS: Platform[] = [
   {
-    key: "instagram",
+    key: "Instagram",
     name: "Instagram",
     color: "#E1306C",
     icon: <Instagram className="text-[#E1306C]" size={26} />,
@@ -54,7 +54,7 @@ const PLATFORMS: Platform[] = [
     ],
   },
   {
-    key: "tiktok",
+    key: "Tiktok",
     name: "TikTok",
     color: "#00F2EA",
     icon: <Music2 className="text-[#00F2EA]" size={26} />,
@@ -65,7 +65,7 @@ const PLATFORMS: Platform[] = [
     ],
   },
   {
-    key: "youtube",
+    key: "Youtube",
     name: "YouTube",
     color: "#FF0000",
     icon: <Youtube className="text-[#FF0000]" size={26} />,
@@ -97,17 +97,17 @@ function getStealthPackage(platform: Platform, service: Service): StealthPackage
   let pkg = "Premium Package";
   let type = "Standard";
 
-  if (platform.key === "instagram" && service.type === "Followers") pkg = "High-Quality Followers";
-  if (platform.key === "instagram" && service.type === "Likes") pkg = "High-Quality Likes";
-  if (platform.key === "instagram" && service.type === "Views") pkg = "High-Quality Views";
+  if (platform.key === "Instagram" && service.type === "Followers") pkg = "High-Quality Followers";
+  if (platform.key === "Instagram" && service.type === "Likes") pkg = "High-Quality Likes";
+  if (platform.key === "Instagram" && service.type === "Views") pkg = "High-Quality Views";
 
-  if (platform.key === "tiktok" && service.type === "Followers") pkg = "High-Quality Followers";
-  if (platform.key === "tiktok" && service.type === "Likes") pkg = "High-Quality Likes";
-  if (platform.key === "tiktok" && service.type === "Views") pkg = "High-Quality Views";
+  if (platform.key === "Tiktok" && service.type === "Followers") pkg = "High-Quality Followers";
+  if (platform.key === "Tiktok" && service.type === "Likes") pkg = "High-Quality Likes";
+  if (platform.key === "Tiktok" && service.type === "Views") pkg = "High-Quality Views";
 
-  if (platform.key === "youtube" && service.type === "Subscribers") pkg = "High-Quality Subscribers";
-  if (platform.key === "youtube" && service.type === "Likes") pkg = "High-Quality Likes";
-  if (platform.key === "youtube" && service.type === "Views") pkg = "High-Quality Views";
+  if (platform.key === "Youtube" && service.type === "Subscribers") pkg = "High-Quality Subscribers";
+  if (platform.key === "Youtube" && service.type === "Likes") pkg = "High-Quality Likes";
+  if (platform.key === "Youtube" && service.type === "Views") pkg = "High-Quality Views";
 
   if (service.type === "Followers" || service.type === "Subscribers") type = "PREMIUM";
   if (service.type === "Likes") type = "PREMIUM";
