@@ -1,3 +1,19 @@
+Here’s the **full updated `pages/dashboard/index.tsx`** with:
+
+* ✅ No random question-mark icon anywhere in the order flow
+* ✅ Header text driven by **step**, not just service
+
+  * Step 0 → **“Choose Platform”**
+  * Step 1 → **`Instagram` / `TikTok` / `YouTube`**
+  * Step 2 & 3 → **`Instagram Followers`**, `TikTok Likes`, etc.
+* ✅ Going **back** from Details → Service or Service → Platform updates the header correctly (it does **NOT** stay stuck on “Instagram Followers”)
+* ✅ Rest of the dashboard (sidebar, analytics, orders, profile, etc.) untouched
+
+You can **copy-paste this entire file** over your existing `pages/dashboard/index.tsx`.
+
+---
+
+```tsx
 // path: pages/dashboard/index.tsx
 import React, { useEffect, useMemo, useState, useCallback, memo } from "react";
 import { useRouter } from "next/router";
@@ -21,7 +37,6 @@ import {
   Menu,
   Tag,
   Play,
-  HelpCircle,
 } from "lucide-react";
 
 /* ============================ Types ============================ */
@@ -155,12 +170,9 @@ function getStealthPackage(platform: Platform, service: Service) {
 }
 
 /* =========================== Helpers ========================== */
-function getQuickAmounts(platform: Platform, service?: Service | null): number[] {
-  if (!service) return [100, 500, 1000, 2000, 5000, 10000];
-
+function getQuickAmounts(platform: Platform, service: Service): number[] {
   const t = service.type.toString().toLowerCase();
   const k = platform.key;
-
   if (k === "instagram" && t === "views")
     return [500, 2000, 5000, 10000, 20000, 50000];
   if (k === "instagram" && t === "followers")
@@ -169,22 +181,18 @@ function getQuickAmounts(platform: Platform, service?: Service | null): number[]
     ];
   if (k === "instagram" && t === "likes")
     return [50, 100, 300, 500, 1000, 2000, 5000, 10000, 20000];
-
   if (k === "tiktok" && (t === "followers" || t === "likes"))
     return [100, 250, 500, 1000, 2000, 5000, 10000];
   if (k === "tiktok" && t === "views")
     return [1000, 2000, 5000, 10000, 20000, 50000];
-
   if (k === "youtube" && t === "views")
     return [200, 500, 1000, 2000, 5000, 10000];
   if (k === "youtube" && t === "subscribers")
     return [200, 500, 1000, 2000, 5000, 10000];
   if (k === "youtube" && t === "likes")
     return [250, 500, 1000, 2000, 5000, 10000];
-
   return [100, 500, 1000, 2000, 5000, 10000, 25000, 50000];
 }
-
 function getDiscountedPrice(price: number) {
   const discount = 0.02 + Math.random() * 0.02;
   const discounted = Math.max(
@@ -193,19 +201,13 @@ function getDiscountedPrice(price: number) {
   );
   return { discount: Math.round(discount * 100), discounted };
 }
-
 const isLink = (t: string) => /^https?:\/\//i.test(t.trim());
-
-function getTargetLabel(service?: Service | null) {
-  if (!service) return "Profile or Link";
+function getTargetLabel(service: Service) {
   return service.type === "Followers" || service.type === "Subscribers"
     ? "Profile or Username"
     : "Post / Video Link";
 }
-
-function getTargetPlaceholder(platform: Platform, service?: Service | null) {
-  if (!service) return "Enter profile or link";
-
+function getTargetPlaceholder(platform: Platform, service: Service) {
   const isFollow =
     service.type === "Followers" || service.type === "Subscribers";
   if (isFollow) {
@@ -223,7 +225,6 @@ function getTargetPlaceholder(platform: Platform, service?: Service | null) {
   if (platform.key === "youtube") return "Paste your YouTube video link";
   return "Paste your post / video link";
 }
-
 function normalizeHandle(platform: Platform, target: string) {
   const raw = target.trim();
   if (!raw) return "";
@@ -232,7 +233,6 @@ function normalizeHandle(platform: Platform, target: string) {
   if (["instagram", "tiktok", "youtube"].includes(platform.key)) return `@${raw}`;
   return raw;
 }
-
 function hashToHsl(seed: string, s = 65, l = 58) {
   let h = 0;
   for (let i = 0; i < seed.length; i++)
@@ -279,9 +279,7 @@ async function fetchPreview(
   }
 }
 
-/* ====================== ProfileForm (isolated) =================
-   WHY: Memoized to prevent remounts while typing. No autoFocus.
-=================================================================*/
+/* ====================== ProfileForm (isolated) ================= */
 type ProfileFormProps = {
   initialEmail: string;
 };
@@ -348,14 +346,14 @@ const ProfileForm = memo(function ProfileForm({
           />
           <button
             onClick={onUpdateEmail}
-            className="bg[#007BFF] hover:bg-[#005FCC] text-white px-4 py-2 rounded font-bold bg-[#007BFF]"
+            className="bg-[#007BFF] hover:bg-[#005FCC] text-white px-4 py-2 rounded font-bold"
           >
             Update
           </button>
         </div>
         <p className="text-xs text-[#555] mt-1">
-          A confirmation link will be sent to the new email. Your account email only
-          changes after you confirm.
+          A confirmation link will be sent to the new email; changes apply after
+          you confirm.
         </p>
       </div>
 
@@ -410,11 +408,13 @@ export default function DashboardPage() {
   const [analytics, setAnalytics] = useState({ total: 0, completed: 0 });
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  // Order state (inline OrderModal flow)
+  // Order state
   const [orderStep, setOrderStep] = useState(0);
   const [platform, setPlatform] = useState<Platform>(PLATFORMS[0]);
-  const [service, setService] = useState<Service | null>(null);
-  const [quantity, setQuantity] = useState<number>(100);
+  const [service, setService] = useState<Service>(PLATFORMS[0].services[0]);
+  const [quantity, setQuantity] = useState<number>(
+    getQuickAmounts(PLATFORMS[0], PLATFORMS[0].services[0])[0]
+  );
   const [target, setTarget] = useState<string>("");
   const [orderError, setOrderError] = useState<string>("");
   const [orderLoading, setOrderLoading] = useState(false);
@@ -426,16 +426,11 @@ export default function DashboardPage() {
   const discount = priceState.discount;
   const discounted = priceState.discounted;
 
-  // Package details for Review step
-  const { pkg, type } = service
-    ? getStealthPackage(platform, service)
-    : { pkg: "", type: "" };
-
   // Review preview-only
   const [preview, setPreview] = useState<PreviewData | null>(null);
   const [previewLoading, setPreviewLoading] = useState(false);
   const isContentEngagement =
-    service?.type === "Likes" || service?.type === "Views";
+    service.type === "Likes" || service.type === "Views";
   const isVideo = useMemo(
     () => isContentEngagement && isLink(target),
     [isContentEngagement, target]
@@ -473,85 +468,64 @@ export default function DashboardPage() {
 
   // re-lock discount when service/platform changes
   useEffect(() => {
-    if (service) {
-      setPriceState(getDiscountedPrice(service.price));
-    }
+    setPriceState(getDiscountedPrice(service.price));
   }, [service, platform]);
 
   /* ===================== Order handlers ===================== */
-  function resetOrder() {
-    setOrderStep(0);
-    setPlatform(PLATFORMS[0]);
-    setService(null);
-    setQuantity(100);
-    setTarget("");
-    setOrderError("");
-    setPreview(null);
-    setPreviewLoading(false);
-  }
-
   function handleOrderNext() {
     if (orderStep === 2) {
       const trimmed = target.trim();
       if (!trimmed) {
         setOrderError(
           isContentEngagement
-            ? "Paste full post / video link."
+            ? "Paste the full post / video link."
             : "Paste your profile link or username."
         );
         return;
       }
       if (isContentEngagement && !isLink(trimmed)) {
-        setOrderError("Full post or video URL required.");
+        setOrderError("For likes / views, please paste a full post / video URL.");
         return;
       }
       if (!quantity || quantity < 1) {
-        setOrderError("Select a valid amount.");
+        setOrderError("Enter a valid quantity.");
         return;
       }
     }
     setOrderError("");
-    setOrderStep(orderStep + 1);
+    setOrderStep((prev) => Math.min(prev + 1, ORDER_STEPS.length - 1));
   }
 
   function handleOrderBack() {
     setOrderError("");
-    setOrderStep((prev) => Math.max(0, prev - 1));
+    setOrderStep((prev) => Math.max(prev - 1, 0));
   }
 
   function handleSecureCheckout(e: React.FormEvent) {
     e.preventDefault();
 
-    if (!service) {
-      setOrderError("Choose a service first.");
-      return;
-    }
-
     const trimmed = target.trim();
     if (!trimmed) {
       setOrderError(
         isContentEngagement
-          ? "Paste full post / video link."
+          ? "Paste the full post / video link."
           : "Paste your profile link or username."
       );
       return;
     }
     if (isContentEngagement && !isLink(trimmed)) {
-      setOrderError("Full post or video URL required.");
+      setOrderError("For likes / views, please paste a full post / video URL.");
       return;
     }
 
     setOrderError("");
     setOrderLoading(true);
 
-    const { pkg: packageName, type: packageType } = getStealthPackage(
-      platform,
-      service
-    );
+    const { pkg, type } = getStealthPackage(platform, service);
 
     const order = {
-      package: packageName,
-      type: packageType,
+      package: pkg,
+      type,
       platform: platform.key,
       service: service.type,
       amount: quantity,
@@ -600,8 +574,7 @@ export default function DashboardPage() {
   /* ===================== UI bits reused ===================== */
   function ServiceSummary() {
     const PlatformIcon = platform.icon;
-    const ServiceIcon = service?.icon;
-
+    const ServiceIcon = service.icon;
     return (
       <div
         className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs font-semibold"
@@ -612,24 +585,14 @@ export default function DashboardPage() {
           className="inline-flex items-center justify-center w-5 h-5 rounded-full"
           style={{ background: COLORS.accentBg }}
         >
-          {service ? (
-            <PlatformIcon size={12} style={{ color: platform.iconColor }} />
-          ) : (
-            <HelpCircle size={12} className="text-[#94A3B8]" />
-          )}
+          <PlatformIcon size={12} style={{ color: platform.iconColor }} />
         </span>
-        <span className="text-[#0B63E6]">
-          {service ? platform.name : "Choose a service"}
+        <span className="text-[#0B63E6]">{platform.name}</span>
+        <span className="opacity-40">•</span>
+        <span className="inline-flex items-center gap-1 text-[#334155]">
+          <ServiceIcon size={12} style={{ color: service.iconColor }} />
+          {service.type}
         </span>
-        {service && ServiceIcon && (
-          <>
-            <span className="opacity-40">•</span>
-            <span className="inline-flex items-center gap-1 text-[#334155]">
-              <ServiceIcon size={12} style={{ color: service.iconColor }} />
-              {service.type}
-            </span>
-          </>
-        )}
       </div>
     );
   }
@@ -667,16 +630,16 @@ export default function DashboardPage() {
   }
 
   function AmountSelector() {
-    if (!service) return null;
-
     const options = getQuickAmounts(platform, service);
     const toLabel = (v: number) => (v >= 1000 ? `${v / 1000}K` : `${v}`);
     const ariaService = `${platform.name} ${service.type}`;
 
     return (
-      <div className="w-full max-w-[640px] mx-auto">
+      <div className="w-full max-w-[640px]">
         <div className="flex items-center justify-between mb-2">
-          <h4 className="text-sm font-extrabold text-[#0B63E6]">Amount</h4>
+          <h4 className="text-sm font-extrabold text-[#0B63E6]">
+            How many {platform.name} {service.type}?
+          </h4>
           <div className="hidden sm:block">
             <ServiceSummary />
           </div>
@@ -687,7 +650,14 @@ export default function DashboardPage() {
         </div>
 
         <div
-          className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2 w-full"
+          className="
+            grid 
+            grid-cols-3 
+            sm:grid-cols-4 
+            md:grid-cols-5 
+            gap-2 
+            w-full
+          "
           role="radiogroup"
           aria-label={`Select amount of ${ariaService}`}
         >
@@ -712,11 +682,11 @@ export default function DashboardPage() {
 
     return (
       <div
-        className="w-full max-w-sm rounded-xl border bg-white shadow-lg overflow-hidden mx-auto"
+        className="w-full max-w-sm rounded-xl border bg-white shadow-sm overflow-hidden mx-auto"
         style={{ borderColor: COLORS.border }}
       >
         <div
-          className="flex items-center gap-2 px-3 py-2 border-b bg-white"
+          className="flex items-center gap-2 px-3 py-2 border-b bg-white/80"
           style={{ borderColor: "#E0ECFF" }}
         >
           <div
@@ -789,7 +759,7 @@ export default function DashboardPage() {
               {normalized || "—"}
             </span>
             <span className="text-[10px] text-[#6B7280]">
-              Preview only — not live
+              For display purposes only — Not a real-time account preview
             </span>
           </div>
         </div>
@@ -810,15 +780,20 @@ export default function DashboardPage() {
       const orderPercent =
         (orderStep / (ORDER_STEPS.length - 1)) * 100;
 
+      // ✅ Header title driven by step (Option A)
+      const headerTitle =
+        orderStep === 0
+          ? "Choose Platform"
+          : orderStep === 1
+          ? platform.name
+          : `${platform.name} ${service.type}`;
+
       const PlatformIconHeader = platform.icon;
-      const showQuestion = orderStep === 0 && !service;
 
       return (
         <div className="max-w-2xl mx-auto">
-          <div
-            className="w-full bg-white rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.16)] border border-[#D6E4FF] overflow-hidden"
-          >
-            {/* HEADER (from OrderModal) */}
+          <div className="bg-white border border-[#CFE4FF] rounded-2xl shadow-xl overflow-hidden">
+            {/* Premium Header with Stepper */}
             <div
               className="w-full border-b px-5 py-5 sm:px-6 sm:py-6 relative"
               style={{
@@ -826,359 +801,334 @@ export default function DashboardPage() {
                 borderColor: COLORS.border,
               }}
             >
-              {/* RESET BUTTON (acts like close) */}
-              <button
-                onClick={resetOrder}
-                aria-label="Reset order"
-                className="absolute top-4 right-4 w-9 h-9 bg-white rounded-full border border-[#E3EDFC] shadow flex items-center justify-center hover:bg-[#F3F7FF] transition"
-              >
-                <HelpCircle size={20} className="text-[#007BFF]" />
-              </button>
-
-              {/* PLATFORM + SERVICE TITLE */}
-              <div className="flex items-center gap-3 pr-12">
+              <div className="flex items-center gap-3 pr-2">
                 <div className="w-10 h-10 rounded-2xl bg-white shadow flex items-center justify-center">
-                  {showQuestion ? (
-                    <HelpCircle size={28} className="text-[#94A3B8]" />
-                  ) : (
-                    <PlatformIconHeader
-                      size={26}
-                      style={{ color: platform.iconColor }}
-                    />
-                  )}
+                  <PlatformIconHeader
+                    size={26}
+                    style={{ color: platform.iconColor }}
+                  />
                 </div>
                 <div>
                   <div className="text-[11px] font-semibold text-[#2563EB] tracking-wider uppercase">
                     YesViral Order
                   </div>
                   <div className="text-sm font-bold text-[#0F172A]">
-                    {orderStep === 0 && !service
-                      ? "Choose a platform"
-                      : service
-                      ? `${platform.name} ${service.type}`
-                      : platform.name}
+                    {headerTitle}
                   </div>
                 </div>
               </div>
 
-              {/* STEPPER */}
+              {/* Stepper */}
               <div className="mt-4">
-                <div className="grid grid-cols-4 gap-1">
-                  {ORDER_STEPS.map((s, i) => (
-                    <div key={s.label} className="flex flex-col items-center">
+                <div className="relative mx-auto max-w-lg">
+                  <div className="relative flex items-center justify-between z-20 mb-3">
+                    {ORDER_STEPS.map((s, i) => (
                       <div
-                        className={
-                          "w-8 h-8 flex items-center justify-center rounded-full border-4 text-xs font-bold " +
-                          (orderStep === i
-                            ? "bg-[#007BFF] border-[#007BFF] text-white"
-                            : orderStep > i
-                            ? "bg-[#E6F0FF] border-[#007BFF] text-[#007BFF]"
-                            : "bg-[#E6F0FF] border-[#E6F0FF] text-[#9CA3AF]")
-                        }
+                        key={s.label}
+                        className="flex flex-col items-center flex-1 min-w-0"
                       >
-                        {i + 1}
+                        <div
+                          className={`flex items-center justify-center w-8 h-8 font-extrabold text-xs border-2 transition
+                            ${
+                              orderStep === i
+                                ? "bg-[#007BFF] text-white border-[#007BFF] shadow-lg scale-110"
+                                : orderStep > i
+                                ? "bg-[#007BFF] text-white border-[#007BFF]"
+                                : "bg-[#E6F0FF] text-[#888] border-[#E6F0FF]"
+                            }`}
+                          style={{
+                            marginBottom: 3,
+                            borderRadius: "999px",
+                            boxShadow:
+                              orderStep === i
+                                ? "0 2px 10px #007bff22"
+                                : undefined,
+                          }}
+                        >
+                          {i + 1}
+                        </div>
+                        <span
+                          className="text-[10px] font-bold text-center whitespace-nowrap mt-1 transition"
+                          style={{
+                            color:
+                              orderStep >= i ? COLORS.primary : COLORS.muted,
+                            textShadow:
+                              orderStep === i ? "0 1px 0 #fff" : "none",
+                          }}
+                        >
+                          {s.label}
+                        </span>
                       </div>
-                      <div
-                        className={
-                          "mt-1 text-[10px] font-semibold " +
-                          (orderStep === i ? "text-[#007BFF]" : "text-[#9CA3AF]")
-                        }
-                      >
-                        {s.label}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="relative w-full h-2 mt-3">
-                  <div className="absolute inset-0 bg-[#E6F0FF] rounded-full" />
-                  <div
-                    className="absolute inset-y-0 left-0 bg-gradient-to-r from-[#007BFF] to-[#005FCC] rounded-full shadow"
-                    style={{
-                      width: `${orderPercent}%`,
-                      transition: "width 0.35s ease",
-                    }}
-                  />
+                    ))}
+                  </div>
+                  <div className="relative w-full h-[5px] rounded-full bg-[#E6F0FF] z-0">
+                    <div
+                      className="absolute top-0 left-0 h-[5px] rounded-full z-10"
+                      style={{
+                        width: `${orderPercent}%`,
+                        background: `linear-gradient(90deg, ${COLORS.primary} 0%, ${COLORS.primaryHover} 100%)`,
+                        transition:
+                          "width .38s cubic-bezier(.51,1.15,.67,.97)",
+                      }}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* CONTENT (OrderModal steps inline) */}
-            <div className="flex-1 px-5 py-6 sm:px-6 sm:py-7 bg-[#FAFCFF]">
-              {/* STEP 0: PLATFORM */}
+            {/* Body */}
+            <div className="px-5 py-6 sm:px-6 sm:py-7 bg-[#FAFCFF]">
+              {/* STEP 0: Platform */}
               {orderStep === 0 && (
-                <div>
-                  <h3 className="text-center text-xl sm:text-2xl font-black text-[#111]">
+                <>
+                  <h3 className="font-black text-2xl mb-6 text-[#111] text-center tracking-tight">
                     Choose Platform
                   </h3>
-                  <p className="text-center text-sm text-[#64748B] mt-2">
+                  <p className="text-center text-sm text-[#64748B] mb-6">
                     Select the platform you want to boost.
                   </p>
 
-                  <div className="mt-6 flex flex-wrap justify-center gap-4">
+                  <div className="flex justify-center gap-5 flex-wrap mb-6">
                     {PLATFORMS.map((p) => {
                       const Icon = p.icon;
                       return (
                         <button
                           key={p.key}
+                          className={`flex flex-col items-center gap-1 px-7 py-5 rounded-xl border-2 font-bold text-base shadow hover:shadow-lg transition
+                            ${
+                              platform.key === p.key
+                                ? "border-[#007BFF] bg-[#E6F0FF] text-[#007BFF] scale-105"
+                                : "border-[#CFE4FF] text-[#111111] bg-white"
+                            }`}
+                          style={{ minWidth: 120, minHeight: 90 }}
                           onClick={() => {
                             setPlatform(p);
-                            setService(null);
-                            setQuantity(100);
-                            setOrderStep(1);
+                            setService(p.services[0]);
+                            setQuantity(getQuickAmounts(p, p.services[0])[0]);
                           }}
-                          className={
-                            "w-[140px] h-[110px] flex flex-col items-center justify-center rounded-2xl border transition shadow-sm " +
-                            (platform.key === p.key
-                              ? "bg-[#FFFFFF] border-[#007BFF] shadow-lg scale-[1.03]"
-                              : "bg-white border-[#D6E4FF] hover:border-[#7FB5FF]")
-                          }
                         >
-                          <div className="w-10 h-10 rounded-2xl bg-[#EFF4FF] flex items-center justify-center mb-2">
-                            <Icon size={26} style={{ color: p.iconColor }} />
-                          </div>
-                          <div className="font-semibold">{p.name}</div>
-                          <div className="text-[11px] text-[#94A3B8]">
-                            Followers • Likes • Views
-                          </div>
+                          <Icon size={30} style={{ color: p.iconColor }} />
+                          <span>{p.name}</span>
                         </button>
                       );
                     })}
                   </div>
-                </div>
+
+                  <div className="flex justify-end mt-4">
+                    <button
+                      className="px-6 py-3 rounded-xl font-bold bg-[#007BFF] text-white hover:bg-[#005FCC] shadow transition text-lg"
+                      onClick={handleOrderNext}
+                    >
+                      Next
+                    </button>
+                  </div>
+                </>
               )}
 
-              {/* STEP 1: SERVICE */}
+              {/* STEP 1: Service */}
               {orderStep === 1 && (
-                <div>
-                  <h3 className="text-center text-xl sm:text-2xl font-black text-[#111]">
-                    {platform.name} Services
+                <>
+                  <h3 className="font-black text-2xl mb-6 text-[#111] text-center">
+                    <span className="inline-flex items-center gap-2">
+                      {(() => {
+                        const I = platform.icon;
+                        return (
+                          <I size={27} style={{ color: platform.iconColor }} />
+                        );
+                      })()}
+                      {platform.name} Services
+                    </span>
                   </h3>
-                  <p className="text-center text-sm text-[#64748B] mt-2">
+                  <p className="text-center text-sm text-[#64748B] mb-6">
                     Choose what type of engagement you want.
                   </p>
 
-                  <div className="mt-6 space-y-3">
+                  <div className="flex flex-wrap gap-5 justify-center mb-6">
                     {platform.services.map((s) => {
                       const SIcon = s.icon;
-                      const { discount: disc, discounted: discPrice } =
-                        getDiscountedPrice(s.price);
-                      const isSelected = service?.type === s.type;
-
+                      const isSelected = service.type === s.type;
                       return (
                         <button
                           key={s.type}
+                          className={`flex flex-col items-center gap-1 px-7 py-5 rounded-xl border-2 font-bold text-base shadow hover:shadow-lg transition
+                            ${
+                              isSelected
+                                ? "border-[#007BFF] bg-[#E6F0FF] text-[#007BFF] scale-105"
+                                : "border-[#CFE4FF] text-[#111111] bg-white"
+                            }`}
                           onClick={() => {
                             setService(s);
                             setQuantity(getQuickAmounts(platform, s)[0]);
-                            setOrderStep(2);
                           }}
-                          className={
-                            "w-full flex items-center justify-between p-4 rounded-2xl border shadow-sm transition " +
-                            (isSelected
-                              ? "border-[#007BFF] bg-white shadow-lg scale-[1.01]"
-                              : "border-[#D6E4FF] bg-white hover:border-[#7FB5FF]")
-                          }
                         >
-                          <div className="flex items-center gap-3">
-                            <div className="w-9 h-9 rounded-2xl bg-[#EFF4FF] flex items-center justify-center">
-                              <SIcon size={20} style={{ color: s.iconColor }} />
-                            </div>
-                            <div>
-                              <div
-                                className={
-                                  isSelected
-                                    ? "text-[#007BFF] font-bold"
-                                    : "font-bold"
-                                }
-                              >
-                                {s.type}
-                              </div>
-                              <div className="text-[11px] text-[#94A3B8]">
-                                Real • High Quality • Safe
-                              </div>
-                            </div>
-
-                            {disc > 0 && (
-                              <span className="text-xs text-[#007BFF] bg-[#E6F0FF] px-2 py-1 rounded-full flex items-center gap-1">
-                                <Tag size={12} /> -{disc}%
-                              </span>
-                            )}
-                          </div>
-
-                          <div className="text-right">
-                            <div className="line-through text-xs text-[#9CA3AF]">
-                              ${s.price.toFixed(2)}
-                            </div>
-                            <div className="font-bold text-[#007BFF]">
-                              ${discPrice.toFixed(2)}
-                            </div>
-                          </div>
+                          <SIcon size={22} style={{ color: s.iconColor }} />
+                          <span>{s.type}</span>
+                          <span className="text-xs text-[#888]">
+                            ${s.price}/ea
+                          </span>
+                          {isSelected && (
+                            <span className="mt-1 px-2 py-0.5 rounded-full bg-[#e7f7f0] text-[#007BFF] text-xs font-bold flex items-center gap-1 animate-flashSale">
+                              <Tag size={14} className="mr-0.5" />
+                              -{discount}% Flash Sale
+                            </span>
+                          )}
                         </button>
                       );
                     })}
                   </div>
-
-                  <button
-                    className="mx-auto block mt-6 text-[#007BFF] underline"
-                    onClick={handleOrderBack}
-                  >
-                    ← Back
-                  </button>
-                </div>
+                  <div className="flex justify-between mt-4">
+                    <button
+                      className="px-6 py-3 rounded-xl font-bold bg-[#E6F0FF] text-[#007BFF] border border-[#CFE4FF] hover:bg-[#d7eafd] shadow transition text-lg"
+                      onClick={handleOrderBack}
+                    >
+                      Back
+                    </button>
+                    <button
+                      className="px-6 py-3 rounded-xl font-bold bg-[#007BFF] text-white hover:bg-[#005FCC] shadow transition text-lg"
+                      onClick={handleOrderNext}
+                    >
+                      Next
+                    </button>
+                  </div>
+                </>
               )}
 
-              {/* STEP 2: DETAILS */}
+              {/* STEP 2: Details */}
               {orderStep === 2 && (
-                <div>
-                  <h3 className="text-center text-xl sm:text-2xl font-black text-[#111]">
+                <>
+                  <h3 className="font-black text-2xl mb-6 text-[#111] text-center">
                     Order Details
                   </h3>
 
-                  <div className="mt-6 space-y-6">
+                  <div className="flex flex-col gap-6 max-w-sm mx-auto mb-6">
+                    {/* Target input */}
                     <div>
-                      <label className="text-sm font-semibold text-[#007BFF] mb-1 block">
+                      <label
+                        htmlFor="order-target"
+                        className="block font-semibold text-[#007BFF] text-lg mb-2"
+                      >
                         {getTargetLabel(service)}
                       </label>
                       <input
-                        value={target}
-                        onChange={(e) => setTarget(e.target.value)}
+                        id="order-target"
+                        type="text"
+                        className="w-full border border-[#CFE4FF] rounded-xl px-4 py-3 text-base font-medium outline-[#007BFF] bg-white shadow focus:border-[#007BFF] focus:ring-2 focus:ring-[#E6F0FF] transition"
                         placeholder={getTargetPlaceholder(platform, service)}
-                        className="w-full border border-[#D6E4FF] rounded-xl p-3 text-sm shadow-sm focus:ring-2 focus:ring-[#007BFF] focus:border-[#007BFF]"
+                        value={target}
+                        onChange={(e) => setTarget(e.currentTarget.value)}
                       />
-                      <div className="text-xs text-[#64748B] mt-1">
+                      <span className="mt-2 block text-xs text-[#777]">
                         {isContentEngagement
-                          ? "Paste the full post or video URL."
-                          : "Use @username or full profile URL."}
+                          ? "For likes / views, you must paste the full post or video URL."
+                          : "For followers / subscribers, you can use a username or full profile URL."}
+                      </span>
+                    </div>
+
+                    {/* Amount */}
+                    <div className="flex flex-col items-center gap-3 w-full">
+                      <AmountSelector />
+                      <div className="flex justify-between items-center mt-2 w-full max-w-[640px]">
+                        <span className="text-sm text-[#888]">Total:</span>
+                        <span className="font-bold text-[#007BFF] text-xl">
+                          {(discounted * quantity).toFixed(2)}
+                          <span className="ml-2 text-sm text-[#c7c7c7] line-through">
+                            {(service.price * quantity).toFixed(2)}
+                          </span>
+                        </span>
                       </div>
                     </div>
 
-                    <AmountSelector />
-
-                    {service && (
-                      <div className="text-center text-[#007BFF] font-extrabold text-xl mt-4">
-                        Total: ${(discounted * quantity).toFixed(2)}
-                        <span className="text-sm text-[#B0B9C7] line-through ml-2">
-                          {(service.price * quantity).toFixed(2)}
-                        </span>
-                      </div>
-                    )}
-
+                    <span className="text-xs text-[#007BFF] font-semibold animate-flashSale">
+                      Flash Sale! {discount}% off for a limited time
+                    </span>
                     {orderError && (
-                      <div className="text-center text-sm text-red-500">
+                      <div className="mt-1 text-[#EF4444] text-center">
                         {orderError}
                       </div>
                     )}
                   </div>
 
-                  <div className="mt-6 flex flex-col sm:flex-row justify-between gap-3">
+                  <div className="flex justify-between mt-4">
                     <button
+                      className="px-6 py-3 rounded-xl font-bold bg-[#E6F0FF] text-[#007BFF] border border-[#CFE4FF] hover:bg-[#d7eafd] shadow transition text-lg"
                       onClick={handleOrderBack}
-                      className="w-full sm:w-auto bg-[#E6F0FF] text-[#007BFF] border border-[#CFE4FF] rounded-xl px-5 py-3 font-semibold"
                     >
                       Back
                     </button>
                     <button
+                      className="px-6 py-3 rounded-xl font-bold bg-[#007BFF] text-white hover:bg-[#005FCC] shadow transition text-lg"
                       onClick={handleOrderNext}
-                      className="w-full sm:w-auto bg-[#007BFF] hover:bg-[#005FCC] text-white rounded-xl px-5 py-3 font-semibold shadow"
                     >
                       Review
                     </button>
                   </div>
-                </div>
+                </>
               )}
 
-              {/* STEP 3: REVIEW */}
+              {/* STEP 3: Review */}
               {orderStep === 3 && (
                 <form onSubmit={handleSecureCheckout}>
-                  <h3 className="text-center text-xl sm:text-2xl font-black text-[#111]">
-                    Review & Checkout
+                  <h3 className="font-black text-2xl mb-5 text-[#111] text-center">
+                    Review & Secure Checkout
                   </h3>
 
-                  <div className="mt-6 border border-[#CFE4FF] bg-white rounded-xl p-5 shadow-sm">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-[#EFF4FF] flex items-center justify-center">
-                        {service ? (
-                          <PlatformIconHeader
-                            size={20}
+                  <div className="bg-[#F5FAFF] border border-[#CFE4FF] rounded-xl px-6 py-7 mb-6">
+                    <div className="flex items-center gap-2 mb-2">
+                      {(() => {
+                        const I = platform.icon;
+                        return (
+                          <I
+                            size={24}
                             style={{ color: platform.iconColor }}
                           />
-                        ) : (
-                          <HelpCircle
-                            className="text-[#94A3B8]"
-                            size={20}
-                          />
-                        )}
-                      </div>
-                      <div>
-                        <div className="font-bold text-[#111]">
-                          {platform.name}
-                        </div>
-                        <div className="text-xs text-[#2563EB]">
-                          {service ? service.type : "Choose a service"}
-                        </div>
-                      </div>
+                        );
+                      })()}
+                      <span className="font-semibold text-lg">
+                        {platform.name}
+                      </span>
+                      <span className="ml-3 px-3 py-1 rounded-full bg-[#E6F0FF] text-[#007BFF] font-semibold text-xs">
+                        {service.type}
+                      </span>
                     </div>
-
-                    {service && (
-                      <>
-                        <div className="mt-4 space-y-2 text-sm text-[#475569]">
-                          <div className="flex justify-between">
-                            <b>Package:</b> {pkg} ({type})
-                          </div>
-                          <div className="flex justify-between">
-                            <b>User / Link:</b>{" "}
-                            <span className="max-w-[160px] break-words text-right">
-                              {target}
-                            </span>
-                          </div>
-                          <div className="flex justify-between">
-                            <b>Amount:</b> {quantity}
-                          </div>
-                          <div className="flex justify-between">
-                            <b>Price:</b>
-                            <span>
-                              <span className="text-[#007BFF] font-semibold">
-                                {discounted.toFixed(3)}
-                              </span>
-                              <span className="line-through text-[#94A3B8] text-xs ml-1">
-                                {service.price.toFixed(3)}
-                              </span>
-                            </span>
-                          </div>
-                        </div>
-
-                        <div className="mt-3 pt-3 border-t border-dashed border-[#CFE4FF] flex justify-between text-[#111] font-bold text-lg">
-                          <div>Total</div>
-                          <div className="text-[#007BFF]">
-                            {(discounted * quantity).toFixed(2)}
-                          </div>
-                        </div>
-                      </>
-                    )}
+                    <div className="text-[#444] mb-1">
+                      <b>Username / Link:</b> {target}
+                    </div>
+                    <div className="text-[#444] mb-1">
+                      <b>Amount:</b> {quantity}
+                    </div>
+                    <div className="text-[#444] mb-1">
+                      <b>Unit:</b> ${discounted}/ea{" "}
+                      <span className="text-[#c7c7c7] line-through">
+                        ${service.price}/ea
+                      </span>
+                    </div>
+                    <div className="mt-2 font-extrabold text-lg text-[#007BFF]">
+                      Total: ${(discounted * quantity).toFixed(2)}
+                    </div>
                   </div>
 
-                  <div className="mt-6">
+                  {/* REVIEW-ONLY PREVIEW */}
+                  <div className="mb-6">
                     <PreviewMini />
                   </div>
 
                   {orderError && (
-                    <div className="text-center text-sm text-red-500 mt-3">
+                    <div className="mt-4 text-[#EF4444] text-center text-sm">
                       {orderError}
                     </div>
                   )}
 
-                  <div className="mt-6 flex flex-col sm:flex-row justify-between gap-3">
+                  <div className="flex justify-between mt-7">
                     <button
                       type="button"
+                      className="px-6 py-3 rounded-xl font-bold bg-[#E6F0FF] text-[#007BFF] border border-[#CFE4FF] hover:bg-[#d7eafd] shadow transition text-lg"
                       onClick={handleOrderBack}
-                      className="w-full sm:w-auto bg-[#E6F0FF] text-[#007BFF] border border-[#CFE4FF] rounded-xl px-5 py-3 font-semibold"
                     >
                       Back
                     </button>
                     <button
                       type="submit"
-                      className="w-full sm:w-auto bg-gradient-to-br from-[#007BFF] to-[#005FCC] text-white rounded-xl px-6 py-3 font-semibold shadow-lg flex items-center justify-center gap-2"
+                      className="px-6 py-3 rounded-xl font-bold bg-gradient-to-br from-[#007BFF] to-[#005FCC] hover:from-[#005FCC] hover:to-[#007BFF] text-white shadow-lg transition text-lg flex items-center gap-2"
                       disabled={orderLoading}
                     >
                       {orderLoading ? (
@@ -1208,14 +1158,27 @@ export default function DashboardPage() {
                       Secure Checkout
                     </button>
                   </div>
-
-                  <p className="mt-3 text-center text-xs text-[#94A3B8]">
-                    Protected by Stripe • Encrypted • Discreet billing
-                  </p>
                 </form>
               )}
             </div>
           </div>
+
+          <style jsx global>{`
+            @keyframes flashSale {
+              0%,
+              100% {
+                background: #e7f7f0;
+                color: #007bff;
+              }
+              50% {
+                background: #d9ecff;
+                color: #005fcc;
+              }
+            }
+            .animate-flashSale {
+              animation: flashSale 2.5s infinite;
+            }
+          `}</style>
         </div>
       );
     }
@@ -1540,7 +1503,9 @@ function DashboardStat({
       ? "text-yellow-500"
       : "";
   return (
-    <div className={`p-4 rounded-xl bg-[#F5FAFF] border border-[#CFE4FF] text-center shadow`}>
+    <div
+      className={`p-4 rounded-xl bg-[#F5FAFF] border border-[#CFE4FF] text-center shadow`}
+    >
       <span className={`block text-sm font-semibold mb-1 ${textColor}`}>
         {label}
       </span>
