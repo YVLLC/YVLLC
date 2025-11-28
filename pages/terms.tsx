@@ -120,7 +120,7 @@ export default function Terms() {
             </h2>
             <p>
               For questions or support, email <a href="mailto:support@yesviral.com" className="text-[#007BFF] underline font-semibold">support@yesviral.com</a>.<br />
-              We aim to respond within 24–48 hours. Or try our <a href="/support" className="text-[#007BFF] underline font-semibold">support chat</a> for fast help.
+              We aim to respond within 24–48 hours. Or try our <a href="/contact" className="text-[#007BFF] underline font-semibold">Support Chat</a> for fast help.
             </p>
           </div>
         </section>

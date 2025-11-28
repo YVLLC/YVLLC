@@ -91,7 +91,7 @@ export default function Privacy() {
               Have questions, want your data deleted, or just want to understand more? Email us anytime at <a href="mailto:support@yesviral.com" className="text-[#007BFF] underline font-semibold">support@yesviral.com</a>.
             </p>
             <p className="mt-3">
-              Or get instant help via our <a href="/support" className="text-[#007BFF] underline font-semibold">support chat</a>.
+              Or get instant help via our <a href="/contact" className="text-[#007BFF] underline font-semibold">Support Chat</a>.
             </p>
           </div>
         </div>
