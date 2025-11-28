@@ -97,17 +97,17 @@ function getStealthPackage(platform: Platform, service: Service): StealthPackage
   let pkg = "Premium Package";
   let type = "Standard";
 
-  if (platform.key === "instagram" && service.type === "Followers") pkg = "High-Quality Instagram Followers";
-  if (platform.key === "instagram" && service.type === "Likes") pkg = "Premium Instagram Likes";
-  if (platform.key === "instagram" && service.type === "Views") pkg = "High-Retention Instagram Views";
+  if (platform.key === "instagram" && service.type === "Followers") pkg = "Instagram Followers";
+  if (platform.key === "instagram" && service.type === "Likes") pkg = "Instagram Likes";
+  if (platform.key === "instagram" && service.type === "Views") pkg = "Instagram Views";
 
-  if (platform.key === "tiktok" && service.type === "Followers") pkg = "High-Quality TikTok Followers";
-  if (platform.key === "tiktok" && service.type === "Likes") pkg = "Premium TikTok Likes";
-  if (platform.key === "tiktok" && service.type === "Views") pkg = "High-Retention TikTok Views";
+  if (platform.key === "tiktok" && service.type === "Followers") pkg = "TikTok Followers";
+  if (platform.key === "tiktok" && service.type === "Likes") pkg = "TikTok Likes";
+  if (platform.key === "tiktok" && service.type === "Views") pkg = "TikTok Views";
 
-  if (platform.key === "youtube" && service.type === "Subscribers") pkg = "High-Quality YouTube Subscribers";
-  if (platform.key === "youtube" && service.type === "Likes") pkg = "Premium YouTube Likes";
-  if (platform.key === "youtube" && service.type === "Views") pkg = "High-Retention YouTube Views";
+  if (platform.key === "youtube" && service.type === "Subscribers") pkg = "YouTube Subscribers";
+  if (platform.key === "youtube" && service.type === "Likes") pkg = "YouTube Likes";
+  if (platform.key === "youtube" && service.type === "Views") pkg = "YouTube Views";
 
   if (service.type === "Followers" || service.type === "Subscribers") type = "High-Quality";
   if (service.type === "Likes") type = "Premium";

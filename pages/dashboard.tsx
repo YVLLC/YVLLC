@@ -123,27 +123,27 @@ function getStealthPackage(platform: Platform, service: Service) {
 
   // INSTAGRAM
   if (platform.key === "instagram" && service.type === "Followers")
-    pkg = "High-Quality Instagram Followers";
+    pkg = "Instagram Followers";
   if (platform.key === "instagram" && service.type === "Likes")
-    pkg = "Premium Instagram Likes";
+    pkg = "Instagram Likes";
   if (platform.key === "instagram" && service.type === "Views")
-    pkg = "High-Retention Instagram Views";
+    pkg = "Instagram Views";
 
   // TIKTOK
   if (platform.key === "tiktok" && service.type === "Followers")
-    pkg = "High-Quality TikTok Followers";
+    pkg = "TikTok Followers";
   if (platform.key === "tiktok" && service.type === "Likes")
-    pkg = "Premium TikTok Likes";
+    pkg = "TikTok Likes";
   if (platform.key === "tiktok" && service.type === "Views")
-    pkg = "High-Retention TikTok Views";
+    pkg = "TikTok Views";
 
   // YOUTUBE
   if (platform.key === "youtube" && service.type === "Subscribers")
-    pkg = "High-Quality YouTube Subscribers";
+    pkg = "YouTube Subscribers";
   if (platform.key === "youtube" && service.type === "Likes")
-    pkg = "Premium YouTube Likes";
+    pkg = "YouTube Likes";
   if (platform.key === "youtube" && service.type === "Views")
-    pkg = "High-Retention YouTube Views";
+    pkg = "YouTube Views";
 
   if (service.type === "Followers" || service.type === "Subscribers")
     type = "High-Quality";
