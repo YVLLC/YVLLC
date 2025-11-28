@@ -180,6 +180,7 @@ function ImageSafe({ src, alt }: { src: string; alt: string }) {
       {!loaded && !failed && (
         <div className="absolute inset-0 animate-pulse bg-gradient-to-br from-[#EAF2FF] via-[#F5FAFF] to-white" />
       )}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={src}
         alt={alt}
@@ -431,6 +432,19 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
   }
 
   /* ============================
+      HEADER TITLE (PER STEP)
+  ============================ */
+  function getHeaderTitle() {
+    if (step === 0) return "Choose a platform";
+    if (step === 1) return platform.name;
+    if (step === 2 || step === 3) {
+      if (service) return `${platform.name} ${service.type}`;
+      return platform.name;
+    }
+    return platform.name;
+  }
+
+  /* ============================
       SERVICE SUMMARY BADGE
   ============================ */
   function ServiceSummary() {
@@ -443,7 +457,7 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
           className="flex h-5 w-5 items-center justify-center rounded-full"
           style={{ background: COLORS.accentBg }}
         >
-          {service ? platform.icon : <HelpCircle size={14} className="text-[#94A3B8]" />}
+          {platform.icon}
         </span>
 
         <span className="text-[#0B63E6]">
@@ -647,23 +661,21 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
             <X size={20} className="text-[#007BFF]" />
           </button>
 
-          {/* PLATFORM + SERVICE */}
+          {/* PLATFORM + SERVICE HEADER */}
           <div className="flex items-center gap-3 pr-12">
             <div className="w-10 h-10 rounded-2xl bg-white shadow flex items-center justify-center">
-              {service ? platform.icon : <HelpCircle size={28} className="text-[#94A3B8]" />}
+              {step === 0 ? (
+                <HelpCircle size={28} className="text-[#94A3B8]" />
+              ) : (
+                platform.icon
+              )}
             </div>
             <div>
               <div className="text-[11px] font-semibold text-[#2563EB] tracking-wider uppercase">
                 YesViral Order
               </div>
               <div className="text-sm font-bold text-[#0F172A]">
-                {service ? (
-                  <>
-                    {platform.name} {service.type}
-                  </>
-                ) : (
-                  "Choose a service"
-                )}
+                {getHeaderTitle()}
               </div>
             </div>
           </div>
@@ -896,7 +908,7 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
               <div className="mt-6 border border-[#CFE4FF] bg-white rounded-xl p-5 shadow-sm">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl bg-[#EFF4FF] flex items-center justify-center">
-                    {service ? platform.icon : <HelpCircle className="text-[#94A3B8]" size={20} />}
+                    {platform.icon}
                   </div>
                   <div>
                     <div className="font-bold text-[#111]">{platform.name}</div>
