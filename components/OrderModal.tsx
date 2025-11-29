@@ -19,7 +19,12 @@ import {
    TYPES
 ======================================================== */
 type ServiceType = "Followers" | "Likes" | "Views" | "Subscribers";
-type Service = { type: ServiceType | string; price: number; icon: JSX.Element };
+type Service = {
+  type: ServiceType | string;
+  price: number; // base "from" price shown on cards
+  icon: JSX.Element;
+  packages?: Record<number, number>; // amount -> fixed package price
+};
 type Platform = { key: string; name: string; color: string; icon: JSX.Element; services: Service[] };
 type StealthPackageResult = { pkg: string; type: string };
 type PreviewData = { ok: boolean; type?: string; image?: string | null; error?: string };
@@ -39,7 +44,8 @@ const COLORS = {
 };
 
 /* ========================================================
-   PLATFORM DATA
+   PLATFORM DATA + PACKAGE PRICING
+   (Buzzoid-style packages with fixed prices)
 ======================================================== */
 const PLATFORMS: Platform[] = [
   {
@@ -48,9 +54,50 @@ const PLATFORMS: Platform[] = [
     color: "#E1306C",
     icon: <Instagram className="text-[#E1306C]" size={26} />,
     services: [
-      { type: "Followers", price: 0.09, icon: <UserPlus size={17} className="text-[#E1306C]" /> },
-      { type: "Likes", price: 0.07, icon: <ThumbsUp size={17} className="text-[#E1306C]" /> },
-      { type: "Views", price: 0.04, icon: <Eye size={17} className="text-[#E1306C]" /> },
+      {
+        type: "Followers",
+        // "From" price shown on service card
+        price: 2.99,
+        icon: <UserPlus size={17} className="text-[#E1306C]" />,
+        // Fixed packages
+        packages: {
+          50: 2.99,
+          100: 3.99,
+          250: 7.99,
+          500: 11.99,
+          1000: 14.99,
+          2500: 34.99,
+          5000: 59.99,
+        },
+      },
+      {
+        type: "Likes",
+        price: 2.49,
+        icon: <ThumbsUp size={17} className="text-[#E1306C]" />,
+        packages: {
+          50: 2.49,
+          100: 3.49,
+          250: 6.49,
+          500: 8.99,
+          1000: 12.99,
+          2500: 24.99,
+          5000: 39.99,
+        },
+      },
+      {
+        type: "Views",
+        price: 0.49,
+        icon: <Eye size={17} className="text-[#E1306C]" />,
+        packages: {
+          500: 0.49,
+          1000: 0.69,
+          2500: 1.29,
+          5000: 1.99,
+          10000: 2.99,
+          25000: 5.99,
+          50000: 9.99,
+        },
+      },
     ],
   },
   {
@@ -59,9 +106,47 @@ const PLATFORMS: Platform[] = [
     color: "#00F2EA",
     icon: <Music2 className="text-[#00F2EA]" size={26} />,
     services: [
-      { type: "Followers", price: 0.1, icon: <UserPlus size={17} className="text-[#00F2EA]" /> },
-      { type: "Likes", price: 0.08, icon: <ThumbsUp size={17} className="text-[#00F2EA]" /> },
-      { type: "Views", price: 0.06, icon: <Eye size={17} className="text-[#00F2EA]" /> },
+      {
+        type: "Followers",
+        price: 2.49,
+        icon: <UserPlus size={17} className="text-[#00F2EA]" />,
+        packages: {
+          50: 2.49,
+          100: 3.49,
+          250: 7.49,
+          500: 10.99,
+          1000: 12.99,
+          2500: 32.99,
+          5000: 57.99,
+        },
+      },
+      {
+        type: "Likes",
+        price: 1.79,
+        icon: <ThumbsUp size={17} className="text-[#00F2EA]" />,
+        packages: {
+          50: 1.79,
+          100: 2.49,
+          250: 4.49,
+          500: 5.99,
+          1000: 7.99,
+          2500: 17.99,
+          5000: 29.99,
+        },
+      },
+      {
+        type: "Views",
+        price: 0.39,
+        icon: <Eye size={17} className="text-[#00F2EA]" />,
+        packages: {
+          1000: 0.39,
+          2500: 0.79,
+          5000: 1.49,
+          10000: 2.49,
+          25000: 5.49,
+          50000: 8.99,
+        },
+      },
     ],
   },
   {
@@ -70,9 +155,48 @@ const PLATFORMS: Platform[] = [
     color: "#FF0000",
     icon: <Youtube className="text-[#FF0000]" size={26} />,
     services: [
-      { type: "Subscribers", price: 0.12, icon: <UserPlus size={17} className="text-[#FF0000]" /> },
-      { type: "Likes", price: 0.09, icon: <ThumbsUp size={17} className="text-[#FF0000]" /> },
-      { type: "Views", price: 0.05, icon: <Eye size={17} className="text-[#FF0000]" /> },
+      {
+        type: "Subscribers",
+        price: 7.49,
+        icon: <UserPlus size={17} className="text-[#FF0000]" />,
+        packages: {
+          50: 7.49,
+          100: 12.99,
+          250: 24.99,
+          500: 39.99,
+          1000: 69.99,
+          2500: 159.99,
+          5000: 289.99,
+        },
+      },
+      {
+        type: "Likes",
+        price: 1.99,
+        icon: <ThumbsUp size={17} className="text-[#FF0000]" />,
+        packages: {
+          50: 1.99,
+          100: 2.79,
+          250: 4.99,
+          500: 6.99,
+          1000: 9.99,
+          2500: 22.99,
+          5000: 38.99,
+        },
+      },
+      {
+        type: "Views",
+        price: 8.99,
+        icon: <Eye size={17} className="text-[#FF0000]" />,
+        packages: {
+          500: 8.99,
+          1000: 14.99,
+          2500: 29.99,
+          5000: 49.99,
+          10000: 79.99,
+          25000: 179.99,
+          50000: 299.99,
+        },
+      },
     ],
   },
 ];
@@ -80,14 +204,39 @@ const PLATFORMS: Platform[] = [
 const steps = [{ label: "Platform" }, { label: "Service" }, { label: "Details" }, { label: "Review" }];
 
 /* ========================================================
-   DISCOUNT SYSTEM
+   DISCOUNT / PUFFERY SYSTEM
+   - Shows fake MSRP + % OFF
+   - Real price stays the same
 ======================================================== */
-function getDiscountedPrice(price: number) {
-  const discount = 0.02 + Math.random() * 0.02;
+function getDiscountedPrice(realPrice: number) {
+  if (!realPrice || realPrice <= 0) {
+    return { discount: 0, discounted: realPrice, original: realPrice };
+  }
+
+  // Aggressive puffery factor (about 50–65% off)
+  const minFactor = 2.1;
+  const maxFactor = 2.7;
+  const factor = minFactor + Math.random() * (maxFactor - minFactor);
+
+  const original = Number((realPrice * factor).toFixed(2));
+  const discountPercent = Math.round(100 - (realPrice / original) * 100);
+
   return {
-    discount: Math.round(discount * 100),
-    discounted: Number((price * (1 - discount)).toFixed(3)),
+    discount: discountPercent, // % OFF to show
+    discounted: realPrice, // actual price the user pays
+    original, // fake "was" price, crossed-out
   };
+}
+
+/* ========================================================
+   PACKAGE PRICE RESOLVER
+======================================================== */
+function getPackagePrice(platform: Platform, service: Service, quantity: number): number {
+  if (service.packages && service.packages[quantity]) {
+    return service.packages[quantity];
+  }
+  // Fallback: just use base price if no package defined
+  return service.price;
 }
 
 /* ========================================================
@@ -117,24 +266,28 @@ function getStealthPackage(platform: Platform, service: Service): StealthPackage
 }
 
 /* ========================================================
-   QUICK AMOUNT OPTIONS
+   QUICK AMOUNT OPTIONS (PACKAGE SIZES)
 ======================================================== */
 function getQuickAmounts(platform: Platform, service: Service) {
   const type = service.type.toString().toLowerCase();
-  const key = platform.key;
+  const key = platform.key.toUpperCase();
 
-  if (key === "instagram" && type === "views") return [500, 2000, 5000, 10000, 20000, 50000];
-  if (key === "instagram" && type === "followers") return [100, 200, 350, 500, 1000, 2000, 5000, 10000];
-  if (key === "instagram" && type === "likes") return [50, 100, 300, 500, 1000, 2000, 5000];
+  // INSTAGRAM
+  if (key === "INSTAGRAM" && type === "followers") return [50, 100, 250, 500, 1000, 2500, 5000];
+  if (key === "INSTAGRAM" && type === "likes") return [50, 100, 250, 500, 1000, 2500, 5000];
+  if (key === "INSTAGRAM" && type === "views") return [500, 1000, 2500, 5000, 10000, 25000, 50000];
 
-  if (key === "tiktok" && type === "followers") return [100, 250, 500, 1000, 2000, 5000];
-  if (key === "tiktok" && type === "likes") return [100, 250, 500, 1000, 2000];
-  if (key === "tiktok" && type === "views") return [1000, 2000, 5000, 10000, 20000];
+  // TIKTOK
+  if (key === "TIKTOK" && type === "followers") return [50, 100, 250, 500, 1000, 2500, 5000];
+  if (key === "TIKTOK" && type === "likes") return [50, 100, 250, 500, 1000, 2500, 5000];
+  if (key === "TIKTOK" && type === "views") return [1000, 2500, 5000, 10000, 25000, 50000];
 
-  if (key === "youtube" && type === "views") return [200, 500, 1000, 2000, 5000];
-  if (key === "youtube" && type === "subscribers") return [200, 500, 1000, 2000];
-  if (key === "youtube" && type === "likes") return [250, 500, 1000, 2000];
+  // YOUTUBE
+  if (key === "YOUTUBE" && type === "subscribers") return [50, 100, 250, 500, 1000, 2500, 5000];
+  if (key === "YOUTUBE" && type === "likes") return [50, 100, 250, 500, 1000, 2500, 5000];
+  if (key === "YOUTUBE" && type === "views") return [500, 1000, 2500, 5000, 10000, 25000, 50000];
 
+  // Fallback
   return [100, 500, 1000, 2000, 5000, 10000];
 }
 
@@ -323,21 +476,22 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
   if (!open) return null;
 
   /* ============================
-       PACKAGE DETAILS
+       PACKAGE DETAILS + PRICING
   ============================ */
   const { pkg, type } =
     service ? getStealthPackage(platform, service) : { pkg: "", type: "" };
 
-  const { discount, discounted } = service
-    ? getDiscountedPrice(service.price)
-    : { discount: 0, discounted: 0 };
+  const currentPrice = service ? getPackagePrice(platform, service, quantity) : 0;
+  const { discount, discounted, original } = service
+    ? getDiscountedPrice(currentPrice)
+    : { discount: 0, discounted: currentPrice, original: currentPrice };
 
   const orderToSend = {
     package: pkg,
     type,
     amount: quantity,
     reference: target,
-    total: Number((discounted * quantity).toFixed(2)),
+    total: Number(discounted.toFixed(2)), // REAL price user pays
     platform: platform.key,
     service: service?.type.toString(),
   };
@@ -775,8 +929,11 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
 
               <div className="mt-6 space-y-3">
                 {platform.services.map((s) => {
-                  const { discount: disc, discounted: discPrice } =
-                    getDiscountedPrice(s.price);
+                  const {
+                    discount: disc,
+                    discounted: realPrice,
+                    original: msrp,
+                  } = getDiscountedPrice(s.price);
 
                   return (
                     <button
@@ -813,17 +970,17 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
 
                         {disc > 0 && (
                           <span className="text-xs text-[#007BFF] bg-[#E6F0FF] px-2 py-1 rounded-full flex items-center gap-1">
-                            <Tag size={12} /> -{disc}%
+                            <Tag size={12} /> -{disc}% OFF
                           </span>
                         )}
                       </div>
 
                       <div className="text-right">
                         <div className="line-through text-xs text-[#9CA3AF]">
-                          ${s.price.toFixed(2)}
+                          ${msrp.toFixed(2)}
                         </div>
                         <div className="font-bold text-[#007BFF]">
-                          ${discPrice.toFixed(2)}
+                          ${realPrice.toFixed(2)}
                         </div>
                       </div>
                     </button>
@@ -869,9 +1026,9 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
 
                 {service && (
                   <div className="text-center text-[#007BFF] font-extrabold text-xl mt-4">
-                    Total: ${(discounted * quantity).toFixed(2)}
+                    Total: ${discounted.toFixed(2)}
                     <span className="text-sm text-[#B0B9C7] line-through ml-2">
-                      ${(service.price * quantity).toFixed(2)}
+                      ${original.toFixed(2)}
                     </span>
                   </div>
                 )}
@@ -936,10 +1093,10 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
                       <b>Price:</b>
                       <span>
                         <span className="text-[#007BFF] font-semibold">
-                          ${discounted.toFixed(3)}
+                          ${discounted.toFixed(2)}
                         </span>
                         <span className="line-through text-[#94A3B8] text-xs ml-1">
-                          ${service.price.toFixed(3)}
+                          ${original.toFixed(2)}
                         </span>
                       </span>
                     </div>
@@ -950,7 +1107,7 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
                   <div className="mt-3 pt-3 border-t border-dashed border-[#CFE4FF] flex justify-between text-[#111] font-bold text-lg">
                     <div>Total</div>
                     <div className="text-[#007BFF]">
-                      ${(discounted * quantity).toFixed(2)}
+                      ${discounted.toFixed(2)}
                     </div>
                   </div>
                 )}
