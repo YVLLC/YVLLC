@@ -56,10 +56,8 @@ const PLATFORMS: Platform[] = [
     services: [
       {
         type: "Followers",
-        // "From" price shown on service card
         price: 2.99,
         icon: <UserPlus size={17} className="text-[#E1306C]" />,
-        // Fixed packages
         packages: {
           50: 2.99,
           100: 3.99,
@@ -205,15 +203,12 @@ const steps = [{ label: "Platform" }, { label: "Service" }, { label: "Details" }
 
 /* ========================================================
    DISCOUNT / PUFFERY SYSTEM
-   - Shows fake MSRP + % OFF
-   - Real price stays the same
 ======================================================== */
 function getDiscountedPrice(realPrice: number) {
   if (!realPrice || realPrice <= 0) {
     return { discount: 0, discounted: realPrice, original: realPrice };
   }
 
-  // Aggressive puffery factor (about 50–65% off)
   const minFactor = 2.1;
   const maxFactor = 2.7;
   const factor = minFactor + Math.random() * (maxFactor - minFactor);
@@ -222,9 +217,9 @@ function getDiscountedPrice(realPrice: number) {
   const discountPercent = Math.round(100 - (realPrice / original) * 100);
 
   return {
-    discount: discountPercent, // % OFF to show
-    discounted: realPrice, // actual price the user pays
-    original, // fake "was" price, crossed-out
+    discount: discountPercent,
+    discounted: realPrice,
+    original,
   };
 }
 
@@ -235,7 +230,6 @@ function getPackagePrice(platform: Platform, service: Service, quantity: number)
   if (service.packages && service.packages[quantity]) {
     return service.packages[quantity];
   }
-  // Fallback: just use base price if no package defined
   return service.price;
 }
 
@@ -258,36 +252,30 @@ function getStealthPackage(platform: Platform, service: Service): StealthPackage
   if (platform.key === "YOUTUBE" && service.type === "Likes") pkg = "High-Quality Likes";
   if (platform.key === "YOUTUBE" && service.type === "Views") pkg = "High-Quality Views";
 
-  if (service.type === "Followers" || service.type === "Subscribers") type = "PREMIUM";
-  if (service.type === "Likes") type = "PREMIUM";
-  if (service.type === "Views") type = "PREMIUM";
+  if (["Followers", "Subscribers", "Likes", "Views"].includes(service.type)) type = "PREMIUM";
 
   return { pkg, type };
 }
 
 /* ========================================================
-   QUICK AMOUNT OPTIONS (PACKAGE SIZES)
+   QUICK AMOUNT OPTIONS
 ======================================================== */
 function getQuickAmounts(platform: Platform, service: Service) {
   const type = service.type.toString().toLowerCase();
   const key = platform.key.toUpperCase();
 
-  // INSTAGRAM
   if (key === "INSTAGRAM" && type === "followers") return [50, 100, 250, 500, 1000, 2500, 5000];
   if (key === "INSTAGRAM" && type === "likes") return [50, 100, 250, 500, 1000, 2500, 5000];
   if (key === "INSTAGRAM" && type === "views") return [500, 1000, 2500, 5000, 10000, 25000, 50000];
 
-  // TIKTOK
   if (key === "TIKTOK" && type === "followers") return [50, 100, 250, 500, 1000, 2500, 5000];
   if (key === "TIKTOK" && type === "likes") return [50, 100, 250, 500, 1000, 2500, 5000];
   if (key === "TIKTOK" && type === "views") return [1000, 2500, 5000, 10000, 25000, 50000];
 
-  // YOUTUBE
   if (key === "YOUTUBE" && type === "subscribers") return [50, 100, 250, 500, 1000, 2500, 5000];
   if (key === "YOUTUBE" && type === "likes") return [50, 100, 250, 500, 1000, 2500, 5000];
   if (key === "YOUTUBE" && type === "views") return [500, 1000, 2500, 5000, 10000, 25000, 50000];
 
-  // Fallback
   return [100, 500, 1000, 2000, 5000, 10000];
 }
 
@@ -333,13 +321,10 @@ function ImageSafe({ src, alt }: { src: string; alt: string }) {
       {!loaded && !failed && (
         <div className="absolute inset-0 animate-pulse bg-gradient-to-br from-[#EAF2FF] via-[#F5FAFF] to-white" />
       )}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={src}
         alt={alt}
-        className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${
-          loaded && !failed ? "opacity-100" : "opacity-0"
-        }`}
+        className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${loaded && !failed ? "opacity-100" : "opacity-0"}`}
         onLoad={() => setLoaded(true)}
         onError={() => setFailed(true)}
       />
@@ -371,9 +356,6 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
   const [preview, setPreview] = useState<PreviewData | null>(null);
   const [previewLoading, setPreviewLoading] = useState(false);
 
-  /* ============================
-       LOCK SCROLL WHEN OPEN
-  ============================ */
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
     return () => {
@@ -381,9 +363,6 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
     };
   }, [open]);
 
-  /* ============================
-       INIT STATE
-  ============================ */
   useEffect(() => {
     if (!open) return;
 
@@ -434,9 +413,6 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
     target,
   ]);
 
-  /* ============================
-       LOAD PREVIEW
-  ============================ */
   const doFetchPreview = useCallback(
     async () => {
       if (!open || step !== 3) return;
@@ -475,9 +451,6 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
 
   if (!open) return null;
 
-  /* ============================
-       PACKAGE DETAILS + PRICING
-  ============================ */
   const { pkg, type } =
     service ? getStealthPackage(platform, service) : { pkg: "", type: "" };
 
@@ -491,14 +464,11 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
     type,
     amount: quantity,
     reference: target,
-    total: Number(discounted.toFixed(2)), // REAL price user pays
+    total: Number(discounted.toFixed(2)),
     platform: platform.key,
     service: service?.type.toString(),
   };
 
-  /* ============================
-     NAVIGATION HANDLERS
-  ============================ */
   function handleBack() {
     setError("");
     setStep((prev) => Math.max(0, prev - 1));
@@ -560,9 +530,6 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
       "https://checkout.yesviral.com/checkout?order=" + encoded;
   }
 
-  /* ============================
-      LABEL + PLACEHOLDER
-  ============================ */
   function getTargetLabel() {
     if (!service) return "Profile or Link";
     if (service.type === "Followers" || service.type === "Subscribers")
@@ -585,9 +552,6 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
     return "Paste post / video link";
   }
 
-  /* ============================
-      HEADER TITLE (PER STEP)
-  ============================ */
   function getHeaderTitle() {
     if (step === 0) return "Choose a platform";
     if (step === 1) return platform.name;
@@ -598,9 +562,6 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
     return platform.name;
   }
 
-  /* ============================
-      SERVICE SUMMARY BADGE
-  ============================ */
   function ServiceSummary() {
     return (
       <div
@@ -631,9 +592,6 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
     );
   }
 
-  /* ============================
-      AMOUNT SELECTOR
-  ============================ */
   function Pill({
     label,
     selected,
@@ -698,9 +656,6 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
     );
   }
 
-  /* ============================
-      MINI PREVIEW
-  ============================ */
   function PreviewMini() {
     const hasImg = !!(preview && preview.ok && preview.image);
     const normalized = normalizeHandle(platform, target || "");
@@ -712,7 +667,7 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
         style={{ borderColor: COLORS.border }}
       >
         <div
-          className="flex items-center gap-2 px-3 py-2 border-b bg-white"
+          className="flex items-center gap-2 px-3 py-2 border-b bg:white"
           style={{ borderColor: "#E0ECFF" }}
         >
           <div
@@ -729,10 +684,7 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
           </div>
         </div>
 
-        <div
-          className="relative w-full bg-[#DAE6FF]"
-          style={{ paddingTop: "75%", maxHeight: 140 }}
-        >
+        <div className="relative w-full bg-[#DAE6FF]" style={{ paddingTop: "75%", maxHeight: 140 }}>
           {previewLoading && (
             <div className="absolute inset-0 animate-pulse bg-gradient-to-br from-[#EAF2FF] via-[#F5FAFF] to-white" />
           )}
@@ -754,10 +706,7 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
               <div
                 className="w-[52%] max-w-[110px] aspect-square rounded-xl text-white font-bold text-xl shadow flex items-center justify-center"
                 style={{
-                  background: `linear-gradient(135deg, ${bgHue}, ${bgHue.replace(
-                    "% 58%)",
-                    "% 40%)"
-                  )})`,
+                  background: `linear-gradient(135deg, ${bgHue}, ${bgHue.replace("% 58%)", "% 40%)")})`
                 }}
               >
                 {normalized.replace("@", "").slice(0, 2).toUpperCase()}
@@ -788,17 +737,12 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
     );
   }
 
-  /* ========================================================
-      MAIN RENDER
-  ======================================================== */
   return (
     <div className="fixed inset-0 z-[9999] bg-black/70 backdrop-blur-sm flex items-center justify-center px-3 py-6 sm:px-4 sm:py-8">
-      {/* MODAL WRAPPER */}
       <div
         className="w-full max-w-xl bg-white rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.3)] border border-[#D6E4FF] flex flex-col overflow-hidden"
         style={{ maxHeight: "94vh" }}
       >
-        {/* HEADER */}
         <div
           className="w-full border-b px-5 py-5 sm:px-6 sm:py-6 relative"
           style={{
@@ -806,7 +750,6 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
             borderColor: COLORS.border,
           }}
         >
-          {/* CLOSE */}
           <button
             onClick={onClose}
             aria-label="Close"
@@ -815,7 +758,6 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
             <X size={20} className="text-[#007BFF]" />
           </button>
 
-          {/* PLATFORM + SERVICE HEADER */}
           <div className="flex items-center gap-3 pr-12">
             <div className="w-10 h-10 rounded-2xl bg-white shadow flex items-center justify-center">
               {step === 0 ? (
@@ -834,7 +776,6 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
             </div>
           </div>
 
-          {/* STEPS */}
           <div className="mt-4">
             <div className="grid grid-cols-4 gap-1">
               {steps.map((s, i) => (
@@ -876,9 +817,7 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
           </div>
         </div>
 
-        {/* CONTENT */}
         <div className="flex-1 overflow-y-auto px-5 py-6 sm:px-6 sm:py-7 bg-[#FAFCFF]">
-          {/* STEP 0 */}
           {step === 0 && (
             <div>
               <h3 className="text-center text-xl sm:text-2xl font-black text-[#111]">
@@ -908,16 +847,15 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
                       {p.icon}
                     </div>
                     <div className="font-semibold">{p.name}</div>
-                    <div className="text-[11px] text-[#94A3B8]">
-                      Followers • Likes • Views
-                    </div>
+
+                    {/* THIS LINE REMOVED PER YOUR REQUEST */}
+                    {/* <div className="text-[11px] text-[#94A3B8]">Followers • Likes • Views</div> */}
                   </button>
                 ))}
               </div>
             </div>
           )}
 
-          {/* STEP 1 */}
           {step === 1 && (
             <div>
               <h3 className="text-center text-xl sm:text-2xl font-black text-[#111]">
@@ -997,7 +935,6 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
             </div>
           )}
 
-          {/* STEP 2 */}
           {step === 2 && (
             <div>
               <h3 className="text-center text-xl sm:text-2xl font-black text-[#111]">
@@ -1055,14 +992,13 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
             </div>
           )}
 
-          {/* STEP 3 */}
           {step === 3 && (
             <form onSubmit={handleSecureCheckout}>
               <h3 className="text-center text-xl sm:text-2xl font-black text-[#111]">
                 Review & Checkout
               </h3>
 
-              <div className="mt-6 border border-[#CFE4FF] bg-white rounded-xl p-5 shadow-sm">
+              <div className="mt-6 border border-[#CFE4FF] bg.white rounded-xl p-5 shadow-sm">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl bg-[#EFF4FF] flex items-center justify-center">
                     {platform.icon}
@@ -1082,9 +1018,7 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
                     </div>
                     <div className="flex justify-between">
                       <b>User / Link:</b>{" "}
-                      <span className="max-w-[160px] break-words text-right">
-                        {target}
-                      </span>
+                      <span className="max-w-[160px] break-words text-right">{target}</span>
                     </div>
                     <div className="flex justify-between">
                       <b>Amount:</b> {quantity}
@@ -1092,12 +1026,8 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
                     <div className="flex justify-between">
                       <b>Price:</b>
                       <span>
-                        <span className="text-[#007BFF] font-semibold">
-                          ${discounted.toFixed(2)}
-                        </span>
-                        <span className="line-through text-[#94A3B8] text-xs ml-1">
-                          ${original.toFixed(2)}
-                        </span>
+                        <span className="text-[#007BFF] font-semibold">${discounted.toFixed(2)}</span>
+                        <span className="line-through text-[#94A3B8] text-xs ml-1">${original.toFixed(2)}</span>
                       </span>
                     </div>
                   </div>
@@ -1106,9 +1036,7 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
                 {service && (
                   <div className="mt-3 pt-3 border-t border-dashed border-[#CFE4FF] flex justify-between text-[#111] font-bold text-lg">
                     <div>Total</div>
-                    <div className="text-[#007BFF]">
-                      ${discounted.toFixed(2)}
-                    </div>
+                    <div className="text-[#007BFF]">${discounted.toFixed(2)}</div>
                   </div>
                 )}
               </div>
