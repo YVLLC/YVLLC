@@ -330,7 +330,7 @@ function getQuickAmounts(platform: Platform, service: Service) {
 }
 
 /* ========================================================
-   SIMPLE COLOR HASH (USED FOR PREVIEW AVATAR)
+   SIMPLE COLOR HASH (USED FOR AVATAR IF NEEDED)
 ======================================================== */
 function hashToHsl(seed: string, s = 65, l = 58) {
   let h = 0;
@@ -645,59 +645,39 @@ export default function OrderModal({
   }
 
   /* ========================================================
-     NEW: SIMPLE, PREMIUM PREVIEW (NO API / IMAGES)
+     NEW: FORMAT REFERENCE FOR REVIEW (CLICKABLE LINK)
   ======================================================== */
-  function PreviewMini() {
-    if (!service) return null;
+  function formatReference(): { display: string; href: string } {
+    if (!service) return { display: "", href: "" };
 
     const cleaned = sanitizeFollowizInput(target, service.type.toString());
+    const rawTrimmed = target.trim();
     const needsUrl =
       service.type.toString().toLowerCase() === "likes" ||
       service.type.toString().toLowerCase() === "views";
 
-    let display = cleaned || target.trim();
-    if (!needsUrl && cleaned) {
-      display = "@" + cleaned;
+    if (needsUrl) {
+      const display = cleaned || rawTrimmed;
+      const href = cleaned || "";
+      return { display, href };
     }
 
-    const label = needsUrl ? "Post / Video" : "Profile";
-    const seed = display || platform.name;
-    const bgHue = hashToHsl(seed || platform.name);
+    // Followers / Subscribers → build profile URLs
+    const usernameBase = cleaned || rawTrimmed.replace(/^@+/, "");
+    if (!usernameBase) return { display: "", href: "" };
 
-    return (
-      <div
-        className="w-full max-w-xs mx-auto rounded-2xl border bg-white shadow-sm px-4 py-3 flex items-center gap-3"
-        style={{ borderColor: COLORS.border }}
-      >
-        <div
-          className="w-10 h-10 rounded-2xl flex items-center justify-center text-white text-sm font-bold"
-          style={{
-            background: `linear-gradient(135deg, ${bgHue}, ${bgHue.replace(
-              "% 58%)",
-              "% 40%)"
-            )})`,
-          }}
-        >
-          {(display || platform.name).replace("@", "").slice(0, 2).toUpperCase() ||
-            "?"}
-        </div>
-        <div className="flex-1 min-w-0">
-          <div className="text-[11px] font-semibold text-[#64748B]">
-            {label}
-          </div>
-          <div className="text-sm font-semibold text-[#0F172A] truncate">
-            {display || "—"}
-          </div>
-          <div className="text-[11px] text-[#94A3B8]">
-            Sent via {platform.name} {service.type}
-          </div>
-        </div>
-        <div className="flex items-center justify-center w-9 h-9 rounded-2xl bg-[#EFF4FF]">
-          {platform.icon}
-        </div>
-      </div>
-    );
+    const display = "@" + usernameBase;
+    let href = "";
+    const key = platform.key.toLowerCase();
+
+    if (key === "instagram") href = `https://instagram.com/${usernameBase}`;
+    else if (key === "tiktok") href = `https://www.tiktok.com/@${usernameBase}`;
+    else if (key === "youtube") href = `https://www.youtube.com/@${usernameBase}`;
+
+    return { display, href };
   }
+
+  const { display: refDisplay, href: refHref } = formatReference();
 
   return (
     <div className="fixed inset-0 z-[9999] bg-black/70 backdrop-blur-sm flex items-center justify-center px-3 py-6 sm:px-4 sm:py-8">
@@ -981,10 +961,18 @@ export default function OrderModal({
                     <div className="flex justify-between">
                       <b>User / Link:</b>{" "}
                       <span className="max-w-[160px] break-words text-right">
-                        {sanitizeFollowizInput(
-                          target,
-                          service.type.toString()
-                        ) || target}
+                        {refHref ? (
+                          <a
+                            href={refHref}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-[#007BFF] hover:underline break-words"
+                          >
+                            {refDisplay || "—"}
+                          </a>
+                        ) : (
+                          refDisplay || "—"
+                        )}
                       </span>
                     </div>
                     <div className="flex justify-between">
@@ -1012,10 +1000,6 @@ export default function OrderModal({
                     </div>
                   </div>
                 )}
-              </div>
-
-              <div className="mt-6">
-                <PreviewMini />
               </div>
 
               {error && (
