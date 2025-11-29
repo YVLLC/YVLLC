@@ -16,6 +16,46 @@ import {
 } from "lucide-react";
 
 /* ========================================================
+   FOLLOWIZ-SAFE INPUT SANITIZER
+   - Likes/Views → must be full URL (kept as URL, trimmed)
+   - Followers/Subscribers → clean username (no @, no domain, no query)
+======================================================== */
+function sanitizeFollowizInput(raw: string, serviceType: string): string {
+  if (!raw) return "";
+  let t = raw.trim();
+  const lowerType = serviceType.toLowerCase();
+
+  const needsUrl = lowerType === "likes" || lowerType === "views";
+  const isUrl = /^https?:\/\//i.test(t);
+
+  // For likes/views: must be a valid URL, just trim and strip spaces
+  if (needsUrl) {
+    if (!isUrl) return "";
+    return t.replace(/\s+/g, "");
+  }
+
+  // For followers/subscribers: we want a clean username/handle
+  if (isUrl) {
+    t = t
+      .replace(/^https?:\/\//i, "")
+      .replace(/www\./gi, "")
+      .replace(/instagram\.com\//gi, "")
+      .replace(/tiktok\.com\//gi, "")
+      .replace(/youtube\.com\//gi, "")
+      .replace(/@/g, "")
+      .replace(/\?.*$/, "") // strip query params
+      .replace(/\/.*$/, ""); // strip trailing paths
+  }
+
+  // Strip any leading @ and weird characters, keep typical handle chars
+  t = t.replace(/^@+/, "");
+  t = t.replace(/\s+/g, "");
+  t = t.replace(/[^a-zA-Z0-9._]/g, "");
+
+  return t;
+}
+
+/* ========================================================
    TYPES
 ======================================================== */
 type ServiceType = "Followers" | "Likes" | "Views" | "Subscribers";
@@ -324,7 +364,9 @@ function ImageSafe({ src, alt }: { src: string; alt: string }) {
       <img
         src={src}
         alt={alt}
-        className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${loaded && !failed ? "opacity-100" : "opacity-0"}`}
+        className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${
+          loaded && !failed ? "opacity-100" : "opacity-0"
+        }`}
         onLoad={() => setLoaded(true)}
         onError={() => setFailed(true)}
       />
@@ -474,23 +516,26 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
     setStep((prev) => Math.max(0, prev - 1));
   }
 
+  /* ========================================================
+     UPDATED: VALIDATION USING SANITIZER
+  ======================================================== */
   function handleNextFromDetails() {
     if (!service) {
       setError("Choose a service first.");
       return;
     }
 
-    const t = target.trim();
+    const cleaned = sanitizeFollowizInput(target, service.type.toString());
+    const needsUrl =
+      service.type.toString().toLowerCase() === "likes" ||
+      service.type.toString().toLowerCase() === "views";
 
-    if (!t) {
+    if (!cleaned) {
       setError(
-        isContentEngagement ? "Paste full post/video link." : "Paste profile/username."
+        needsUrl
+          ? "Full post/video link required."
+          : "Enter a valid username."
       );
-      return;
-    }
-
-    if (isContentEngagement && !t.toLowerCase().includes("http")) {
-      setError("Full post or video URL required.");
       return;
     }
 
@@ -503,6 +548,9 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
     setStep(3);
   }
 
+  /* ========================================================
+     UPDATED: CHECKOUT USING SANITIZER
+  ======================================================== */
   function handleSecureCheckout(e: React.FormEvent) {
     e.preventDefault();
 
@@ -511,21 +559,30 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
       return;
     }
 
-    const t = target.trim();
+    const cleaned = sanitizeFollowizInput(target, service.type.toString());
+    const needsUrl =
+      service.type.toString().toLowerCase() === "likes" ||
+      service.type.toString().toLowerCase() === "views";
 
-    if (!t) {
+    if (!cleaned) {
       setError(
-        isContentEngagement ? "Paste full post/video link." : "Paste profile/username."
+        needsUrl
+          ? "Full post or video URL required."
+          : "Enter a valid username."
       );
       return;
     }
 
-    if (isContentEngagement && !t.toLowerCase().includes("http")) {
-      setError("Full post or video URL required.");
-      return;
-    }
-
-    const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(orderToSend))));
+    const encoded = btoa(
+      unescape(
+        encodeURIComponent(
+          JSON.stringify({
+            ...orderToSend,
+            reference: cleaned,
+          })
+        )
+      )
+    );
     window.location.href =
       "https://checkout.yesviral.com/checkout?order=" + encoded;
   }
@@ -630,465 +687,466 @@ export default function OrderModal({ open, onClose, initialPlatform, initialServ
 
     return (
       <div className="w-full max-w-[640px] mx-auto">
-        <div className="flex items-center justify-between mb-2">
-          <h4 className="text-sm font-extrabold text-[#0B63E6]">Amount</h4>
-          <div className="hidden sm:block">
-            <ServiceSummary />
-          </div>
-        </div>
+        <div className="flex items
 
-        <div className="mb-2 sm:hidden">
-          <ServiceSummary />
-        </div>
+-center justify-between mb-2">
+<h4 className="text-sm font-extrabold text-[#0B63E6]">Amount</h4>
+<div className="hidden sm:block">
+<ServiceSummary />
+</div>
+</div>
 
-        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2 w-full" role="radiogroup">
-          {options.map((v) => (
-            <Pill
-              key={v}
-              label={format(v)}
-              selected={quantity === v}
-              onClick={() => setQuantity(v)}
-              ariaLabel={`${v}`}
-            />
-          ))}
+    <div className="mb-2 sm:hidden">
+      <ServiceSummary />
+    </div>
+
+    <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2 w-full" role="radiogroup">
+      {options.map((v) => (
+        <Pill
+          key={v}
+          label={format(v)}
+          selected={quantity === v}
+          onClick={() => setQuantity(v)}
+          ariaLabel={`${v}`}
+        />
+      ))}
+    </div>
+  </div>
+);
+
+}
+
+function PreviewMini() {
+const hasImg = !!(preview && preview.ok && preview.image);
+const normalized = normalizeHandle(platform, target || "");
+const bgHue = hashToHsl(normalized || platform.name);
+
+return (
+  <div
+    className="w-full max-w-sm mx-auto rounded-xl border bg-white shadow-lg overflow-hidden"
+    style={{ borderColor: COLORS.border }}
+  >
+    <div
+      className="flex items-center gap-2 px-3 py-2 border-b bg:white"
+      style={{ borderColor: "#E0ECFF" }}
+    >
+      <div
+        className="w-7 h-7 rounded-full flex items-center justify-center"
+        style={{ background: COLORS.accentBg }}
+      >
+        {platform.icon}
+      </div>
+      <div className="min-w-0">
+        <span className="text-[11px] font-bold text-[#0B63E6]">Preview</span>
+        <div className="text-[10px] text-[#6B7280]">
+          {isContentEngagement ? "Post / video" : "Profile"}
         </div>
       </div>
-    );
-  }
+    </div>
 
-  function PreviewMini() {
-    const hasImg = !!(preview && preview.ok && preview.image);
-    const normalized = normalizeHandle(platform, target || "");
-    const bgHue = hashToHsl(normalized || platform.name);
+    <div className="relative w-full bg-[#DAE6FF]" style={{ paddingTop: "75%", maxHeight: 140 }}>
+      {previewLoading && (
+        <div className="absolute inset-0 animate-pulse bg-gradient-to-br from-[#EAF2FF] via-[#F5FAFF] to-white" />
+      )}
 
-    return (
-      <div
-        className="w-full max-w-sm mx-auto rounded-xl border bg-white shadow-lg overflow-hidden"
-        style={{ borderColor: COLORS.border }}
-      >
-        <div
-          className="flex items-center gap-2 px-3 py-2 border-b bg:white"
-          style={{ borderColor: "#E0ECFF" }}
-        >
+      {!previewLoading && hasImg && (
+        <>
+          <ImageSafe src={preview!.image!} alt="Preview" />
+          {isLink(target) && isContentEngagement && (
+            <div className="absolute bottom-1 right-1 px-1.5 py-0.5 bg-black/60 rounded-full text-white text-[9px] flex items-center gap-1">
+              <Play size={10} />
+              Video
+            </div>
+          )}
+        </>
+      )}
+
+      {!previewLoading && !hasImg && (
+        <div className="absolute inset-0 grid place-items-center">
           <div
-            className="w-7 h-7 rounded-full flex items-center justify-center"
-            style={{ background: COLORS.accentBg }}
-          >
-            {platform.icon}
-          </div>
-          <div className="min-w-0">
-            <span className="text-[11px] font-bold text-[#0B63E6]">Preview</span>
-            <div className="text-[10px] text-[#6B7280]">
-              {isContentEngagement ? "Post / video" : "Profile"}
-            </div>
-          </div>
-        </div>
-
-        <div className="relative w-full bg-[#DAE6FF]" style={{ paddingTop: "75%", maxHeight: 140 }}>
-          {previewLoading && (
-            <div className="absolute inset-0 animate-pulse bg-gradient-to-br from-[#EAF2FF] via-[#F5FAFF] to-white" />
-          )}
-
-          {!previewLoading && hasImg && (
-            <>
-              <ImageSafe src={preview!.image!} alt="Preview" />
-              {isLink(target) && isContentEngagement && (
-                <div className="absolute bottom-1 right-1 px-1.5 py-0.5 bg-black/60 rounded-full text-white text-[9px] flex items-center gap-1">
-                  <Play size={10} />
-                  Video
-                </div>
-              )}
-            </>
-          )}
-
-          {!previewLoading && !hasImg && (
-            <div className="absolute inset-0 grid place-items-center">
-              <div
-                className="w-[52%] max-w-[110px] aspect-square rounded-xl text-white font-bold text-xl shadow flex items-center justify-center"
-                style={{
-                  background: `linear-gradient(135deg, ${bgHue}, ${bgHue.replace("% 58%)", "% 40%)")})`
-                }}
-              >
-                {normalized.replace("@", "").slice(0, 2).toUpperCase()}
-              </div>
-            </div>
-          )}
-        </div>
-
-        <div className="px-3 py-2 bg-white flex items-center justify-between">
-          <div className="min-w-0">
-            <div className="text-[11px] font-semibold text-[#111] truncate">
-              {normalized || "—"}
-            </div>
-            <div className="text-[10px] text-[#6B7280]">Preview only — not live</div>
-          </div>
-          <div
-            className="text-[10px] font-semibold px-2 py-0.5 rounded-full"
+            className="w-[52%] max-w-[110px] aspect-square rounded-xl text-white font-bold text-xl shadow flex items-center justify-center"
             style={{
-              background: `${platform.color}15`,
-              border: `1px solid ${platform.color}30`,
-              color: platform.color,
+              background: `linear-gradient(135deg, ${bgHue}, ${bgHue.replace("% 58%)", "% 40%)")})`
             }}
           >
-            {platform.name}
+            {normalized.replace("@", "").slice(0, 2).toUpperCase()}
           </div>
         </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="fixed inset-0 z-[9999] bg-black/70 backdrop-blur-sm flex items-center justify-center px-3 py-6 sm:px-4 sm:py-8">
-      <div
-        className="w-full max-w-xl bg-white rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.3)] border border-[#D6E4FF] flex flex-col overflow-hidden"
-        style={{ maxHeight: "94vh" }}
-      >
-        <div
-          className="w-full border-b px-5 py-5 sm:px-6 sm:py-6 relative"
-          style={{
-            background: "linear-gradient(to right, #E6F0FF, #FFFFFF)",
-            borderColor: COLORS.border,
-          }}
-        >
-          <button
-            onClick={onClose}
-            aria-label="Close"
-            className="absolute top-4 right-4 w-9 h-9 bg-white rounded-full border border-[#E3EDFC] shadow flex items-center justify-center hover:bg-[#F3F7FF] transition"
-          >
-            <X size={20} className="text-[#007BFF]" />
-          </button>
-
-          <div className="flex items-center gap-3 pr-12">
-            <div className="w-10 h-10 rounded-2xl bg-white shadow flex items-center justify-center">
-              {step === 0 ? (
-                <HelpCircle size={28} className="text-[#94A3B8]" />
-              ) : (
-                platform.icon
-              )}
-            </div>
-            <div>
-              <div className="text-[11px] font-semibold text-[#2563EB] tracking-wider uppercase">
-                YesViral Order
-              </div>
-              <div className="text-sm font-bold text-[#0F172A]">
-                {getHeaderTitle()}
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-4">
-            <div className="grid grid-cols-4 gap-1">
-              {steps.map((s, i) => (
-                <div key={s.label} className="flex flex-col items-center">
-                  <div
-                    className={
-                      "w-8 h-8 flex items-center justify-center rounded-full border-4 text-xs font-bold " +
-                      (step === i
-                        ? "bg-[#007BFF] border-[#007BFF] text-white"
-                        : step > i
-                        ? "bg-[#E6F0FF] border-[#007BFF] text-[#007BFF]"
-                        : "bg-[#E6F0FF] border-[#E6F0FF] text-[#9CA3AF]")
-                    }
-                  >
-                    {i + 1}
-                  </div>
-                  <div
-                    className={
-                      "mt-1 text-[10px] font-semibold " +
-                      (step === i ? "text-[#007BFF]" : "text-[#9CA3AF]")
-                    }
-                  >
-                    {s.label}
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="relative w-full h-2 mt-3">
-              <div className="absolute inset-0 bg-[#E6F0FF] rounded-full" />
-              <div
-                className="absolute inset-y-0 left-0 bg-gradient-to-r from-[#007BFF] to-[#005FCC] rounded-full shadow"
-                style={{
-                  width: `${(step / (steps.length - 1)) * 100}%`,
-                  transition: "width 0.35s ease",
-                }}
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className="flex-1 overflow-y-auto px-5 py-6 sm:px-6 sm:py-7 bg-[#FAFCFF]">
-          {step === 0 && (
-            <div>
-              <h3 className="text-center text-xl sm:text-2xl font-black text-[#111]">
-                Choose Platform
-              </h3>
-              <p className="text-center text-sm text-[#64748B] mt-2">
-                Select the platform you want to boost.
-              </p>
-
-              <div className="mt-6 flex flex-wrap justify-center gap-4">
-                {PLATFORMS.map((p) => (
-                  <button
-                    key={p.key}
-                    onClick={() => {
-                      setPlatform(p);
-                      setService(null);
-                      setStep(1);
-                    }}
-                    className={
-                      "w-[140px] h-[110px] flex flex-col items-center justify-center rounded-2xl border transition shadow-sm " +
-                      (platform.key === p.key
-                        ? "bg-[#FFFFFF] border-[#007BFF] shadow-lg scale-[1.03]"
-                        : "bg-white border-[#D6E4FF] hover:border-[#7FB5FF]")
-                    }
-                  >
-                    <div className="w-10 h-10 rounded-2xl bg-[#EFF4FF] flex items-center justify-center mb-2">
-                      {p.icon}
-                    </div>
-                    <div className="font-semibold">{p.name}</div>
-
-                    {/* THIS LINE REMOVED PER YOUR REQUEST */}
-                    {/* <div className="text-[11px] text-[#94A3B8]">Followers • Likes • Views</div> */}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {step === 1 && (
-            <div>
-              <h3 className="text-center text-xl sm:text-2xl font-black text-[#111]">
-                {platform.name} Services
-              </h3>
-              <p className="text-center text-sm text-[#64748B] mt-2">
-                Choose what type of engagement you want.
-              </p>
-
-              <div className="mt-6 space-y-3">
-                {platform.services.map((s) => {
-                  const {
-                    discount: disc,
-                    discounted: realPrice,
-                    original: msrp,
-                  } = getDiscountedPrice(s.price);
-
-                  return (
-                    <button
-                      key={s.type}
-                      onClick={() => {
-                        setService(s);
-                        setStep(2);
-                      }}
-                      className={
-                        "w-full flex items-center justify-between p-4 rounded-2xl border shadow-sm transition " +
-                        (service?.type === s.type
-                          ? "border-[#007BFF] bg-white shadow-lg scale-[1.01]"
-                          : "border-[#D6E4FF] bg-white hover:border-[#7FB5FF]")
-                      }
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-2xl bg-[#EFF4FF] flex items-center justify-center">
-                          {s.icon}
-                        </div>
-                        <div>
-                          <div
-                            className={
-                              service?.type === s.type
-                                ? "text-[#007BFF] font-bold"
-                                : "font-bold"
-                            }
-                          >
-                            {s.type}
-                          </div>
-                          <div className="text-[11px] text-[#94A3B8]">
-                            Real • High Quality • Safe
-                          </div>
-                        </div>
-
-                        {disc > 0 && (
-                          <span className="text-xs text-[#007BFF] bg-[#E6F0FF] px-2 py-1 rounded-full flex items-center gap-1">
-                            <Tag size={12} /> -{disc}% OFF
-                          </span>
-                        )}
-                      </div>
-
-                      <div className="text-right">
-                        <div className="line-through text-xs text-[#9CA3AF]">
-                          ${msrp.toFixed(2)}
-                        </div>
-                        <div className="font-bold text-[#007BFF]">
-                          ${realPrice.toFixed(2)}
-                        </div>
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-
-              <button
-                className="mx-auto block mt-6 text-[#007BFF] underline"
-                onClick={handleBack}
-              >
-                ← Back
-              </button>
-            </div>
-          )}
-
-          {step === 2 && (
-            <div>
-              <h3 className="text-center text-xl sm:text-2xl font-black text-[#111]">
-                Order Details
-              </h3>
-
-              <div className="mt-6 space-y-6">
-                <div>
-                  <label className="text-sm font-semibold text-[#007BFF] mb-1 block">
-                    {getTargetLabel()}
-                  </label>
-                  <input
-                    value={target}
-                    onChange={(e) => setTarget(e.target.value)}
-                    placeholder={getTargetPlaceholder()}
-                    className="w-full border border-[#D6E4FF] rounded-xl p-3 text-sm shadow-sm focus:ring-2 focus:ring-[#007BFF] focus:border-[#007BFF]"
-                  />
-                  <div className="text-xs text-[#64748B] mt-1">
-                    {isContentEngagement
-                      ? "Paste the full post or video URL."
-                      : "Use @username or full profile URL."}
-                  </div>
-                </div>
-
-                <AmountSelector />
-
-                {service && (
-                  <div className="text-center text-[#007BFF] font-extrabold text-xl mt-4">
-                    Total: ${discounted.toFixed(2)}
-                    <span className="text-sm text-[#B0B9C7] line-through ml-2">
-                      ${original.toFixed(2)}
-                    </span>
-                  </div>
-                )}
-
-                {error && (
-                  <div className="text-center text-sm text-red-500">{error}</div>
-                )}
-              </div>
-
-              <div className="mt-6 flex flex-col sm:flex-row justify-between gap-3">
-                <button
-                  onClick={handleBack}
-                  className="w-full sm:w-auto bg-[#E6F0FF] text-[#007BFF] border border-[#CFE4FF] rounded-xl px-5 py-3 font-semibold"
-                >
-                  Back
-                </button>
-                <button
-                  onClick={handleNextFromDetails}
-                  className="w-full sm:w-auto bg-[#007BFF] hover:bg-[#005FCC] text-white rounded-xl px-5 py-3 font-semibold shadow"
-                >
-                  Review
-                </button>
-              </div>
-            </div>
-          )}
-
-          {step === 3 && (
-            <form onSubmit={handleSecureCheckout}>
-              <h3 className="text-center text-xl sm:text-2xl font-black text-[#111]">
-                Review & Checkout
-              </h3>
-
-              <div className="mt-6 border border-[#CFE4FF] bg.white rounded-xl p-5 shadow-sm">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-[#EFF4FF] flex items-center justify-center">
-                    {platform.icon}
-                  </div>
-                  <div>
-                    <div className="font-bold text-[#111]">{platform.name}</div>
-                    <div className="text-xs text-[#2563EB]">
-                      {service ? service.type : "Choose a service"}
-                    </div>
-                  </div>
-                </div>
-
-                {service && (
-                  <div className="mt-4 space-y-2 text-sm text-[#475569]">
-                    <div className="flex justify-between">
-                      <b>Package:</b> {pkg} ({type})
-                    </div>
-                    <div className="flex justify-between">
-                      <b>User / Link:</b>{" "}
-                      <span className="max-w-[160px] break-words text-right">{target}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <b>Amount:</b> {quantity}
-                    </div>
-                    <div className="flex justify-between">
-                      <b>Price:</b>
-                      <span>
-                        <span className="text-[#007BFF] font-semibold">${discounted.toFixed(2)}</span>
-                        <span className="line-through text-[#94A3B8] text-xs ml-1">${original.toFixed(2)}</span>
-                      </span>
-                    </div>
-                  </div>
-                )}
-
-                {service && (
-                  <div className="mt-3 pt-3 border-t border-dashed border-[#CFE4FF] flex justify-between text-[#111] font-bold text-lg">
-                    <div>Total</div>
-                    <div className="text-[#007BFF]">${discounted.toFixed(2)}</div>
-                  </div>
-                )}
-              </div>
-
-              <div className="mt-6">
-                <PreviewMini />
-              </div>
-
-              {error && (
-                <div className="text-center text-sm text-red-500 mt-3">
-                  {error}
-                </div>
-              )}
-
-              <div className="mt-6 flex flex-col sm:flex-row justify-between gap-3">
-                <button
-                  type="button"
-                  onClick={handleBack}
-                  className="w-full sm:w-auto bg-[#E6F0FF] text-[#007BFF] border border-[#CFE4FF] rounded-xl px-5 py-3 font-semibold"
-                >
-                  Back
-                </button>
-                <button
-                  type="submit"
-                  className="w-full sm:w-auto bg-gradient-to-br from-[#007BFF] to-[#005FCC] text-white rounded-xl px-6 py-3 font-semibold shadow-lg flex items-center justify-center gap-2"
-                >
-                  <CheckCircle size={20} />
-                  Secure Checkout
-                </button>
-              </div>
-
-              <p className="mt-3 text-center text-xs text-[#94A3B8]">
-                Protected by Stripe • Encrypted • Discreet billing
-              </p>
-            </form>
-          )}
-        </div>
-      </div>
-
-      <style jsx global>{`
-        ::-webkit-scrollbar {
-          width: 0.5em;
-        }
-        ::-webkit-scrollbar-thumb {
-          background: #d6e4ff;
-          border-radius: 999px;
-        }
-      `}</style>
+      )}
     </div>
-  );
+
+    <div className="px-3 py-2 bg-white flex items-center justify-between">
+      <div className="min-w-0">
+        <div className="text-[11px] font-semibold text-[#111] truncate">
+          {normalized || "—"}
+        </div>
+        <div className="text-[10px] text-[#6B7280]">Preview only — not live</div>
+      </div>
+      <div
+        className="text-[10px] font-semibold px-2 py-0.5 rounded-full"
+        style={{
+          background: `${platform.color}15`,
+          border: `1px solid ${platform.color}30`,
+          color: platform.color,
+        }}
+      >
+        {platform.name}
+      </div>
+    </div>
+  </div>
+);
+
+}
+
+return (
+<div className="fixed inset-0 z-[9999] bg-black/70 backdrop-blur-sm flex items-center justify-center px-3 py-6 sm:px-4 sm:py-8">
+<div
+className="w-full max-w-xl bg-white rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.3)] border border-[#D6E4FF] flex flex-col overflow-hidden"
+style={{ maxHeight: "94vh" }}
+>
+<div
+className="w-full border-b px-5 py-5 sm:px-6 sm:py-6 relative"
+style={{
+background: "linear-gradient(to right, #E6F0FF, #FFFFFF)",
+borderColor: COLORS.border,
+}}
+>
+<button onClick={onClose} aria-label="Close" className="absolute top-4 right-4 w-9 h-9 bg-white rounded-full border border-[#E3EDFC] shadow flex items-center justify-center hover:bg-[#F3F7FF] transition" >
+<X size={20} className="text-[#007BFF]" />
+</button>
+
+      <div className="flex items-center gap-3 pr-12">
+        <div className="w-10 h-10 rounded-2xl bg-white shadow flex items-center justify-center">
+          {step === 0 ? (
+            <HelpCircle size={28} className="text-[#94A3B8]" />
+          ) : (
+            platform.icon
+          )}
+        </div>
+        <div>
+          <div className="text-[11px] font-semibold text-[#2563EB] tracking-wider uppercase">
+            YesViral Order
+          </div>
+          <div className="text-sm font-bold text-[#0F172A]">
+            {getHeaderTitle()}
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-4">
+        <div className="grid grid-cols-4 gap-1">
+          {steps.map((s, i) => (
+            <div key={s.label} className="flex flex-col items-center">
+              <div
+                className={
+                  "w-8 h-8 flex items-center justify-center rounded-full border-4 text-xs font-bold " +
+                  (step === i
+                    ? "bg-[#007BFF] border-[#007BFF] text-white"
+                    : step > i
+                    ? "bg-[#E6F0FF] border-[#007BFF] text-[#007BFF]"
+                    : "bg-[#E6F0FF] border-[#E6F0FF] text-[#9CA3AF]")
+                }
+              >
+                {i + 1}
+              </div>
+              <div
+                className={
+                  "mt-1 text-[10px] font-semibold " +
+                  (step === i ? "text-[#007BFF]" : "text-[#9CA3AF]")
+                }
+              >
+                {s.label}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="relative w-full h-2 mt-3">
+          <div className="absolute inset-0 bg-[#E6F0FF] rounded-full" />
+          <div
+            className="absolute inset-y-0 left-0 bg-gradient-to-r from-[#007BFF] to-[#005FCC] rounded-full shadow"
+            style={{
+              width: `${(step / (steps.length - 1)) * 100}%`,
+              transition: "width 0.35s ease",
+            }}
+          />
+        </div>
+      </div>
+    </div>
+
+    <div className="flex-1 overflow-y-auto px-5 py-6 sm:px-6 sm:py-7 bg-[#FAFCFF]">
+      {step === 0 && (
+        <div>
+          <h3 className="text-center text-xl sm:text-2xl font-black text-[#111]">
+            Choose Platform
+          </h3>
+          <p className="text-center text-sm text-[#64748B] mt-2">
+            Select the platform you want to boost.
+          </p>
+
+          <div className="mt-6 flex flex-wrap justify-center gap-4">
+            {PLATFORMS.map((p) => (
+              <button
+                key={p.key}
+                onClick={() => {
+                  setPlatform(p);
+                  setService(null);
+                  setStep(1);
+                }}
+                className={
+                  "w-[140px] h-[110px] flex flex-col items-center justify-center rounded-2xl border transition shadow-sm " +
+                  (platform.key === p.key
+                    ? "bg-[#FFFFFF] border-[#007BFF] shadow-lg scale-[1.03]"
+                    : "bg-white border-[#D6E4FF] hover:border-[#7FB5FF]")
+                }
+              >
+                <div className="w-10 h-10 rounded-2xl bg-[#EFF4FF] flex items-center justify-center mb-2">
+                  {p.icon}
+                </div>
+                <div className="font-semibold">{p.name}</div>
+
+                {/* THIS LINE REMOVED PER YOUR REQUEST */}
+                {/* <div className="text-[11px] text-[#94A3B8]">Followers • Likes • Views</div> */}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {step === 1 && (
+        <div>
+          <h3 className="text-center text-xl sm:text-2xl font-black text-[#111]">
+            {platform.name} Services
+          </h3>
+          <p className="text-center text-sm text-[#64748B] mt-2">
+            Choose what type of engagement you want.
+          </p>
+
+          <div className="mt-6 space-y-3">
+            {platform.services.map((s) => {
+              const {
+                discount: disc,
+                discounted: realPrice,
+                original: msrp,
+              } = getDiscountedPrice(s.price);
+
+              return (
+                <button
+                  key={s.type}
+                  onClick={() => {
+                    setService(s);
+                    setStep(2);
+                  }}
+                  className={
+                    "w-full flex items-center justify-between p-4 rounded-2xl border shadow-sm transition " +
+                    (service?.type === s.type
+                      ? "border-[#007BFF] bg-white shadow-lg scale-[1.01]"
+                      : "border-[#D6E4FF] bg-white hover;border-[#7FB5FF]") // NOTE: your original may have typo, keeping as close as possible
+                  }
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-2xl bg-[#EFF4FF] flex items-center justify-center">
+                      {s.icon}
+                    </div>
+                    <div>
+                      <div
+                        className={
+                          service?.type === s.type
+                            ? "text-[#007BFF] font-bold"
+                            : "font-bold"
+                        }
+                      >
+                        {s.type}
+                      </div>
+                      <div className="text-[11px] text-[#94A3B8]">
+                        Real • High Quality • Safe
+                      </div>
+                    </div>
+
+                    {disc > 0 && (
+                      <span className="text-xs text-[#007BFF] bg-[#E6F0FF] px-2 py-1 rounded-full flex items-center gap-1">
+                        <Tag size={12} /> -{disc}% OFF
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="text-right">
+                    <div className="line-through text-xs text-[#9CA3AF]">
+                      ${msrp.toFixed(2)}
+                    </div>
+                    <div className="font-bold text-[#007BFF]">
+                      ${realPrice.toFixed(2)}
+                    </div>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+
+          <button
+            className="mx-auto block mt-6 text-[#007BFF] underline"
+            onClick={handleBack}
+          >
+            ← Back
+          </button>
+        </div>
+      )}
+
+      {step === 2 && (
+        <div>
+          <h3 className="text-center text-xl sm:text-2xl font-black text-[#111]">
+            Order Details
+          </h3>
+
+          <div className="mt-6 space-y-6">
+            <div>
+              <label className="text-sm font-semibold text-[#007BFF] mb-1 block">
+                {getTargetLabel()}
+              </label>
+              <input
+                value={target}
+                onChange={(e) => setTarget(e.target.value)}
+                placeholder={getTargetPlaceholder()}
+                className="w-full border border-[#D6E4FF] rounded-xl p-3 text-sm shadow-sm focus:ring-2 focus:ring-[#007BFF] focus:border-[#007BFF]"
+              />
+              <div className="text-xs text-[#64748B] mt-1">
+                {isContentEngagement
+                  ? "Paste the full post or video URL."
+                  : "Use @username or full profile URL."}
+              </div>
+            </div>
+
+            <AmountSelector />
+
+            {service && (
+              <div className="text-center text-[#007BFF] font-extrabold text-xl mt-4">
+                Total: ${discounted.toFixed(2)}
+                <span className="text-sm text-[#B0B9C7] line-through ml-2">
+                  ${original.toFixed(2)}
+                </span>
+              </div>
+            )}
+
+            {error && (
+              <div className="text-center text-sm text-red-500">{error}</div>
+            )}
+          </div>
+
+          <div className="mt-6 flex flex-col sm:flex-row justify-between gap-3">
+            <button
+              onClick={handleBack}
+              className="w-full sm:w-auto bg-[#E6F0FF] text-[#007BFF] border border-[#CFE4FF] rounded-xl px-5 py-3 font-semibold"
+            >
+              Back
+            </button>
+            <button
+              onClick={handleNextFromDetails}
+              className="w-full sm:w-auto bg-[#007BFF] hover:bg-[#005FCC] text-white rounded-xl px-5 py-3 font-semibold shadow"
+            >
+              Review
+            </button>
+          </div>
+        </div>
+      )}
+
+      {step === 3 && (
+        <form onSubmit={handleSecureCheckout}>
+          <h3 className="text-center text-xl sm:text-2xl font-black text-[#111]">
+            Review & Checkout
+          </h3>
+
+          <div className="mt-6 border border-[#CFE4FF] bg.white rounded-xl p-5 shadow-sm">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-[#EFF4FF] flex items-center justify-center">
+                {platform.icon}
+              </div>
+              <div>
+                <div className="font-bold text-[#111]">{platform.name}</div>
+                <div className="text-xs text-[#2563EB]">
+                  {service ? service.type : "Choose a service"}
+                </div>
+              </div>
+            </div>
+
+            {service && (
+              <div className="mt-4 space-y-2 text-sm text-[#475569]">
+                <div className="flex justify-between">
+                  <b>Package:</b> {pkg} ({type})
+                </div>
+                <div className="flex justify-between">
+                  <b>User / Link:</b>{" "}
+                  <span className="max-w-[160px] break-words text-right">{target}</span>
+                </div>
+                <div className="flex justify-between">
+                  <b>Amount:</b> {quantity}
+                </div>
+                <div className="flex justify-between">
+                  <b>Price:</b>
+                  <span>
+                    <span className="text-[#007BFF] font-semibold">${discounted.toFixed(2)}</span>
+                    <span className="line-through text-[#94A3B8] text-xs ml-1">${original.toFixed(2)}</span>
+                  </span>
+                </div>
+              </div>
+            )}
+
+            {service && (
+              <div className="mt-3 pt-3 border-t border-dashed border-[#CFE4FF] flex justify-between text-[#111] font-bold text-lg">
+                <div>Total</div>
+                <div className="text-[#007BFF]">${discounted.toFixed(2)}</div>
+              </div>
+            )}
+          </div>
+
+          <div className="mt-6">
+            <PreviewMini />
+          </div>
+
+          {error && (
+            <div className="text-center text-sm text-red-500 mt-3">
+              {error}
+            </div>
+          )}
+
+          <div className="mt-6 flex flex-col sm:flex-row justify-between gap-3">
+            <button
+              type="button"
+              onClick={handleBack}
+              className="w-full sm:w-auto bg-[#E6F0FF] text-[#007BFF] border border-[#CFE4FF] rounded-xl px-5 py-3 font-semibold"
+            >
+              Back
+            </button>
+            <button
+              type="submit"
+              className="w-full sm:w-auto bg-gradient-to-br from-[#007BFF] to-[#005FCC] text-white rounded-xl px-6 py-3 font-semibold shadow-lg flex items-center justify-center gap-2"
+            >
+              <CheckCircle size={20} />
+              Secure Checkout
+            </button>
+          </div>
+
+          <p className="mt-3 text-center text-xs text-[#94A3B8]">
+            Protected by Stripe • Encrypted • Discreet billing
+          </p>
+        </form>
+      )}
+    </div>
+  </div>
+
+  <style jsx global>{`
+    ::-webkit-scrollbar {
+      width: 0.5em;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #d6e4ff;
+      border-radius: 999px;
+    }
+  `}</style>
+</div>
+
+);
 }
 
 function onClickBackSafe(fn: () => void) {
-  return fn;
+return fn;
 }
