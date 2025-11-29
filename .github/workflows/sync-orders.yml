@@ -1,0 +1,18 @@
+name: Sync Followiz Orders
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"   # every 5 minutes
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Sync Followiz order statuses
+        run: |
+          curl -X POST \
+            https://<PROJECT-ID>.functions.supabase.co/sync-followiz \
+            -H "apikey: <ANON-KEY>" \
+            -H "Content-Type: application/json"
