@@ -1,6 +1,6 @@
 // components/OrderModal.tsx
 
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect } from "react";
 import {
   Instagram,
   Youtube,
@@ -73,12 +73,6 @@ type Platform = {
   services: Service[];
 };
 type StealthPackageResult = { pkg: string; type: string };
-type PreviewData = {
-  ok: boolean;
-  type?: string;
-  image?: string | null;
-  error?: string;
-};
 
 /* ========================================================
    COLORS (YESVIRAL BRAND)
@@ -296,29 +290,19 @@ function getStealthPackage(platform: Platform, service: Service): StealthPackage
   let pkg = "Premium Package";
   let type = "Standard";
 
-  if (platform.key === "INSTAGRAM" && service.type === "Followers")
-    pkg = "High-Quality Followers";
-  if (platform.key === "INSTAGRAM" && service.type === "Likes")
-    pkg = "High-Quality Likes";
-  if (platform.key === "INSTAGRAM" && service.type === "Views")
-    pkg = "High-Quality Views";
+  if (platform.key === "INSTAGRAM" && service.type === "Followers") pkg = "High-Quality Followers";
+  if (platform.key === "INSTAGRAM" && service.type === "Likes") pkg = "High-Quality Likes";
+  if (platform.key === "INSTAGRAM" && service.type === "Views") pkg = "High-Quality Views";
 
-  if (platform.key === "TIKTOK" && service.type === "Followers")
-    pkg = "High-Quality Followers";
-  if (platform.key === "TIKTOK" && service.type === "Likes")
-    pkg = "High-Quality Likes";
-  if (platform.key === "TIKTOK" && service.type === "Views")
-    pkg = "High-Quality Views";
+  if (platform.key === "TIKTOK" && service.type === "Followers") pkg = "High-Quality Followers";
+  if (platform.key === "TIKTOK" && service.type === "Likes") pkg = "High-Quality Likes";
+  if (platform.key === "TIKTOK" && service.type === "Views") pkg = "High-Quality Views";
 
-  if (platform.key === "YOUTUBE" && service.type === "Subscribers")
-    pkg = "High-Quality Subscribers";
-  if (platform.key === "YOUTUBE" && service.type === "Likes")
-    pkg = "High-Quality Likes";
-  if (platform.key === "YOUTUBE" && service.type === "Views")
-    pkg = "High-Quality Views";
+  if (platform.key === "YOUTUBE" && service.type === "Subscribers") pkg = "High-Quality Subscribers";
+  if (platform.key === "YOUTUBE" && service.type === "Likes") pkg = "High-Quality Likes";
+  if (platform.key === "YOUTUBE" && service.type === "Views") pkg = "High-Quality Views";
 
-  if (["Followers", "Subscribers", "Likes", "Views"].includes(service.type))
-    type = "PREMIUM";
+  if (["Followers", "Subscribers", "Likes", "Views"].includes(service.type)) type = "PREMIUM";
 
   return { pkg, type };
 }
@@ -330,90 +314,28 @@ function getQuickAmounts(platform: Platform, service: Service) {
   const type = service.type.toString().toLowerCase();
   const key = platform.key.toUpperCase();
 
-  if (key === "INSTAGRAM" && type === "followers")
-    return [50, 100, 250, 500, 1000, 2500, 5000];
-  if (key === "INSTAGRAM" && type === "likes")
-    return [50, 100, 250, 500, 1000, 2500, 5000];
-  if (key === "INSTAGRAM" && type === "views")
-    return [500, 1000, 2500, 5000, 10000, 25000, 50000];
+  if (key === "INSTAGRAM" && type === "followers") return [50, 100, 250, 500, 1000, 2500, 5000];
+  if (key === "INSTAGRAM" && type === "likes") return [50, 100, 250, 500, 1000, 2500, 5000];
+  if (key === "INSTAGRAM" && type === "views") return [500, 1000, 2500, 5000, 10000, 25000, 50000];
 
-  if (key === "TIKTOK" && type === "followers")
-    return [50, 100, 250, 500, 1000, 2500, 5000];
-  if (key === "TIKTOK" && type === "likes")
-    return [50, 100, 250, 500, 1000, 2500, 5000];
-  if (key === "TIKTOK" && type === "views")
-    return [1000, 2500, 5000, 10000, 25000, 50000];
+  if (key === "TIKTOK" && type === "followers") return [50, 100, 250, 500, 1000, 2500, 5000];
+  if (key === "TIKTOK" && type === "likes") return [50, 100, 250, 500, 1000, 2500, 5000];
+  if (key === "TIKTOK" && type === "views") return [1000, 2500, 5000, 10000, 25000, 50000];
 
-  if (key === "YOUTUBE" && type === "subscribers")
-    return [50, 100, 250, 500, 1000, 2500, 5000];
-  if (key === "YOUTUBE" && type === "likes")
-    return [50, 100, 250, 500, 1000, 2500, 5000];
-  if (key === "YOUTUBE" && type === "views")
-    return [500, 1000, 2500, 5000, 10000, 25000, 50000];
+  if (key === "YOUTUBE" && type === "subscribers") return [50, 100, 250, 500, 1000, 2500, 5000];
+  if (key === "YOUTUBE" && type === "likes") return [50, 100, 250, 500, 1000, 2500, 5000];
+  if (key === "YOUTUBE" && type === "views") return [500, 1000, 2500, 5000, 10000, 25000, 50000];
 
   return [100, 500, 1000, 2000, 5000, 10000];
 }
 
 /* ========================================================
-   PREVIEW FETCH
+   SIMPLE COLOR HASH (USED FOR PREVIEW AVATAR)
 ======================================================== */
-async function fetchPreview(platform: string, target: string): Promise<PreviewData> {
-  try {
-    const res = await fetch(
-      `/api/preview?platform=${platform}&target=${encodeURIComponent(target)}`
-    );
-    return await res.json();
-  } catch {
-    return { ok: false, error: "Network error" };
-  }
-}
-
-/* ========================================================
-   UTILITIES
-======================================================== */
-const isLink = (t: string) => /^https?:\/\//i.test(t.trim());
-
-function normalizeHandle(platform: Platform, target: string) {
-  const raw = target.trim();
-  if (!raw) return "";
-  if (isLink(raw)) return raw.replace(/^https?:\/\//, "");
-  if (raw.startsWith("@")) return raw;
-  if (["instagram", "tiktok", "youtube"].includes(platform.key.toLowerCase()))
-    return `@${raw}`;
-  return raw;
-}
-
 function hashToHsl(seed: string, s = 65, l = 58) {
   let h = 0;
-  for (let i = 0; i < seed.length; i++)
-    h = (h * 31 + seed.charCodeAt(i)) >>> 0;
+  for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) >>> 0;
   return `hsl(${h % 360} ${s}% ${l}%)`;
-}
-
-/* ========================================================
-   SAFE IMAGE
-======================================================== */
-function ImageSafe({ src, alt }: { src: string; alt: string }) {
-  const [loaded, setLoaded] = useState(false);
-  const [failed, setFailed] = useState(false);
-
-  return (
-    <div className="absolute inset-0">
-      {!loaded && !failed && (
-        <div className="absolute inset-0 animate-pulse bg-gradient-to-br from-[#EAF2FF] via-[#F5FAFF] to-white" />
-      )}
-      <img
-        src={src}
-        alt={alt}
-        className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${
-          loaded && !failed ? "opacity-100" : "opacity-0"
-        }`}
-        onLoad={() => setLoaded(true)}
-        onError={() => setFailed(true)}
-      />
-      {failed && <div className="absolute inset-0 bg-[#EEF4FF]" />}
-    </div>
-  );
 }
 
 /* ========================================================
@@ -441,9 +363,6 @@ export default function OrderModal({
   const [target, setTarget] = useState<string>("");
   const [error, setError] = useState<string>("");
 
-  const [preview, setPreview] = useState<PreviewData | null>(null);
-  const [previewLoading, setPreviewLoading] = useState(false);
-
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
     return () => {
@@ -459,17 +378,17 @@ export default function OrderModal({
     let nextStep = 0;
 
     if (initialPlatform) {
+      const lower = initialPlatform.toLowerCase();
       const found = PLATFORMS.find(
-        (p) =>
-          p.key.toLowerCase() === initialPlatform.toLowerCase() ||
-          p.name.toLowerCase() === initialPlatform.toLowerCase()
+        (p) => p.key.toLowerCase() === lower || p.name.toLowerCase() === lower
       );
 
       if (found) {
         selectedPlatform = found;
         if (initialService) {
+          const lowerService = initialService.toLowerCase();
           const serv = found.services.find(
-            (s) => s.type.toLowerCase() === initialService.toLowerCase()
+            (s) => s.type.toLowerCase() === lowerService
           );
           if (serv) {
             selectedService = serv;
@@ -489,68 +408,30 @@ export default function OrderModal({
     setTarget("");
     setError("");
     setStep(nextStep);
-    setPreview(null);
-    setPreviewLoading(false);
   }, [open, initialPlatform, initialService]);
 
   const isContentEngagement =
     service?.type === "Likes" || service?.type === "Views";
-
-  const isVideo = useMemo(
-    () => isContentEngagement && isLink(target),
-    [isContentEngagement, target]
-  );
-
-  const cleanedReference =
-    service ? sanitizeFollowizInput(target, service.type.toString()) : "";
-  const needsUrl =
-    service &&
-    (service.type.toString().toLowerCase() === "likes" ||
-      service.type.toString().toLowerCase() === "views");
-
-  const doFetchPreview = useCallback(
-    async () => {
-      if (!open || step !== 3) return;
-      const trimmed = target.trim();
-
-      if (!trimmed) {
-        setPreview(null);
-        setPreviewLoading(false);
-        return;
-      }
-
-      if (isContentEngagement && !isLink(trimmed)) {
-        setPreview({ ok: false, error: "Post / video URL required." });
-        return;
-      }
-
-      setPreviewLoading(true);
-      const data = await fetchPreview(platform.key, trimmed);
-      setPreview(data);
-      setPreviewLoading(false);
-    },
-    [open, step, target, platform.key, isContentEngagement]
-  );
-
-  useEffect(() => {
-    if (step !== 3) return;
-    const id = setTimeout(() => {
-      void doFetchPreview();
-    }, 150);
-    return () => clearTimeout(id);
-  }, [doFetchPreview, step]);
 
   if (!open) return null;
 
   const { pkg, type } =
     service ? getStealthPackage(platform, service) : { pkg: "", type: "" };
 
-  const currentPrice = service
-    ? getPackagePrice(platform, service, quantity)
-    : 0;
+  const currentPrice = service ? getPackagePrice(platform, service, quantity) : 0;
   const { discount, discounted, original } = service
     ? getDiscountedPrice(currentPrice)
     : { discount: 0, discounted: currentPrice, original: currentPrice };
+
+  const orderToSend = {
+    package: pkg,
+    type,
+    amount: quantity,
+    reference: target,
+    total: Number(discounted.toFixed(2)),
+    platform: platform.key,
+    service: service?.type.toString(),
+  };
 
   function handleBack() {
     setError("");
@@ -566,7 +447,12 @@ export default function OrderModal({
       return;
     }
 
-    if (!cleanedReference) {
+    const cleaned = sanitizeFollowizInput(target, service.type.toString());
+    const needsUrl =
+      service.type.toString().toLowerCase() === "likes" ||
+      service.type.toString().toLowerCase() === "views";
+
+    if (!cleaned) {
       setError(
         needsUrl
           ? "Full post/video link required."
@@ -595,7 +481,12 @@ export default function OrderModal({
       return;
     }
 
-    if (!cleanedReference) {
+    const cleaned = sanitizeFollowizInput(target, service.type.toString());
+    const needsUrl =
+      service.type.toString().toLowerCase() === "likes" ||
+      service.type.toString().toLowerCase() === "views";
+
+    if (!cleaned) {
       setError(
         needsUrl
           ? "Full post or video URL required."
@@ -604,18 +495,15 @@ export default function OrderModal({
       return;
     }
 
-    const orderPayload = {
-      package: pkg,
-      type,
-      amount: quantity,
-      reference: cleanedReference,
-      total: Number(discounted.toFixed(2)),
-      platform: platform.key,
-      service: service.type.toString(),
-    };
-
     const encoded = btoa(
-      unescape(encodeURIComponent(JSON.stringify(orderPayload)))
+      unescape(
+        encodeURIComponent(
+          JSON.stringify({
+            ...orderToSend,
+            reference: cleaned,
+          })
+        )
+      )
     );
     window.location.href =
       "https://checkout.yesviral.com/checkout?order=" + encoded;
@@ -756,90 +644,56 @@ export default function OrderModal({
     );
   }
 
+  /* ========================================================
+     NEW: SIMPLE, PREMIUM PREVIEW (NO API / IMAGES)
+  ======================================================== */
   function PreviewMini() {
-    const hasImg = !!(preview && preview.ok && preview.image);
-    const normalized = normalizeHandle(platform, target || "");
-    const bgHue = hashToHsl(normalized || platform.name);
+    if (!service) return null;
+
+    const cleaned = sanitizeFollowizInput(target, service.type.toString());
+    const needsUrl =
+      service.type.toString().toLowerCase() === "likes" ||
+      service.type.toString().toLowerCase() === "views";
+
+    let display = cleaned || target.trim();
+    if (!needsUrl && cleaned) {
+      display = "@" + cleaned;
+    }
+
+    const label = needsUrl ? "Post / Video" : "Profile";
+    const seed = display || platform.name;
+    const bgHue = hashToHsl(seed || platform.name);
 
     return (
       <div
-        className="w-full max-w-sm mx-auto rounded-xl border bg-white shadow-lg overflow-hidden"
+        className="w-full max-w-xs mx-auto rounded-2xl border bg-white shadow-sm px-4 py-3 flex items-center gap-3"
         style={{ borderColor: COLORS.border }}
       >
         <div
-          className="flex items-center gap-2 px-3 py-2 border-b bg:white"
-          style={{ borderColor: "#E0ECFF" }}
+          className="w-10 h-10 rounded-2xl flex items-center justify-center text-white text-sm font-bold"
+          style={{
+            background: `linear-gradient(135deg, ${bgHue}, ${bgHue.replace(
+              "% 58%)",
+              "% 40%)"
+            )})`,
+          }}
         >
-          <div
-            className="w-7 h-7 rounded-full flex items-center justify-center"
-            style={{ background: COLORS.accentBg }}
-          >
-            {platform.icon}
+          {(display || platform.name).replace("@", "").slice(0, 2).toUpperCase() ||
+            "?"}
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="text-[11px] font-semibold text-[#64748B]">
+            {label}
           </div>
-          <div className="min-w-0">
-            <span className="text-[11px] font-bold text-[#0B63E6]">Preview</span>
-            <div className="text-[10px] text-[#6B7280]">
-              {isContentEngagement ? "Post / video" : "Profile"}
-            </div>
+          <div className="text-sm font-semibold text-[#0F172A] truncate">
+            {display || "—"}
+          </div>
+          <div className="text-[11px] text-[#94A3B8]">
+            Sent via {platform.name} {service.type}
           </div>
         </div>
-
-        <div
-          className="relative w-full bg-[#DAE6FF]"
-          style={{ paddingTop: "75%", maxHeight: 140 }}
-        >
-          {previewLoading && (
-            <div className="absolute inset-0 animate-pulse bg-gradient-to-br from-[#EAF2FF] via-[#F5FAFF] to-white" />
-          )}
-
-          {!previewLoading && hasImg && (
-            <>
-              <ImageSafe src={preview!.image!} alt="Preview" />
-              {isLink(target) && isContentEngagement && (
-                <div className="absolute bottom-1 right-1 px-1.5 py-0.5 bg-black/60 rounded-full text-white text-[9px] flex items-center gap-1">
-                  <Play size={10} />
-                  {isVideo ? "Video" : "Post"}
-                </div>
-              )}
-            </>
-          )}
-
-          {!previewLoading && !hasImg && (
-            <div className="absolute inset-0 grid place-items-center">
-              <div
-                className="w-[52%] max-w-[110px] aspect-square rounded-xl text-white font-bold text-xl shadow flex items-center justify-center"
-                style={{
-                  background: `linear-gradient(135deg, ${bgHue}, ${bgHue.replace(
-                    "% 58%)",
-                    "% 40%)"
-                  )})`,
-                }}
-              >
-                {normalized.replace("@", "").slice(0, 2).toUpperCase()}
-              </div>
-            </div>
-          )}
-        </div>
-
-        <div className="px-3 py-2 bg-white flex items-center justify-between">
-          <div className="min-w-0">
-            <div className="text-[11px] font-semibold text-[#111] truncate">
-              {normalized || "—"}
-            </div>
-            <div className="text-[10px] text-[#6B7280]">
-              Preview only — not live
-            </div>
-          </div>
-          <div
-            className="text-[10px] font-semibold px-2 py-0.5 rounded-full"
-            style={{
-              background: `${platform.color}15`,
-              border: `1px solid ${platform.color}30`,
-              color: platform.color,
-            }}
-          >
-            {platform.name}
-          </div>
+        <div className="flex items-center justify-center w-9 h-9 rounded-2xl bg-[#EFF4FF]">
+          {platform.icon}
         </div>
       </div>
     );
@@ -1079,9 +933,7 @@ export default function OrderModal({
                 )}
 
                 {error && (
-                  <div className="text-center text-sm text-red-500">
-                    {error}
-                  </div>
+                  <div className="text-center text-sm text-red-500">{error}</div>
                 )}
               </div>
 
@@ -1108,7 +960,7 @@ export default function OrderModal({
                 Review & Checkout
               </h3>
 
-              <div className="mt-6 border border-[#CFE4FF] bg.white rounded-xl p-5 shadow-sm">
+              <div className="mt-6 border border-[#CFE4FF] bg-white rounded-xl p-5 shadow-sm">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl bg-[#EFF4FF] flex items-center justify-center">
                     {platform.icon}
@@ -1129,7 +981,10 @@ export default function OrderModal({
                     <div className="flex justify-between">
                       <b>User / Link:</b>{" "}
                       <span className="max-w-[160px] break-words text-right">
-                        {cleanedReference || target}
+                        {sanitizeFollowizInput(
+                          target,
+                          service.type.toString()
+                        ) || target}
                       </span>
                     </div>
                     <div className="flex justify-between">
