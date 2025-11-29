@@ -10,9 +10,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Sync Followiz order statuses
+      - name: Call Supabase Followiz Sync Function
         run: |
           curl -X POST \
-            https://<PROJECT-ID>.functions.supabase.co/sync-followiz \
-            -H "apikey: <ANON-KEY>" \
+            https://tnmgmzfwdnpfyizjqavd.functions.supabase.co/sync-followiz \
+            -H "apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRubWdtemZ3ZG5wZnlpempxYXZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE4OTgxMjUsImV4cCI6MjA2NzQ3NDEyNX0.Hu7mbQkpE_R0UkmyjnN8LLbWF_vEQHC2OPkeOOF-nk8" \
             -H "Content-Type: application/json"
