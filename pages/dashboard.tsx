@@ -276,7 +276,11 @@ function getDiscountedPrice(realPrice: number) {
  * Resolve fixed package price for the chosen amount.
  * - If no package defined, fallback to "from" price.
  */
-function getPackagePrice(platform: Platform, service: Service, quantity: number): number {
+function getPackagePrice(
+  platform: Platform,
+  service: Service,
+  quantity: number
+): number {
   if (service.packages && service.packages[quantity]) {
     return service.packages[quantity];
   }
@@ -368,8 +372,7 @@ function getTargetPlaceholder(platform: Platform, service: Service) {
       return "@username or instagram.com/username";
     if (platform.key === "tiktok")
       return "@username or tiktok.com/@username";
-    if (platform.key === "youtube")
-      return "Channel URL or @handle";
+    if (platform.key === "youtube") return "Channel URL or @handle";
     return "Profile link or username";
   }
   if (platform.key === "instagram")
@@ -383,7 +386,8 @@ function normalizeHandle(platform: Platform, target: string) {
   if (!raw) return "";
   if (isLink(raw)) return raw.replace(/^https?:\/\//, "");
   if (raw.startsWith("@")) return raw;
-  if (["instagram", "tiktok", "youtube"].includes(platform.key)) return `@${raw}`;
+  if (["instagram", "tiktok", "youtube"].includes(platform.key))
+    return `@${raw}`;
   return raw;
 }
 function hashToHsl(seed: string, s = 65, l = 58) {
@@ -583,6 +587,8 @@ export default function DashboardPage() {
   );
 
   useEffect(() => {
+    let channel: any | null = null;
+
     const fetchUserAndOrders = async () => {
       const {
         data: { session },
@@ -594,13 +600,13 @@ export default function DashboardPage() {
       const email = session.user.email || "";
       setProfileEmail(email);
 
-const userId = session.user.id;
+      const userId = session.user.id;
 
-const { data: allOrders } = await supabase
-  .from("orders")
-  .select("id, platform, service, quantity, status, created_at")
-  .eq("user_id", userId)
-  .order("created_at", { ascending: false });
+      const { data: allOrders } = await supabase
+        .from("orders")
+        .select("id, platform, service, quantity, status, created_at")
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false });
 
       if (allOrders) {
         setOrders(allOrders as Order[]);
@@ -609,9 +615,42 @@ const { data: allOrders } = await supabase
         );
         setAnalytics({ total: allOrders.length, completed: completed.length });
       }
+
+      // REALTIME: keep this user's orders in sync live
+      channel = supabase
+        .channel("orders-changes")
+        .on(
+          "postgres_changes",
+          {
+            event: "*",
+            schema: "public",
+            table: "orders",
+            filter: `user_id=eq.${userId}`,
+          },
+          (payload: any) => {
+            setOrders((prev) => {
+              const idx = prev.findIndex((o) => o.id === payload.new.id);
+              if (idx !== -1) {
+                const copy = [...prev];
+                copy[idx] = { ...copy[idx], ...payload.new };
+                return copy;
+              }
+              return [payload.new as Order, ...prev];
+            });
+          }
+        )
+        .subscribe();
+
       setLoading(false);
     };
+
     fetchUserAndOrders();
+
+    return () => {
+      if (channel) {
+        supabase.removeChannel(channel);
+      }
+    };
   }, [router]);
 
   /* ===================== Order handlers ===================== */
@@ -627,7 +666,9 @@ const { data: allOrders } = await supabase
         return;
       }
       if (isContentEngagement && !isLink(trimmed)) {
-        setOrderError("For likes / views, please paste a full post / video URL.");
+        setOrderError(
+          "For likes / views, please paste a full post / video URL."
+        );
         return;
       }
       if (!quantity || quantity < 1) {
@@ -657,7 +698,9 @@ const { data: allOrders } = await supabase
       return;
     }
     if (isContentEngagement && !isLink(trimmed)) {
-      setOrderError("For likes / views, please paste a full post / video URL.");
+      setOrderError(
+        "For likes / views, please paste a full post / video URL."
+      );
       return;
     }
 
@@ -1582,15 +1625,6 @@ const { data: allOrders } = await supabase
               Dashboard
             </span>
           </div>
-          <button
-            onClick={async () => {
-              await supabase.auth.signOut();
-              router.push("/login");
-            }}
-            className="flex items-center gap-2 bg-[#EF4444] hover:bg-red-600 text-white px-4 py-2 rounded-xl font-bold shadow"
-          >
-            <LogOut size={18} /> Log Out
-          </button>
         </div>
 
         <div className="flex flex-col md:flex-row gap-5 relative">
@@ -1633,6 +1667,20 @@ const { data: allOrders } = await supabase
                 {tab.label}
               </button>
             ))}
+
+            {/* Logout moved INSIDE sidebar at bottom (blue theme) */}
+            <div className="mt-10 pt-6 border-t border-[#CFE4FF]">
+              <button
+                onClick={async () => {
+                  await supabase.auth.signOut();
+                  router.push("/login");
+                }}
+                className="flex items-center gap-3 px-4 py-3 rounded-lg font-semibold transition text-base w-full bg-[#007BFF] text-white hover:bg-[#005FCC] shadow"
+              >
+                <LogOut size={20} />
+                Log Out
+              </button>
+            </div>
           </aside>
           {sidebarOpen && (
             <div
