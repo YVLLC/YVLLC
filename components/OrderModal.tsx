@@ -1,6 +1,3 @@
-Here’s the **full updated `components/OrderModal.tsx`** with the **Followiz-safe sanitizer fully wired** + small bugfixes, **nothing else touched** visually.
-
-```tsx
 // components/OrderModal.tsx
 
 import { useState, useEffect, useMemo, useCallback } from "react";
@@ -1213,4 +1210,3 @@ export default function OrderModal({
 function onClickBackSafe(fn: () => void) {
   return fn;
 }
-```
