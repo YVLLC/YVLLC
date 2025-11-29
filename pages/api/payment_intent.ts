@@ -1,12 +1,19 @@
 // path: pages/api/payment_intent.ts
 import Stripe from "stripe";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { createClient } from "@supabase/supabase-js";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2023-08-16",
 });
 
-// 🔥 IMPORTANT — Allow checkout.yesviral.com to call this API
+// Server-side Supabase client (anon key is fine for reading session)
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
+
+// Allow requests from your embedded checkout
 function allowCors(res: NextApiResponse) {
   res.setHeader("Access-Control-Allow-Origin", "https://checkout.yesviral.com");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
@@ -14,23 +21,30 @@ function allowCors(res: NextApiResponse) {
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  // Enable CORS FIRST
   allowCors(res);
 
-  // Handle CORS preflight
-  if (req.method === "OPTIONS") {
-    return res.status(200).end();
-  }
-
-  // Only allow POST
-  if (req.method !== "POST") {
+  if (req.method === "OPTIONS") return res.status(200).end();
+  if (req.method !== "POST")
     return res.status(405).json({ error: "Method Not Allowed" });
-  }
 
   const { amount, metadata } = req.body;
 
   if (!amount || typeof amount !== "number" || amount < 1) {
     return res.status(400).json({ error: "Invalid amount." });
+  }
+
+  /* -------------------------------------------------------------
+      🔥 GET SUPABASE SESSION → USER ID
+      If user is logged in → use their user_id
+      If not logged in → user_id = null (guest checkout)
+  ------------------------------------------------------------- */
+  let userId: string | null = null;
+
+  try {
+    const { data } = await supabase.auth.getSession();
+    userId = data.session?.user?.id ?? null;
+  } catch (e) {
+    console.log("No session found (guest checkout).");
   }
 
   try {
@@ -39,9 +53,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       currency: "usd",
       automatic_payment_methods: { enabled: true },
 
-      // SAVE ENCODED ORDER DATA HERE
       metadata: {
         yesviral_order: metadata?.order || "",
+        user_id: userId || "", // IMPORTANT!!
       },
     });
 

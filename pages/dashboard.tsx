@@ -594,11 +594,13 @@ export default function DashboardPage() {
       const email = session.user.email || "";
       setProfileEmail(email);
 
-      const { data: allOrders } = await supabase
-        .from("orders")
-        .select("id, platform, service, quantity, status, created_at")
-        .eq("email", email)
-        .order("created_at", { ascending: false });
+const userId = session.user.id;
+
+const { data: allOrders } = await supabase
+  .from("orders")
+  .select("id, platform, service, quantity, status, created_at")
+  .eq("user_id", userId)
+  .order("created_at", { ascending: false });
 
       if (allOrders) {
         setOrders(allOrders as Order[]);
