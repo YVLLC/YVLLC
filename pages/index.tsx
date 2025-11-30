@@ -3,15 +3,8 @@ import Link from "next/link";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import {
-  ShieldCheck,
-  Clock,
-  UserCheck,
-  Zap,
-  RefreshCcw,
-  Star,
-  Instagram,
-  Music2,
-  Youtube,
+  ShieldCheck, Clock, UserCheck, Zap, RefreshCcw, Star,
+  Instagram, Music2, Youtube
 } from "lucide-react";
 import { useState } from "react";
 import OrderModal from "@/components/OrderModal";
@@ -20,42 +13,39 @@ import Testimonials from "@/components/Testimonials";
 import HowItWorks from "@/components/HowItWorks";
 import FAQ from "@/components/FAQ";
 
-const SalesNotifications = dynamic(
-  () => import("@/components/SalesNotifications"),
-  { ssr: false }
-);
+const SalesNotifications = dynamic(() => import("@/components/SalesNotifications"), { ssr: false });
 
 const FAQS = [
   {
-    question: "Why choose YesViral?",
+    question: "Why choose us?",
     answer:
-      "YesViral is built for people who take their presence seriously. We focus on consistency, speed, and quality so your social proof grows the way it should—without stress, guesswork, or cheap shortcuts.",
+      "Unlike other Social Growth Services, YesViral constantly upgrades our Private Delivery Networks (PDNs) to ensure users receive the Highest-Quality services every time. We focus on Fast, Reliable, and High-Quality results that evolve and improve with every order placed."
   },
   {
     question: "What services do you offer?",
     answer:
-      "We provide social media growth services across Instagram, TikTok, YouTube, and more. That includes followers, likes, views, subscribers, and other engagement options designed to help creators, influencers, and brands build stronger visibility and credibility online.",
+      "Our Social Media Marketing services help Individuals, Influencers, and Brands grow their online presence with targeted High-Quality Engagement. Whether you want more Followers, Subscribers, Video views, We offer a wide range of services across platforms like Instagram, YouTube, TikTok, and more."
   },
   {
     question: "Do I need to share my account password?",
     answer:
-      "No. We will never ask for your password or login details. All orders are processed externally using your profile, post, or video link only. If anyone ever contacts you asking for your password claiming to be YesViral, ignore it and let us know.",
+      "No, never. We do not require your password for any of our services. Everything is delivered securely without accessing your account. If you ever receive a message asking for your password claiming to be from us, DO NOT share it—Please report it to us immediately."
   },
   {
-    question: "Are the results high quality?",
+    question: "Are the followers, likes, and subscribers real?",
     answer:
-      "Yes. Our services are designed to deliver high-quality engagement that supports your social proof and makes your profile look active and in-demand. We don’t do low-effort, low-quality blasts—our goal is long-term, repeatable results.",
+      "Yes. We don’t use bots or fake accounts. All engagement comes from real users, helping your account grow through authentic, organic activity that boosts your reach and credibility."
   },
   {
-    question: "Is using YesViral safe?",
+    question: "Is your service safe and legal?",
     answer:
-      "Yes. We never ask for account access, we don’t store card details, and all payments are processed through encrypted, PCI-compliant providers. Your data, billing, and account privacy are always treated as a priority.",
+      "Absolutely. We use safe, secure, and compliant methods to deliver Likes, Followers, Views & more. Your account stays 100% Protected, and everything we do follows platform guidelines to keep your profile secure."
   },
   {
-    question: "What is your 30-day refill guarantee?",
+    question: "What is your refill guarantee?",
     answer:
-      "If you notice a drop in followers, likes, or views within 30 days of your order, our refill guarantee has you covered. Reach out with your order details and we’ll top things back up—no extra cost, no complicated process.",
-  },
+      "Our 30-day refill guarantee means that if any Followers, Likes, Views, or Engagement drop within 30 days of your purchase, we’ll replace them free of charge. This keeps your results strong and consistent. Just reach out through our contact form—No hassle, No extra cost."
+  }
 ];
 
 const SERVICES = [
@@ -64,43 +54,43 @@ const SERVICES = [
     key: "instagram",
     price: "$0.09 / 100",
     description: [
-      "💎 High-quality followers, likes & views",
-      "⚡ Fast start after ordering",
-      "🛡 30-day refill protection",
-      "🔒 Secure, encrypted checkout",
+      "💎 Quality Followers, Likes & Views",
+      "⚡️ Rapid Delivery",
+      "🛡️ Drop Protection",
+      "🔒 100% Secure Checkout"
     ],
     icon: <Instagram className="text-[#E1306C]" size={28} />,
     tag: "Bestseller",
-    count: "2,000+ orders this week",
+    count: "2,000+ bought this week"
   },
   {
     name: "TikTok Services",
     key: "tiktok",
     price: "$0.08 / 100",
     description: [
-      "✨ Strong likes & views for TikTok",
-      "🚀 Orders begin within minutes",
-      "🙅‍♂️ No login or password required",
-      "🛡 Reliable delivery from start to finish",
+      "✨ High-impact Likes & Views",
+      "🚀 Instant Order Start",
+      "🙅‍♂️ No Login Needed",
+      "🛡️ Protected Service"
     ],
     icon: <Music2 className="text-[#25F4EE]" size={28} />,
-    tag: "🔥 Trending",
-    count: "1,400+ orders this week",
+    tag: "🔥 Hot",
+    count: "1,400+ bought this week"
   },
   {
     name: "YouTube Services",
     key: "youtube",
     price: "$0.05 / 1000",
     description: [
-      "🏆 Premium views & watch time",
-      "📈 Helps boost channel performance",
-      "🤫 Discreet, hands-off delivery",
-      "🤖 Optimized for long-term growth",
+      "🏆 Premium Views & Watch time",
+      "📈 Boosts Channel Performance",
+      "🤫 Private Delivery",
+      "🤖 Algorithm Friendly"
     ],
     icon: <Youtube className="text-[#FF0000]" size={28} />,
     tag: "",
-    count: "950+ orders this week",
-  },
+    count: "950+ bought this week"
+  }
 ];
 
 export default function Home() {
@@ -123,12 +113,10 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>
-          YesViral – Premium Social Media Growth Services for Instagram, TikTok &amp; YouTube
-        </title>
+        <title>YesViral – Buy High-Quality Followers, Likes & Views.</title>
         <meta
           name="description"
-          content="YesViral helps creators, influencers, and brands boost followers, likes, and views across Instagram, TikTok, and YouTube. Fast delivery, secure checkout, and high-quality results."
+          content="Grow your social media with YesViral. Buy real followers, likes, views, and more across Instagram, TikTok, YouTube & beyond — fast, secure, and trusted."
         />
       </Head>
 
@@ -140,6 +128,7 @@ export default function Home() {
       />
 
       <main className="px-4 sm:px-6 max-w-7xl mx-auto py-4 sm:py-8 space-y-6 md:space-y-10 select-none">
+
         {/* HERO SECTION */}
         <section className="flex flex-col-reverse md:grid md:grid-cols-2 md:gap-12 items-center pt-0 md:pt-0">
           <div className="w-full flex flex-col items-center md:items-start space-y-7 text-center md:text-left mt-0">
@@ -148,16 +137,12 @@ export default function Home() {
               Trusted by 100,000+ Creators
             </div>
 
-            <h1 className="text-4xl sm:text-5xl font-extrabold text-[#111] leading-tight drop-shadow-sm">
-              Your Audience,
-              <br className="hidden sm:block" />
-              <span className="text-[#007BFF]">Accelerated.</span>
-            </h1>
-
+<h1 className="text-4xl sm:text-5xl font-extrabold text-[#007BFF] leading-tight drop-shadow-sm">
+  Premium Social Growth. <br className="hidden sm:block" />
+  <span className="text-[#005FCC]">Real Results.</span> Delivered Fast.
+</h1>
             <p className="text-[#444] text-base sm:text-lg max-w-md sm:max-w-xl mx-auto md:mx-0 font-medium">
-              YesViral gives you a clean, straightforward way to boost followers, likes, and views
-              across Instagram, TikTok, and YouTube. No complications. No logins. Just fast,
-              reliable social growth handled for you.
+              Unlock Social Growth with YesViral — Trusted by Creators and Brands for High-Quality Followers, Likes, & Views powered by Exclusive Private Networks built for Speed, Trust, and Results.
             </p>
 
             <div className="flex flex-col xs:flex-row gap-3 w-full sm:w-auto justify-center md:justify-start">
@@ -165,20 +150,19 @@ export default function Home() {
                 className="bg-[#007BFF] text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:bg-[#005FCC] transition text-base sm:text-lg w-full xs:w-auto"
                 onClick={openOrderModalPlatform}
               >
-                View Services &amp; Pricing
+                Order Now
               </button>
             </div>
 
             <span className="text-xs text-[#555] font-medium mt-2">
-              🔒 SSL-encrypted payments · ⭐ 4.8/5 from 10,000+ clients · ⚡ Orders typically start in
-              minutes
+              Trusted by 100K+ Creators · 100% Secure Payments · High Quality
             </span>
           </div>
 
           <div className="w-full hidden md:flex justify-center mb-0">
             <Image
               src="/hero-illustration.png"
-              alt="YesViral notifications and social growth illustration"
+              alt="YesViral Notifications Illustration"
               width={420}
               height={320}
               className="w-full max-w-[420px] h-auto object-contain drop-shadow-2xl m-0 p-0"
@@ -191,23 +175,20 @@ export default function Home() {
 
         {/* SERVICES SECTION */}
         <section id="order" className="space-y-7 py-8 md:py-14">
-          <h2 className="text-center text-4xl font-extrabold">
-            Choose Your Platform &amp; Get Started
-          </h2>
+          <h2 className="text-center text-4xl font-extrabold">Place Your Order Instantly</h2>
           <p className="text-[#444] text-center max-w-2xl mx-auto">
-            Pick a service, drop your link, and let YesViral handle the rest.{" "}
-            <span className="font-semibold text-[#007BFF]">
-              No account access, no hidden steps—just simple, effective social growth.
-            </span>
+            Choose your service — No logins needed, No Hassle.{" "}
+            <span className="font-semibold text-[#007BFF]">Instant delivery starts within minutes.</span>
           </p>
 
+          {/* ⭐⭐⭐⭐⭐ YESVIRAL RATING (4.8/5) — ADDED */}
           <div className="flex items-center justify-center gap-1 mb-6 mt-1">
             {[1, 2, 3, 4].map((_, i) => (
               <Star key={i} size={20} className="text-[#007BFF] fill-[#007BFF]" />
             ))}
             <Star size={20} className="text-[#007BFF] fill-[#007BFF] opacity-50" />
             <span className="ml-2 font-semibold text-[#007BFF] text-sm">
-              4.8 / 5 rating from 10,000+ clients
+              4.8 / 5 rating
             </span>
           </div>
 
@@ -236,16 +217,14 @@ export default function Home() {
 
                 <div className="flex items-center gap-2 mt-2">
                   <span className="text-sm font-medium text-[#007BFF]">{price}</span>
-                  <span className="text-xs text-[#111] bg-[#E8F1FF] px-2 py-0.5 rounded">
-                    {count}
-                  </span>
+                  <span className="text-xs text-[#111] bg-[#E8F1FF] px-2 py-0.5 rounded">{count}</span>
                 </div>
 
                 <button
-                  className="mt-4 w-full bg-[#007BFF] text-white text-sm px-4 py-2 rounded-lg font-bold hover:bg-[#005FCC] shadow transition-transform duration-150 ease-out transform hover:scale-[1.03] active:scale-95"
+                  className="mt-4 w-full bg-[#007BFF] text-white text-sm px-4 py-2 rounded-lg font-bold hover:bg-[#005FCC] shadow transition transform hover:scale-[1.03] active:scale-95"
                   onClick={() => openOrderModalService(key)}
                 >
-                  View {name} Packages
+                  Order
                 </button>
               </div>
             ))}
@@ -253,57 +232,46 @@ export default function Home() {
         </section>
 
         {/* ABOUT SECTION */}
-        <section
-          id="about"
-          className="bg-[#F5FAFF] p-8 md:p-12 rounded-2xl text-center shadow-sm space-y-8 py-8 md:py-14"
-        >
-          <h2 className="text-4xl font-extrabold text-[#111]">Why People Choose YesViral</h2>
+        <section id="about" className="bg-[#F5FAFF] p-8 md:p-12 rounded-2xl text-center shadow-sm space-y-8 py-8 md:py-14">
+          <h2 className="text-4xl font-extrabold text-[#111]">Why Choose YesViral?</h2>
 
           <div className="flex flex-wrap gap-7 justify-center mt-6">
             <div className="flex flex-col items-center max-w-[170px]">
               <Zap className="text-[#007BFF]" size={32} />
-              <span className="font-semibold mt-2">Fast Start</span>
-              <span className="text-sm text-[#444]">
-                Most orders begin processing within 1–10 minutes.
-              </span>
+              <span className="font-semibold mt-2">Instant Start</span>
+              <span className="text-sm text-[#444]">Growth begins in 1–10 min</span>
             </div>
 
             <div className="flex flex-col items-center max-w-[170px]">
               <UserCheck className="text-[#007BFF]" size={32} />
-              <span className="font-semibold mt-2">Quality Focused</span>
-              <span className="text-sm text-[#444]">
-                Services built around reliability, not one-time blasts.
-              </span>
+              <span className="font-semibold mt-2">Quality Results</span>
+              <span className="text-sm text-[#444]">100% High Quality</span>
             </div>
 
             <div className="flex flex-col items-center max-w-[170px]">
               <ShieldCheck className="text-[#007BFF]" size={32} />
-              <span className="font-semibold mt-2">Safe &amp; Private</span>
-              <span className="text-sm text-[#444]">
-                No passwords, no account access—your profile stays yours.
-              </span>
+              <span className="font-semibold mt-2">Safe & Secure</span>
+              <span className="text-sm text-[#444]">No passwords, 256-bit SSL</span>
             </div>
 
             <div className="flex flex-col items-center max-w-[170px]">
               <Clock className="text-[#007BFF]" size={32} />
-              <span className="font-semibold mt-2">Here When You Need Us</span>
-              <span className="text-sm text-[#444]">
-                Support is available when you have questions or need help.
-              </span>
+              <span className="font-semibold mt-2">24/7 Support</span>
+              <span className="text-sm text-[#444]">Chat any time, any day.</span>
             </div>
 
             <div className="flex flex-col items-center max-w-[170px]">
               <RefreshCcw className="text-[#007BFF]" size={32} />
-              <span className="font-semibold mt-2">30-Day Backup</span>
+              <span className="font-semibold mt-2">30 Day Refill</span>
               <span className="text-sm text-[#444]">
-                Drops within 30 days? We&apos;ll refill your order free of charge.
+                If drops occur, we'll refill for 30 days—free.
               </span>
             </div>
           </div>
 
           <div className="flex justify-center gap-8 mt-7 text-[#007BFF] font-bold text-lg">
-            <span>100K+ Orders Processed</span>
-            <span className="hidden sm:inline">Trusted by creators in every niche</span>
+            <span>100k+ Followers Delivered</span>
+            <span className="hidden sm:inline">Rated 4.8/5 by 10,000+ Clients</span>
           </div>
         </section>
 
@@ -329,17 +297,17 @@ export default function Home() {
 
         {/* FINAL CTA — TIGHTER TOP SPACING */}
         <section className="text-center space-y-4 mt-6 py-4 md:py-6">
-          <h2 className="text-4xl font-extrabold mb-2">Ready to grow with YesViral?</h2>
-          <p className="text-[#444] text-lg mb-6 max-w-xl mx-auto">
-            Turn your profile into something people pay attention to. Choose your platform, select a
-            package, and let YesViral handle the heavy lifting in the background.
+          <h2 className="text-4xl font-extrabold mb-2">Ready to try YesViral?</h2>
+          <p className="text-[#444] text-lg mb-6">
+            Join over 100,000+ Creators already growing with YesViral—choose your service and unlock
+            High-Quality results in minutes.
           </p>
           <div className="mt-6 mb-6">
             <button
               className="bg-[#007BFF] text-white px-8 py-3 text-lg rounded-xl hover:bg-[#005FCC] font-bold shadow transition"
               onClick={openOrderModalPlatform}
             >
-              Get Started in Minutes
+              View Services
             </button>
           </div>
         </section>
