@@ -323,4 +323,58 @@ export default function Home() {
         </section>
 
         {/* FAQ — TIGHTER SPACING */}
-        <section class
+        <section className="mb-4 md:mb-6">
+          <FAQ faqs={FAQS} />
+        </section>
+
+        {/* FINAL CTA — TIGHTER TOP SPACING */}
+        <section className="text-center space-y-4 mt-6 py-4 md:py-6">
+          <h2 className="text-4xl font-extrabold mb-2">Ready to grow with YesViral?</h2>
+          <p className="text-[#444] text-lg mb-6 max-w-xl mx-auto">
+            Turn your profile into something people pay attention to. Choose your platform, select a
+            package, and let YesViral handle the heavy lifting in the background.
+          </p>
+          <div className="mt-6 mb-6">
+            <button
+              className="bg-[#007BFF] text-white px-8 py-3 text-lg rounded-xl hover:bg-[#005FCC] font-bold shadow transition"
+              onClick={openOrderModalPlatform}
+            >
+              Get Started in Minutes
+            </button>
+          </div>
+        </section>
+      </main>
+
+      <SalesNotifications />
+
+      <style jsx global>{`
+        @keyframes starGlow {
+          0% {
+            transform: rotate(0deg) scale(1);
+            filter: drop-shadow(0 0 0 #ffd700);
+          }
+          30% {
+            transform: rotate(8deg) scale(1.16);
+            filter: drop-shadow(0 0 8px #ffd700);
+          }
+          55% {
+            transform: rotate(-7deg) scale(1.09);
+            filter: drop-shadow(0 0 12px #fff78a);
+          }
+          80% {
+            transform: rotate(0deg) scale(1.13);
+            filter: drop-shadow(0 0 10px #ffd700);
+          }
+          100% {
+            transform: rotate(0deg) scale(1);
+            filter: drop-shadow(0 0 0 #ffd700);
+          }
+        }
+        .star-animate {
+          animation: starGlow 2.6s cubic-bezier(0.65, 0.05, 0.36, 1) infinite;
+          will-change: transform, filter;
+        }
+      `}</style>
+    </>
+  );
+}
