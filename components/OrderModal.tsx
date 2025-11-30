@@ -766,7 +766,7 @@ export default function OrderModal({
                 Choose Platform
               </h3>
               <p className="text-center text-sm text-[#64748B] mt-2">
-                Select the platform you want to boost.
+                Trust YesViral’s top-rated growth services to boost your visibility, elevate your presence, and deliver real, high-quality results.
               </p>
 
               <div className="mt-6 flex flex-wrap justify-center gap-4">
@@ -804,7 +804,7 @@ export default function OrderModal({
                 {platform.name} Services
               </h3>
               <p className="text-center text-sm text-[#64748B] mt-2">
-                Choose what type of engagement you want.
+                Choose from our High-Quality services — Followers, Likes, and Views.
               </p>
 
               <div className="mt-6 space-y-3">
