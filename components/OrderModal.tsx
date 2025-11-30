@@ -1,5 +1,3 @@
-// components/OrderModal.tsx
-
 import React, { useState, useEffect } from "react";
 import {
   Instagram,
@@ -90,7 +88,6 @@ const COLORS = {
 
 /* ========================================================
    PLATFORM DATA + PACKAGE PRICING
-   (Buzzoid-style packages with fixed prices)
 ======================================================== */
 const PLATFORMS: Platform[] = [
   {
@@ -685,6 +682,7 @@ export default function OrderModal({
         className="w-full max-w-xl bg-white rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.3)] border border-[#D6E4FF] flex flex-col overflow-hidden"
         style={{ maxHeight: "94vh" }}
       >
+        {/* HEADER */}
         <div
           className="w-full border-b px-5 py-5 sm:px-6 sm:py-6 relative"
           style={{
@@ -718,6 +716,7 @@ export default function OrderModal({
             </div>
           </div>
 
+          {/* STEPS INDICATOR */}
           <div className="mt-4">
             <div className="grid grid-cols-4 gap-1">
               {steps.map((s, i) => (
@@ -759,15 +758,41 @@ export default function OrderModal({
           </div>
         </div>
 
+        {/* CONTENT */}
         <div className="flex-1 overflow-y-auto px-5 py-6 sm:px-6 sm:py-7 bg-[#FAFCFF]">
+          {/* STEP 0 — PLATFORM SELECTION */}
           {step === 0 && (
             <div>
               <h3 className="text-center text-xl sm:text-2xl font-black text-[#111]">
                 Choose Platform
               </h3>
               <p className="text-center text-sm text-[#64748B] mt-2">
-                Trust YesViral’s top-rated growth services to boost your visibility, elevate your presence, and deliver real, high-quality results.
+                Trust YesViral’s top-rated growth services to boost your
+                visibility, elevate your presence, and deliver real,
+                high-quality results.
               </p>
+
+              {/* ⭐ ADDED — 4.8/5 STAR RATING BELOW THE TEXT */}
+              <div className="mt-3 flex items-center justify-center gap-1">
+                <div className="flex items-center">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <svg
+                      key={i}
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="w-4 h-4"
+                      fill={i < 4 ? "#007BFF" : "#CFE4FF"}
+                      stroke="#007BFF"
+                      strokeWidth="1.2"
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M12 17.3l6.18 3.7-1.64-7.03L21 9.24l-7.19-.61L12 2 10.19 8.63 3 9.24l4.46 4.73L5.82 21z" />
+                    </svg>
+                  ))}
+                </div>
+                <span className="ml-2 text-xs font-semibold text-[#0B63E6]">
+                  4.8 / 5 rating by creators
+                </span>
+              </div>
 
               <div className="mt-6 flex flex-wrap justify-center gap-4">
                 {PLATFORMS.map((p) => (
@@ -789,8 +814,6 @@ export default function OrderModal({
                       {p.icon}
                     </div>
                     <div className="font-semibold">{p.name}</div>
-
-                    {/* THIS LINE REMOVED PER YOUR REQUEST */}
                     {/* <div className="text-[11px] text-[#94A3B8]">Followers • Likes • Views</div> */}
                   </button>
                 ))}
@@ -798,13 +821,15 @@ export default function OrderModal({
             </div>
           )}
 
+          {/* STEP 1 — SERVICE SELECT */}
           {step === 1 && (
             <div>
               <h3 className="text-center text-xl sm:text-2xl font-black text-[#111]">
                 {platform.name} Services
               </h3>
               <p className="text-center text-sm text-[#64748B] mt-2">
-                Choose from our High-Quality services — Followers, Likes, and Views.
+                Choose from our High-Quality services — Followers, Likes, and
+                Views.
               </p>
 
               <div className="mt-6 space-y-3">
@@ -877,6 +902,7 @@ export default function OrderModal({
             </div>
           )}
 
+          {/* STEP 2 — DETAILS */}
           {step === 2 && (
             <div>
               <h3 className="text-center text-xl sm:text-2xl font-black text-[#111]">
@@ -899,6 +925,27 @@ export default function OrderModal({
                       ? "Paste the full post or video URL."
                       : "Use @username or full profile URL."}
                   </div>
+
+                  {/* ⭐ ADDED — PREMIUM SAFETY WARNING */}
+                  <div className="mt-2 flex items-start gap-2 text-xs text-[#EF4444] bg-[#FFECEC] border border-[#FFBDBD] px-3 py-2 rounded-lg shadow-sm">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="w-4 h-4 mt-0.5"
+                      fill="none"
+                      stroke="#EF4444"
+                      strokeWidth="2"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle cx="12" cy="12" r="10" />
+                      <line x1="12" y1="8" x2="12" y2="12" />
+                      <line x1="12" y1="16" x2="12" y2="16" />
+                    </svg>
+                    <span className="leading-tight font-medium">
+                      Make sure your account is <b>public</b> and your
+                      username/link is entered <b>correctly</b>. Incorrect
+                      details can delay delivery.
+                    </span>
+                  </div>
                 </div>
 
                 <AmountSelector />
@@ -913,7 +960,9 @@ export default function OrderModal({
                 )}
 
                 {error && (
-                  <div className="text-center text-sm text-red-500">{error}</div>
+                  <div className="text-center text-sm text-red-500">
+                    {error}
+                  </div>
                 )}
               </div>
 
@@ -934,6 +983,7 @@ export default function OrderModal({
             </div>
           )}
 
+          {/* STEP 3 — REVIEW */}
           {step === 3 && (
             <form onSubmit={handleSecureCheckout}>
               <h3 className="text-center text-xl sm:text-2xl font-black text-[#111]">
@@ -946,7 +996,9 @@ export default function OrderModal({
                     {platform.icon}
                   </div>
                   <div>
-                    <div className="font-bold text-[#111]">{platform.name}</div>
+                    <div className="font-bold text-[#111]">
+                      {platform.name}
+                    </div>
                     <div className="text-xs text-[#2563EB]">
                       {service ? service.type : "Choose a service"}
                     </div>
@@ -961,32 +1013,32 @@ export default function OrderModal({
                     <div className="flex justify-between">
                       <b>User / Link:</b>{" "}
                       <span className="max-w-[160px] break-words text-right">
-{refHref ? (
-  <a
-    href={refHref}
-    target="_blank"
-    rel="noopener noreferrer"
-    className="text-[#007BFF] hover:underline break-words inline-flex items-center gap-1"
-  >
-    {refDisplay || "—"}
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      className="w-3 h-3 text-[#007BFF]"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M18 13v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-      <polyline points="15 3 21 3 21 9" />
-      <line x1="10" y1="14" x2="21" y2="3" />
-    </svg>
-  </a>
-) : (
-  refDisplay || "—"
-)}
+                        {refHref ? (
+                          <a
+                            href={refHref}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-[#007BFF] hover:underline break-words inline-flex items-center gap-1"
+                          >
+                            {refDisplay || "—"}
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="w-3 h-3 text-[#007BFF]"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            >
+                              <path d="M18 13v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                              <polyline points="15 3 21 3 21 9" />
+                              <line x1="10" y1="14" x2="21" y2="3" />
+                            </svg>
+                          </a>
+                        ) : (
+                          refDisplay || "—"
+                        )}
                       </span>
                     </div>
                     <div className="flex justify-between">
@@ -1040,7 +1092,7 @@ export default function OrderModal({
               </div>
 
               <p className="mt-3 text-center text-xs text-[#94A3B8]">
-                Protected by Stripe • Encrypted • Discreet billing
+                Private Networks • Encrypted • Discreet billing
               </p>
             </form>
           )}
