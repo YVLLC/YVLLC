@@ -21,6 +21,7 @@ import {
   Menu,
   Tag,
   Play,
+  HelpCircle, // <— added for question-mark icon on step 0
 } from "lucide-react";
 
 /* ============================ Types ============================ */
@@ -252,22 +253,25 @@ const ORDER_STEPS = [
 /**
  * SAME puffery system as OrderModal.tsx
  * - realPrice = actual package price
- * - original = fake "was" price (2.1–2.7x)
+ * - original = fake "was" price
  * - discount = % off
+ *
+ * UPDATED: removed randomness so discount/original
+ * STAY THE SAME and don't change when you type.
  */
 function getDiscountedPrice(realPrice: number) {
   if (!realPrice || realPrice <= 0) {
     return { discount: 0, discounted: realPrice, original: realPrice };
   }
-  const minFactor = 2.1;
-  const maxFactor = 2.7;
-  const factor = minFactor + Math.random() * (maxFactor - minFactor);
+
+  // Fixed puffery factor (no Math.random)
+  const factor = 2.4; // ~58% off look
   const original = Number((realPrice * factor).toFixed(2));
   const discountPercent = Math.round(100 - (realPrice / original) * 100);
 
   return {
     discount: discountPercent,
-    discounted: realPrice,
+    discounted: realPrice, // actual charged price
     original,
   };
 }
@@ -968,7 +972,7 @@ export default function DashboardPage() {
       const orderPercent =
         (orderStep / (ORDER_STEPS.length - 1)) * 100;
 
-      // Header title driven by step (Option A)
+      // Header title driven by step
       const headerTitle =
         orderStep === 0
           ? "Choose Platform"
@@ -991,10 +995,17 @@ export default function DashboardPage() {
             >
               <div className="flex items-center gap-3 pr-2">
                 <div className="w-10 h-10 rounded-2xl bg-white shadow flex items-center justify-center">
-                  <PlatformIconHeader
-                    size={26}
-                    style={{ color: platform.iconColor }}
-                  />
+                  {orderStep === 0 ? (
+                    <HelpCircle
+                      size={26}
+                      className="text-[#94A3B8]"
+                    />
+                  ) : (
+                    <PlatformIconHeader
+                      size={26}
+                      style={{ color: platform.iconColor }}
+                    />
+                  )}
                 </div>
                 <div>
                   <div className="text-[11px] font-semibold text-[#2563EB] tracking-wider uppercase">
@@ -1142,7 +1153,7 @@ export default function DashboardPage() {
                       const SIcon = s.icon;
                       const isSelected = service.type === s.type;
 
-                      // Puffery for "from" price – same as modal
+                      // Puffery for "from" price – now STATIC (no random)
                       const {
                         discount,
                         discounted: realPrice,
@@ -1668,7 +1679,7 @@ export default function DashboardPage() {
               </button>
             ))}
 
-            {/* Logout moved INSIDE sidebar at bottom (blue theme) */}
+            {/* Logout INSIDE sidebar at bottom */}
             <div className="mt-10 pt-6 border-t border-[#CFE4FF]">
               <button
                 onClick={async () => {
