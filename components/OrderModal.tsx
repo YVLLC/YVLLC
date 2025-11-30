@@ -961,18 +961,32 @@ export default function OrderModal({
                     <div className="flex justify-between">
                       <b>User / Link:</b>{" "}
                       <span className="max-w-[160px] break-words text-right">
-                        {refHref ? (
-                          <a
-                            href={refHref}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-[#007BFF] hover:underline break-words"
-                          >
-                            {refDisplay || "—"}
-                          </a>
-                        ) : (
-                          refDisplay || "—"
-                        )}
+{refHref ? (
+  <a
+    href={refHref}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="text-[#007BFF] hover:underline break-words inline-flex items-center gap-1"
+  >
+    {refDisplay || "—"}
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      className="w-3 h-3 text-[#007BFF]"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M18 13v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+      <polyline points="15 3 21 3 21 9" />
+      <line x1="10" y1="14" x2="21" y2="3" />
+    </svg>
+  </a>
+) : (
+  refDisplay || "—"
+)}
                       </span>
                     </div>
                     <div className="flex justify-between">
