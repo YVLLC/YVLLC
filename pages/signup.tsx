@@ -1,9 +1,11 @@
-// signup.tsx — Premium Signup UI
+// signup.tsx — Premium Signup UI + Welcome Email Integration
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { supabase } from "@/lib/supabase";
 import { Toaster, toast } from "react-hot-toast";
 import Image from "next/image";
+import { sendEmail } from "@/lib/email"; // <-- ADDED
+import { getWelcomeEmailHtml } from "@/lib/emailTemplates"; // <-- ADDED
 
 export default function SignupPage() {
   const router = useRouter();
@@ -15,7 +17,10 @@ export default function SignupPage() {
     e.preventDefault();
     setLoading(true);
 
-    const { error } = await supabase.auth.signUp({ email, password });
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+    });
 
     if (error) {
       toast.error(error.message || "Signup failed");
@@ -23,7 +28,20 @@ export default function SignupPage() {
       return;
     }
 
-    toast.success("Account created! Redirecting...");
+    // Send Welcome Email (Postmark)
+    try {
+      await sendEmail({
+        to: email,
+        subject: "🎉 Welcome to YesViral — Your Account is Ready!",
+        html: getWelcomeEmailHtml({ name: email.split("@")[0] }),
+      });
+
+      console.log("📨 Welcome email sent.");
+    } catch (err) {
+      console.error("Welcome email failed:", err);
+    }
+
+    toast.success("Account created! Check your inbox 👀");
     setTimeout(() => router.push("/login"), 1500);
   };
 
@@ -76,7 +94,10 @@ export default function SignupPage() {
         </form>
 
         <p className="text-center text-xs text-[#888] mt-6">
-          Already have an account? <a href="/login" className="text-[#007BFF] hover:underline">Log in</a>
+          Already have an account?{" "}
+          <a href="/login" className="text-[#007BFF] hover:underline">
+            Log in
+          </a>
         </p>
       </div>
     </main>
