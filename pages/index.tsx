@@ -155,8 +155,7 @@ export default function Home() {
             </div>
 
             <span className="text-xs text-[#555] font-medium mt-2">
-              Trusted by 100K+ Creators · 100% Secure Payments · High Quality
-            </span>
+              🔒 SSL-encrypted payments · ⭐ 4.8/5 from 10,000+ clients · ⚡ Orders typically start in minutes </span>
           </div>
 
           <div className="w-full hidden md:flex justify-center mb-0">
