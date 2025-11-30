@@ -19,6 +19,16 @@ export function getWelcomeEmailHtml(opts: { name?: string }) {
 
             <!-- LOGO -->
             <tr>
+<<<<<<< HEAD
+              <td align="center" style="padding-bottom:10px;">
+                <img 
+                  src="https://yesviral.com/logo.png" 
+                  alt="YesViral Logo" 
+                  width="70" 
+                  height="70" 
+                  style="border-radius:16px;"
+                />
+=======
               <td align="center" style="padding-bottom:10px;">
                 <div style="
                   height:60px;width:60px;border-radius:14px;
@@ -27,6 +37,7 @@ export function getWelcomeEmailHtml(opts: { name?: string }) {
                   color:white;font-weight:900;font-size:26px;">
                   Y
                 </div>
+>>>>>>> 451a754d85b62f813913e8a8c71dda89dc1b6d37
               </td>
             </tr>
 
@@ -44,7 +55,7 @@ export function getWelcomeEmailHtml(opts: { name?: string }) {
               </td>
             </tr>
 
-            <!-- GREETING CARD -->
+            <!-- INFO BOX -->
             <tr>
               <td>
                 <div style="
@@ -55,14 +66,14 @@ export function getWelcomeEmailHtml(opts: { name?: string }) {
                   font-size:14px;
                   color:#333;">
                   <strong style="color:#007BFF;">Welcome aboard 🎉</strong><br/><br/>
-                  You now have access to high-quality Followers, Likes & Views delivered through YesViral’s trusted Private Delivery Networks.
+                  You now have access to High-Quality Followers, Likes & Views delivered through YesViral’s trusted Private Delivery Networks.
                   <br/><br/>
                   Here’s what you can do next:
                   <ul style="margin-top:10px;padding-left:22px;color:#333;line-height:1.55;">
                     <li>Place your first order in under 60 seconds</li>
                     <li>Track every order in real-time</li>
                     <li>Enjoy our 30-day refill guarantee</li>
-                    <li>Grow across Instagram, TikTok, YouTube & more</li>
+                    <li>Premium growth across Instagram, TikTok, YouTube & more</li>
                   </ul>
                 </div>
               </td>
