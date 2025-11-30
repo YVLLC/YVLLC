@@ -767,9 +767,8 @@ export default function OrderModal({
                 Choose Platform
               </h3>
               <p className="text-center text-sm text-[#64748B] mt-2">
-                Trust YesViral’s top-rated growth services to boost your
-                visibility, elevate your presence, and deliver real,
-                high-quality results.
+                Trust YesViral’s Top-Rated Growth services to Boost your
+                visibility, Elevate your presence and deliver High-Quality results.
               </p>
 
               {/* ⭐ ADDED — 4.8/5 STAR RATING BELOW THE TEXT */}
@@ -790,7 +789,7 @@ export default function OrderModal({
                   ))}
                 </div>
                 <span className="ml-2 text-xs font-semibold text-[#0B63E6]">
-                  4.8 / 5 rating by creators
+                  4.8 / 5 rating by Customers
                 </span>
               </div>
 
