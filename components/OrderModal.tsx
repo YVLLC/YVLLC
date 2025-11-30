@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   Instagram,
   Youtube,
@@ -412,13 +412,24 @@ export default function OrderModal({
 
   if (!open) return null;
 
+  /* ===========================
+     STABLE PRICING (NO FLICKER)
+  ============================ */
+  const currentPrice = useMemo(
+    () => (service ? getPackagePrice(platform, service, quantity) : 0),
+    [service, platform, quantity]
+  );
+
   const { pkg, type } =
     service ? getStealthPackage(platform, service) : { pkg: "", type: "" };
 
-  const currentPrice = service ? getPackagePrice(platform, service, quantity) : 0;
-  const { discount, discounted, original } = service
-    ? getDiscountedPrice(currentPrice)
-    : { discount: 0, discounted: currentPrice, original: currentPrice };
+  const { discount, discounted, original } = useMemo(
+    () =>
+      service
+        ? getDiscountedPrice(currentPrice)
+        : { discount: 0, discounted: currentPrice, original: currentPrice },
+    [service, currentPrice]
+  );
 
   const orderToSend = {
     package: pkg,
@@ -771,7 +782,7 @@ export default function OrderModal({
                 visibility, Elevate your presence and deliver High-Quality results.
               </p>
 
-              {/* ⭐ ADDED — 4.8/5 STAR RATING BELOW THE TEXT */}
+              {/* ⭐ 4.8/5 STAR RATING BELOW THE TEXT */}
               <div className="mt-3 flex items-center justify-center gap-1">
                 <div className="flex items-center">
                   {Array.from({ length: 5 }).map((_, i) => (
@@ -925,7 +936,7 @@ export default function OrderModal({
                       : "Use @username or full profile URL."}
                   </div>
 
-                  {/* ⭐ ADDED — PREMIUM SAFETY WARNING */}
+                  {/* PREMIUM SAFETY WARNING */}
                   <div className="mt-2 flex items-start gap-2 text-xs text-[#EF4444] bg-[#FFECEC] border border-[#FFBDBD] px-3 py-2 rounded-lg shadow-sm">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -1091,7 +1102,7 @@ export default function OrderModal({
               </div>
 
               <p className="mt-3 text-center text-xs text-[#94A3B8]">
-                Private Networks • Encrypted • Discreet billing
+                Private Networks • Encrypted • Discreet Billing
               </p>
             </form>
           )}
