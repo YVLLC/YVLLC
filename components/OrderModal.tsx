@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Instagram,
   Youtube,
@@ -250,6 +250,7 @@ const steps = [
 
 /* ========================================================
    DISCOUNT / PUFFERY SYSTEM
+   (used for puffery only, **not** for dynamic price)
 ======================================================== */
 function getDiscountedPrice(realPrice: number) {
   if (!realPrice || realPrice <= 0) {
@@ -360,6 +361,12 @@ export default function OrderModal({
   const [target, setTarget] = useState<string>("");
   const [error, setError] = useState<string>("");
 
+  // ⭐ NEW: locked puffery discount/original (based on base service price)
+  const [lockedDiscount, setLockedDiscount] = useState<{
+    discount: number;
+    original: number;
+  } | null>(null);
+
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
     return () => {
@@ -404,6 +411,14 @@ export default function OrderModal({
     setQuantity(100);
     setTarget("");
     setError("");
+
+    if (selectedService) {
+      const d = getDiscountedPrice(selectedService.price);
+      setLockedDiscount({ discount: d.discount, original: d.original });
+    } else {
+      setLockedDiscount(null);
+    }
+
     setStep(nextStep);
   }, [open, initialPlatform, initialService]);
 
@@ -412,31 +427,23 @@ export default function OrderModal({
 
   if (!open) return null;
 
-  /* ===========================
-     STABLE PRICING (NO FLICKER)
-  ============================ */
-  const currentPrice = useMemo(
-    () => (service ? getPackagePrice(platform, service, quantity) : 0),
-    [service, platform, quantity]
-  );
-
   const { pkg, type } =
     service ? getStealthPackage(platform, service) : { pkg: "", type: "" };
 
-  const { discount, discounted, original } = useMemo(
-    () =>
-      service
-        ? getDiscountedPrice(currentPrice)
-        : { discount: 0, discounted: currentPrice, original: currentPrice },
-    [service, currentPrice]
-  );
+  // REAL price based on selected package + amount
+  const currentPrice = service ? getPackagePrice(platform, service, quantity) : 0;
+
+  // 🔒 Puffery: locked discount/original. Discounted ALWAYS equals real price.
+  const discount = lockedDiscount?.discount ?? 0;
+  const original = lockedDiscount?.original ?? currentPrice;
+  const discounted = currentPrice;
 
   const orderToSend = {
     package: pkg,
     type,
     amount: quantity,
     reference: target,
-    total: Number(discounted.toFixed(2)),
+    total: Number(discounted.toFixed(2)), // real price only
     platform: platform.key,
     service: service?.type.toString(),
   };
@@ -811,6 +818,7 @@ export default function OrderModal({
                     onClick={() => {
                       setPlatform(p);
                       setService(null);
+                      setLockedDiscount(null);
                       setStep(1);
                     }}
                     className={
@@ -824,7 +832,6 @@ export default function OrderModal({
                       {p.icon}
                     </div>
                     <div className="font-semibold">{p.name}</div>
-                    {/* <div className="text-[11px] text-[#94A3B8]">Followers • Likes • Views</div> */}
                   </button>
                 ))}
               </div>
@@ -855,6 +862,8 @@ export default function OrderModal({
                       key={s.type}
                       onClick={() => {
                         setService(s);
+                        const d = getDiscountedPrice(s.price);
+                        setLockedDiscount({ discount: d.discount, original: d.original });
                         setStep(2);
                       }}
                       className={
