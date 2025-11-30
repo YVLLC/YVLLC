@@ -24,7 +24,7 @@ const FAQS = [
   {
     question: "What services do you offer?",
     answer:
-      "Our Social Media Marketing services help Individuals, Influencers, and Brands grow their online presence with targeted High-Quality Engagement. Whether you want more Followers, Subscribers, Video views, We offer a wide range of services across platforms like Instagram, YouTube, Spotify, TikTok, and more."
+      "Our Social Media Marketing services help Individuals, Influencers, and Brands grow their online presence with targeted High-Quality Engagement. Whether you want more Followers, Subscribers, Video views, We offer a wide range of services across platforms like Instagram, YouTube, TikTok, and more."
   },
   {
     question: "Do I need to share my account password?",
