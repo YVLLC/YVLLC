@@ -1,5 +1,5 @@
-// signup.tsx — ORIGINAL restored + Safe email call
-import { useState } from "react";
+// signup.tsx — FIXED double toast + redirect to dashboard
+import { useState, useRef } from "react";
 import { useRouter } from "next/router";
 import { supabase } from "@/lib/supabase";
 import { Toaster, toast } from "react-hot-toast";
@@ -11,8 +11,15 @@ export default function SignupPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // 🛡 Prevent double-submit from Supabase auth events
+  const signupAlreadyHandled = useRef(false);
+
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (signupAlreadyHandled.current) return; // prevent duplicate runs
+    signupAlreadyHandled.current = true;
+
     setLoading(true);
 
     const { error } = await supabase.auth.signUp({ email, password });
@@ -20,10 +27,11 @@ export default function SignupPage() {
     if (error) {
       toast.error(error.message || "Signup failed");
       setLoading(false);
+      signupAlreadyHandled.current = false;
       return;
     }
 
-    // 🔥 CALL EMAIL API ROUTE (SAFE)
+    // 🔥 Send welcome email
     try {
       await fetch("/api/send-welcome-email", {
         method: "POST",
@@ -35,7 +43,9 @@ export default function SignupPage() {
     }
 
     toast.success("Account created! Redirecting...");
-    setTimeout(() => router.push("/login"), 1500);
+
+    // 🔥 Redirect to DASHBOARD (not login)
+    setTimeout(() => router.push("/dashboard"), 1200);
   };
 
   return (
