@@ -2,6 +2,7 @@ import Stripe from "stripe";
 import axios from "axios";
 import { createClient } from "@supabase/supabase-js";
 import { ServerClient } from "postmark";
+import { getOrderConfirmationHtml } from "@/lib/emailTemplates";
 
 export const config = {
   api: { bodyParser: false },
@@ -18,7 +19,7 @@ const postmark = new ServerClient(process.env.POSTMARK_SERVER_TOKEN);
 // Followiz API
 const FOLLOWIZ_API_KEY = process.env.FOLLOWIZ_API_KEY;
 
-// Supabase server-side client (SERVICE ROLE KEY REQUIRED)
+// Supabase (Service Role)
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
   process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -41,7 +42,7 @@ function getServiceId(platform, service) {
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).end();
 
-  // Collect raw body
+  // Collect raw body for Stripe validation
   const chunks = [];
   for await (const chunk of req) chunks.push(chunk);
   const body = Buffer.concat(chunks);
@@ -64,9 +65,7 @@ export default async function handler(req, res) {
   if (event.type === "payment_intent.succeeded") {
     const pi = event.data.object;
 
-    // Metadata stored during payment intent creation
     const encodedOrder = pi.metadata ? pi.metadata.yesviral_order : null;
-
     if (!encodedOrder) {
       console.warn("⚠️ No yesviral_order metadata.");
       return res.json({ received: true });
@@ -86,7 +85,7 @@ export default async function handler(req, res) {
     const quantity = order.amount;
     const total = Number(order.total) || 0;
 
-    const supabaseUserId = pi.metadata?.user_id || null; // from dashboard orders
+    const supabaseUserId = pi.metadata?.user_id || null;
 
     const serviceId = getServiceId(platform, service);
     if (!serviceId) {
@@ -96,7 +95,7 @@ export default async function handler(req, res) {
 
     let followizOrderId = null;
 
-    // Send order to Followiz
+    // Submit order to Followiz
     try {
       const params = new URLSearchParams({
         key: FOLLOWIZ_API_KEY,
@@ -112,13 +111,12 @@ export default async function handler(req, res) {
       );
 
       console.log("✅ FOLLOWIZ ORDER:", followizRes.data);
-
       followizOrderId = followizRes.data.order;
     } catch (err) {
       console.error("❌ FOLLOWIZ ORDER FAILED:", err.response?.data || err);
     }
 
-    // INSERT INTO SUPABASE
+    // Insert into Supabase
     const { error: dbErr } = await supabase.from("orders").insert([
       {
         user_id: supabaseUserId,
@@ -129,7 +127,7 @@ export default async function handler(req, res) {
         price_paid: total,
         followiz_order_id: followizOrderId,
         status: "processing",
-        refill_until: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+        refill_until: new Date(Date.now() + 30 * 86400000).toISOString(),
       },
     ]);
 
@@ -139,40 +137,20 @@ export default async function handler(req, res) {
       console.log("✅ Order saved to Supabase.");
     }
 
-    // ✉️ SEND POSTMARK ORDER EMAIL
+    // ✉️ Premium Order Confirmation Email
     try {
       await postmark.sendEmail({
         From: process.env.EMAIL_FROM,
         To: order.email ?? pi.receipt_email,
         Subject: `Your YesViral Order #${followizOrderId || "Pending"}`,
-        HtmlBody: `
-          <div style="font-family: Arial, sans-serif; padding: 20px;">
-            <h2 style="color: #007BFF;">Your YesViral Order</h2>
-
-            <p>Thank you for your purchase! Your order has been received and is now being processed.</p>
-
-            <h3>Order Details:</h3>
-            <ul>
-              <li><strong>Platform:</strong> ${platform}</li>
-              <li><strong>Service:</strong> ${service}</li>
-              <li><strong>Target:</strong> ${target}</li>
-              <li><strong>Quantity:</strong> ${quantity}</li>
-              <li><strong>Total Paid:</strong> $${total}</li>
-              <li><strong>Order ID:</strong> ${followizOrderId || "Pending API Response"}</li>
-            </ul>
-
-            <br/>
-
-            <a href="https://yesviral.com/track?order=${followizOrderId}"
-               style="background:#007BFF;color:white;padding:12px 18px;border-radius:6px;text-decoration:none;">
-               Track Your Order
-            </a>
-
-            <p style="margin-top:20px;color:#444;">
-              If you have any questions, reply directly to this email — we’re here 24/7.
-            </p>
-          </div>
-        `,
+        HtmlBody: getOrderConfirmationHtml({
+          orderId: followizOrderId || "Pending",
+          platform,
+          service,
+          target,
+          quantity,
+          total,
+        }),
         MessageStream: "outbound",
       });
 
