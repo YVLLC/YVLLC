@@ -1,4 +1,3 @@
-// path: pages/dashboard.tsx
 import React, { useEffect, useMemo, useState, useCallback, memo } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
@@ -924,7 +923,7 @@ export default function DashboardPage() {
         style={{ borderColor: COLORS.border }}
       >
         <div
-          className="flex items-center gap-2 px-3 py-2 border-b bg-white/80"
+          className="flex items-center gap-2 px-3 py-2 border-b bg白/80"
           style={{ borderColor: "#E0ECFF" }}
         >
           <div
@@ -1514,11 +1513,6 @@ export default function DashboardPage() {
                           <div className="mt-2 font-extrabold text-lg text-[#007BFF]">
                             Total: ${discounted.toFixed(2)}
                           </div>
-                        </div>
-
-                        {/* REVIEW-ONLY PREVIEW */}
-                        <div className="mb-6">
-                          <PreviewMini />
                         </div>
 
                         {orderError && (
