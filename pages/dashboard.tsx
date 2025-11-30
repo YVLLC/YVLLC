@@ -1157,9 +1157,9 @@ export default function DashboardPage() {
                     Choose Platform
                   </h3>
                   <p className="text-center text-sm text-[#64748B]">
-                    Trust YesViral’s top-rated growth services to boost your
-                    visibility, elevate your presence, and deliver
-                    high-quality results.
+                    Trust YesViral’s Top-Rated Growth services to Boost your
+                    visibility, Elevate your presence, and deliver
+                    High-Quality results.
                   </p>
 
                   {/* 4.8/5 rating line */}
