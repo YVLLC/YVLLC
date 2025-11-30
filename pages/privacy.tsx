@@ -33,9 +33,9 @@ export default function Privacy() {
               <CreditCard className="text-[#007BFF]" size={20} /> Payment Security
             </h2>
             <ul className="list-disc pl-6">
-              <li>All payments are processed via industry-leading, PCI-compliant providers (e.g., Stripe, PayPal).</li>
+              <li>All payments are processed via industry-leading, PCI-compliant providers.</li>
               <li><span className="font-semibold">We never store your full credit card number.</span> Only card type and last 4 digits may be stored for reference.</li>
-              <li>All transactions are SSL encrypted. <span className="inline-flex items-center text-green-600 font-semibold"><Lock size={16} className="mr-1" /> Secure as banks.</span></li>
+              <li>All transactions are SSL encrypted. <span className="inline-flex items-center text-green-600 font-semibold"><Lock size={16} className="mr-1" /> PCI-compliant processing.</span></li>
             </ul>
           </div>
 
