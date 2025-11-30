@@ -19,7 +19,6 @@ export function getWelcomeEmailHtml(opts: { name?: string }) {
 
             <!-- LOGO -->
             <tr>
-<<<<<<< HEAD
               <td align="center" style="padding-bottom:10px;">
                 <img 
                   src="https://yesviral.com/logo.png" 
@@ -28,16 +27,6 @@ export function getWelcomeEmailHtml(opts: { name?: string }) {
                   height="70" 
                   style="border-radius:16px;"
                 />
-=======
-              <td align="center" style="padding-bottom:10px;">
-                <div style="
-                  height:60px;width:60px;border-radius:14px;
-                  background:#007BFF;
-                  display:flex;align-items:center;justify-content:center;
-                  color:white;font-weight:900;font-size:26px;">
-                  Y
-                </div>
->>>>>>> 451a754d85b62f813913e8a8c71dda89dc1b6d37
               </td>
             </tr>
 
