@@ -1,4 +1,4 @@
-// path: pages/dashboard/index.tsx
+// path: pages/dashboard.tsx
 import React, { useEffect, useMemo, useState, useCallback, memo } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
@@ -21,8 +21,48 @@ import {
   Menu,
   Tag,
   Play,
-  HelpCircle, // <— added for question-mark icon on step 0
+  HelpCircle,
 } from "lucide-react";
+
+/* ========================================================
+   FOLLOWIZ-SAFE INPUT SANITIZER
+   - Likes/Views → must be full URL (kept as URL, trimmed)
+   - Followers/Subscribers → clean username (no @, no domain, no query)
+======================================================== */
+function sanitizeFollowizInput(raw: string, serviceType: string): string {
+  if (!raw) return "";
+  let t = raw.trim();
+  const lowerType = serviceType.toLowerCase();
+
+  const needsUrl = lowerType === "likes" || lowerType === "views";
+  const isUrl = /^https?:\/\//i.test(t);
+
+  // For likes/views: must be a valid URL, just trim and strip spaces
+  if (needsUrl) {
+    if (!isUrl) return "";
+    return t.replace(/\s+/g, "");
+  }
+
+  // For followers/subscribers: we want a clean username/handle
+  if (isUrl) {
+    t = t
+      .replace(/^https?:\/\//i, "")
+      .replace(/www\./gi, "")
+      .replace(/instagram\.com\//gi, "")
+      .replace(/tiktok\.com\//gi, "")
+      .replace(/youtube\.com\//gi, "")
+      .replace(/@/g, "")
+      .replace(/\?.*$/, "") // strip query params
+      .replace(/\/.*$/, ""); // strip trailing paths
+  }
+
+  // Strip any leading @ and weird characters, keep typical handle chars
+  t = t.replace(/^@+/, "");
+  t = t.replace(/\s+/g, "");
+  t = t.replace(/[^a-zA-Z0-9._]/g, "");
+
+  return t;
+}
 
 /* ============================ Types ============================ */
 type ServiceType = "Followers" | "Likes" | "Views" | "Subscribers";
@@ -251,20 +291,16 @@ const ORDER_STEPS = [
 
 /* ======================= Puffery / Packages ======================= */
 /**
- * SAME puffery system as OrderModal.tsx
+ * Puffery system (static factor here)
  * - realPrice = actual package price
  * - original = fake "was" price
  * - discount = % off
- *
- * UPDATED: removed randomness so discount/original
- * STAY THE SAME and don't change when you type.
  */
 function getDiscountedPrice(realPrice: number) {
   if (!realPrice || realPrice <= 0) {
     return { discount: 0, discounted: realPrice, original: realPrice };
   }
 
-  // Fixed puffery factor (no Math.random)
   const factor = 2.4; // ~58% off look
   const original = Number((realPrice * factor).toFixed(2));
   const discountPercent = Math.round(100 - (realPrice / original) * 100);
@@ -660,23 +696,26 @@ export default function DashboardPage() {
   /* ===================== Order handlers ===================== */
   function handleOrderNext() {
     if (orderStep === 2) {
-      const trimmed = target.trim();
-      if (!trimmed) {
+      if (!service) {
+        setOrderError("Choose a service first.");
+        return;
+      }
+
+      const cleaned = sanitizeFollowizInput(target, service.type.toString());
+      const needsUrl =
+        service.type === "Likes" || service.type === "Views";
+
+      if (!cleaned) {
         setOrderError(
-          isContentEngagement
-            ? "Paste the full post / video link."
-            : "Paste your profile link or username."
+          needsUrl
+            ? "Full post / video URL required."
+            : "Enter a valid username."
         );
         return;
       }
-      if (isContentEngagement && !isLink(trimmed)) {
-        setOrderError(
-          "For likes / views, please paste a full post / video URL."
-        );
-        return;
-      }
+
       if (!quantity || quantity < 1) {
-        setOrderError("Enter a valid quantity.");
+        setOrderError("Enter a valid amount.");
         return;
       }
     }
@@ -692,19 +731,26 @@ export default function DashboardPage() {
   function handleSecureCheckout(e: React.FormEvent) {
     e.preventDefault();
 
-    const trimmed = target.trim();
-    if (!trimmed) {
+    if (!service) {
+      setOrderError("Choose a service first.");
+      return;
+    }
+
+    const cleaned = sanitizeFollowizInput(target, service.type.toString());
+    const needsUrl =
+      service.type === "Likes" || service.type === "Views";
+
+    if (!cleaned) {
       setOrderError(
-        isContentEngagement
-          ? "Paste the full post / video link."
-          : "Paste your profile link or username."
+        needsUrl
+          ? "Full post or video URL required."
+          : "Enter a valid username."
       );
       return;
     }
-    if (isContentEngagement && !isLink(trimmed)) {
-      setOrderError(
-        "For likes / views, please paste a full post / video URL."
-      );
+
+    if (!quantity || quantity < 1) {
+      setOrderError("Enter a valid amount.");
       return;
     }
 
@@ -720,7 +766,7 @@ export default function DashboardPage() {
       platform: platform.key,
       service: service.type,
       amount: quantity,
-      reference: target,
+      reference: cleaned,
       // REAL amount charged = package price
       total: Number(currentPrice.toFixed(2)),
     };
@@ -982,6 +1028,34 @@ export default function DashboardPage() {
 
       const PlatformIconHeader = platform.icon;
 
+      // For review: clickable username/link display
+      const cleanedForReview = sanitizeFollowizInput(
+        target,
+        service.type.toString()
+      );
+      const needsUrlForReview =
+        service.type === "Likes" || service.type === "Views";
+      let refDisplay = "";
+      let refHref = "";
+
+      if (needsUrlForReview) {
+        refDisplay = cleanedForReview || target.trim();
+        refHref = cleanedForReview || "";
+      } else {
+        const usernameBase =
+          cleanedForReview || target.trim().replace(/^@+/, "");
+        if (usernameBase) {
+          refDisplay = "@" + usernameBase;
+          const key = platform.key.toLowerCase();
+          if (key === "instagram")
+            refHref = `https://instagram.com/${usernameBase}`;
+          else if (key === "tiktok")
+            refHref = `https://www.tiktok.com/@${usernameBase}`;
+          else if (key === "youtube")
+            refHref = `https://www.youtube.com/@${usernameBase}`;
+        }
+      }
+
       return (
         <div className="max-w-2xl mx-auto">
           <div className="bg-white border border-[#CFE4FF] rounded-2xl shadow-xl overflow-hidden">
@@ -1080,14 +1154,38 @@ export default function DashboardPage() {
               {/* STEP 0: Platform */}
               {orderStep === 0 && (
                 <>
-                  <h3 className="font-black text-2xl mb-6 text-[#111] text-center tracking-tight">
+                  <h3 className="font-black text-2xl mb-2 text-[#111] text-center tracking-tight">
                     Choose Platform
                   </h3>
-                  <p className="text-center text-sm text-[#64748B] mb-6">
-                    Select the platform you want to boost.
+                  <p className="text-center text-sm text-[#64748B]">
+                    Trust YesViral’s top-rated growth services to boost your
+                    visibility, elevate your presence, and deliver
+                    high-quality results.
                   </p>
 
-                  <div className="flex justify-center gap-5 flex-wrap mb-6">
+                  {/* 4.8/5 rating line */}
+                  <div className="mt-3 flex items-center justify-center gap-1">
+                    <div className="flex items-center">
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <svg
+                          key={i}
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="w-4 h-4"
+                          fill={i < 4 ? "#007BFF" : "#CFE4FF"}
+                          stroke="#007BFF"
+                          strokeWidth="1.2"
+                          viewBox="0 0 24 24"
+                        >
+                          <path d="M12 17.3l6.18 3.7-1.64-7.03L21 9.24l-7.19-.61L12 2 10.19 8.63 3 9.24l4.46 4.73L5.82 21z" />
+                        </svg>
+                      ))}
+                    </div>
+                    <span className="ml-2 text-xs font-semibold text-[#0B63E6]">
+                      4.8 / 5 rating by Customers
+                    </span>
+                  </div>
+
+                  <div className="mt-6 flex justify-center gap-5 flex-wrap mb-6">
                     {PLATFORMS.map((p) => {
                       const Icon = p.icon;
                       return (
@@ -1145,7 +1243,8 @@ export default function DashboardPage() {
                     </span>
                   </h3>
                   <p className="text-center text-sm text-[#64748B] mb-6">
-                    Choose what type of engagement you want.
+                    Choose from our High-Quality services — Followers, Likes,
+                    and Views.
                   </p>
 
                   <div className="flex flex-wrap gap-5 justify-center mb-6">
@@ -1153,7 +1252,6 @@ export default function DashboardPage() {
                       const SIcon = s.icon;
                       const isSelected = service.type === s.type;
 
-                      // Puffery for "from" price – now STATIC (no random)
                       const {
                         discount,
                         discounted: realPrice,
@@ -1188,7 +1286,7 @@ export default function DashboardPage() {
                           {isSelected && (
                             <span className="mt-1 px-2 py-0.5 rounded-full bg-[#e7f7f0] text-[#007BFF] text-xs font-bold flex items-center gap-1 animate-flashSale">
                               <Tag size={14} className="mr-0.5" />
-                              -{discount}% Flash Sale
+                              -{discount}% OFF
                             </span>
                           )}
                         </button>
@@ -1219,7 +1317,6 @@ export default function DashboardPage() {
                     Order Details
                   </h3>
 
-                  {/** PACKAGE PRICING (same as modal) */}
                   {(() => {
                     const currentPrice = getPackagePrice(
                       platform,
@@ -1258,9 +1355,30 @@ export default function DashboardPage() {
                             />
                             <span className="mt-2 block text-xs text-[#777]">
                               {isContentEngagement
-                                ? "For likes / views, you must paste the full post or video URL."
-                                : "For followers / subscribers, you can use a username or full profile URL."}
+                                ? "Paste the full post or video URL."
+                                : "Use @username or full profile URL."}
                             </span>
+
+                            {/* PREMIUM SAFETY WARNING */}
+                            <div className="mt-2 flex items-start gap-2 text-xs text-[#EF4444] bg-[#FFECEC] border border-[#FFBDBD] px-3 py-2 rounded-lg shadow-sm">
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="w-4 h-4 mt-0.5"
+                                fill="none"
+                                stroke="#EF4444"
+                                strokeWidth="2"
+                                viewBox="0 0 24 24"
+                              >
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="12" y1="8" x2="12" y2="12" />
+                                <line x1="12" y1="16" x2="12" y2="16" />
+                              </svg>
+                              <span className="leading-tight font-medium">
+                                Make sure your account is <b>public</b> and your
+                                username/link is entered <b>correctly</b>.
+                                Incorrect details can delay delivery.
+                              </span>
+                            </div>
                           </div>
 
                           {/* Amount */}
@@ -1353,7 +1471,33 @@ export default function DashboardPage() {
                             <b>Package:</b> {pkg} ({type})
                           </div>
                           <div className="text-[#444] mb-1">
-                            <b>Username / Link:</b> {target}
+                            <b>Username / Link:</b>{" "}
+                            {refHref ? (
+                              <a
+                                href={refHref}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-[#007BFF] hover:underline inline-flex items-center gap-1 break-all"
+                              >
+                                {refDisplay || "—"}
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  className="w-3 h-3 text-[#007BFF]"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  strokeWidth="2"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                >
+                                  <path d="M18 13v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                                  <polyline points="15 3 21 3 21 9" />
+                                  <line x1="10" y1="14" x2="21" y2="3" />
+                                </svg>
+                              </a>
+                            ) : (
+                              refDisplay || target || "—"
+                            )}
                           </div>
                           <div className="text-[#444] mb-1">
                             <b>Amount:</b> {quantity}
@@ -1423,6 +1567,10 @@ export default function DashboardPage() {
                             Secure Checkout
                           </button>
                         </div>
+
+                        <p className="mt-3 text-center text-xs text-[#94A3B8]">
+                          Private Networks • Encrypted • Discreet Billing
+                        </p>
                       </>
                     );
                   })()}
