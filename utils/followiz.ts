@@ -2,8 +2,8 @@ import axios from "axios";
 
 const FOLLOWIZ_API_KEY = process.env.FOLLOWIZ_API_KEY || "";
 
-// Followiz API endpoint
-const FOLLOWIZ_API_URL = "https://api.followiz.com";
+// Correct endpoint
+const FOLLOWIZ_API_URL = "https://followiz.com/api/v2";
 
 export async function placeFollowizOrder({
   service,
@@ -20,10 +20,10 @@ export async function placeFollowizOrder({
       new URLSearchParams({
         key: FOLLOWIZ_API_KEY,
         action: "add",
-        service: service.toString(),
+        service: String(service),
         link,
-        quantity: quantity.toString(),
-      }),
+        quantity: String(quantity),
+      }).toString(), // <— REQUIRED
       {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
@@ -45,8 +45,8 @@ export async function checkFollowizOrderStatus(orderId: string) {
       new URLSearchParams({
         key: FOLLOWIZ_API_KEY,
         action: "status",
-        order: orderId,
-      }),
+        order: String(orderId),
+      }).toString(), // <— REQUIRED
       {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
@@ -54,7 +54,7 @@ export async function checkFollowizOrderStatus(orderId: string) {
       }
     );
 
-    return response.data; // { status: ... }
+    return response.data;
   } catch (error: any) {
     console.error("Followiz Status Error:", error?.response?.data || error);
     throw new Error("Failed to check Followiz order status.");

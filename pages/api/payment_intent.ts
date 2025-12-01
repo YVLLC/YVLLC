@@ -43,7 +43,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       currency: "usd",
       automatic_payment_methods: { enabled: true },
       metadata: {
-        yesviral_order: metadata?.order || "",
+        yesviral_order: metadata?.yesviral_order || "",
         user_id: userId || "",
       },
     });

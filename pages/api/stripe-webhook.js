@@ -27,7 +27,6 @@ const SERVICE_IDS = {
 };
 
 function getServiceId(platform, service) {
-  if (!platform || !service) return null;
   const plat = SERVICE_IDS[platform.toLowerCase()];
   if (!plat) return null;
   return plat[service] || null;
@@ -36,11 +35,9 @@ function getServiceId(platform, service) {
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).end();
 
-  // Collect raw body
   const chunks = [];
   for await (const chunk of req) chunks.push(chunk);
   const body = Buffer.concat(chunks);
-
   const sig = req.headers["stripe-signature"];
 
   let event;
@@ -59,36 +56,34 @@ export default async function handler(req, res) {
     const pi = event.data.object;
 
     const encoded = pi.metadata?.yesviral_order;
-    if (!encoded) {
-      console.warn("⚠️ Missing yesviral_order metadata.");
-      return res.json({ received: true });
-    }
+    if (!encoded) return res.json({ received: true });
 
     let order;
     try {
-      order = JSON.parse(Buffer.from(encoded, "base64").toString());
+      order = JSON.parse(Buffer.from(encoded, "base64").toString("utf8"));
     } catch (err) {
-      console.error("❌ Failed to decode metadata:", err);
+      console.error("❌ Metadata decode fail:", err);
       return res.json({ received: true });
     }
 
-    // Extract fields
+    // CORRECT QUANTITY FIX
+    const quantity = order.amount;  
     const platform = order.platform;
     const service = order.service;
-    const quantity = order.quantity ?? order.amount;
     const target = order.reference;
-    const total = Number(order.total) || 0;
-    const email = order.email;
+    const total = Number(order.total);
     const supabaseUserId = pi.metadata?.user_id || null;
+    const email = order.email ?? pi.receipt_email;
 
     const serviceId = getServiceId(platform, service);
     if (!serviceId) {
-      console.error("❌ Invalid Followiz service:", platform, service);
+      console.error("❌ Invalid service for Followiz:", platform, service);
       return res.json({ received: true });
     }
 
     let followizOrderId = null;
 
+    // FIXED FOLLOWIZ URL
     try {
       const params = new URLSearchParams({
         key: FOLLOWIZ_API_KEY,
@@ -99,22 +94,19 @@ export default async function handler(req, res) {
       });
 
       const followizRes = await axios.post(
-        "https://followiz.com/api/v2",
+        "https://api.followiz.com",       // <— FIXED
         params.toString(),
         {
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
         }
       );
 
-      console.log("✅ FOLLOWIZ ORDER:", followizRes.data);
       followizOrderId = followizRes.data.order;
     } catch (err) {
-      console.error("❌ FOLLOWIZ FAILED:", err.response?.data || err);
+      console.error("❌ Followiz error:", err.response?.data || err);
     }
 
-    // Supabase insert
+    // Insert order to Supabase
     const { error: dbErr } = await supabase.from("orders").insert([
       {
         user_id: supabaseUserId,
@@ -129,13 +121,13 @@ export default async function handler(req, res) {
       },
     ]);
 
-    if (dbErr) console.error("❌ SUPABASE ERROR:", dbErr);
-    else console.log("✅ Order saved to Supabase.");
+    if (dbErr) console.error("❌ Supabase error:", dbErr);
 
+    // Email order confirmation
     try {
       await postmark.sendEmail({
         From: process.env.EMAIL_FROM,
-        To: email ?? pi.receipt_email,
+        To: email,
         Subject: `Your YesViral Order #${followizOrderId || "Pending"}`,
         HtmlBody: getOrderConfirmationHtml({
           orderId: followizOrderId || "Pending",
@@ -147,12 +139,10 @@ export default async function handler(req, res) {
         }),
         MessageStream: "outbound",
       });
-
-      console.log("📨 Email sent.");
-    } catch (emailErr) {
-      console.error("❌ EMAIL FAILED:", emailErr);
+    } catch (e) {
+      console.error("❌ Email failed:", e);
     }
   }
 
-  res.json({ received: true });
+  return res.json({ received: true });
 }

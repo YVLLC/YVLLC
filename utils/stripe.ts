@@ -1,34 +1,32 @@
+// path: utils/stripe.ts
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
-  apiVersion: "2024-04-10", // downgrade to match installed Stripe version
+export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: "2024-04-10",
 });
 
-export async function createCheckoutSession({
-  price,
-  success_url,
-  cancel_url,
+/**
+ * Create a PaymentIntent for YesViral checkout flow.
+ * Used by /api/payment_intent → CheckoutForm → webhook → Followiz fulfillment.
+ */
+export async function createPaymentIntent({
+  amount,
+  metadata,
 }: {
-  price: number;
-  success_url: string;
-  cancel_url: string;
+  amount: number;
+  metadata: Record<string, string>;
 }) {
-  return await stripe.checkout.sessions.create({
-    payment_method_types: ["card"],
-    line_items: [
-      {
-        price_data: {
-          currency: "usd",
-          product_data: {
-            name: "YesViral Social Media Service",
-          },
-          unit_amount: price * 100,
-        },
-        quantity: 1,
-      },
-    ],
-    mode: "payment",
-    success_url,
-    cancel_url,
+  const intent = await stripe.paymentIntents.create({
+    amount,
+    currency: "usd",
+    automatic_payment_methods: { enabled: true },
+    metadata,
   });
+
+  return {
+    id: intent.id,
+    clientSecret: intent.client_secret!,
+    status: intent.status,
+    amount: intent.amount,
+  };
 }
