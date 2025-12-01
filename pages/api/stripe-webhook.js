@@ -8,24 +8,18 @@ export const config = {
   api: { bodyParser: false },
 };
 
-// Stripe client
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2024-04-10",
 });
 
-// Postmark client
-const postmark = new ServerClient(process.env.POSTMARK_SERVER_TOKEN);
+const postmark = new ServerClient(process.env.POSTMARK_SERVER_TOKEN!);
 
-// Followiz API
-const FOLLOWIZ_API_KEY = process.env.FOLLOWIZ_API_KEY;
-
-// Supabase (Service Role)
+const FOLLOWIZ_API_KEY = process.env.FOLLOWIZ_API_KEY!;
 const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-// Followiz service IDs
 const SERVICE_IDS = {
   instagram: { Followers: 511, Likes: 483, Views: 811 },
   tiktok: { Followers: 6951, Likes: 1283, Views: 1016 },
@@ -42,7 +36,7 @@ function getServiceId(platform, service) {
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).end();
 
-  // Collect raw body for Stripe validation
+  // Collect raw body
   const chunks = [];
   for await (const chunk of req) chunks.push(chunk);
   const body = Buffer.concat(chunks);
@@ -54,48 +48,47 @@ export default async function handler(req, res) {
     event = stripe.webhooks.constructEvent(
       body,
       sig,
-      process.env.STRIPE_WEBHOOK_SECRET
+      process.env.STRIPE_WEBHOOK_SECRET!
     );
   } catch (err) {
     console.error("❌ Webhook signature error:", err.message);
     return res.status(400).send(`Webhook signature error: ${err.message}`);
   }
 
-  // Handle successful payments
   if (event.type === "payment_intent.succeeded") {
     const pi = event.data.object;
 
-    const encodedOrder = pi.metadata ? pi.metadata.yesviral_order : null;
-    if (!encodedOrder) {
-      console.warn("⚠️ No yesviral_order metadata.");
+    const encoded = pi.metadata?.yesviral_order;
+    if (!encoded) {
+      console.warn("⚠️ Missing yesviral_order metadata.");
       return res.json({ received: true });
     }
 
     let order;
     try {
-      order = JSON.parse(encodedOrder);
+      order = JSON.parse(Buffer.from(encoded, "base64").toString());
     } catch (err) {
-      console.error("❌ Failed to parse order metadata:", err);
+      console.error("❌ Failed to decode metadata:", err);
       return res.json({ received: true });
     }
 
+    // Extract fields
     const platform = order.platform;
     const service = order.service;
+    const quantity = order.quantity ?? order.amount;
     const target = order.reference;
-    const quantity = order.amount;
     const total = Number(order.total) || 0;
-
+    const email = order.email;
     const supabaseUserId = pi.metadata?.user_id || null;
 
     const serviceId = getServiceId(platform, service);
     if (!serviceId) {
-      console.error("❌ Invalid service ID:", platform, service);
+      console.error("❌ Invalid Followiz service:", platform, service);
       return res.json({ received: true });
     }
 
     let followizOrderId = null;
 
-    // Submit order to Followiz
     try {
       const params = new URLSearchParams({
         key: FOLLOWIZ_API_KEY,
@@ -107,16 +100,21 @@ export default async function handler(req, res) {
 
       const followizRes = await axios.post(
         "https://followiz.com/api/v2",
-        params
+        params.toString(),
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        }
       );
 
       console.log("✅ FOLLOWIZ ORDER:", followizRes.data);
       followizOrderId = followizRes.data.order;
     } catch (err) {
-      console.error("❌ FOLLOWIZ ORDER FAILED:", err.response?.data || err);
+      console.error("❌ FOLLOWIZ FAILED:", err.response?.data || err);
     }
 
-    // Insert into Supabase
+    // Supabase insert
     const { error: dbErr } = await supabase.from("orders").insert([
       {
         user_id: supabaseUserId,
@@ -131,17 +129,13 @@ export default async function handler(req, res) {
       },
     ]);
 
-    if (dbErr) {
-      console.error("❌ SUPABASE INSERT ERROR:", dbErr);
-    } else {
-      console.log("✅ Order saved to Supabase.");
-    }
+    if (dbErr) console.error("❌ SUPABASE ERROR:", dbErr);
+    else console.log("✅ Order saved to Supabase.");
 
-    // ✉️ Premium Order Confirmation Email
     try {
       await postmark.sendEmail({
         From: process.env.EMAIL_FROM,
-        To: order.email ?? pi.receipt_email,
+        To: email ?? pi.receipt_email,
         Subject: `Your YesViral Order #${followizOrderId || "Pending"}`,
         HtmlBody: getOrderConfirmationHtml({
           orderId: followizOrderId || "Pending",
@@ -154,9 +148,9 @@ export default async function handler(req, res) {
         MessageStream: "outbound",
       });
 
-      console.log("📨 Order email sent successfully.");
+      console.log("📨 Email sent.");
     } catch (emailErr) {
-      console.error("❌ Email sending failed:", emailErr);
+      console.error("❌ EMAIL FAILED:", emailErr);
     }
   }
 
