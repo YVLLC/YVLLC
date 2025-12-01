@@ -10,19 +10,23 @@ export default async function handler(
     return res.status(405).json({ error: "Method not allowed" });
 
   try {
-    const { email, orderId, service, amount } = req.body;
+    const { email, orderId, platform, service, target, quantity, amount } =
+      req.body;
 
-    if (!email || !orderId)
-      return res.status(400).json({ error: "Missing required fields" });
+    if (!email || !orderId) {
+      return res
+        .status(400)
+        .json({ error: "Missing email or order ID" });
+    }
 
-    // PREMIUM ORDER CONFIRMATION TEMPLATE
+    // SAFE FALLBACKS — prevents template breakage
     const html = getOrderConfirmationHtml({
       orderId,
-      platform: "Social Platform",
-      service,
-      target: "Customer Provided Link",
-      quantity: 0,
-      total: amount,
+      platform: platform || "Unknown Platform",
+      service: service || "Service",
+      target: target || "Not Provided",
+      quantity: quantity || 1,
+      total: amount || 0,
     });
 
     await sendEmail({
@@ -31,9 +35,11 @@ export default async function handler(
       html,
     });
 
-    res.json({ success: true });
-  } catch (err) {
+    return res.json({ success: true });
+  } catch (err: any) {
     console.error("Postmark send error:", err);
-    res.status(500).json({ error: "Failed to send email" });
+    return res
+      .status(500)
+      .json({ error: "Failed to send email", details: err.message });
   }
 }
