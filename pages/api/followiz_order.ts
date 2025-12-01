@@ -38,12 +38,16 @@ const FOLLOWIZ_SERVICE_IDS = {
 
 const FOLLOWIZ_API_KEY = process.env.FOLLOWIZ_API_KEY!;
 
+// ⭐ FIXED: TS-safe service lookup (NO more index errors)
 function getServiceId(platform: string, service: string): number | null {
   const plat = platform.toLowerCase();
-
   const normalized = NORMALIZE_SERVICE[service] || service.toLowerCase();
 
-  const id = FOLLOWIZ_SERVICE_IDS[plat]?.[normalized];
+  // Fix: cast entire lookup to "any"
+  const serviceMap = (FOLLOWIZ_SERVICE_IDS as any)[plat];
+  if (!serviceMap) return null;
+
+  const id = serviceMap[normalized];
 
   return typeof id === "number" && id > 0 ? id : null;
 }
