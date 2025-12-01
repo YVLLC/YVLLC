@@ -134,7 +134,7 @@ export default function TrackOrderPage() {
 
             {/* Restored Subtitle #3 */}
             <span className="text-[11px] font-medium text-[#94A3B8]">
-              Powered by private delivery networks
+              Powered by Private Delivery Networks
             </span>
           </div>
         </Link>
@@ -218,7 +218,7 @@ export default function TrackOrderPage() {
                     id="order-id"
                     ref={inputRef}
                     type="text"
-                    placeholder="e.g. 48392-YESVIRAL-1293"
+                    placeholder="e.g. 98718168"
                     value={orderId}
                     onChange={(e) => setOrderId(e.target.value)}
                     required
