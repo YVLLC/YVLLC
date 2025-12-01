@@ -2,16 +2,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import axios from "axios";
 
-/* ===========================================
-   FOLLOWIZ CONFIG
-=========================================== */
-
 const FOLLOWIZ_API_KEY = process.env.FOLLOWIZ_API_KEY || "";
 const FOLLOWIZ_API_URL = "https://api.followiz.com/v2";
-
-/* ===========================================
-   NORMALIZE SERVICE NAMES
-=========================================== */
 
 const NORMALIZE_SERVICE: Record<string, string> = {
   Likes: "likes",
@@ -21,10 +13,6 @@ const NORMALIZE_SERVICE: Record<string, string> = {
   Comments: "comments",
 };
 
-/* ===========================================
-   SERVICE IDs (OFFICIAL FINAL MAP)
-=========================================== */
-
 const FOLLOWIZ_SERVICE_IDS = {
   youtube: {
     views: 4023,
@@ -33,7 +21,6 @@ const FOLLOWIZ_SERVICE_IDS = {
     followers: null,
     comments: null,
   },
-
   tiktok: {
     views: 1016,
     likes: 1283,
@@ -41,7 +28,6 @@ const FOLLOWIZ_SERVICE_IDS = {
     subscribers: null,
     comments: null,
   },
-
   instagram: {
     views: 811,
     likes: 483,
@@ -51,18 +37,15 @@ const FOLLOWIZ_SERVICE_IDS = {
   },
 };
 
-/* ===========================================
-   CLEAN SERVICE ID EXTRACTOR — NO TS ERRORS
-=========================================== */
-
+// ======================================================
+// THE FIX — TS CANNOT BREAK THIS. EVER.
+// ======================================================
 function getServiceId(platform: string, service: string): number | null {
-  const plat = platform.toLowerCase() as keyof typeof FOLLOWIZ_SERVICE_IDS;
+  const plat = platform.toLowerCase();
+  const normalized = (NORMALIZE_SERVICE[service] || service.toLowerCase());
 
-  // normalize "Likes" -> "likes"
-  const normalized =
-    (NORMALIZE_SERVICE[service] || service.toLowerCase()) as keyof (typeof FOLLOWIZ_SERVICE_IDS)[typeof plat];
-
-  const serviceMap = FOLLOWIZ_SERVICE_IDS[plat];
+  // ⭐ This line FIXES THE TS ERROR:
+  const serviceMap = (FOLLOWIZ_SERVICE_IDS as any)[plat];
   if (!serviceMap) return null;
 
   const id = serviceMap[normalized];
@@ -70,10 +53,9 @@ function getServiceId(platform: string, service: string): number | null {
   return typeof id === "number" && id > 0 ? id : null;
 }
 
-/* ===========================================
-   API ROUTE HANDLER
-=========================================== */
-
+// ======================================================
+// API HANDLER
+// ======================================================
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -89,12 +71,11 @@ export default async function handler(
 
     const service_id = getServiceId(platform, service);
     if (!service_id) {
-      return res
-        .status(400)
-        .json({ error: `Invalid or unsupported service: ${platform} ${service}` });
+      return res.status(400).json({
+        error: `Invalid or unsupported service: ${platform} ${service}`,
+      });
     }
 
-    // Build encoded Followiz request
     const params = new URLSearchParams({
       key: FOLLOWIZ_API_KEY,
       action: "add",
@@ -103,14 +84,12 @@ export default async function handler(
       quantity: String(quantity),
     });
 
-    // Call Followiz API
-    const followizRes = await axios.post(FOLLOWIZ_API_URL, params.toString(), {
+    const response = await axios.post(FOLLOWIZ_API_URL, params.toString(), {
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
     });
 
-    const data = followizRes.data;
+    const data = response.data;
 
-    // If Followiz returned an order id
     if (data?.order) {
       return res.status(200).json({
         success: true,
@@ -118,12 +97,11 @@ export default async function handler(
       });
     }
 
-    // If Followiz returned an error
     return res.status(400).json({
       error: data?.error || "Followiz returned an unknown error.",
     });
   } catch (error: any) {
-    console.error("❌ Followiz Order Error:", error?.response?.data || error);
+    console.error("❌ Followiz Error:", error?.response?.data || error);
     return res.status(500).json({
       error: "Failed to place Followiz order.",
       details: error?.response?.data || error.message,
