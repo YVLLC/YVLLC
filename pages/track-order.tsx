@@ -110,8 +110,6 @@ export default function TrackOrderPage() {
       {/* HEADER */}
       <header className="z-10 mb-6 flex w-full max-w-5xl items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
-
-          {/* YESVIRAL LOGO */}
           <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-white shadow-md border border-[#CFE4FF]/80 overflow-hidden">
             <Image
               src="/logo.png"
@@ -135,21 +133,17 @@ export default function TrackOrderPage() {
           </div>
         </Link>
 
-        {/* REMOVED EXTRA LIVE ENGINE BADGE */}
+        {/* EXTRA LIVE ENGINE BADGE REMOVED */}
       </header>
 
       {/* MAIN WRAPPER */}
       <div className="z-10 flex w-full max-w-5xl flex-col gap-8 lg:flex-row lg:items-start">
 
-        {/* ========================
-            LEFT: TRACKING CARD
-        ========================= */}
+        {/* LEFT: TRACKING CARD */}
         <div className="relative w-full lg:flex-[1.2]">
 
-          {/* Gradient border */}
           <div className="absolute -inset-[1px] rounded-[26px] bg-gradient-to-br from-[#007BFF] via-[#4F46E5] to-[#0EA5E9] opacity-80" />
 
-          {/* MAIN CARD */}
           <div className="relative glass-card border border-white/60 bg-white/90 px-5 py-7 shadow-[0_24px_60px_rgba(15,23,42,0.16)] sm:px-8 sm:py-10 rounded-[24px] space-y-7">
 
             {/* HEADER */}
@@ -166,7 +160,7 @@ export default function TrackOrderPage() {
                 Drop your order ID below to see the latest status across our private delivery networks in real time.
               </p>
 
-              {/* MAIN-CARD LIVE ENGINE BADGE — KEPT */}
+              {/* MAIN BADGE */}
               <div className="mt-3 flex items-center justify-center">
                 <span className="inline-flex items-center gap-2 rounded-full bg-[#F0F5FF] px-4 py-1.5 border border-[#CFE4FF] shadow-sm text-[11px] font-semibold text-[#007BFF]">
                   <span className="h-2.5 w-2.5 rounded-full bg-[#22C55E] animate-pulse" />
@@ -196,9 +190,7 @@ export default function TrackOrderPage() {
               </div>
             </div>
 
-            {/* ========================
-                FORM
-            ========================= */}
+            {/* FORM */}
             <form onSubmit={handleTrack} className="space-y-4 w-full">
               <div className="relative">
                 <label
@@ -248,14 +240,13 @@ export default function TrackOrderPage() {
               </button>
             </form>
 
-            {/* ========================
-                STATUS OUTPUT
-            ========================= */}
+            {/* STATUS OUTPUT */}
             {(statusKey || error) && (
               <div className="mt-1 flex flex-col items-center gap-3 rounded-2xl border border-[#E0EDFF] bg-[#F5F7FF] px-4 py-4 sm:px-6 sm:py-5">
 
                 <div className="flex items-center gap-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white shadow-inner border borde>
+                  {/* FIXED BROKEN DIV HERE */}
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white shadow-inner border border-[#E0ECFF]">
                     {STATUS_ICONS[statusKey || "unknown"]}
                   </div>
 
@@ -284,7 +275,7 @@ export default function TrackOrderPage() {
                   </div>
                 </div>
 
-                {/* BLUE-ONLY PROGRESS BAR */}
+                {/* BLUE PROGRESS BAR */}
                 <div className="mt-1 flex w-full max-w-md flex-col gap-2">
                   <div className="flex items-center justify-between text-[11px] text-[#6B7280] font-semibold uppercase tracking-[0.16em]">
                     <span>Order Placed</span>
@@ -316,7 +307,7 @@ export default function TrackOrderPage() {
                 </button>
               </Link>
 
-              {/* UPDATED TO YESVIRAL BLUE ONLY — NOTHING ELSE TOUCHED */}
+              {/* YESVIRAL BLUE BUTTON */}
               <button
                 className="group flex w-full items-center justify-center gap-2 rounded-xl bg-[#007BFF] px-6 py-2.5 text-[14px] font-semibold text-white shadow-[0_16px_35px_rgba(15,23,42,0.6)] transition hover:bg-[#005FCC] sm:flex-1"
                 onClick={() => setShowOrderModal(true)}
@@ -329,15 +320,13 @@ export default function TrackOrderPage() {
           </div>
         </div>
 
-        {/* ========================
-            RIGHT: FAQ SIDEBAR
-        ========================= */}
+        {/* FAQ SIDEBAR */}
         <aside className="relative w-full lg:flex-[0.9]">
           <div className="relative mt-4 lg:mt-0 rounded-[22px] border border-[#D5E4FF] bg-white/95 px-4 py-5 shadow-[0_18px_40px_rgba(15,23,42,0.10)] sm:px-6 sm:py-7">
 
             <div className="mb-4 flex items-center justify-between">
               <div>
-                <h2 className="text-[16px] font-black tracking-tight text="#">
+                <h2 className="text-[16px] font-black tracking-tight text-[#0F172A]">
                   Tracking help & FAQs
                 </h2>
                 <p className="mt-1 text-[12px] text-[#64748B] max-w-xs">
@@ -380,7 +369,6 @@ export default function TrackOrderPage() {
               ))}
             </div>
 
-            {/* SUPPORT CTA */}
             <div className="mt-6 text-center">
               <Link href="/contact">
                 <button className="inline-flex items-center gap-2 rounded-full border border-[#CFE4FF] bg-white px-5 py-2.5 text-[13px] font-semibold text-[#007BFF] shadow-sm transition hover:bg-[#EFF5FF]">
