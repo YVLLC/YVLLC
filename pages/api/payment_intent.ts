@@ -9,7 +9,7 @@ export default async function handler(
   if (req.method !== "POST") return res.status(405).end();
 
   try {
-    const { amount, metadata, email } = req.body;
+    const { amount, metadata, email, user_id } = req.body;
 
     if (!amount || typeof amount !== "number" || amount < 0) {
       return res.status(400).json({ error: "Invalid amount" });
@@ -21,7 +21,10 @@ export default async function handler(
 
     const intent = await createPaymentIntent({
       amount,
-      metadata,
+      metadata: {
+        ...metadata,
+        user_id: user_id || "", // ⭐ FIXED
+      },
       customerEmail: email || null,
     });
 
