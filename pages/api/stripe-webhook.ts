@@ -109,7 +109,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
 
       const followizRes = await axios.post(
-        "https://api.followiz.com/v2",
+        "https://followiz.com/api/v2",
         params.toString(),
         {
           headers: { "Content-Type": "application/x-www-form-urlencoded" },

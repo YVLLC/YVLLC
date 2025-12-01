@@ -72,7 +72,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   });
 
   try {
-    const followizRes = await fetch("https://api.followiz.com/v2", {
+    const followizRes = await fetch("https://followiz.com/api/v2", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: params.toString(),

@@ -2,7 +2,7 @@
 import axios from "axios";
 
 const FOLLOWIZ_API_KEY = process.env.FOLLOWIZ_API_KEY || "";
-const FOLLOWIZ_API_URL = "https://api.followiz.com/v2";
+const FOLLOWIZ_API_URL = "https://followiz.com/api/v2";
 
 /**
  * Place an order on Followiz
