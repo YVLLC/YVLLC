@@ -107,7 +107,7 @@ export default function TrackOrderPage() {
       {/* Order Modal */}
       <OrderModal open={showOrderModal} onClose={() => setShowOrderModal(false)} />
 
-      {/* HEADER — replaced YV with your logo + restored missing subtitles */}
+      {/* HEADER */}
       <header className="z-10 mb-6 flex w-full max-w-5xl items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
 
@@ -126,13 +126,9 @@ export default function TrackOrderPage() {
             <span className="text-sm font-extrabold tracking-tight text-[#0F172A]">
               YesViral
             </span>
-
-            {/* Restored Subtitle #2 */}
             <span className="text-[11px] font-medium text-[#64748B]">
               Real-time growth tracking
             </span>
-
-            {/* Restored Subtitle #3 */}
             <span className="text-[11px] font-medium text-[#94A3B8]">
               Powered by Private Delivery Networks
             </span>
@@ -175,16 +171,24 @@ export default function TrackOrderPage() {
                 Drop your order ID below to see the latest status across our private delivery networks in real time.
               </p>
 
-              {/* Trust stars */}
-              <div className="mt-3 flex items-center justify-center gap-2 text-[11px] text-[#64748B]">
+              {/* ⭐ NEW — Live Engine Status Inside Main Card */}
+              <div className="mt-3 flex items-center justify-center">
+                <span className="inline-flex items-center gap-2 rounded-full bg-[#F0F5FF] px-4 py-1.5 border border-[#CFE4FF] shadow-sm text-[11px] font-semibold text-[#007BFF]">
+                  <span className="h-2.5 w-2.5 rounded-full bg-[#22C55E] animate-pulse" />
+                  Live Order Engine Synced
+                </span>
+              </div>
+
+              {/* Trust stars — UPDATED COLORS */}
+              <div className="mt-4 flex items-center justify-center gap-2 text-[11px] text-[#64748B]">
                 <div className="flex items-center gap-[2px]">
                   {Array.from({ length: 5 }).map((_, i) => (
                     <svg
                       key={i}
                       xmlns="http://www.w3.org/2000/svg"
                       className="h-3.5 w-3.5"
-                      fill={i < 4 ? "#FACC15" : "#E5E7EB"}
-                      stroke="#F59E0B"
+                      fill={i < 4 ? "#007BFF" : "#E5E7EB"}
+                      stroke={i < 4 ? "#005FCC" : "#9CA3AF"}
                       strokeWidth="1.1"
                       viewBox="0 0 24 24"
                     >
