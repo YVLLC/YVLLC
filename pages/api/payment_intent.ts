@@ -18,7 +18,10 @@ function allowCors(res: NextApiResponse) {
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 }
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   allowCors(res);
 
   if (req.method === "OPTIONS") return res.status(200).end();
@@ -31,6 +34,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(400).json({ error: "Invalid amount." });
   }
 
+  // Get logged in user (only if logged in)
   let userId: string | null = null;
   try {
     const { data } = await supabase.auth.getSession();
@@ -42,9 +46,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       amount,
       currency: "usd",
       automatic_payment_methods: { enabled: true },
+
+      // ⭐ FINAL, SAFE, CLEAN METADATA FLOW ⭐
       metadata: {
-        yesviral_order: metadata?.yesviral_order || "",
-        user_id: userId || "",
+        yesviral_order: metadata?.yesviral_order || "",  // base64 encoded
+        user_id: userId ?? "",
       },
     });
 

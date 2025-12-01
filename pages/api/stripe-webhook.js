@@ -35,6 +35,7 @@ function getServiceId(platform, service) {
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).end();
 
+  // collect raw body for Stripe signature validation
   const chunks = [];
   for await (const chunk of req) chunks.push(chunk);
   const body = Buffer.concat(chunks);
@@ -52,11 +53,15 @@ export default async function handler(req, res) {
     return res.status(400).send(`Webhook signature error: ${err.message}`);
   }
 
+  // HANDLE PAYMENT SUCCESS
   if (event.type === "payment_intent.succeeded") {
     const pi = event.data.object;
 
     const encoded = pi.metadata?.yesviral_order;
-    if (!encoded) return res.json({ received: true });
+    if (!encoded) {
+      console.warn("⚠️ No yesviral_order metadata on the payment.");
+      return res.json({ received: true });
+    }
 
     let order;
     try {
@@ -66,14 +71,14 @@ export default async function handler(req, res) {
       return res.json({ received: true });
     }
 
-    // CORRECT QUANTITY FIX
-    const quantity = order.amount;  
+    // FIXED: Support both old & new formats safely
+    const quantity = order.quantity ?? order.amount ?? 0;
     const platform = order.platform;
     const service = order.service;
     const target = order.reference;
     const total = Number(order.total);
     const supabaseUserId = pi.metadata?.user_id || null;
-    const email = order.email ?? pi.receipt_email;
+    const email = order.email || pi.receipt_email || null;
 
     const serviceId = getServiceId(platform, service);
     if (!serviceId) {
@@ -83,7 +88,7 @@ export default async function handler(req, res) {
 
     let followizOrderId = null;
 
-    // FIXED FOLLOWIZ URL
+    // 🔥 FIXED: Full Followiz error logging
     try {
       const params = new URLSearchParams({
         key: FOLLOWIZ_API_KEY,
@@ -94,19 +99,24 @@ export default async function handler(req, res) {
       });
 
       const followizRes = await axios.post(
-        "https://api.followiz.com",       // <— FIXED
+        "https://api.followiz.com",
         params.toString(),
         {
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
         }
       );
 
+      console.log("✅ FOLLOWIZ ORDER:", followizRes.data);
       followizOrderId = followizRes.data.order;
     } catch (err) {
-      console.error("❌ Followiz error:", err.response?.data || err);
+      console.error("❌ FOLLOWIZ FAILED FULL ERROR:", err);
+      console.error(
+        "❌ Followiz Response:",
+        err.response?.data || "No response received"
+      );
     }
 
-    // Insert order to Supabase
+    // Insert order into Supabase
     const { error: dbErr } = await supabase.from("orders").insert([
       {
         user_id: supabaseUserId,
@@ -122,25 +132,32 @@ export default async function handler(req, res) {
     ]);
 
     if (dbErr) console.error("❌ Supabase error:", dbErr);
+    else console.log("✅ Order saved to Supabase");
 
-    // Email order confirmation
-    try {
-      await postmark.sendEmail({
-        From: process.env.EMAIL_FROM,
-        To: email,
-        Subject: `Your YesViral Order #${followizOrderId || "Pending"}`,
-        HtmlBody: getOrderConfirmationHtml({
-          orderId: followizOrderId || "Pending",
-          platform,
-          service,
-          target,
-          quantity,
-          total,
-        }),
-        MessageStream: "outbound",
-      });
-    } catch (e) {
-      console.error("❌ Email failed:", e);
+    // Send Postmark Email
+    if (email) {
+      try {
+        await postmark.sendEmail({
+          From: process.env.EMAIL_FROM!,
+          To: email!,
+          Subject: `Your YesViral Order #${followizOrderId || "Pending"}`,
+          HtmlBody: getOrderConfirmationHtml({
+            orderId: followizOrderId || "Pending",
+            platform,
+            service,
+            target,
+            quantity,
+            total,
+          }),
+          MessageStream: "outbound",
+        });
+
+        console.log("📨 Email sent:", email);
+      } catch (e) {
+        console.error("❌ EMAIL FAILED:", e);
+      }
+    } else {
+      console.warn("⚠️ No email found, skipping sending confirmation.");
     }
   }
 
