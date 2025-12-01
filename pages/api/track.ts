@@ -17,7 +17,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     // Followiz uses form-urlencoded, NOT JSON or params
     const response = await axios.post(
-      "https://api.followiz.com",
+      "https://api.followiz.com/v2",
       new URLSearchParams({
         key: FOLLOWIZ_API_KEY,
         action: "status",

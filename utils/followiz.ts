@@ -1,10 +1,14 @@
 import axios from "axios";
 
+/* ===========================================
+   FOLLOWIZ CONFIG
+=========================================== */
 const FOLLOWIZ_API_KEY = process.env.FOLLOWIZ_API_KEY || "";
+const FOLLOWIZ_API_URL = "https://api.followiz.com/v2";
 
-// Correct endpoint
-const FOLLOWIZ_API_URL = "https://followiz.com/api/v2";
-
+/* ===========================================
+   PLACE ORDER
+=========================================== */
 export async function placeFollowizOrder({
   service,
   link,
@@ -23,7 +27,7 @@ export async function placeFollowizOrder({
         service: String(service),
         link,
         quantity: String(quantity),
-      }).toString(), // <— REQUIRED
+      }).toString(),
       {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
@@ -31,13 +35,23 @@ export async function placeFollowizOrder({
       }
     );
 
-    return response.data; // { order: 123456 }
+    return response.data; // { order: 12345, charge: "..." }
   } catch (error: any) {
-    console.error("Followiz Order Error:", error?.response?.data || error);
-    throw new Error("Failed to place Followiz order.");
+    const errMsg =
+      error?.response?.data?.error ||
+      error?.response?.data ||
+      error?.message ||
+      "Unknown Followiz error";
+
+    console.error("❌ Followiz Order Error:", errMsg);
+
+    throw new Error(`Followiz Error: ${errMsg}`);
   }
 }
 
+/* ===========================================
+   CHECK ORDER STATUS
+=========================================== */
 export async function checkFollowizOrderStatus(orderId: string) {
   try {
     const response = await axios.post(
@@ -46,7 +60,7 @@ export async function checkFollowizOrderStatus(orderId: string) {
         key: FOLLOWIZ_API_KEY,
         action: "status",
         order: String(orderId),
-      }).toString(), // <— REQUIRED
+      }).toString(),
       {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
@@ -54,9 +68,16 @@ export async function checkFollowizOrderStatus(orderId: string) {
       }
     );
 
-    return response.data;
+    return response.data; // full status object
   } catch (error: any) {
-    console.error("Followiz Status Error:", error?.response?.data || error);
-    throw new Error("Failed to check Followiz order status.");
+    const errMsg =
+      error?.response?.data?.error ||
+      error?.response?.data ||
+      error?.message ||
+      "Unknown Followiz error";
+
+    console.error("❌ Followiz Status Error:", errMsg);
+
+    throw new Error(`Followiz Status Error: ${errMsg}`);
   }
 }

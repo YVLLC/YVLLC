@@ -1,102 +1,96 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
-// Define platform + service key types
-type PlatformKey = "youtube" | "tiktok" | "instagram";
-type ServiceKey =
-  | "views"
-  | "likes"
-  | "subscribers"
-  | "followers"
-  | "comments";
+// Normalize input service names (from your modal)
+const NORMALIZE_SERVICE: Record<string, string> = {
+  Likes: "likes",
+  Followers: "followers",
+  Views: "views",
+  Subscribers: "subscribers",
+  Comments: "comments",
+};
 
-// FOLLOWIZ SERVICE IDS (FINAL)
-const FOLLOWIZ_SERVICE_IDS: Record<PlatformKey, Record<ServiceKey, number>> = {
+// FOLLOWIZ SERVICE IDS
+const FOLLOWIZ_SERVICE_IDS = {
   youtube: {
-    views: 4023,        // YouTube Views
-    likes: 2450,        // YouTube Likes
-    subscribers: 1238,  // YouTube Subscribers
-    followers: 0,
-    comments: 0,
+    views: 4023,
+    likes: 2450,
+    subscribers: 1238,
+    followers: null,
+    comments: null,
   },
 
   tiktok: {
-    views: 1016,        // TikTok Views
-    likes: 1283,        // TikTok Likes
-    followers: 6951,    // TikTok Followers
-    subscribers: 0,
-    comments: 0,
+    views: 1016,
+    likes: 1283,
+    followers: 6951,
+    subscribers: null,
+    comments: null,
   },
 
   instagram: {
-    views: 811,         // IG Views
-    likes: 483,         // IG Likes
-    followers: 511,     // IG Followers
-    comments: 0,
-    subscribers: 0,
+    views: 811,
+    likes: 483,
+    followers: 511,
+    comments: null,
+    subscribers: null,
   },
 };
 
-const FOLLOWIZ_API_KEY = process.env.FOLLOWIZ_API_KEY as string;
+const FOLLOWIZ_API_KEY = process.env.FOLLOWIZ_API_KEY!;
 
-// Safely get service ID from map
 function getServiceId(platform: string, service: string): number | null {
-  const plat = platform.toLowerCase() as PlatformKey;
-  const serv = service.toLowerCase() as ServiceKey;
+  const plat = platform.toLowerCase();
 
-  if (!FOLLOWIZ_SERVICE_IDS[plat]) return null;
-  if (!FOLLOWIZ_SERVICE_IDS[plat][serv]) return null;
+  const normalized = NORMALIZE_SERVICE[service] || service.toLowerCase();
 
-  const id = FOLLOWIZ_SERVICE_IDS[plat][serv];
-  return id > 0 ? id : null;
+  const id = FOLLOWIZ_SERVICE_IDS[plat]?.[normalized];
+
+  return typeof id === "number" && id > 0 ? id : null;
 }
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  // Only POST
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") return res.status(405).end();
 
   const { platform, service, quantity, target } = req.body;
 
-  // Get the Followiz service ID
   const service_id = getServiceId(platform, service);
 
   if (!service_id) {
-    return res.status(400).json({ error: "Invalid service selected." });
+    return res.status(400).json({ error: "Invalid or unsupported service selected." });
   }
 
-  // Build Followiz form-encoded body
-  const params = new URLSearchParams();
-  params.append("key", FOLLOWIZ_API_KEY);
-  params.append("action", "add");
-  params.append("service", service_id.toString());
-  params.append("link", target);
-  params.append("quantity", quantity.toString());
+  const params = new URLSearchParams({
+    key: FOLLOWIZ_API_KEY,
+    action: "add",
+    service: String(service_id),
+    link: String(target),
+    quantity: String(quantity),
+  });
 
   try {
-    // Send order to Followiz API
-    const followizRes = await fetch("https://api.followiz.com", {
+    const followizRes = await fetch("https://api.followiz.com/v2", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: params.toString(),
     });
 
-    const data = await followizRes.json();
+    let data;
+    try {
+      data = await followizRes.json();
+    } catch {
+      return res.status(500).json({
+        error: "Followiz returned non-JSON (panel offline or key incorrect).",
+      });
+    }
 
     if (data.order) {
-      // SUCCESS
-      return res.status(200).json({
-        success: true,
-        order: data.order,
-      });
+      return res.status(200).json({ success: true, order: data.order });
     } else {
-      // FAIL
-      return res
-        .status(400)
-        .json({ error: data.error || "Followiz API returned an error." });
+      return res.status(400).json({
+        error: data.error || "Followiz API returned an error.",
+      });
     }
-  } catch (e: any) {
+  } catch (e) {
     console.error("Followiz Order Error:", e);
     return res.status(500).json({ error: "Followiz request failed." });
   }
