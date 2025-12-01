@@ -67,7 +67,6 @@ export default function TrackOrderPage() {
 
     try {
       const res = await axios.post("/api/track", { orderId });
-
       const followizStatus = res.data.data?.status?.toLowerCase() || "unknown";
       setStatus(followizStatus);
     } catch {
@@ -110,44 +109,34 @@ export default function TrackOrderPage() {
       {/* HEADER */}
       <header className="z-10 mb-6 flex w-full max-w-5xl items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
+
           <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-white shadow-md border border-[#CFE4FF]/80 overflow-hidden">
-            <Image
-              src="/logo.png"
-              alt="YesViral Logo"
-              width={34}
-              height={34}
-              className="object-contain"
-            />
+            <Image src="/logo.png" alt="YesViral Logo" width={34} height={34} className="object-contain" />
           </div>
 
           <div className="flex flex-col leading-tight">
-            <span className="text-sm font-extrabold tracking-tight text-[#0F172A]">
-              YesViral
-            </span>
-            <span className="text-[11px] font-medium text-[#64748B]">
-              Real-time growth tracking
-            </span>
-            <span className="text-[11px] font-medium text-[#94A3B8]">
-              Powered by Private Delivery Networks
-            </span>
+            <span className="text-sm font-extrabold tracking-tight text-[#0F172A]">YesViral</span>
+            <span className="text-[11px] font-medium text-[#64748B]">Real-time growth tracking</span>
+            <span className="text-[11px] font-medium text-[#94A3B8]">Powered by Private Delivery Networks</span>
           </div>
         </Link>
-
-        {/* EXTRA LIVE ENGINE BADGE REMOVED */}
       </header>
 
       {/* MAIN WRAPPER */}
       <div className="z-10 flex w-full max-w-5xl flex-col gap-8 lg:flex-row lg:items-start">
 
-        {/* LEFT: TRACKING CARD */}
+        {/* LEFT CARD */}
         <div className="relative w-full lg:flex-[1.2]">
 
-          <div className="absolute -inset-[1px] rounded-[26px] bg-gradient-to-br from-[#007BFF] via-[#4F46E5] to-[#0EA5E9] opacity-80" />
+          {/* UPDATED BLUE GRADIENT BORDER */}
+          <div className="absolute -inset-[1px] rounded-[26px] bg-gradient-to-br from-[#007BFF] via-[#0EA5E9] to-[#005FCC] opacity-80" />
 
+          {/* MAIN CARD */}
           <div className="relative glass-card border border-white/60 bg-white/90 px-5 py-7 shadow-[0_24px_60px_rgba(15,23,42,0.16)] sm:px-8 sm:py-10 rounded-[24px] space-y-7">
 
-            {/* HEADER */}
+            {/* HEADER CONTENT */}
             <div className="text-center mb-2">
+
               <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#E6F0FF] shadow-inner">
                 <Search className="text-[#007BFF]" size={26} />
               </div>
@@ -193,17 +182,12 @@ export default function TrackOrderPage() {
             {/* FORM */}
             <form onSubmit={handleTrack} className="space-y-4 w-full">
               <div className="relative">
-                <label
-                  htmlFor="order-id"
-                  className="mb-1 block text-xs font-semibold uppercase tracking-[0.12em] text-[#64748B]"
-                >
+                <label htmlFor="order-id" className="mb-1 block text-xs font-semibold uppercase tracking-[0.12em] text-[#64748B]">
                   Order ID
                 </label>
 
                 <div className="relative">
-                  <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-[#9CA3AF]">
-                    #
-                  </span>
+                  <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-[#9CA3AF]">#</span>
 
                   <input
                     id="order-id"
@@ -222,6 +206,7 @@ export default function TrackOrderPage() {
                 </p>
               </div>
 
+              {/* TRACK BUTTON (BLUE OVERLAY FIXED) */}
               <button
                 type="submit"
                 disabled={loading || !orderId.trim()}
@@ -230,7 +215,7 @@ export default function TrackOrderPage() {
                 }`}
               >
                 {!loading && (
-                  <span className="absolute inset-[1px] rounded-[11px] bg-gradient-to-r from-[#1D4ED8] to-[#0EA5E9] opacity-0 transition group-hover:opacity-100" />
+                  <span className="absolute inset-[1px] rounded-[11px] bg-gradient-to-r from-[#007BFF] to-[#005FCC] opacity-0 transition group-hover:opacity-100" />
                 )}
 
                 <span className="relative flex items-center gap-2">
@@ -245,7 +230,6 @@ export default function TrackOrderPage() {
               <div className="mt-1 flex flex-col items-center gap-3 rounded-2xl border border-[#E0EDFF] bg-[#F5F7FF] px-4 py-4 sm:px-6 sm:py-5">
 
                 <div className="flex items-center gap-3">
-                  {/* FIXED BROKEN DIV HERE */}
                   <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white shadow-inner border border-[#E0ECFF]">
                     {STATUS_ICONS[statusKey || "unknown"]}
                   </div>
@@ -260,18 +244,14 @@ export default function TrackOrderPage() {
                         {statusKey === "delivered"
                           ? "Your YesViral order has been fully delivered. If you have any concerns, reach out with your order ID."
                           : statusKey === "in_progress"
-                          ? "Your order is actively processing through our delivery pools. You’ll continue to see results roll in soon."
+                          ? "Your order is actively processing through our delivery pools. You’ll continue see results roll in soon."
                           : statusKey === "unknown"
                           ? "We couldn’t locate this order. Double-check the ID or reach out to support and we’ll investigate."
                           : null}
                       </p>
                     )}
 
-                    {error && (
-                      <p className="mt-1 text-[13px] font-medium text-red-500">
-                        {error}
-                      </p>
-                    )}
+                    {error && <p className="mt-1 text-[13px] font-medium text-red-500">{error}</p>}
                   </div>
                 </div>
 
@@ -298,7 +278,7 @@ export default function TrackOrderPage() {
               </div>
             )}
 
-            {/* ACTION BUTTONS */}
+            {/* BUTTONS */}
             <div className="flex flex-col gap-3 pt-2 sm:flex-row sm:justify-between">
               <Link href="/" className="sm:flex-1">
                 <button className="group flex w-full items-center justify-center gap-2 rounded-xl border border-[#CFE4FF] bg-white/90 px-6 py-2.5 text-[14px] font-semibold text-[#0B63E6] shadow-sm transition hover:bg-[#EAF2FF]">
@@ -307,7 +287,7 @@ export default function TrackOrderPage() {
                 </button>
               </Link>
 
-              {/* YESVIRAL BLUE BUTTON */}
+              {/* PLACE ANOTHER ORDER — BLUE */}
               <button
                 className="group flex w-full items-center justify-center gap-2 rounded-xl bg-[#007BFF] px-6 py-2.5 text-[14px] font-semibold text-white shadow-[0_16px_35px_rgba(15,23,42,0.6)] transition hover:bg-[#005FCC] sm:flex-1"
                 onClick={() => setShowOrderModal(true)}
@@ -326,12 +306,8 @@ export default function TrackOrderPage() {
 
             <div className="mb-4 flex items-center justify-between">
               <div>
-                <h2 className="text-[16px] font-black tracking-tight text-[#0F172A]">
-                  Tracking help & FAQs
-                </h2>
-                <p className="mt-1 text-[12px] text-[#64748B] max-w-xs">
-                  Quick answers for the most common tracking questions.
-                </p>
+                <h2 className="text-[16px] font-black tracking-tight text-[#0F172A]">Tracking help & FAQs</h2>
+                <p className="mt-1 text-[12px] text-[#64748B] max-w-xs">Quick answers for the most common tracking questions.</p>
               </div>
 
               <div className="hidden sm:flex items-center gap-2 rounded-full bg-[#F3F6FF] px-3 py-1 text-[11px] font-semibold text-[#0B63E6] border border-[#D0E2FF]">
@@ -344,27 +320,15 @@ export default function TrackOrderPage() {
               {FAQS.map((item, i) => (
                 <div
                   key={i}
-                  className={`cursor-pointer rounded-xl border border-[#CFE4FF] bg-[#F9FAFF] p-4 transition-all ${
-                    showFaq === i ? "shadow-xl scale-[1.02]" : "shadow-sm"
-                  }`}
+                  className={`cursor-pointer rounded-xl border border-[#CFE4FF] bg-[#F9FAFF] p-4 transition-all ${showFaq === i ? "shadow-xl scale-[1.02]" : "shadow-sm"}`}
                   onClick={() => setShowFaq(showFaq === i ? null : i)}
                 >
                   <div className="flex items-center justify-between select-none">
-                    <span className="text-[14px] font-semibold text-[#0B63E6]">
-                      {item.q}
-                    </span>
-                    <ChevronDown
-                      className={`h-5 w-5 text-[#64748B] transition-transform ${
-                        showFaq === i ? "rotate-180" : ""
-                      }`}
-                    />
+                    <span className="text-[14px] font-semibold text-[#0B63E6]">{item.q}</span>
+                    <ChevronDown className={`h-5 w-5 text-[#64748B] transition-transform ${showFaq === i ? "rotate-180" : ""}`} />
                   </div>
 
-                  {showFaq === i && (
-                    <p className="mt-3 text-[13px] leading-relaxed text-[#4B5563]">
-                      {item.a}
-                    </p>
-                  )}
+                  {showFaq === i && <p className="mt-3 text-[13px] leading-relaxed text-[#4B5563]">{item.a}</p>}
                 </div>
               ))}
             </div>
