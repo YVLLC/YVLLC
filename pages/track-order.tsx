@@ -153,7 +153,7 @@ export default function TrackOrderPage() {
               <div className="mt-3 flex items-center justify-center">
                 <span className="inline-flex items-center gap-2 rounded-full bg-[#F0F5FF] px-4 py-1.5 border border-[#CFE4FF] shadow-sm text-[11px] font-semibold text-[#007BFF]">
                   <span className="h-2.5 w-2.5 rounded-full bg-[#22C55E] animate-pulse" />
-                  Live Order Engine Synced
+                  Order Tracker: Online
                 </span>
               </div>
 
