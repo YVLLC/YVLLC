@@ -11,20 +11,21 @@ import {
   Repeat,
 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import OrderModal from "@/components/OrderModal";
 
 // --- STATUS & FAQS ---
 const STATUS_ICONS: Record<string, JSX.Element> = {
   searching: <RefreshCw className="animate-spin text-[#007BFF]" size={32} />,
-  delivered: <CheckCircle className="text-[#007BFF]" size={32} />,   // changed from green
-  completed: <CheckCircle className="text-[#007BFF]" size={32} />,   // changed from green
+  delivered: <CheckCircle className="text-[#22C55E]" size={32} />,
+  completed: <CheckCircle className="text-[#22C55E]" size={32} />,
   in_progress: <RefreshCw className="animate-spin text-[#007BFF]" size={32} />,
   pending: <RefreshCw className="animate-spin text-[#007BFF]" size={32} />,
-  unknown: <AlertTriangle className="text-[#FACC15]" size={32} />, // keep yellow for "warning"
-  error: <AlertTriangle className="text-[#EF4444]" size={32} />,  // error stays red
+  unknown: <AlertTriangle className="text-yellow-500" size={32} />,
+  error: <AlertTriangle className="text-red-500" size={32} />,
 };
 
-const STATUS_TITLES = {
+const STATUS_TITLES: Record<string, string> = {
   delivered: "Delivered!",
   completed: "Completed!",
   in_progress: "In Progress",
@@ -58,7 +59,7 @@ export default function TrackOrderPage() {
   const [showOrderModal, setShowOrderModal] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const handleTrack = async (e: any) => {
+  const handleTrack = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus("");
     setError("");
@@ -66,6 +67,7 @@ export default function TrackOrderPage() {
 
     try {
       const res = await axios.post("/api/track", { orderId });
+
       const followizStatus = res.data.data?.status?.toLowerCase() || "unknown";
       setStatus(followizStatus);
     } catch {
@@ -79,11 +81,14 @@ export default function TrackOrderPage() {
   const statusKey =
     loading
       ? "searching"
-      : ["delivered", "completed"].includes(status)
+      : status === "delivered" || status === "completed"
       ? "delivered"
-      : ["in progress", "processing", "pending", "in_progress"].includes(status)
+      : status === "in progress" ||
+        status === "processing" ||
+        status === "pending" ||
+        status === "in_progress"
       ? "in_progress"
-      : error
+      : status === "error" || error
       ? "error"
       : status === "unknown"
       ? "unknown"
@@ -92,59 +97,85 @@ export default function TrackOrderPage() {
   return (
     <main className="relative min-h-screen w-full overflow-hidden bg-gradient-to-br from-[#F4F7FF] via-[#E6F0FF] to-[#F9FBFF] px-3 py-6 sm:py-12 flex flex-col items-center">
 
-      {/* Background lights → YESVIRAL BLUE ONLY */}
+      {/* Background lights */}
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute -top-32 -left-10 h-72 w-72 rounded-full bg-[#007BFF]/12 blur-3xl" />
-        <div className="absolute top-10 right-[-80px] h-72 w-72 rounded-full bg-[#007BFF]/10 blur-3xl" />
-        <div className="absolute bottom-[-80px] left-10 h-72 w-72 rounded-full bg-[#005FCC]/10 blur-3xl" />
+        <div className="absolute top-10 right-[-80px] h-72 w-72 rounded-full bg-[#22C55E]/8 blur-3xl" />
+        <div className="absolute bottom-[-80px] left-10 h-72 w-72 rounded-full bg-[#0EA5E9]/10 blur-3xl" />
       </div>
 
+      {/* Order Modal */}
       <OrderModal open={showOrderModal} onClose={() => setShowOrderModal(false)} />
 
-      {/* Header */}
+      {/* HEADER — replaced YV with your logo + restored missing subtitles */}
       <header className="z-10 mb-6 flex w-full max-w-5xl items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-white shadow-md border border-[#CFE4FF]/80">
-            <span className="text-xs font-black tracking-tight text-[#007BFF]">YV</span>
+
+          {/* YESVIRAL LOGO */}
+          <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-white shadow-md border border-[#CFE4FF]/80 overflow-hidden">
+            <Image
+              src="/logo.png"
+              alt="YesViral Logo"
+              width={34}
+              height={34}
+              className="object-contain"
+            />
           </div>
+
           <div className="flex flex-col leading-tight">
             <span className="text-sm font-extrabold tracking-tight text-[#0F172A]">
               YesViral
             </span>
+
+            {/* Restored Subtitle #2 */}
             <span className="text-[11px] font-medium text-[#64748B]">
               Real-time growth tracking
+            </span>
+
+            {/* Restored Subtitle #3 */}
+            <span className="text-[11px] font-medium text-[#94A3B8]">
+              Powered by private delivery networks
             </span>
           </div>
         </Link>
 
-        {/* Online badge → YesViral Blue */}
-        <div className="hidden sm:flex items-center gap-3 text-[11px] font-medium text-[#007BFF]">
-          <span className="inline-flex items-center gap-1 rounded-full bg-white/80 px-3 py-1 border border-[#CFE4FF] shadow-sm">
-            <span className="h-2 w-2 rounded-full bg-[#007BFF] animate-pulse" />
+        <div className="hidden sm:flex items-center gap-3 text-[11px] font-medium text-[#64748B]">
+          <span className="inline-flex items-center gap-1 rounded-full bg-white/80 px-3 py-1 border border-[#CFE4FF]/70 shadow-sm">
+            <span className="h-2 w-2 rounded-full bg-[#22C55E] animate-pulse" />
             Live order engine online
           </span>
         </div>
       </header>
 
-      {/* Main wrapper + card */}
+      {/* MAIN WRAPPER */}
       <div className="z-10 flex w-full max-w-5xl flex-col gap-8 lg:flex-row lg:items-start">
+
+        {/* ========================
+            LEFT: TRACKING CARD
+        ========================= */}
         <div className="relative w-full lg:flex-[1.2]">
 
-          {/* Frame gradient updated to YesViral blues */}
-          <div className="absolute -inset-[1px] rounded-[26px] bg-gradient-to-br from-[#007BFF] via-[#005FCC] to-[#007BFF] opacity-80" />
+          {/* Gradient border */}
+          <div className="absolute -inset-[1px] rounded-[26px] bg-gradient-to-br from-[#007BFF] via-[#4F46E5] to-[#0EA5E9] opacity-80" />
 
+          {/* MAIN CARD */}
           <div className="relative glass-card border border-white/60 bg-white/90 px-5 py-7 shadow-[0_24px_60px_rgba(15,23,42,0.16)] sm:px-8 sm:py-10 rounded-[24px] space-y-7">
 
-            {/* Header */}
+            {/* HEADER */}
             <div className="text-center mb-2">
               <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#E6F0FF] shadow-inner">
                 <Search className="text-[#007BFF]" size={26} />
               </div>
-              <h1 className="text-3xl md:text-[2.3rem] font-black text-[#007BFF] mb-2 tracking-tight">
+
+              <h1 className="text-3xl md:text-[2.3rem] font-black text-[#0B63E6] mb-2 tracking-tight">
                 Track Your YesViral Order
               </h1>
 
-              {/* Stars → Now YesViral Blue */}
+              <p className="mx-auto max-w-md text-sm md:text-base text-[#4B5563]">
+                Drop your order ID below to see the latest status across our private delivery networks in real time.
+              </p>
+
+              {/* Trust stars */}
               <div className="mt-3 flex items-center justify-center gap-2 text-[11px] text-[#64748B]">
                 <div className="flex items-center gap-[2px]">
                   {Array.from({ length: 5 }).map((_, i) => (
@@ -152,8 +183,8 @@ export default function TrackOrderPage() {
                       key={i}
                       xmlns="http://www.w3.org/2000/svg"
                       className="h-3.5 w-3.5"
-                      fill={i < 4 ? "#007BFF" : "#CFE4FF"}
-                      stroke="#005FCC"
+                      fill={i < 4 ? "#FACC15" : "#E5E7EB"}
+                      stroke="#F59E0B"
                       strokeWidth="1.1"
                       viewBox="0 0 24 24"
                     >
@@ -161,87 +192,117 @@ export default function TrackOrderPage() {
                     </svg>
                   ))}
                 </div>
-                <span className="font-semibold text-[#0B63E6]">
-                  4.8 / 5
-                </span>
+                <span className="font-semibold text-[#0F172A]">4.8 / 5</span>
                 <span>Avg. satisfaction on tracked orders</span>
               </div>
             </div>
 
-            {/* Input */}
+            {/* ========================
+                FORM
+            ========================= */}
             <form onSubmit={handleTrack} className="space-y-4 w-full">
               <div className="relative">
-                <label className="mb-1 block text-xs font-semibold uppercase tracking-[0.12em] text-[#64748B]">
+                <label
+                  htmlFor="order-id"
+                  className="mb-1 block text-xs font-semibold uppercase tracking-[0.12em] text-[#64748B]"
+                >
                   Order ID
                 </label>
+
                 <div className="relative">
                   <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-[#9CA3AF]">
                     #
                   </span>
+
                   <input
+                    id="order-id"
                     ref={inputRef}
                     type="text"
                     placeholder="e.g. 48392-YESVIRAL-1293"
                     value={orderId}
                     onChange={(e) => setOrderId(e.target.value)}
                     required
-                    className="w-full rounded-xl border-2 border-[#CFE4FF] bg-[#F9FBFF] pl-7 pr-4 py-3 text-[15px] font-medium text-[#0F172A] shadow-sm transition focus:border-[#007BFF] focus:ring-2 focus:ring-[#CFE4FF]"
+                    className="w-full rounded-xl border-2 border-[#CFE4FF] bg-[#F9FBFF] pl-7 pr-4 py-3 text-[15px] font-medium text-[#0F172A] shadow-sm outline-none transition focus:border-[#007BFF] focus:ring-2 focus:ring-[#E0EDFF]"
                   />
-
-                  <div className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 px-2 py-[3px] text-[10px] font-semibold text-[#64748B] shadow-sm border border-[#CFE4FF]">
-                    Secure lookup
-                  </div>
                 </div>
+
+                <p className="mt-1 text-[11px] text-[#6B7280]">
+                  You’ll find this on your confirmation page and in your email receipt.
+                </p>
               </div>
 
-              {/* Button updated */}
               <button
                 type="submit"
                 disabled={loading || !orderId.trim()}
-                className={`group relative flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#007BFF] to-[#005FCC] py-3.5 text-[15px] font-semibold text-white shadow-[0_16px_40px_rgba(0,123,255,0.45)] transition hover:brightness-105 active:scale-95 ${
-                  loading ? "opacity-70 cursor-not-allowed" : ""
+                className={`group relative flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#007BFF] to-[#005FCC] py-3.5 text-[15px] font-semibold text-white shadow-[0_16px_40px_rgba(37,99,235,0.55)] transition hover:brightness-[1.03] active:scale-[0.99] ${
+                  loading || !orderId.trim() ? "opacity-70 cursor-not-allowed" : ""
                 }`}
               >
-                {loading && <RefreshCw className="animate-spin" size={18} />}
-                {loading ? "Checking..." : "Track Order"}
+                {!loading && (
+                  <span className="absolute inset-[1px] rounded-[11px] bg-gradient-to-r from-[#1D4ED8] to-[#0EA5E9] opacity-0 transition group-hover:opacity-100" />
+                )}
+
+                <span className="relative flex items-center gap-2">
+                  {loading && <RefreshCw className="animate-spin" size={18} />}
+                  {loading ? "Checking live status..." : "Track Order"}
+                </span>
               </button>
             </form>
 
-            {/* Status Output */}
+            {/* ========================
+                STATUS OUTPUT
+            ========================= */}
             {(statusKey || error) && (
-              <div className="mt-1 flex flex-col items-center gap-3 rounded-2xl border border-[#CFE4FF] bg-[#F5F7FF] px-4 py-4 sm:px-6 sm:py-5">
+              <div className="mt-1 flex flex-col items-center gap-3 rounded-2xl border border-[#E0EDFF] bg-[#F5F7FF] px-4 py-4 sm:px-6 sm:py-5">
+
                 <div className="flex items-center gap-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white shadow-inner border border-[#CFE4FF]">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white shadow-inner border border-[#E0ECFF]">
                     {STATUS_ICONS[statusKey || "unknown"]}
                   </div>
+
                   <div className="text-left">
-                    <div className="text-[15px] font-extrabold text-[#0B63E6]">
+                    <div className="text-[15px] font-extrabold text-[#0F172A]">
                       {STATUS_TITLES[statusKey || "unknown"] || status}
                     </div>
+
+                    {status && !error && (
+                      <p className="mt-1 text-[13px] text-[#4B5563] max-w-md">
+                        {statusKey === "delivered"
+                          ? "Your YesViral order has been fully delivered. If you have any concerns, reach out with your order ID."
+                          : statusKey === "in_progress"
+                          ? "Your order is actively processing through our delivery pools. You’ll continue to see results roll in soon."
+                          : statusKey === "unknown"
+                          ? "We couldn’t locate this order. Double-check the ID or reach out to support and we’ll investigate."
+                          : null}
+                      </p>
+                    )}
+
                     {error && (
-                      <p className="mt-1 text-[13px] text-red-500 font-medium">
+                      <p className="mt-1 text-[13px] font-medium text-red-500">
                         {error}
                       </p>
                     )}
                   </div>
                 </div>
 
-                {/* Progress bar → all YesViral blues */}
-                <div className="mt-1 w-full max-w-md">
-                  <div className="flex justify-between text-[11px] text-[#6B7280] font-semibold uppercase tracking-[0.16em] mb-1">
+                {/* Step indicator */}
+                <div className="mt-1 flex w-full max-w-md flex-col gap-2">
+                  <div className="flex items-center justify-between text-[11px] text-[#6B7280] font-semibold uppercase tracking-[0.16em]">
                     <span>Order Placed</span>
                     <span>Processing</span>
                     <span>Delivered</span>
                   </div>
 
-                  <div className="relative h-1.5 w-full rounded-full bg-[#CFE4FF] overflow-hidden">
+                  <div className="relative h-1.5 w-full overflow-hidden rounded-full bg-[#E0ECFF]">
                     <div
-                      className={`absolute left-0 top-0 h-full rounded-full transition-all duration-500 ${
+                      className={`absolute left-0 top-0 h-full rounded-full bg-gradient-to-r from-[#007BFF] via-[#0EA5E9] to-[#22C55E] transition-all duration-500 ${
                         statusKey === "delivered"
-                          ? "w-full bg-[#007BFF]"
-                          : statusKey === "in_progress"
-                          ? "w-1/2 bg-[#007BFF]"
-                          : "w-1/3 bg-[#007BFF]"
+                          ? "w-full"
+                          : statusKey === "in_progress" || statusKey === "searching"
+                          ? "w-1/2"
+                          : statusKey === "error" || statusKey === "unknown"
+                          ? "w-1/3 bg-gradient-to-r from-[#F97316] to-[#EF4444]"
+                          : "w-1/3"
                       }`}
                     />
                   </div>
@@ -249,41 +310,46 @@ export default function TrackOrderPage() {
               </div>
             )}
 
-            {/* Bottom Buttons */}
+            {/* ACTION BUTTONS */}
             <div className="flex flex-col gap-3 pt-2 sm:flex-row sm:justify-between">
               <Link href="/" className="sm:flex-1">
-                <button className="w-full flex items-center justify-center gap-2 rounded-xl border border-[#CFE4FF] bg-white px-6 py-2.5 text-[#007BFF] font-semibold shadow-sm hover:bg-[#E6F0FF] transition">
+                <button className="group flex w-full items-center justify-center gap-2 rounded-xl border border-[#CFE4FF] bg-white/90 px-6 py-2.5 text-[14px] font-semibold text-[#0B63E6] shadow-sm transition hover:bg-[#EAF2FF]">
                   <Home size={17} />
-                  Back to Home
+                  <span>Back to Home</span>
                 </button>
               </Link>
 
-              {/* BLACK BUTTON → Now YesViral Blue */}
               <button
-                className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#007BFF] hover:bg-[#005FCC] px-6 py-2.5 text-white font-semibold shadow-[0_16px_35px_rgba(0,123,255,0.45)] transition sm:flex-1"
+                className="group flex w-full items-center justify-center gap-2 rounded-xl bg-[#0F172A] px-6 py-2.5 text-[14px] font-semibold text-white shadow-[0_16px_35px_rgba(15,23,42,0.6)] transition hover:bg-[#020617] sm:flex-1"
                 onClick={() => setShowOrderModal(true)}
+                type="button"
               >
-                <Repeat size={17} /> Place Another Order
+                <Repeat size={17} />
+                <span>Place Another Order</span>
               </button>
             </div>
           </div>
         </div>
 
-        {/* Sidebar */}
+        {/* ========================
+            RIGHT: FAQ SIDEBAR
+        ========================= */}
         <aside className="relative w-full lg:flex-[0.9]">
-          <div className="relative mt-4 lg:mt-0 rounded-[22px] border border-[#CFE4FF] bg-white px-4 py-5 shadow-[0_18px_40px_rgba(0,123,255,0.12)] sm:px-6 sm:py-7">
+          <div className="relative mt-4 lg:mt-0 rounded-[22px] border border-[#D5E4FF] bg-white/95 px-4 py-5 shadow-[0_18px_40px_rgba(15,23,42,0.10)] sm:px-6 sm:py-7">
+
             <div className="mb-4 flex items-center justify-between">
               <div>
-                <h2 className="text-[16px] font-black text-[#0F172A]">
+                <h2 className="text-[16px] font-black tracking-tight text-[#0F172A]">
                   Tracking help & FAQs
                 </h2>
-                <p className="text-[12px] text-[#64748B] mt-1">
-                  Quick answers for the most common questions.
+                <p className="mt-1 text-[12px] text-[#64748B] max-w-xs">
+                  Quick answers for the most common tracking questions.
                 </p>
               </div>
-              <div className="hidden sm:flex items-center gap-2 rounded-full bg-[#F3F6FF] px-3 py-1 text-[11px] font-semibold text-[#007BFF] border border-[#CFE4FF]">
-                <span className="h-2 w-2 rounded-full bg-[#007BFF] animate-pulse" />
-                Support responds in under 24 hours
+
+              <div className="hidden sm:flex items-center gap-2 rounded-full bg-[#F3F6FF] px-3 py-1 text-[11px] font-semibold text-[#0B63E6] border border-[#D0E2FF]">
+                <span className="h-2 w-2 rounded-full bg-[#22C55E] animate-pulse" />
+                <span>Support responds in under 24 hours</span>
               </div>
             </div>
 
@@ -297,7 +363,7 @@ export default function TrackOrderPage() {
                   onClick={() => setShowFaq(showFaq === i ? null : i)}
                 >
                   <div className="flex items-center justify-between select-none">
-                    <span className="text-[14px] font-semibold text-[#007BFF]">
+                    <span className="text-[14px] font-semibold text-[#0B63E6]">
                       {item.q}
                     </span>
                     <ChevronDown
@@ -316,22 +382,25 @@ export default function TrackOrderPage() {
               ))}
             </div>
 
+            {/* SUPPORT CTA */}
             <div className="mt-6 text-center">
               <Link href="/contact">
-                <button className="inline-flex items-center gap-2 rounded-full border border-[#CFE4FF] bg-white px-5 py-2.5 text-[#007BFF] text-[13px] font-semibold shadow-sm hover:bg-[#EAF2FF] transition">
+                <button className="inline-flex items-center gap-2 rounded-full border border-[#CFE4FF] bg-white px-5 py-2.5 text-[13px] font-semibold text-[#007BFF] shadow-sm transition hover:bg-[#EFF5FF]">
                   <MessageCircle size={17} />
-                  Need more help?
+                  <span>Need more help? Chat with our support team</span>
                 </button>
               </Link>
             </div>
+
           </div>
         </aside>
       </div>
 
       <style jsx global>{`
         .glass-card {
-          background: rgba(255,255,255,0.9);
+          background: rgba(255, 255, 255, 0.9);
           backdrop-filter: blur(14px);
+          -webkit-backdrop-filter: blur(14px);
         }
       `}</style>
     </main>
