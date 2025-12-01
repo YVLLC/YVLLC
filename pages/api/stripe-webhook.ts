@@ -132,16 +132,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (dbErr) console.error("❌ Supabase Insert Error:", dbErr);
 
-  // Send email
+  // Send confirmation email
   try {
     if (email) {
       const html = getOrderConfirmationHtml({
-        order_id: followizOrderId || "Pending",
+        orderId: followizOrderId || "Pending",
         platform,
         service,
-        quantity,
-        amount: total,
         target,
+        quantity,
+        total,
       });
 
       await sendEmail({
