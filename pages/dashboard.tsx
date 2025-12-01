@@ -1,3 +1,4 @@
+// path: pages/dashboard/index.tsx
 import React, { useEffect, useMemo, useState, useCallback, memo } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
@@ -289,12 +290,6 @@ const ORDER_STEPS = [
 ];
 
 /* ======================= Puffery / Packages ======================= */
-/**
- * Puffery system (static factor here)
- * - realPrice = actual package price
- * - original = fake "was" price
- * - discount = % off
- */
 function getDiscountedPrice(realPrice: number) {
   if (!realPrice || realPrice <= 0) {
     return { discount: 0, discounted: realPrice, original: realPrice };
@@ -306,7 +301,7 @@ function getDiscountedPrice(realPrice: number) {
 
   return {
     discount: discountPercent,
-    discounted: realPrice, // actual charged price
+    discounted: realPrice,
     original,
   };
 }
@@ -604,6 +599,9 @@ export default function DashboardPage() {
   const [analytics, setAnalytics] = useState({ total: 0, completed: 0 });
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  // ⭐ NEW: store logged-in Supabase user id for metadata
+  const [userId, setUserId] = useState<string | null>(null);
+
   // Order state
   const [orderStep, setOrderStep] = useState(0);
   const [platform, setPlatform] = useState<Platform>(PLATFORMS[0]);
@@ -639,12 +637,13 @@ export default function DashboardPage() {
       const email = session.user.email || "";
       setProfileEmail(email);
 
-      const userId = session.user.id;
+      const uId = session.user.id;
+      setUserId(uId); // ⭐ store user id for checkout metadata
 
       const { data: allOrders } = await supabase
         .from("orders")
         .select("id, platform, service, quantity, status, created_at")
-        .eq("user_id", userId)
+        .eq("user_id", uId)
         .order("created_at", { ascending: false });
 
       if (allOrders) {
@@ -664,7 +663,7 @@ export default function DashboardPage() {
             event: "*",
             schema: "public",
             table: "orders",
-            filter: `user_id=eq.${userId}`,
+            filter: `user_id=eq.${uId}`,
           },
           (payload: any) => {
             setOrders((prev) => {
@@ -759,6 +758,7 @@ export default function DashboardPage() {
     const { pkg, type } = getStealthPackage(platform, service);
     const currentPrice = getPackagePrice(platform, service, quantity);
 
+    // ⭐ IMPORTANT: include user_id so Stripe metadata + webhook can use it
     const order = {
       package: pkg,
       type,
@@ -766,8 +766,8 @@ export default function DashboardPage() {
       service: service.type,
       amount: quantity,
       reference: cleaned,
-      // REAL amount charged = package price
       total: Number(currentPrice.toFixed(2)),
+      user_id: userId || "", // <— THIS ties the order to the logged-in user
     };
 
     const orderString = btoa(
