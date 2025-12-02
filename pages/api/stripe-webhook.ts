@@ -87,7 +87,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     orderData.target ||
     orderData.url ||
     "No Link Provided";
-
   const total = Number(orderData.total) || 0;
 
   // Extract email
@@ -97,31 +96,35 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     pi.receipt_email ||
     "";
 
-  // 🔥 FIXED user_id resolution
+  // Resolve user_id
   let userId: string | null =
     (orderData.user_id && orderData.user_id.trim() !== "" ? orderData.user_id : null) ||
     (pi.metadata?.user_id && pi.metadata.user_id.trim() !== "" ? pi.metadata.user_id : null) ||
     null;
 
-  // 🔍 If still null → resolve via Supabase Admin
+  // 🔍 If still null → manually search Supabase users for matching email
   if ((!userId || userId === "") && email) {
     try {
-      const { data: users, error: lookupError } =
-        await supabase.auth.admin.listUsers({ email });
+      // Fetch first page of users (up to 10,000)
+      const { data: usersData, error: listErr } =
+        await supabase.auth.admin.listUsers({ page: 1, perPage: 10000 });
 
-      if (!lookupError && users?.users?.length > 0) {
-        userId = users.users[0].id;
-        console.log("✅ user_id resolved via Supabase Admin listUsers:", userId);
+      if (!listErr && usersData?.users?.length > 0) {
+        const match = usersData.users.find((u: any) => u.email === email);
+        if (match) {
+          userId = match.id;
+          console.log("✅ Resolved user via email:", userId);
+        }
       }
     } catch (err) {
-      console.error("❌ Supabase email lookup failed:", err);
+      console.error("❌ Supabase manual email lookup failed:", err);
     }
   }
 
   // Followiz service mapping
   const serviceId = getServiceId(platform, service);
 
-  // 🔹 Place Followiz order
+  // Place Followiz order
   let followizOrderId: number | null = null;
   try {
     if (serviceId) {
@@ -146,7 +149,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     console.error("❌ Followiz Error:", err.response?.data || err);
   }
 
-  // 🔹 Insert order into Supabase
+  // Insert order
   const { error: dbErr } = await supabase.from("orders").insert([
     {
       user_id: userId || null,
@@ -163,7 +166,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (dbErr) console.error("❌ Supabase Insert Error:", dbErr);
 
-  // 🔹 Send confirmation email
+  // Send confirmation email
   try {
     if (email) {
       const html = getOrderConfirmationHtml({
