@@ -59,14 +59,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(400).send("Webhook signature error");
   }
 
-  // We only care about successful payments
+  // Only handle successful payments
   if (event.type !== "payment_intent.succeeded") {
     return res.json({ received: true });
   }
 
   const pi = event.data.object as Stripe.PaymentIntent;
 
-  // 🔹 Decode order metadata
+  // Decode metadata
   const encoded = pi.metadata?.yesviral_order;
   if (!encoded) return res.json({ received: true });
 
@@ -87,6 +87,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     orderData.target ||
     orderData.url ||
     "No Link Provided";
+
   const total = Number(orderData.total) || 0;
 
   // Extract email
@@ -96,31 +97,31 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     pi.receipt_email ||
     "";
 
-  // 🔥🔥 FINAL FIX: Resolve user_id aggressively
+  // 🔥 FIXED user_id resolution
   let userId: string | null =
     (orderData.user_id && orderData.user_id.trim() !== "" ? orderData.user_id : null) ||
     (pi.metadata?.user_id && pi.metadata.user_id.trim() !== "" ? pi.metadata.user_id : null) ||
     null;
 
-  // If still null → try to resolve via email
+  // 🔍 If still null → resolve via Supabase Admin
   if ((!userId || userId === "") && email) {
     try {
-      const { data: lookup, error: lookupError } =
-        await supabase.auth.admin.getUserByEmail(email);
+      const { data: users, error: lookupError } =
+        await supabase.auth.admin.listUsers({ email });
 
-      if (!lookupError && lookup?.user?.id) {
-        userId = lookup.user.id;
-        console.log("✅ user_id resolved via Supabase Admin:", userId);
+      if (!lookupError && users?.users?.length > 0) {
+        userId = users.users[0].id;
+        console.log("✅ user_id resolved via Supabase Admin listUsers:", userId);
       }
     } catch (err) {
       console.error("❌ Supabase email lookup failed:", err);
     }
   }
 
-  // Look up Followiz service
+  // Followiz service mapping
   const serviceId = getServiceId(platform, service);
 
-  // 🔹 Place order with Followiz
+  // 🔹 Place Followiz order
   let followizOrderId: number | null = null;
   try {
     if (serviceId) {
@@ -148,7 +149,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   // 🔹 Insert order into Supabase
   const { error: dbErr } = await supabase.from("orders").insert([
     {
-      user_id: userId || null, // ⭐ Always correct now
+      user_id: userId || null,
       platform,
       service,
       target_url: target,
