@@ -15,7 +15,10 @@ export default function LoginPage() {
     e.preventDefault();
     setLoading(true);
 
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
 
     if (error) {
       toast.error("Invalid email or password");
@@ -23,7 +26,13 @@ export default function LoginPage() {
       return;
     }
 
+    // ⭐ NEW — store user_id for checkout.yesviral.com
+    if (data?.user?.id) {
+      localStorage.setItem("yv_uid", data.user.id);
+    }
+
     toast.success("Logged in successfully");
+
     setTimeout(() => {
       router.push(email === "admin@yesviral.com" ? "/admin" : "/dashboard");
     }, 800);
