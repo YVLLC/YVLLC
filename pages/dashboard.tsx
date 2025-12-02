@@ -757,18 +757,18 @@ export default function DashboardPage() {
 
     const { pkg, type } = getStealthPackage(platform, service);
     const currentPrice = getPackagePrice(platform, service, quantity);
-
-    // ⭐ IMPORTANT: include user_id so Stripe metadata + webhook can use it
-    const order = {
-      package: pkg,
-      type,
-      platform: platform.key,
-      service: service.type,
-      amount: quantity,
-      reference: cleaned,
-      total: Number(currentPrice.toFixed(2)),
-      user_id: userId || "", // <— THIS ties the order to the logged-in user
-    };
+    
+  const order = {
+  package: pkg,
+  type,
+  platform: platform.key,
+  service: service.type,
+  amount: quantity,
+  quantity: quantity, // 🔥 REQUIRED FOR CHECKOUT — FIXES CRASH
+  reference: cleaned,
+  total: Number(currentPrice.toFixed(2)),
+  user_id: userId || "",
+};
 
     const orderString = btoa(
       unescape(encodeURIComponent(JSON.stringify(order)))
