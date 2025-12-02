@@ -96,11 +96,13 @@ export default async function handler(
     pi.receipt_email ||
     "";
 
-  // ✅ Use user_id from encoded order first
+  // ✅ FIXED: SAFELY MERGE user_id WITHOUT OVERRIDING VALID VALUES
   const supabaseUserId =
-    orderData.user_id ||
-    (pi.metadata && (pi.metadata as any).user_id) ||
-    null;
+    orderData.user_id && orderData.user_id.trim() !== ""
+      ? orderData.user_id
+      : (pi.metadata?.user_id && pi.metadata.user_id.trim() !== ""
+          ? pi.metadata.user_id
+          : null);
 
   const serviceId = getServiceId(platform, service);
 
