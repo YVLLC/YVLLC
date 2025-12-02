@@ -82,11 +82,14 @@ type Platform = {
 };
 interface Order {
   id: string;
+  followiz_order_id: number | null; // ⭐ Show this instead of uuid
   platform: string;
   service: string;
   quantity: number;
   status: string;
   created_at: string;
+  price_paid?: number | null;
+  target_url?: string | null;
 }
 type PreviewData = {
   ok: boolean;
@@ -106,6 +109,54 @@ const COLORS = {
   accentBg: "#E6F0FF",
   border: "#CFE4FF",
 };
+
+/* ========================== Status Colors ========================== */
+const STATUS_STYLES: Record<
+  string,
+  { bg: string; text: string; dot: string; label?: string }
+> = {
+  processing: {
+    bg: "bg-[#E0EAFF]",
+    text: "text-[#1D4ED8]",
+    dot: "bg-[#3B82F6]",
+    label: "Processing",
+  },
+  pending: {
+    bg: "bg-[#FEF9C3]",
+    text: "text-[#92400E]",
+    dot: "bg-[#FACC15]",
+    label: "Pending",
+  },
+  completed: {
+    bg: "bg-[#DCFCE7]",
+    text: "text-[#166534]",
+    dot: "bg-[#22C55E]",
+    label: "Completed",
+  },
+  partial: {
+    bg: "bg-[#FEE2E2]",
+    text: "text-[#B91C1C]",
+    dot: "bg-[#F97373]",
+    label: "Partial",
+  },
+  refunded: {
+    bg: "bg-[#F3E8FF]",
+    text: "text-[#6B21A8]",
+    dot: "bg-[#A855F7]",
+    label: "Refunded",
+  },
+  canceled: {
+    bg: "bg-[#F3F4F6]",
+    text: "text-[#374151]",
+    dot: "bg-[#9CA3AF]",
+    label: "Cancelled",
+  },
+};
+
+function statusToStyle(status: string) {
+  const key = (status || "").toLowerCase();
+  return STATUS_STYLES[key] || STATUS_STYLES["processing"];
+}
 
 /* ========================== Platforms ========================== */
 /**
@@ -530,14 +581,14 @@ const ProfileForm = memo(function ProfileForm({
           <input
             id="email-input"
             type="email"
-            className="border border-[#CFE4FF] px-3 py-2 rounded-md w-full"
+            className="border border-[#CFE4FF] px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-[#007BFF]"
             placeholder="you@example.com"
             value={newEmail}
             onChange={(e) => setNewEmail(e.currentTarget.value)}
           />
           <button
             onClick={onUpdateEmail}
-            className="bg-[#007BFF] hover:bg-[#005FCC] text-white px-4 py-2 rounded font-bold"
+            className="bg-[#007BFF] hover:bg-[#005FCC] text-white px-4 py-2 rounded font-bold text-sm"
           >
             Update
           </button>
@@ -560,7 +611,7 @@ const ProfileForm = memo(function ProfileForm({
             placeholder="Current password"
             value={passwordCurrent}
             onChange={(e) => setPasswordCurrent(e.currentTarget.value)}
-            className="border border-[#CFE4FF] px-3 py-2 rounded-md w-full"
+            className="border border-[#CFE4FF] px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-[#007BFF]"
           />
           <input
             id="new-password"
@@ -568,12 +619,12 @@ const ProfileForm = memo(function ProfileForm({
             placeholder="New password (6+ chars)"
             value={passwordNew}
             onChange={(e) => setPasswordNew(e.currentTarget.value)}
-            className="border border-[#CFE4FF] px-3 py-2 rounded-md w-full"
+            className="border border-[#CFE4FF] px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-[#007BFF]"
           />
           <div>
             <button
               onClick={onUpdatePassword}
-              className="bg-[#007BFF] hover:bg-[#005FCC] text-white px-4 py-2 rounded font-bold"
+              className="bg-[#007BFF] hover:bg-[#005FCC] text-white px-4 py-2 rounded font-bold text-sm"
             >
               Update Password
             </button>
@@ -596,7 +647,11 @@ export default function DashboardPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [profileEmail, setProfileEmail] = useState("");
-  const [analytics, setAnalytics] = useState({ total: 0, completed: 0 });
+  const [analytics, setAnalytics] = useState({
+    total: 0,
+    completed: 0,
+    spent: 0,
+  });
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // ⭐ store logged-in Supabase user id for metadata
@@ -642,16 +697,27 @@ export default function DashboardPage() {
 
       const { data: allOrders } = await supabase
         .from("orders")
-        .select("id, platform, service, quantity, status, created_at")
+        .select(
+          "id, followiz_order_id, platform, service, quantity, status, created_at, price_paid, target_url"
+        )
         .eq("user_id", uId)
         .order("created_at", { ascending: false });
 
       if (allOrders) {
-        setOrders(allOrders as Order[]);
-        const completed = allOrders.filter(
-          (o: Order) => o.status === "Completed"
+        const typed = allOrders as unknown as Order[];
+        setOrders(typed);
+
+        const completed = typed.filter((o) => o.status === "Completed");
+        const spent = typed.reduce(
+          (sum, o) => sum + (o.price_paid || 0),
+          0
         );
-        setAnalytics({ total: allOrders.length, completed: completed.length });
+
+        setAnalytics({
+          total: typed.length,
+          completed: completed.length,
+          spent,
+        });
       }
 
       // REALTIME: keep this user's orders in sync live
@@ -667,13 +733,18 @@ export default function DashboardPage() {
           },
           (payload: any) => {
             setOrders((prev) => {
-              const idx = prev.findIndex((o) => o.id === payload.new.id);
+              const next = [...prev];
+              const idx = next.findIndex((o) => o.id === payload.new.id);
               if (idx !== -1) {
-                const copy = [...prev];
-                copy[idx] = { ...copy[idx], ...payload.new };
-                return copy;
+                next[idx] = { ...next[idx], ...payload.new };
+              } else {
+                next.unshift(payload.new as Order);
               }
-              return [payload.new as Order, ...prev];
+              return next.sort(
+                (a, b) =>
+                  new Date(b.created_at).getTime() -
+                  new Date(a.created_at).getTime()
+              );
             });
           }
         )
@@ -1010,8 +1081,9 @@ export default function DashboardPage() {
   const renderTabContent = () => {
     if (loading)
       return (
-        <div className="flex justify-center items-center py-24">
-          <Loader2 className="animate-spin mr-2" /> Loading...
+        <div className="flex justify-center items-center py-24 text-[#0F172A]">
+          <Loader2 className="animate-spin mr-2 text-[#007BFF]" /> Loading your
+          dashboard...
         </div>
       );
 
@@ -1595,149 +1667,421 @@ export default function DashboardPage() {
       );
     }
 
+    /* ====================== CURRENT ORDERS (CARDS) ====================== */
     if (activeTab === "orders") {
       const inProgress = orders.filter((o) => o.status !== "Completed");
+
       return (
-        <div>
-          <h2 className="text-2xl font-extrabold mb-4 flex items-center gap-2">
-            <List size={22} /> Current Orders
-          </h2>
+        <div className="space-y-6">
+          <div className="flex items-center justify-between gap-2">
+            <h2 className="text-2xl font-extrabold flex items-center gap-2 text-[#0F172A]">
+              <List size={22} className="text-[#007BFF]" /> Current Orders
+            </h2>
+            {inProgress.length > 0 && (
+              <span className="text-xs px-3 py-1 rounded-full bg-[#E0EAFF] text-[#1D4ED8] font-semibold">
+                Live updates enabled
+              </span>
+            )}
+          </div>
+
           {inProgress.length === 0 ? (
-            <div className="text-[#888] py-16 text-center">
-              No current orders. Place your first order above!
+            <div className="border border-dashed border-[#CFE4FF] rounded-2xl bg-[#F5FAFF] p-8 text-center">
+              <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-white shadow mb-4">
+                <BadgePercent className="text-[#007BFF]" />
+              </div>
+              <h3 className="text-lg font-bold text-[#0F172A] mb-1">
+                No active orders yet
+              </h3>
+              <p className="text-sm text-[#6B7280] mb-4 max-w-md mx-auto">
+                As soon as you place an order, it will appear here with a live
+                status and your Followiz order number.
+              </p>
+              <button
+                onClick={() => setActiveTab("order")}
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#007BFF] text-white text-sm font-semibold shadow hover:bg-[#005FCC] transition"
+              >
+                Create a new order
+              </button>
             </div>
           ) : (
-            <div
-              className="overflow-x-auto"
-              style={{ WebkitOverflowScrolling: "touch" }}
-            >
-              <table className="min-w-full text-sm">
-                <thead>
-                  <tr className="bg-[#F5FAFF]">
-                    <th className="p-3 text-left">Order ID</th>
-                    <th className="p-3 text-left">Platform</th>
-                    <th className="p-3 text-left">Service</th>
-                    <th className="p-3 text-left">Quantity</th>
-                    <th className="p-3 text-left">Status</th>
-                    <th className="p-3 text-left">Date</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {inProgress.map((order) => (
-                    <tr key={order.id} className="border-t">
-                      <td className="p-3">{order.id.slice(0, 6)}...</td>
-                      <td className="p-3">{order.platform}</td>
-                      <td className="p-3">{order.service}</td>
-                      <td className="p-3">{order.quantity}</td>
-                      <td className="p-3 font-bold text-[#007BFF]">
-                        {order.status}
-                      </td>
-                      <td className="p-3">
-                        {new Date(order.created_at).toLocaleString()}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {inProgress.map((order) => {
+                const platformMeta =
+                  PLATFORMS.find(
+                    (p) =>
+                      p.key === order.platform ||
+                      p.name.toLowerCase() === order.platform.toLowerCase()
+                  ) || PLATFORMS[0];
+                const PlatformIcon = platformMeta.icon;
+                const statusStyle = statusToStyle(order.status);
+                const orderLabel =
+                  order.followiz_order_id ?? order.id.slice(0, 8);
+                const nicePlatform = platformMeta.name;
+                const niceService = order.service;
+                const created = new Date(order.created_at).toLocaleString();
+                const trackUrl = order.followiz_order_id
+                  ? `https://www.yesviral.com/track-order?orderId=${order.followiz_order_id}`
+                  : "https://www.yesviral.com/track-order";
+
+                return (
+                  <div
+                    key={order.id}
+                    className="relative overflow-hidden rounded-2xl border border-[#CFE4FF] bg-white shadow-[0_14px_40px_rgba(15,23,42,0.10)] hover:shadow-[0_18px_50px_rgba(15,23,42,0.16)] hover:-translate-y-0.5 transition-all"
+                  >
+                    <div className="h-1.5 bg-gradient-to-r from-[#007BFF] via-[#22C55E] to-[#FACC15]" />
+                    <div className="p-4 flex flex-col gap-3">
+                      {/* Header row */}
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-3 min-w-0">
+                          <div className="w-9 h-9 rounded-2xl bg-[#E6F0FF] flex items-center justify-center">
+                            <PlatformIcon
+                              size={20}
+                              style={{ color: platformMeta.iconColor }}
+                            />
+                          </div>
+                          <div className="min-w-0">
+                            <div className="text-xs font-semibold text-[#6B7280] uppercase tracking-wide">
+                              #{orderLabel}
+                            </div>
+                            <div className="text-sm font-bold text-[#0F172A] truncate">
+                              {nicePlatform} · {niceService}
+                            </div>
+                          </div>
+                        </div>
+
+                        <div
+                          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full ${statusStyle.bg} ${statusStyle.text} text-[11px] font-semibold`}
+                        >
+                          <span
+                            className={`w-1.5 h-1.5 rounded-full ${statusStyle.dot}`}
+                          />
+                          <span>
+                            {statusStyle.label || order.status || "Processing"}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Middle: metrics */}
+                      <div className="flex items-center justify-between text-xs text-[#6B7280]">
+                        <div>
+                          <span className="block text-[11px] uppercase font-semibold text-[#9CA3AF]">
+                            Quantity
+                          </span>
+                          <span className="text-sm font-semibold text-[#0F172A]">
+                            {order.quantity.toLocaleString()}
+                          </span>
+                        </div>
+                        <div className="text-right">
+                          <span className="block text-[11px] uppercase font-semibold text-[#9CA3AF]">
+                            Placed
+                          </span>
+                          <span className="text-xs font-medium">
+                            {created}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Footer: CTA */}
+                      <div className="flex items-center justify-between pt-2 border-t border-[#E5EDFF] mt-1">
+                        <button
+                          onClick={() => {
+                            window.open(trackUrl, "_blank");
+                          }}
+                          className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-[#007BFF] hover:text-[#005FCC]"
+                        >
+                          View live status
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="w-3 h-3"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
+                            <polyline points="9 18 15 12 9 6" />
+                          </svg>
+                        </button>
+                        <span className="text-[10px] text-[#9CA3AF]">
+                          Auto-synced from YesViral
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>
       );
     }
 
+    /* ====================== COMPLETED ORDERS (CARDS) ====================== */
     if (activeTab === "completed") {
       const completed = orders.filter((o) => o.status === "Completed");
+
       return (
-        <div>
-          <h2 className="text-2xl font-extrabold mb-4 flex items-center gap-2">
-            <CheckCircle size={22} /> Completed Orders
-          </h2>
+        <div className="space-y-6">
+          <div className="flex items-center justify-between gap-2">
+            <h2 className="text-2xl font-extrabold mb-1 flex items-center gap-2 text-[#0F172A]">
+              <CheckCircle size={22} className="text-[#22C55E]" /> Completed
+              Orders
+            </h2>
+            {completed.length > 0 && (
+              <span className="text-xs px-3 py-1 rounded-full bg-[#DCFCE7] text-[#166534] font-semibold">
+                Delivered · Eligible for refills if applicable
+              </span>
+            )}
+          </div>
+
           {completed.length === 0 ? (
-            <div className="text-[#888] py-16 text-center">
-              No completed orders yet.
+            <div className="border border-dashed border-[#CFE4FF] rounded-2xl bg-[#F9FAFB] p-8 text-center">
+              <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-[#DCFCE7] mb-4">
+                <CheckCircle className="text-[#16A34A]" />
+              </div>
+              <h3 className="text-lg font-bold text-[#0F172A] mb-1">
+                No completed orders yet
+              </h3>
+              <p className="text-sm text-[#6B7280] mb-1 max-w-md mx-auto">
+                As soon as your orders finish processing, they’ll appear here as
+                completed.
+              </p>
             </div>
           ) : (
-            <div
-              className="overflow-x-auto"
-              style={{ WebkitOverflowScrolling: "touch" }}
-            >
-              <table className="min-w-full text-sm">
-                <thead>
-                  <tr className="bg-[#F5FAFF]">
-                    <th className="p-3 text-left">Order ID</th>
-                    <th className="p-3 text-left">Platform</th>
-                    <th className="p-3 text-left">Service</th>
-                    <th className="p-3 text-left">Quantity</th>
-                    <th className="p-3 text-left">Status</th>
-                    <th className="p-3 text-left">Date</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {completed.map((order) => (
-                    <tr key={order.id} className="border-t">
-                      <td className="p-3">{order.id.slice(0, 6)}...</td>
-                      <td className="p-3">{order.platform}</td>
-                      <td className="p-3">{order.service}</td>
-                      <td className="p-3">{order.quantity}</td>
-                      <td className="p-3 font-bold text-[#007BFF]">
-                        {order.status}
-                      </td>
-                      <td className="p-3">
-                        {new Date(order.created_at).toLocaleString()}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {completed.map((order) => {
+                const platformMeta =
+                  PLATFORMS.find(
+                    (p) =>
+                      p.key === order.platform ||
+                      p.name.toLowerCase() === order.platform.toLowerCase()
+                  ) || PLATFORMS[0];
+                const PlatformIcon = platformMeta.icon;
+                const created = new Date(order.created_at).toLocaleString();
+                const trackUrl = order.followiz_order_id
+                  ? `https://www.yesviral.com/track-order?orderId=${order.followiz_order_id}`
+                  : "https://www.yesviral.com/track-order";
+
+                return (
+                  <div
+                    key={order.id}
+                    className="relative overflow-hidden rounded-2xl border border-[#BBF7D0] bg-white shadow-[0_10px_35px_rgba(22,163,74,0.18)] hover:shadow-[0_14px_45px_rgba(22,163,74,0.24)] hover:-translate-y-0.5 transition-all"
+                  >
+                    <div className="h-1.5 bg-gradient-to-r from-[#22C55E] via-[#BBF7D0] to-[#F5F5F5]" />
+                    <div className="p-4 flex flex-col gap-3">
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-3 min-w-0">
+                          <div className="w-9 h-9 rounded-2xl bg-[#ECFDF3] flex items-center justify-center">
+                            <PlatformIcon
+                              size={20}
+                              style={{ color: platformMeta.iconColor }}
+                            />
+                          </div>
+                          <div className="min-w-0">
+                            <div className="text-xs font-semibold text-[#16A34A] uppercase tracking-wide">
+                              #{order.followiz_order_id ?? order.id.slice(0, 8)}
+                            </div>
+                            <div className="text-sm font-bold text-[#0F172A] truncate">
+                              {platformMeta.name} · {order.service}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#DCFCE7] text-[#166534] text-[11px] font-semibold">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#22C55E]" />
+                          Completed
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-between text-xs text-[#6B7280]">
+                        <div>
+                          <span className="block text-[11px] uppercase font-semibold text-[#9CA3AF]">
+                            Quantity
+                          </span>
+                          <span className="text-sm font-semibold text-[#0F172A]">
+                            {order.quantity.toLocaleString()}
+                          </span>
+                        </div>
+                        <div className="text-right">
+                          <span className="block text-[11px] uppercase font-semibold text-[#9CA3AF]">
+                            Completed at
+                          </span>
+                          <span className="text-xs font-medium">
+                            {created}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-between pt-2 border-t border-[#E5EDFF] mt-1">
+                        <button
+                          onClick={() => window.open(trackUrl, "_blank")}
+                          className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-[#15803D] hover:text-[#166534]"
+                        >
+                          View order details
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="w-3 h-3"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
+                            <polyline points="9 18 15 12 9 6" />
+                          </svg>
+                        </button>
+                        <span className="text-[10px] text-[#9CA3AF]">
+                          Need help? Contact support with this ID.
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>
       );
     }
 
+    /* ====================== ANALYTICS ====================== */
     if (activeTab === "analytics") {
+      const avgTicket =
+        analytics.total > 0 ? analytics.spent / analytics.total : 0;
+
       return (
-        <div>
-          <h2 className="text-2xl font-extrabold mb-4 flex items-center gap-2">
-            <BarChart size={22} /> Analytics
-          </h2>
-          <div className="grid grid-cols-2 gap-5 sm:grid-cols-4 mb-10">
-            <DashboardStat label="Orders" value={analytics.total} color="blue" />
+        <div className="space-y-6">
+          <div className="flex items-center justify-between gap-2">
+            <h2 className="text-2xl font-extrabold mb-1 flex items-center gap-2 text-[#0F172A]">
+              <BarChart size={22} className="text-[#007BFF]" /> Analytics
+            </h2>
+            <span className="text-xs px-3 py-1 rounded-full bg-[#E0EAFF] text-[#1D4ED8] font-semibold">
+              Snapshot of your YesViral usage
+            </span>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4 lg:grid-cols-4 mb-4">
+            <DashboardStat
+              label="Total Orders"
+              value={analytics.total}
+              color="blue"
+            />
             <DashboardStat
               label="Completed"
               value={analytics.completed}
               color="blue"
             />
             <DashboardStat
-              label="Spent"
-              value={
-                "$" +
-                orders
-                  .reduce(
-                    (sum, o) =>
-                      sum +
-                      o.quantity *
-                        (PLATFORMS.find((p) => p.name === o.platform)?.services.find(
-                          (s) => s.type === o.service
-                        )?.price || 0),
-                    0
-                  )
-                  .toFixed(2)
-              }
+              label="Total Spent"
+              value={`$${analytics.spent.toFixed(2)}`}
               color="blue"
             />
             <DashboardStat
-              label="Refill Eligible"
-              value={orders.filter((o) => o.status === "Completed").length}
+              label="Avg. Per Order"
+              value={`$${avgTicket.toFixed(2)}`}
               color="blue"
             />
           </div>
+
+          {/* Tiny history strip */}
+          {orders.length > 0 && (
+            <div className="mt-2">
+              <h3 className="text-sm font-semibold text-[#0F172A] mb-2">
+                Recent Activity
+              </h3>
+              <div className="flex flex-col gap-2 max-h-64 overflow-y-auto pr-1">
+                {orders.slice(0, 8).map((order) => {
+                  const statusStyle = statusToStyle(order.status);
+                  const platformMeta =
+                    PLATFORMS.find(
+                      (p) =>
+                        p.key === order.platform ||
+                        p.name.toLowerCase() === order.platform.toLowerCase()
+                    ) || PLATFORMS[0];
+                  const PlatformIcon = platformMeta.icon;
+
+                  return (
+                    <div
+                      key={order.id}
+                      className="flex items-center justify-between gap-3 rounded-xl border border-[#E5EDFF] bg-white px-3 py-2 hover:bg-[#F9FBFF] transition"
+                    >
+                      <div className="flex items-center gap-2 min-w-0">
+                        <div className="w-7 h-7 rounded-xl bg-[#E6F0FF] flex items-center justify-center">
+                          <PlatformIcon
+                            size={16}
+                            style={{ color: platformMeta.iconColor }}
+                          />
+                        </div>
+                        <div className="min-w-0">
+                          <div className="text-xs font-semibold text-[#0F172A] truncate">
+                            #{order.followiz_order_id ?? order.id.slice(0, 8)} ·{" "}
+                            {platformMeta.name} · {order.service}
+                          </div>
+                          <div className="text-[10px] text-[#9CA3AF]">
+                            {new Date(order.created_at).toLocaleString()}
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full ${statusStyle.bg} ${statusStyle.text} text-[10px] font-semibold`}
+                      >
+                        <span
+                          className={`w-1.5 h-1.5 rounded-full ${statusStyle.dot}`}
+                        />
+                        {statusStyle.label || order.status}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
       );
     }
 
+    /* ====================== PROFILE / ACCOUNT ====================== */
     if (activeTab === "profile") {
-      return <ProfileForm initialEmail={profileEmail} />;
+      return (
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1.2fr)] items-start">
+          <div className="bg-white border border-[#CFE4FF] rounded-2xl shadow-sm p-5 sm:p-7">
+            <ProfileForm initialEmail={profileEmail} />
+          </div>
+
+          <div className="bg-gradient-to-br from-[#007BFF] to-[#005FCC] rounded-2xl text-white p-5 sm:p-7 shadow-[0_16px_45px_rgba(37,99,235,0.48)] flex flex-col justify-between gap-4">
+            <div>
+              <h3 className="text-lg font-extrabold mb-1">
+                YesViral Dashboard
+              </h3>
+              <p className="text-sm text-[#E5EDFF] max-w-xs">
+                Your account is connected to our Private Delivery Networks.
+                Update your email and password securely any time.
+              </p>
+            </div>
+            <div className="space-y-2 text-xs text-[#E5EDFF]">
+              <div className="flex items-center justify-between">
+                <span>Account Email</span>
+                <span className="font-semibold text-white truncate max-w-[160px] text-right">
+                  {profileEmail || "Not set"}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span>Security</span>
+                <span className="font-semibold text-white">
+                  SSL • Encrypted
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span>Brand</span>
+                <span className="font-semibold text-white">
+                  YesViral • Hyrica Labs
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
     }
 
     return <div>Pick a tab…</div>;
@@ -1921,7 +2265,7 @@ function DashboardStat({
       : "";
   return (
     <div
-      className={`p-4 rounded-xl bg-[#F5FAFF] border border-[#CFE4FF] text-center shadow`}
+      className={`p-4 rounded-xl bg-[#F5FAFF] border border-[#CFE4FF] text-center shadow-sm`}
     >
       <span className={`block text-sm font-semibold mb-1 ${textColor}`}>
         {label}
