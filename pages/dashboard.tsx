@@ -599,7 +599,7 @@ export default function DashboardPage() {
   const [analytics, setAnalytics] = useState({ total: 0, completed: 0 });
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  // ⭐ NEW: store logged-in Supabase user id for metadata
+  // ⭐ store logged-in Supabase user id for metadata
   const [userId, setUserId] = useState<string | null>(null);
 
   // Order state
@@ -757,18 +757,20 @@ export default function DashboardPage() {
 
     const { pkg, type } = getStealthPackage(platform, service);
     const currentPrice = getPackagePrice(platform, service, quantity);
-    
-  const order = {
-  package: pkg,
-  type,
-  platform: platform.key,
-  service: service.type,
-  amount: quantity,
-  quantity: quantity, // 🔥 REQUIRED FOR CHECKOUT — FIXES CRASH
-  reference: cleaned,
-  total: Number(currentPrice.toFixed(2)),
-  user_id: userId || "",
-};
+
+    // 🔥 IMPORTANT: include quantity, user_id, and email in the encoded order
+    const order = {
+      package: pkg,
+      type,
+      platform: platform.key,
+      service: service.type,
+      amount: quantity,
+      quantity: quantity,
+      reference: cleaned,
+      total: Number(currentPrice.toFixed(2)),
+      user_id: userId || null,
+      email: profileEmail || null,
+    };
 
     const orderString = btoa(
       unescape(encodeURIComponent(JSON.stringify(order)))

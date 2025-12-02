@@ -33,7 +33,10 @@ function getServiceId(platform: string, service: string): number | null {
   return p?.[service] ?? null;
 }
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   if (req.method !== "POST") return res.status(405).end();
 
   // Read raw body
@@ -85,8 +88,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     orderData.url ||
     "No Link Provided";
   const total = Number(orderData.total) || 0;
-  const email = orderData.email || pi.receipt_email || "";
-  const supabaseUserId = pi.metadata?.user_id || null;
+
+  // ✅ ALWAYS try orderData.email first, fallback to Stripe
+  const email =
+    orderData.email ||
+    (pi.metadata && (pi.metadata as any).email) ||
+    pi.receipt_email ||
+    "";
+
+  // ✅ Use user_id from encoded order first
+  const supabaseUserId =
+    orderData.user_id ||
+    (pi.metadata && (pi.metadata as any).user_id) ||
+    null;
 
   const serviceId = getServiceId(platform, service);
 
