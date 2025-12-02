@@ -10,18 +10,21 @@ export const config = {
   api: { bodyParser: false },
 };
 
+// Stripe client
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
   apiVersion: "2024-04-10",
 });
 
+// Followiz API key
 const FOLLOWIZ_API_KEY = process.env.FOLLOWIZ_API_KEY || "";
 
+// Supabase (SERVICE ROLE KEY REQUIRED)
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL as string,
   process.env.SUPABASE_SERVICE_ROLE_KEY as string
 );
 
-// Followiz Services
+// Followiz service IDs
 const SERVICE_IDS: Record<string, Record<string, number>> = {
   instagram: { Followers: 511, Likes: 483, Views: 811 },
   tiktok: { Followers: 6951, Likes: 1283, Views: 1016 },
@@ -33,13 +36,10 @@ function getServiceId(platform: string, service: string): number | null {
   return p?.[service] ?? null;
 }
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") return res.status(405).end();
 
-  // Read raw body
+  // Read raw body for Stripe signature verification
   const chunks: Buffer[] = [];
   for await (const chunk of req) chunks.push(chunk);
   const body = Buffer.concat(chunks);
@@ -47,7 +47,7 @@ export default async function handler(
   const sig = req.headers["stripe-signature"] as string;
   let event: Stripe.Event;
 
-  // Verify signature
+  // Verify Stripe signature
   try {
     event = stripe.webhooks.constructEvent(
       body,
@@ -59,26 +59,26 @@ export default async function handler(
     return res.status(400).send("Webhook signature error");
   }
 
-  // Only handle approved events
+  // We only care about successful payments
   if (event.type !== "payment_intent.succeeded") {
     return res.json({ received: true });
   }
 
   const pi = event.data.object as Stripe.PaymentIntent;
 
-  // Decode order metadata
+  // 🔹 Decode order metadata
   const encoded = pi.metadata?.yesviral_order;
   if (!encoded) return res.json({ received: true });
 
   let orderData: any = {};
   try {
     orderData = JSON.parse(Buffer.from(encoded, "base64").toString("utf8"));
-  } catch (err) {
-    console.error("❌ Failed to decode metadata");
+  } catch {
+    console.error("❌ Failed to decode metadata JSON");
     return res.json({ received: true });
   }
 
-  // Extract fields
+  // Extract order info
   const quantity = Number(orderData.quantity) || 1;
   const platform = orderData.platform || "Unknown Platform";
   const service = orderData.service || "Unknown Service";
@@ -89,24 +89,38 @@ export default async function handler(
     "No Link Provided";
   const total = Number(orderData.total) || 0;
 
-  // ✅ ALWAYS try orderData.email first, fallback to Stripe
+  // Extract email
   const email =
     orderData.email ||
-    (pi.metadata && (pi.metadata as any).email) ||
+    pi.metadata?.email ||
     pi.receipt_email ||
     "";
 
-  // ✅ FIXED: SAFELY MERGE user_id WITHOUT OVERRIDING VALID VALUES
-  const supabaseUserId =
-    orderData.user_id && orderData.user_id.trim() !== ""
-      ? orderData.user_id
-      : (pi.metadata?.user_id && pi.metadata.user_id.trim() !== ""
-          ? pi.metadata.user_id
-          : null);
+  // 🔥🔥 FINAL FIX: Resolve user_id aggressively
+  let userId: string | null =
+    (orderData.user_id && orderData.user_id.trim() !== "" ? orderData.user_id : null) ||
+    (pi.metadata?.user_id && pi.metadata.user_id.trim() !== "" ? pi.metadata.user_id : null) ||
+    null;
 
+  // If still null → try to resolve via email
+  if ((!userId || userId === "") && email) {
+    try {
+      const { data: lookup, error: lookupError } =
+        await supabase.auth.admin.getUserByEmail(email);
+
+      if (!lookupError && lookup?.user?.id) {
+        userId = lookup.user.id;
+        console.log("✅ user_id resolved via Supabase Admin:", userId);
+      }
+    } catch (err) {
+      console.error("❌ Supabase email lookup failed:", err);
+    }
+  }
+
+  // Look up Followiz service
   const serviceId = getServiceId(platform, service);
 
-  // Place Followiz order
+  // 🔹 Place order with Followiz
   let followizOrderId: number | null = null;
   try {
     if (serviceId) {
@@ -114,7 +128,7 @@ export default async function handler(
         key: FOLLOWIZ_API_KEY,
         action: "add",
         service: String(serviceId),
-        link: String(target),
+        link: target,
         quantity: String(quantity),
       });
 
@@ -125,16 +139,16 @@ export default async function handler(
       );
 
       followizOrderId = fwRes.data?.order || null;
-      console.log("🔥 FOLLOWIZ ORDER:", followizOrderId);
+      console.log("🔥 Followiz order placed:", followizOrderId);
     }
   } catch (err: any) {
     console.error("❌ Followiz Error:", err.response?.data || err);
   }
 
-  // Write to Supabase
+  // 🔹 Insert order into Supabase
   const { error: dbErr } = await supabase.from("orders").insert([
     {
-      user_id: supabaseUserId || null,
+      user_id: userId || null, // ⭐ Always correct now
       platform,
       service,
       target_url: target,
@@ -148,7 +162,7 @@ export default async function handler(
 
   if (dbErr) console.error("❌ Supabase Insert Error:", dbErr);
 
-  // Send confirmation email
+  // 🔹 Send confirmation email
   try {
     if (email) {
       const html = getOrderConfirmationHtml({
@@ -166,7 +180,7 @@ export default async function handler(
         html,
       });
 
-      console.log("📧 Email sent");
+      console.log("📧 Confirmation email sent");
     }
   } catch (err) {
     console.error("❌ Email Send Error:", err);
