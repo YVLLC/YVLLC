@@ -89,6 +89,7 @@ interface Order {
   status: string;
   created_at: string;
   followiz_order_id: number | null;
+  refill_until: string | null; // ⭐ refill column from DB (timestamp)
 }
 
 type PreviewData = {
@@ -648,7 +649,7 @@ export default function DashboardPage() {
         const { data: allOrders } = await supabase
           .from("orders")
           .select(
-            "id, platform, service, quantity, status, created_at, followiz_order_id"
+            "id, platform, service, quantity, status, created_at, followiz_order_id, refill_until"
           )
           .eq("user_id", uid)
           .order("created_at", { ascending: false });
@@ -791,7 +792,10 @@ export default function DashboardPage() {
       }
 
       if (isContentEngagement && !isLink(trimmed)) {
-        setPreview({ ok: false, error: "Post / video URL required for preview." });
+        setPreview({
+          ok: false,
+          error: "Post / video URL required for preview.",
+        });
         return;
       }
 
@@ -925,7 +929,7 @@ export default function DashboardPage() {
         style={{ borderColor: COLORS.border }}
       >
         <div
-          className="flex items-center gap-2 px-3 py-2 border-b bg白/80"
+          className="flex itemscenter gap-2 px-3 py-2 border-b bg白/80"
           style={{ borderColor: "#E0ECFF" }}
         >
           <div
@@ -1754,7 +1758,7 @@ export default function DashboardPage() {
                       <th className="p-3">Platform</th>
                       <th className="p-3">Service</th>
                       <th className="p-3">Quantity</th>
-                      <th className="p-3">Status</th>
+                      <th className="p-3">Status / Refill</th>
                       <th className="p-3">Completed</th>
                     </tr>
                   </thead>
@@ -1788,6 +1792,7 @@ export default function DashboardPage() {
                         </td>
                         <td className="p-3">
                           <StatusPill status={order.status} />
+                          <RefillBadge refill_until={order.refill_until} />
                         </td>
                         <td className="p-3 text-[#6B7280]">
                           {new Date(order.created_at).toLocaleString()}
@@ -1818,13 +1823,14 @@ export default function DashboardPage() {
           ? 0
           : Math.round((completedCount / totalFinished) * 100);
 
+      // ⭐ Use refill_until instead of fake 30-day-from-created
       const refillEligibleCount = orders.filter((o) => {
         const status = (o.status || "").toLowerCase();
         if (status !== "completed") return false;
-        const created = new Date(o.created_at).getTime();
-        const daysSince =
-          (Date.now() - created) / (1000 * 60 * 60 * 24);
-        return daysSince <= 30;
+        if (!o.refill_until) return false;
+        const end = new Date(o.refill_until).getTime();
+        if (Number.isNaN(end)) return false;
+        return end > Date.now();
       }).length;
 
       return (
@@ -1856,7 +1862,7 @@ export default function DashboardPage() {
               color="blue"
             />
             <DashboardStat
-              label="Refill Eligible (30 Days)"
+              label="Refill Eligible (Active)"
               value={refillEligibleCount}
               color="blue"
             />
@@ -1880,8 +1886,8 @@ export default function DashboardPage() {
                 are fully applied to your account.
               </li>
               <li>
-                • Refill-eligible orders stay covered for{" "}
-                <b>30 days</b> from completion.
+                • Refill-eligible orders stay covered until their{" "}
+                <b>refill expiration date</b>.
               </li>
               <li>
                 • Any issues or delays can be reviewed via your email receipts
@@ -2143,5 +2149,35 @@ function PlatformBadge({ platform }: { platform: string }) {
       <Icon size={13} style={{ color }} />
       <span className="capitalize">{platform}</span>
     </span>
+  );
+}
+
+/* ⭐ Refill UI badge (refill expiration) */
+function RefillBadge({ refill_until }: { refill_until: string | null }) {
+  if (!refill_until) return null;
+
+  const end = new Date(refill_until);
+  if (Number.isNaN(end.getTime())) return null;
+
+  const now = new Date();
+  const diffMs = end.getTime() - now.getTime();
+  const daysLeft = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+
+  if (daysLeft <= 0) {
+    return (
+      <div className="mt-1">
+        <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-[#F3F4F6] text-[10px] font-semibold text-[#6B7280]">
+          Refill period ended
+        </span>
+      </div>
+    );
+  }
+
+  return (
+    <div className="mt-1">
+      <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-[#E6F0FF] text-[10px] font-semibold text-[#007BFF]">
+        Refill active · {daysLeft} day{daysLeft === 1 ? "" : "s"} left
+      </span>
+    </div>
   );
 }
