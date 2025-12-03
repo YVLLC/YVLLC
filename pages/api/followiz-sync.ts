@@ -1,4 +1,3 @@
-// path: pages/api/followiz-sync.ts
 import type { NextApiRequest, NextApiResponse } from "next";
 import axios from "axios";
 import https from "https";
@@ -17,7 +16,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(500).json({ error: "Missing Followiz API key" });
     }
 
-    // 1. Fetch all orders that are NOT completed and HAVE a followiz ID
     const { data: orders, error } = await supabase
       .from("orders")
       .select("id, followiz_order_id")
@@ -25,7 +23,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       .not("followiz_order_id", "is", null);
 
     if (error) {
-      console.error("Supabase fetch error:", error);
+      console.error("Supabase error:", error);
       return res.status(500).json({ error: "Failed to load orders" });
     }
 
@@ -33,16 +31,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(200).json({ message: "No orders to sync" });
     }
 
-    // SSL Agent to bypass Followiz expired certificate
     const httpsAgent = new https.Agent({
       rejectUnauthorized: false,
     });
 
-    // 2. Loop and sync each order
     for (const order of orders) {
       try {
         const followizRes = await axios.get(
-          "https://followizaddons.com/api/v2",
+          "https://followiz.com/api/v2",   // ⭐ FIXED DOMAIN
           {
             params: {
               key: FOLLOWIZ_API_KEY,
@@ -54,23 +50,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         );
 
         const fw = followizRes.data;
-
-        // Normalize the status
         const status =
           typeof fw.status === "string"
             ? fw.status.toLowerCase()
             : "processing";
 
-        console.log(
-          `Order ${order.followiz_order_id} → Followiz status: ${status}`
-        );
-
-        // 3. Update Supabase
         await supabase
           .from("orders")
           .update({ status })
           .eq("id", order.id);
-      } catch (err: any) {
+      } catch (err) {
         console.error(
           `Followiz API error for order ${order.followiz_order_id}:`,
           err
