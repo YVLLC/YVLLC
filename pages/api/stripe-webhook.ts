@@ -180,7 +180,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       await sendEmail({
         to: email,
-        subject: `Your YesViral Order #${followizOrderId || "Pending"}`,
+        subject: `YesViral Order Confirmation #${followizOrderId || "Pending"}`,
         html,
       });
 
