@@ -312,7 +312,7 @@ export default function TrackOrderPage() {
 
               <div className="hidden sm:flex items-center gap-2 rounded-full bg-[#F3F6FF] px-3 py-1 text-[11px] font-semibold text-[#0B63E6] border border-[#D0E2FF]">
                 <span className="h-2 w-2 rounded-full bg-[#22C55E] animate-pulse" />
-                <span>Support responds in under 24 hours</span>
+                <span>Support Team: Online</span>
               </div>
             </div>
 
