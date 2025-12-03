@@ -1626,7 +1626,7 @@ export default function DashboardPage() {
                   Active Orders ({inProgress.length})
                 </span>
                 <span className="text-[10px] text-[#6B7280]">
-                  Followiz ID • Platform • Service • Quantity • Status • Date
+                  Order ID • Platform • Service • Quantity • Status • Date
                 </span>
               </div>
               <div
@@ -1636,7 +1636,7 @@ export default function DashboardPage() {
                 <table className="min-w-full text-xs sm:text-sm">
                   <thead>
                     <tr className="bg-[#F5FAFF] text-left text-[11px] uppercase tracking-wide text-[#6B7280] border-b border-[#E5EDFF]">
-                      <th className="p-3">Followiz ID</th>
+                      <th className="p-3">Order ID</th>
                       <th className="p-3">Platform</th>
                       <th className="p-3">Service</th>
                       <th className="p-3">Quantity</th>
