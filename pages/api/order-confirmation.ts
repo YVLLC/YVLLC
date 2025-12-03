@@ -31,7 +31,7 @@ export default async function handler(
 
     await sendEmail({
       to: email,
-      subject: `Your YesViral Order #${orderId} is Confirmed`,
+      subject: `YesViral Order Confirmation #${orderId}`,
       html,
     });
 
