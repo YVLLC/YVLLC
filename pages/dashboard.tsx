@@ -663,12 +663,24 @@ export default function DashboardPage() {
         }
       };
 
+      // 🔥 Initial sync with Followiz, then load orders
+      try {
+        await fetch("/api/followiz-sync", { method: "POST" });
+      } catch (e) {
+        console.error("Initial followiz-sync failed", e);
+      }
+
       await fetchOrdersForUser(uId);
       setLoading(false);
 
-      // 🔁 Auto-refresh every 15 seconds to keep statuses live
-      interval = setInterval(() => {
-        fetchOrdersForUser(uId);
+      // 🔁 Auto-refresh every 15 seconds (sync + fresh orders)
+      interval = setInterval(async () => {
+        try {
+          await fetch("/api/followiz-sync", { method: "POST" });
+        } catch (e) {
+          console.error("followiz-sync interval error", e);
+        }
+        await fetchOrdersForUser(uId);
       }, 15000);
     };
 
@@ -1793,9 +1805,27 @@ export default function DashboardPage() {
 
     if (activeTab === "analytics") {
       const totalOrders = analytics.total;
-      const completed = analytics.completed;
+      const completedCount = analytics.completed;
+
+      const totalFinished = orders.filter((o) =>
+        ["completed", "partial", "canceled"].includes(
+          (o.status || "").toLowerCase()
+        )
+      ).length;
+
       const completionRate =
-        totalOrders === 0 ? 0 : Math.round((completed / totalOrders) * 100);
+        totalFinished === 0
+          ? 0
+          : Math.round((completedCount / totalFinished) * 100);
+
+      const refillEligibleCount = orders.filter((o) => {
+        const status = (o.status || "").toLowerCase();
+        if (status !== "completed") return false;
+        const created = new Date(o.created_at).getTime();
+        const daysSince =
+          (Date.now() - created) / (1000 * 60 * 60 * 24);
+        return daysSince <= 30;
+      }).length;
 
       return (
         <div className="space-y-8">
@@ -1817,7 +1847,7 @@ export default function DashboardPage() {
             />
             <DashboardStat
               label="Completed Orders"
-              value={completed}
+              value={completedCount}
               color="blue"
             />
             <DashboardStat
@@ -1826,10 +1856,8 @@ export default function DashboardPage() {
               color="blue"
             />
             <DashboardStat
-              label="Refill Eligible"
-              value={orders.filter(
-                (o) => (o.status || "").toLowerCase() === "completed"
-              ).length}
+              label="Refill Eligible (30 Days)"
+              value={refillEligibleCount}
               color="blue"
             />
           </div>
@@ -1850,6 +1878,10 @@ export default function DashboardPage() {
               <li>
                 • Orders marked <b>completed</b> have finished successfully and
                 are fully applied to your account.
+              </li>
+              <li>
+                • Refill-eligible orders stay covered for{" "}
+                <b>30 days</b> from completion.
               </li>
               <li>
                 • Any issues or delays can be reviewed via your email receipts
@@ -2072,6 +2104,14 @@ function StatusPill({ status }: { status: string }) {
     bg = "#FEF9C3";
     text = "#92400E";
     label = "Pending";
+  } else if (normalized === "partial") {
+    bg = "#FEF3C7";
+    text = "#92400E";
+    label = "Partial";
+  } else if (normalized === "canceled" || normalized === "cancelled") {
+    bg = "#FEE2E2";
+    text = "#B91C1C";
+    label = "Canceled";
   }
 
   return (
