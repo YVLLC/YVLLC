@@ -1621,7 +1621,7 @@ export default function DashboardPage() {
             </div>
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#E6F0FF] border border-[#CFE4FF] text-[11px] font-semibold text-[#0F172A]">
               <span className="w-2 h-2 rounded-full bg-[#22C55E] shadow-[0_0_0_4px_rgba(34,197,94,0.2)]" />
-              Live status updating
+              Live Status Updates
             </div>
           </div>
 
@@ -1727,7 +1727,7 @@ export default function DashboardPage() {
             </div>
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#ECFDF3] border border-[#BBF7D0] text-[11px] font-semibold text-[#166534]">
               <CheckCircle size={14} />
-              Delivered securely via YesViral networks
+              Delivered securely via Private Delivery Networks (PDNS)
             </div>
           </div>
 
