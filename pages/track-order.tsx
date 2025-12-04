@@ -242,11 +242,11 @@ export default function TrackOrderPage() {
                     {status && !error && (
                       <p className="mt-1 text-[13px] text-[#4B5563] max-w-md">
                         {statusKey === "delivered"
-                          ? "Your YesViral order has been fully delivered. If you have any concerns, reach out with your order ID."
+                          ? "Your YesViral order has been delivered. If you have any questions or concerns, reach out with your order ID."
                           : statusKey === "in_progress"
-                          ? "Your order is actively processing through our delivery pools. You’ll continue see results roll in soon."
+                          ? "Your order is actively processing through our Private Delivery Networks (PDNS). You’ll begin to see results roll in soon."
                           : statusKey === "unknown"
-                          ? "We couldn’t locate this order. Double-check the ID or reach out to support and we’ll investigate."
+                          ? "We couldn’t locate this order. Double-check the ID or contact us at support@yesviral.com and we’ll investigate."
                           : null}
                       </p>
                     )}
