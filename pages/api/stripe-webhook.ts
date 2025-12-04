@@ -18,7 +18,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
 // Followiz API key
 const FOLLOWIZ_API_KEY = process.env.FOLLOWIZ_API_KEY || "";
 
-// Supabase (SERVICE ROLE KEY REQUIRED)
+// Supabase
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL as string,
   process.env.SUPABASE_SERVICE_ROLE_KEY as string
@@ -36,9 +36,13 @@ function getServiceId(platform: string, service: string): number | null {
   return p?.[service] ?? null;
 }
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   if (req.method !== "POST") return res.status(405).end();
 
+  // Stripe raw body
   const chunks: Buffer[] = [];
   for await (const chunk of req) chunks.push(chunk);
   const body = Buffer.concat(chunks);
@@ -46,6 +50,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const sig = req.headers["stripe-signature"] as string;
   let event: Stripe.Event;
 
+  // Verify Stripe signature
   try {
     event = stripe.webhooks.constructEvent(
       body,
@@ -57,13 +62,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(400).send("Webhook signature error");
   }
 
+  // Only handle succeeded payments
   if (event.type !== "payment_intent.succeeded") {
     return res.json({ received: true });
   }
 
   const pi = event.data.object as Stripe.PaymentIntent;
 
-  // Decode metadata
+  // Decode order metadata
   const encoded = pi.metadata?.yesviral_order;
   if (!encoded) return res.json({ received: true });
 
@@ -75,36 +81,44 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.json({ received: true });
   }
 
-  // Extract order info
+  // Extract order fields
   const quantity = Number(orderData.amount) || Number(orderData.quantity) || 1;
   const platform = orderData.platform || "Unknown Platform";
   const service = orderData.service || "Unknown Service";
+
   const target =
     orderData.reference ||
     orderData.target ||
     orderData.url ||
     "No Link Provided";
+
   const total = Number(orderData.total) || 0;
 
-  // ⭐ SUPER IMPORTANT — extract email safely
+  // ⭐ EMAIL EXTRACTION — NOW TYPE SAFE
   const email =
-    orderData.email ||
-    pi.metadata?.email ||
-    pi.receipt_email ||
-    pi.charges?.data?.[0]?.billing_details?.email ||
-    "";
+    orderData.email || // From your OrderModal
+    pi.metadata?.email || // Stripe metadata
+    pi.receipt_email || // Stripe receipt email
+    ""; // fallback
 
   // Resolve user_id
   let userId: string | null =
-    (orderData.user_id && orderData.user_id.trim() !== "" ? orderData.user_id : null) ||
-    (pi.metadata?.user_id && pi.metadata.user_id.trim() !== "" ? pi.metadata.user_id : null) ||
+    (orderData.user_id && orderData.user_id.trim() !== ""
+      ? orderData.user_id
+      : null) ||
+    (pi.metadata?.user_id && pi.metadata.user_id.trim() !== ""
+      ? pi.metadata.user_id
+      : null) ||
     null;
 
-  // Lookup user by email
+  // Manual email → user lookup if needed
   if ((!userId || userId === "") && email) {
     try {
       const { data: usersData, error: listErr } =
-        await supabase.auth.admin.listUsers({ page: 1, perPage: 10000 });
+        await supabase.auth.admin.listUsers({
+          page: 1,
+          perPage: 10000,
+        });
 
       if (!listErr && usersData?.users?.length > 0) {
         const match = usersData.users.find((u: any) => u.email === email);
@@ -114,11 +128,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
       }
     } catch (err) {
-      console.error("❌ Supabase manual email lookup failed:", err);
+      console.error("❌ Supabase user lookup failed:", err);
     }
   }
 
-  // Place Followiz order
+  // Send Followiz order
   const serviceId = getServiceId(platform, service);
   let followizOrderId: number | null = null;
 
@@ -135,7 +149,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const fwRes = await axios.post(
         "https://followiz.com/api/v2",
         params.toString(),
-        { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
+        {
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        }
       );
 
       followizOrderId = fwRes.data?.order || null;
@@ -145,11 +161,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     console.error("❌ Followiz Error:", err.response?.data || err);
   }
 
-  // ⭐ INSERT ORDER — EMAIL FIX ADDED HERE
+  // ⭐ INSERT ORDER INTO SUPABASE — EMAIL ADDED
   const { error: dbErr } = await supabase.from("orders").insert([
     {
       user_id: userId || null,
-      email: email || null, // ⭐ ADDED LINE
+      email: email || null, // ⭐ ADDED
       platform,
       service,
       target_url: target,
@@ -163,7 +179,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (dbErr) console.error("❌ Supabase Insert Error:", dbErr);
 
-  // Send confirmation email
+  // Confirmation email
   try {
     if (email) {
       const html = getOrderConfirmationHtml({
@@ -184,7 +200,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       console.log("📧 Confirmation email sent");
     }
   } catch (err) {
-    console.error("❌ Email Send Error:", err);
+    console.error("❌ Email send error:", err);
   }
 
   return res.json({ received: true });
