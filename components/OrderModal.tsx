@@ -250,7 +250,6 @@ const steps = [
 
 /* ========================================================
    DISCOUNT / PUFFERY SYSTEM
-   (used for puffery only, **not** for dynamic price)
 ======================================================== */
 function getDiscountedPrice(realPrice: number) {
   if (!realPrice || realPrice <= 0) {
@@ -361,11 +360,13 @@ export default function OrderModal({
   const [target, setTarget] = useState<string>("");
   const [error, setError] = useState<string>("");
 
-  // ⭐ NEW: locked puffery discount/original (based on base service price)
   const [lockedDiscount, setLockedDiscount] = useState<{
     discount: number;
     original: number;
   } | null>(null);
+
+  // ⭐ ADDED EMAIL STATE
+  const [email, setEmail] = useState("");
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -410,6 +411,7 @@ export default function OrderModal({
     setService(selectedService);
     setQuantity(100);
     setTarget("");
+    setEmail("");
     setError("");
 
     if (selectedService) {
@@ -430,20 +432,20 @@ export default function OrderModal({
   const { pkg, type } =
     service ? getStealthPackage(platform, service) : { pkg: "", type: "" };
 
-  // REAL price based on selected package + amount
   const currentPrice = service ? getPackagePrice(platform, service, quantity) : 0;
 
-  // 🔒 Puffery: locked discount/original. Discounted ALWAYS equals real price.
   const discount = lockedDiscount?.discount ?? 0;
   const original = lockedDiscount?.original ?? currentPrice;
   const discounted = currentPrice;
 
+  // ⭐ EMAIL INCLUDED IN ORDER
   const orderToSend = {
     package: pkg,
     type,
     amount: quantity,
     reference: target,
-    total: Number(discounted.toFixed(2)), // real price only
+    email, // ⭐ ADDED
+    total: Number(discounted.toFixed(2)),
     platform: platform.key,
     service: service?.type.toString(),
   };
@@ -454,7 +456,7 @@ export default function OrderModal({
   }
 
   /* ========================================================
-     UPDATED: VALIDATION USING SANITIZER
+     UPDATED: DETAILS VALIDATION WITH EMAIL
   ======================================================== */
   function handleNextFromDetails() {
     if (!service) {
@@ -464,8 +466,8 @@ export default function OrderModal({
 
     const cleaned = sanitizeFollowizInput(target, service.type.toString());
     const needsUrl =
-      service.type.toString().toLowerCase() === "likes" ||
-      service.type.toString().toLowerCase() === "views";
+      service.type.toLowerCase() === "likes" ||
+      service.type.toLowerCase() === "views";
 
     if (!cleaned) {
       setError(
@@ -481,12 +483,18 @@ export default function OrderModal({
       return;
     }
 
+    // ⭐ EMAIL VALIDATION
+    if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
+      setError("Enter a valid email.");
+      return;
+    }
+
     setError("");
     setStep(3);
   }
 
   /* ========================================================
-     UPDATED: CHECKOUT USING SANITIZER
+     UPDATED: CHECKOUT USING SANITIZER + EMAIL
   ======================================================== */
   function handleSecureCheckout(e: React.FormEvent) {
     e.preventDefault();
@@ -498,8 +506,8 @@ export default function OrderModal({
 
     const cleaned = sanitizeFollowizInput(target, service.type.toString());
     const needsUrl =
-      service.type.toString().toLowerCase() === "likes" ||
-      service.type.toString().toLowerCase() === "views";
+      service.type.toLowerCase() === "likes" ||
+      service.type.toLowerCase() === "views";
 
     if (!cleaned) {
       setError(
@@ -516,6 +524,7 @@ export default function OrderModal({
           JSON.stringify({
             ...orderToSend,
             reference: cleaned,
+            email, // ⭐ ADDED
           })
         )
       )
@@ -964,6 +973,24 @@ export default function OrderModal({
                       username/link is entered <b>correctly</b>. Incorrect
                       details can delay delivery.
                     </span>
+                  </div>
+                </div>
+
+                {/* ⭐ EMAIL FIELD */}
+                <div className="mt-6">
+                  <label className="text-sm font-semibold text-[#007BFF] mb-1 block">
+                    Email (Required)
+                  </label>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="your@email.com"
+                    className="w-full border border-[#D6E4FF] rounded-xl p-3 text-sm shadow-sm focus:ring-2 focus:ring-[#007BFF] focus:border-[#007BFF]"
+                    required
+                  />
+                  <div className="text-xs text-[#64748B] mt-1">
+                    We’ll send your order ID and tracking updates here.
                   </div>
                 </div>
 
