@@ -21,10 +21,15 @@ export default async function handler(
 
     const intent = await createPaymentIntent({
       amount,
+
+      // ⭐ METADATA UPDATED
       metadata: {
         ...metadata,
-        user_id: user_id || "", // ⭐ FIXED
+        email: email || "",     // ⭐ ADDED
+        user_id: user_id || "", // ⭐ EXISTING FIX
       },
+
+      // ⭐ STRIPE CUSTOMER EMAIL (for receipts + fallback)
       customerEmail: email || null,
     });
 

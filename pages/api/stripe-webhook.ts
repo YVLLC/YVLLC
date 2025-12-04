@@ -39,7 +39,6 @@ function getServiceId(platform: string, service: string): number | null {
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") return res.status(405).end();
 
-  // Read raw body for Stripe signature verification
   const chunks: Buffer[] = [];
   for await (const chunk of req) chunks.push(chunk);
   const body = Buffer.concat(chunks);
@@ -47,7 +46,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const sig = req.headers["stripe-signature"] as string;
   let event: Stripe.Event;
 
-  // Verify Stripe signature
   try {
     event = stripe.webhooks.constructEvent(
       body,
@@ -59,7 +57,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(400).send("Webhook signature error");
   }
 
-  // Only handle successful payments
   if (event.type !== "payment_intent.succeeded") {
     return res.json({ received: true });
   }
@@ -79,7 +76,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   // Extract order info
-  const quantity = Number(orderData.quantity) || 1;
+  const quantity = Number(orderData.amount) || Number(orderData.quantity) || 1;
   const platform = orderData.platform || "Unknown Platform";
   const service = orderData.service || "Unknown Service";
   const target =
@@ -89,11 +86,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     "No Link Provided";
   const total = Number(orderData.total) || 0;
 
-  // Extract email
+  // ⭐ SUPER IMPORTANT — extract email safely
   const email =
     orderData.email ||
     pi.metadata?.email ||
     pi.receipt_email ||
+    pi.charges?.data?.[0]?.billing_details?.email ||
     "";
 
   // Resolve user_id
@@ -102,10 +100,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     (pi.metadata?.user_id && pi.metadata.user_id.trim() !== "" ? pi.metadata.user_id : null) ||
     null;
 
-  // 🔍 If still null → manually search Supabase users for matching email
+  // Lookup user by email
   if ((!userId || userId === "") && email) {
     try {
-      // Fetch first page of users (up to 10,000)
       const { data: usersData, error: listErr } =
         await supabase.auth.admin.listUsers({ page: 1, perPage: 10000 });
 
@@ -121,11 +118,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
   }
 
-  // Followiz service mapping
-  const serviceId = getServiceId(platform, service);
-
   // Place Followiz order
+  const serviceId = getServiceId(platform, service);
   let followizOrderId: number | null = null;
+
   try {
     if (serviceId) {
       const params = new URLSearchParams({
@@ -149,10 +145,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     console.error("❌ Followiz Error:", err.response?.data || err);
   }
 
-  // Insert order
+  // ⭐ INSERT ORDER — EMAIL FIX ADDED HERE
   const { error: dbErr } = await supabase.from("orders").insert([
     {
       user_id: userId || null,
+      email: email || null, // ⭐ ADDED LINE
       platform,
       service,
       target_url: target,
