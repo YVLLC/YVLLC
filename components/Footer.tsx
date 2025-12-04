@@ -57,7 +57,7 @@ const PaymentIcons = () => (
 const SocialLinks = () => (
   <div className="flex gap-3 mt-5">
     <a
-      href="https://instagram.com"
+      href="https://www.instagram.com/yesviralapp"
       target="_blank"
       rel="noopener"
       aria-label="Instagram"
