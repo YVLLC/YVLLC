@@ -9,7 +9,6 @@ import {
   X,
   CheckCircle,
   Tag,
-  Play,
   HelpCircle,
 } from "lucide-react";
 
@@ -273,7 +272,11 @@ function getDiscountedPrice(realPrice: number) {
 /* ========================================================
    PACKAGE PRICE RESOLVER
 ======================================================== */
-function getPackagePrice(platform: Platform, service: Service, quantity: number): number {
+function getPackagePrice(
+  platform: Platform,
+  service: Service,
+  quantity: number
+): number {
   if (service.packages && service.packages[quantity]) {
     return service.packages[quantity];
   }
@@ -283,23 +286,36 @@ function getPackagePrice(platform: Platform, service: Service, quantity: number)
 /* ========================================================
    PACKAGE NAME GENERATOR
 ======================================================== */
-function getStealthPackage(platform: Platform, service: Service): StealthPackageResult {
+function getStealthPackage(
+  platform: Platform,
+  service: Service
+): StealthPackageResult {
   let pkg = "Premium Package";
   let type = "Standard";
 
-  if (platform.key === "INSTAGRAM" && service.type === "Followers") pkg = "High-Quality Followers";
-  if (platform.key === "INSTAGRAM" && service.type === "Likes") pkg = "High-Quality Likes";
-  if (platform.key === "INSTAGRAM" && service.type === "Views") pkg = "High-Quality Views";
+  if (platform.key === "INSTAGRAM" && service.type === "Followers")
+    pkg = "High-Quality Followers";
+  if (platform.key === "INSTAGRAM" && service.type === "Likes")
+    pkg = "High-Quality Likes";
+  if (platform.key === "INSTAGRAM" && service.type === "Views")
+    pkg = "High-Quality Views";
 
-  if (platform.key === "TIKTOK" && service.type === "Followers") pkg = "High-Quality Followers";
-  if (platform.key === "TIKTOK" && service.type === "Likes") pkg = "High-Quality Likes";
-  if (platform.key === "TIKTOK" && service.type === "Views") pkg = "High-Quality Views";
+  if (platform.key === "TIKTOK" && service.type === "Followers")
+    pkg = "High-Quality Followers";
+  if (platform.key === "TIKTOK" && service.type === "Likes")
+    pkg = "High-Quality Likes";
+  if (platform.key === "TIKTOK" && service.type === "Views")
+    pkg = "High-Quality Views";
 
-  if (platform.key === "YOUTUBE" && service.type === "Subscribers") pkg = "High-Quality Subscribers";
-  if (platform.key === "YOUTUBE" && service.type === "Likes") pkg = "High-Quality Likes";
-  if (platform.key === "YOUTUBE" && service.type === "Views") pkg = "High-Quality Views";
+  if (platform.key === "YOUTUBE" && service.type === "Subscribers")
+    pkg = "High-Quality Subscribers";
+  if (platform.key === "YOUTUBE" && service.type === "Likes")
+    pkg = "High-Quality Likes";
+  if (platform.key === "YOUTUBE" && service.type === "Views")
+    pkg = "High-Quality Views";
 
-  if (["Followers", "Subscribers", "Likes", "Views"].includes(service.type)) type = "PREMIUM";
+  if (["Followers", "Subscribers", "Likes", "Views"].includes(service.type))
+    type = "PREMIUM";
 
   return { pkg, type };
 }
@@ -311,17 +327,26 @@ function getQuickAmounts(platform: Platform, service: Service) {
   const type = service.type.toString().toLowerCase();
   const key = platform.key.toUpperCase();
 
-  if (key === "INSTAGRAM" && type === "followers") return [50, 100, 250, 500, 1000, 2500, 5000];
-  if (key === "INSTAGRAM" && type === "likes") return [50, 100, 250, 500, 1000, 2500, 5000];
-  if (key === "INSTAGRAM" && type === "views") return [500, 1000, 2500, 5000, 10000, 25000, 50000];
+  if (key === "INSTAGRAM" && type === "followers")
+    return [50, 100, 250, 500, 1000, 2500, 5000];
+  if (key === "INSTAGRAM" && type === "likes")
+    return [50, 100, 250, 500, 1000, 2500, 5000];
+  if (key === "INSTAGRAM" && type === "views")
+    return [500, 1000, 2500, 5000, 10000, 25000, 50000];
 
-  if (key === "TIKTOK" && type === "followers") return [50, 100, 250, 500, 1000, 2500, 5000];
-  if (key === "TIKTOK" && type === "likes") return [50, 100, 250, 500, 1000, 2500, 5000];
-  if (key === "TIKTOK" && type === "views") return [1000, 2500, 5000, 10000, 25000, 50000];
+  if (key === "TIKTOK" && type === "followers")
+    return [50, 100, 250, 500, 1000, 2500, 5000];
+  if (key === "TIKTOK" && type === "likes")
+    return [50, 100, 250, 500, 1000, 2500, 5000];
+  if (key === "TIKTOK" && type === "views")
+    return [1000, 2500, 5000, 10000, 25000, 50000];
 
-  if (key === "YOUTUBE" && type === "subscribers") return [50, 100, 250, 500, 1000, 2500, 5000];
-  if (key === "YOUTUBE" && type === "likes") return [50, 100, 250, 500, 1000, 2500, 5000];
-  if (key === "YOUTUBE" && type === "views") return [500, 1000, 2500, 5000, 10000, 25000, 50000];
+  if (key === "YOUTUBE" && type === "subscribers")
+    return [50, 100, 250, 500, 1000, 2500, 5000];
+  if (key === "YOUTUBE" && type === "likes")
+    return [50, 100, 250, 500, 1000, 2500, 5000];
+  if (key === "YOUTUBE" && type === "views")
+    return [500, 1000, 2500, 5000, 10000, 25000, 50000];
 
   return [100, 500, 1000, 2000, 5000, 10000];
 }
@@ -331,7 +356,8 @@ function getQuickAmounts(platform: Platform, service: Service) {
 ======================================================== */
 function hashToHsl(seed: string, s = 65, l = 58) {
   let h = 0;
-  for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) >>> 0;
+  for (let i = 0; i < seed.length; i++)
+    h = (h * 31 + seed.charCodeAt(i)) >>> 0;
   return `hsl(${h % 360} ${s}% ${l}%)`;
 }
 
@@ -365,7 +391,7 @@ export default function OrderModal({
     original: number;
   } | null>(null);
 
-  // ⭐ ADDED EMAIL STATE
+  // Email state
   const [email, setEmail] = useState("");
 
   useEffect(() => {
@@ -385,7 +411,9 @@ export default function OrderModal({
     if (initialPlatform) {
       const lower = initialPlatform.toLowerCase();
       const found = PLATFORMS.find(
-        (p) => p.key.toLowerCase() === lower || p.name.toLowerCase() === lower
+        (p) =>
+          p.key.toLowerCase() === lower ||
+          p.name.toLowerCase() === lower
       );
 
       if (found) {
@@ -432,19 +460,22 @@ export default function OrderModal({
   const { pkg, type } =
     service ? getStealthPackage(platform, service) : { pkg: "", type: "" };
 
-  const currentPrice = service ? getPackagePrice(platform, service, quantity) : 0;
+  const currentPrice = service
+    ? getPackagePrice(platform, service, quantity)
+    : 0;
 
   const discount = lockedDiscount?.discount ?? 0;
   const original = lockedDiscount?.original ?? currentPrice;
   const discounted = currentPrice;
 
-  // ⭐ EMAIL INCLUDED IN ORDER
+  // Email included, quantity added (and amount kept for backwards compat)
   const orderToSend = {
     package: pkg,
     type,
+    quantity,
     amount: quantity,
     reference: target,
-    email, // ⭐ ADDED
+    email,
     total: Number(discounted.toFixed(2)),
     platform: platform.key,
     service: service?.type.toString(),
@@ -456,7 +487,7 @@ export default function OrderModal({
   }
 
   /* ========================================================
-     UPDATED: DETAILS VALIDATION WITH EMAIL
+     DETAILS VALIDATION WITH EMAIL
   ======================================================== */
   function handleNextFromDetails() {
     if (!service) {
@@ -464,10 +495,13 @@ export default function OrderModal({
       return;
     }
 
-    const cleaned = sanitizeFollowizInput(target, service.type.toString());
+    const cleaned = sanitizeFollowizInput(
+      target,
+      service.type.toString()
+    );
     const needsUrl =
-      service.type.toLowerCase() === "likes" ||
-      service.type.toLowerCase() === "views";
+      service.type.toString().toLowerCase() === "likes" ||
+      service.type.toString().toLowerCase() === "views";
 
     if (!cleaned) {
       setError(
@@ -483,7 +517,6 @@ export default function OrderModal({
       return;
     }
 
-    // ⭐ EMAIL VALIDATION
     if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
       setError("Enter a valid email.");
       return;
@@ -494,7 +527,7 @@ export default function OrderModal({
   }
 
   /* ========================================================
-     UPDATED: CHECKOUT USING SANITIZER + EMAIL
+     CHECKOUT USING SANITIZER + EMAIL
   ======================================================== */
   function handleSecureCheckout(e: React.FormEvent) {
     e.preventDefault();
@@ -504,10 +537,13 @@ export default function OrderModal({
       return;
     }
 
-    const cleaned = sanitizeFollowizInput(target, service.type.toString());
+    const cleaned = sanitizeFollowizInput(
+      target,
+      service.type.toString()
+    );
     const needsUrl =
-      service.type.toLowerCase() === "likes" ||
-      service.type.toLowerCase() === "views";
+      service.type.toString().toLowerCase() === "likes" ||
+      service.type.toString().toLowerCase() === "views";
 
     if (!cleaned) {
       setError(
@@ -518,13 +554,18 @@ export default function OrderModal({
       return;
     }
 
+    if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
+      setError("Enter a valid email.");
+      return;
+    }
+
     const encoded = btoa(
       unescape(
         encodeURIComponent(
           JSON.stringify({
             ...orderToSend,
             reference: cleaned,
-            email, // ⭐ ADDED
+            email,
           })
         )
       )
@@ -535,7 +576,10 @@ export default function OrderModal({
 
   function getTargetLabel() {
     if (!service) return "Profile or Link";
-    if (service.type === "Followers" || service.type === "Subscribers")
+    if (
+      service.type === "Followers" ||
+      service.type === "Subscribers"
+    )
       return "Profile or Username";
     return "Post / Video Link";
   }
@@ -543,7 +587,10 @@ export default function OrderModal({
   function getTargetPlaceholder() {
     if (!service) return "Enter profile or link";
 
-    if (service.type === "Followers" || service.type === "Subscribers") {
+    if (
+      service.type === "Followers" ||
+      service.type === "Subscribers"
+    ) {
       if (platform.key.toLowerCase() === "instagram")
         return "@username or instagram.com/username";
       if (platform.key.toLowerCase() === "tiktok")
@@ -669,12 +716,15 @@ export default function OrderModal({
   }
 
   /* ========================================================
-     NEW: FORMAT REFERENCE FOR REVIEW (CLICKABLE LINK)
+     FORMAT REFERENCE FOR REVIEW (CLICKABLE LINK)
   ======================================================== */
   function formatReference(): { display: string; href: string } {
     if (!service) return { display: "", href: "" };
 
-    const cleaned = sanitizeFollowizInput(target, service.type.toString());
+    const cleaned = sanitizeFollowizInput(
+      target,
+      service.type.toString()
+    );
     const rawTrimmed = target.trim();
     const needsUrl =
       service.type.toString().toLowerCase() === "likes" ||
@@ -695,8 +745,10 @@ export default function OrderModal({
     const key = platform.key.toLowerCase();
 
     if (key === "instagram") href = `https://instagram.com/${usernameBase}`;
-    else if (key === "tiktok") href = `https://www.tiktok.com/@${usernameBase}`;
-    else if (key === "youtube") href = `https://www.youtube.com/@${usernameBase}`;
+    else if (key === "tiktok")
+      href = `https://www.tiktok.com/@${usernameBase}`;
+    else if (key === "youtube")
+      href = `https://www.youtube.com/@${usernameBase}`;
 
     return { display, href };
   }
@@ -795,10 +847,11 @@ export default function OrderModal({
               </h3>
               <p className="text-center text-sm text-[#64748B] mt-2">
                 Trust YesViral’s Top-Rated Growth services to Boost your
-                visibility, Elevate your presence and deliver High-Quality results.
+                visibility, Elevate your presence and deliver High-Quality
+                results.
               </p>
 
-              {/* ⭐ 4.8/5 STAR RATING BELOW THE TEXT */}
+              {/* 4.8/5 STAR RATING */}
               <div className="mt-3 flex items-center justify-center gap-1">
                 <div className="flex items-center">
                   {Array.from({ length: 5 }).map((_, i) => (
@@ -872,7 +925,10 @@ export default function OrderModal({
                       onClick={() => {
                         setService(s);
                         const d = getDiscountedPrice(s.price);
-                        setLockedDiscount({ discount: d.discount, original: d.original });
+                        setLockedDiscount({
+                          discount: d.discount,
+                          original: d.original,
+                        });
                         setStep(2);
                       }}
                       className={
@@ -938,9 +994,11 @@ export default function OrderModal({
               </h3>
 
               <div className="mt-6 space-y-6">
+                {/* TARGET / USERNAME FIELD */}
                 <div>
                   <label className="text-sm font-semibold text-[#007BFF] mb-1 block">
-                    {getTargetLabel()}
+                    {getTargetLabel()}{" "}
+                    <span className="text-[#EF4444]">*</span>
                   </label>
                   <input
                     value={target}
@@ -954,7 +1012,7 @@ export default function OrderModal({
                       : "Use @username or full profile URL."}
                   </div>
 
-                  {/* PREMIUM SAFETY WARNING */}
+                  {/* SAFETY WARNING */}
                   <div className="mt-2 flex items-start gap-2 text-xs text-[#EF4444] bg-[#FFECEC] border border-[#FFBDBD] px-3 py-2 rounded-lg shadow-sm">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -976,10 +1034,10 @@ export default function OrderModal({
                   </div>
                 </div>
 
-                {/* ⭐ EMAIL FIELD */}
+                {/* EMAIL FIELD */}
                 <div className="mt-6">
                   <label className="text-sm font-semibold text-[#007BFF] mb-1 block">
-                    Email (Required)
+                    Email <span className="text-[#EF4444]">*</span>
                   </label>
                   <input
                     type="email"
@@ -987,7 +1045,6 @@ export default function OrderModal({
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="your@email.com"
                     className="w-full border border-[#D6E4FF] rounded-xl p-3 text-sm shadow-sm focus:ring-2 focus:ring-[#007BFF] focus:border-[#007BFF]"
-                    required
                   />
                   <div className="text-xs text-[#64748B] mt-1">
                     We’ll send your order ID and tracking updates here.
