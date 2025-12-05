@@ -139,31 +139,34 @@ export default function Home() {
 
       <main className="px-4 sm:px-6 max-w-7xl mx-auto py-4 sm:py-8 space-y-6 md:space-y-10 select-none">
 
-        {/* HERO SECTION */}
-        <section className="relative flex flex-col-reverse md:grid md:grid-cols-2 md:gap-8 items-center">
+        {/* ================= HERO SECTION ================= */}
+        <section className="flex flex-col-reverse md:grid md:grid-cols-2 md:gap-10 items-center">
 
           {/* LEFT SIDE */}
           <div className="w-full flex flex-col items-center md:items-start space-y-7 text-center md:text-left">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#E8F1FF] rounded-full text-xs font-bold text-[#007BFF] tracking-wide shadow-sm">
+
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#E8F1FF] rounded-full text-xs font-bold text-[#007BFF] shadow-sm">
               <Star size={18} className="text-yellow-400 star-animate" />
               Trusted by 100,000+ Creators
             </div>
 
-            <h1 className="text-4xl sm:text-5xl font-extrabold text-[#007BFF] leading-snug drop-shadow-sm">
+            <h1 className="text-4xl sm:text-5xl font-extrabold text-[#007BFF] leading-snug">
               Boost Your Social Presence Instantly.
-              <br className="hidden sm:block" />
+              <br />
               <span className="text-[#005FCC]">
                 Premium Growth for Instagram, TikTok, YouTube & More.
               </span>
             </h1>
 
             <p className="text-[#444] text-base sm:text-lg max-w-md sm:max-w-xl font-medium">
-              Unlock Social Growth with YesViral — Trusted by Creators and Brands for High-Quality Followers, Likes, & Views powered by Exclusive Private Networks built for Speed, Trust, and Results.
+              Unlock Social Growth with YesViral — Trusted by Creators and Brands for High-Quality
+              Followers, Likes, & Views powered by Exclusive Private Networks built for Speed,
+              Trust, and Results.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto justify-center md:justify-start">
               <button
-                className="bg-[#007BFF] text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:bg-[#005FCC] transition text-base sm:text-lg"
+                className="bg-[#007BFF] text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:bg-[#005FCC]"
                 onClick={openOrderModalPlatform}
               >
                 Get Started
@@ -171,43 +174,52 @@ export default function Home() {
 
               <Link
                 href="/track-order"
-                className="bg-white border border-[#CFE4FF] text-[#007BFF] font-semibold px-6 py-3 rounded-xl shadow hover:bg-[#F5FAFF] transition text-base sm:text-lg text-center"
+                className="bg-white border border-[#CFE4FF] text-[#007BFF] font-semibold px-6 py-3 rounded-xl shadow hover:bg-[#F5FAFF] text-center"
               >
                 Track Order
               </Link>
             </div>
 
             <span className="text-xs text-[#555] font-medium">
-              🔒 SSL-encrypted payments · ⭐ 4.8/5 from 10,000+ clients · ⚡ Orders typically start in minutes
+              🔒 SSL-encrypted payments · ⭐ 4.8/5 from 10,000+ clients · ⚡ Orders typically start
+              in minutes
             </span>
           </div>
 
-          {/* RIGHT SIDE — HERO IMAGE + CARDS HUGGING IT */}
-          <div className="relative hidden md:flex items-center justify-center">
+          {/* RIGHT SIDE — HERO IMAGE + ORBIT CARDS */}
+          <div className="relative hidden md:flex justify-center">
             <div className="relative inline-block">
 
-              {/* TOP LEFT CARD */}
-              <div className="absolute top-3 left-3 bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 yv-card-1">
-                <span className="text-[#007BFF] text-lg">🌍</span>
-                <p className="text-[13px] font-semibold text-[#111]">Trusted Worldwide</p>
-              </div>
-
-              {/* TOP RIGHT CARD */}
-              <div className="absolute top-3 right-3 bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 yv-card-2">
+              {/* TOP RIGHT */}
+              <div className="absolute -top-3 -right-3 bg-white border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg yv-card-1 flex items-center gap-2">
                 <span className="text-[#007BFF] text-lg">📦</span>
-                <p className="text-[13px] font-semibold text-[#111]">Delivered Over 5M Orders</p>
+                <p className="text-[13px] font-semibold text-[#111]">
+                  Delivered Over 5M Orders
+                </p>
               </div>
 
-              {/* BOTTOM LEFT CARD */}
-              <div className="absolute bottom-3 left-3 bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 yv-card-3">
+              {/* TOP LEFT */}
+              <div className="absolute -top-3 -left-3 bg-white border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg yv-card-2 flex items-center gap-2">
+                <span className="text-[#007BFF] text-lg">🌍</span>
+                <p className="text-[13px] font-semibold text-[#111]">
+                  Trusted Worldwide
+                </p>
+              </div>
+
+              {/* BOTTOM LEFT — SPACED FIX */}
+              <div className="absolute bottom-6 left-6 bg-white border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg yv-card-3 flex items-center gap-2">
                 <span className="text-[#007BFF] text-lg">🔒</span>
-                <p className="text-[13px] font-semibold text-[#111]">Secure Growth Network</p>
+                <p className="text-[13px] font-semibold text-[#111]">
+                  Secure Growth Network
+                </p>
               </div>
 
-              {/* BOTTOM RIGHT CARD */}
-              <div className="absolute bottom-3 right-3 bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 yv-card-4">
+              {/* BOTTOM RIGHT — SPACED FIX */}
+              <div className="absolute bottom-6 right-6 bg-white border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg yv-card-4 flex items-center gap-2">
                 <span className="text-[#007BFF] text-lg">⚡</span>
-                <p className="text-[13px] font-semibold text-[#111]">Ultra-Fast Delivery</p>
+                <p className="text-[13px] font-semibold text-[#111]">
+                  Ultra-Fast Delivery
+                </p>
               </div>
 
               <Image
@@ -215,7 +227,7 @@ export default function Home() {
                 alt="YesViral Notifications Illustration"
                 width={420}
                 height={420}
-                className="w-full max-w-[420px] h-auto object-contain drop-shadow-2xl"
+                className="drop-shadow-2xl"
                 draggable={false}
                 priority
               />
@@ -228,7 +240,9 @@ export default function Home() {
           <h2 className="text-center text-4xl font-extrabold">Place Your Order Instantly</h2>
           <p className="text-[#444] text-center max-w-2xl mx-auto">
             Choose your service — No logins needed, No Hassle.{" "}
-            <span className="font-semibold text-[#007BFF]">Instant delivery starts within minutes.</span>
+            <span className="font-semibold text-[#007BFF]">
+              Instant delivery starts within minutes.
+            </span>
           </p>
 
           <div className="flex items-center justify-center gap-1 mb-6 mt-1">
@@ -236,49 +250,51 @@ export default function Home() {
               <Star key={i} size={20} className="text-[#007BFF] fill-[#007BFF]" />
             ))}
             <Star size={20} className="text-[#007BFF] fill-[#007BFF] opacity-50" />
-            <span className="ml-2 font-semibold text-[#007BFF] text-sm">4.8 / 5 rating</span>
+            <span className="ml-2 font-semibold text-[#007BFF] text-sm">
+              4.8 / 5 rating
+            </span>
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {SERVICES.map(
-              ({ name, price, description, icon, tag, count, key }, idx) => (
-                <div
-                  key={idx}
-                  className="bg-white border-2 border-[#CFE4FF] rounded-2xl p-7 shadow-md hover:shadow-2xl transition group flex flex-col gap-3 relative"
-                >
-                  {tag && (
-                    <span className="absolute top-4 right-5 bg-[#E8F1FF] text-[#007BFF] text-xs font-bold px-3 py-1 rounded-full shadow">
-                      {tag}
-                    </span>
-                  )}
+            {SERVICES.map(({ name, price, description, icon, tag, count, key }, idx) => (
+              <div
+                key={idx}
+                className="bg-white border-2 border-[#CFE4FF] rounded-2xl p-7 shadow-md hover:shadow-2xl transition flex flex-col gap-3 relative"
+              >
+                {tag && (
+                  <span className="absolute top-4 right-5 bg-[#E8F1FF] text-[#007BFF] text-xs font-bold px-3 py-1 rounded-full shadow">
+                    {tag}
+                  </span>
+                )}
 
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="bg-[#F5FAFF] p-2 rounded-full">{icon}</div>
-                    <h3 className="text-xl font-bold text-[#111]">{name}</h3>
-                  </div>
-
-                  <ul className="text-sm text-[#444] pl-5 list-disc space-y-1">
-                    {description.map((p, i) => (
-                      <li key={i}>{p}</li>
-                    ))}
-                  </ul>
-
-                  <div className="flex items-center gap-2 mt-2">
-                    <span className="text-sm font-medium text-[#007BFF]">{price}</span>
-                    <span className="text-xs text-[#111] bg-[#E8F1FF] px-2 py-0.5 rounded">
-                      {count}
-                    </span>
-                  </div>
-
-                  <button
-                    className="mt-4 w-full bg-[#007BFF] text-white text-sm px-4 py-2 rounded-lg font-bold hover:bg-[#005FCC] shadow transition transform hover:scale-[1.03] active:scale-95"
-                    onClick={() => openOrderModalService(key)}
-                  >
-                    Order
-                  </button>
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="bg-[#F5FAFF] p-2 rounded-full">{icon}</div>
+                  <h3 className="text-xl font-bold text-[#111]">{name}</h3>
                 </div>
-              )
-            )}
+
+                <ul className="text-sm text-[#444] pl-5 list-disc space-y-1">
+                  {description.map((p, i) => (
+                    <li key={i}>{p}</li>
+                  ))}
+                </ul>
+
+                <div className="flex items-center gap-2 mt-2">
+                  <span className="text-sm font-medium text-[#007BFF]">
+                    {price}
+                  </span>
+                  <span className="text-xs text-[#111] bg-[#E8F1FF] px-2 py-0.5 rounded">
+                    {count}
+                  </span>
+                </div>
+
+                <button
+                  className="mt-4 w-full bg-[#007BFF] text-white text-sm px-4 py-2 rounded-lg font-bold hover:bg-[#005FCC] shadow transition"
+                  onClick={() => openOrderModalService(key)}
+                >
+                  Order
+                </button>
+              </div>
+            ))}
           </div>
         </section>
 
@@ -329,31 +345,28 @@ export default function Home() {
           </div>
         </section>
 
-        {/* HOW IT WORKS */}
+        {/* SECTIONS BELOW LEFT UNCHANGED */}
         <section className="py-2 md:py-3 mb-2 md:mb-3">
           <HowItWorks />
         </section>
 
-        {/* OUR PROMISE */}
         <section className="py-2 md:py-3">
           <OurPromise />
         </section>
 
-        {/* TESTIMONIALS */}
         <section className="py-2 md:py-3">
           <Testimonials />
         </section>
 
-        {/* FAQ */}
         <section className="mb-4 md:mb-6">
           <FAQ faqs={FAQS} />
         </section>
 
-        {/* FINAL CTA */}
         <section className="text-center space-y-4 mt-6 py-4 md:py-6">
           <h2 className="text-4xl font-extrabold mb-2">Ready to try YesViral?</h2>
           <p className="text-[#444] text-lg mb-6">
-            Join over 100,000+ Creators already growing with YesViral—choose your service and unlock High-Quality results in minutes.
+            Join over 100,000+ Creators already growing with YesViral—choose your service and unlock
+            High-Quality results in minutes.
           </p>
           <div className="mt-6 mb-6">
             <button
@@ -370,55 +383,25 @@ export default function Home() {
 
       <style jsx global>{`
         @keyframes starGlow {
-          0% {
-            transform: rotate(0deg) scale(1);
-            filter: drop-shadow(0 0 0 #ffd700);
-          }
-          30% {
-            transform: rotate(8deg) scale(1.16);
-            filter: drop-shadow(0 0 8px #ffd700);
-          }
-          55% {
-            transform: rotate(-7deg) scale(1.09);
-            filter: drop-shadow(0 0 12px #fff78a);
-          }
-          80% {
-            transform: rotate(0deg) scale(1.13);
-            filter: drop-shadow(0 0 10px #ffd700);
-          }
-          100% {
-            transform: rotate(0deg) scale(1);
-            filter: drop-shadow(0 0 0 #ffd700);
-          }
+          0% { transform:rotate(0) scale(1); filter:drop-shadow(0 0 0 #ffd700); }
+          30% { transform:rotate(8deg) scale(1.16); filter:drop-shadow(0 0 8px #ffd700); }
+          55% { transform:rotate(-7deg) scale(1.09); filter:drop-shadow(0 0 12px #fff78a); }
+          80% { transform:rotate(0) scale(1.13); filter:drop-shadow(0 0 10px #ffd700); }
+          100% { transform:rotate(0) scale(1); filter:drop-shadow(0 0 0 #ffd700); }
         }
         .star-animate {
-          animation: starGlow 2.6s cubic-bezier(0.65, 0.05, 0.36, 1) infinite;
-          will-change: transform, filter;
+          animation: starGlow 2.6s cubic-bezier(0.65,0.05,0.36,1) infinite;
         }
 
         @keyframes yvFloat {
-          0% {
-            transform: translateY(0px);
-          }
-          50% {
-            transform: translateY(-10px);
-          }
-          100% {
-            transform: translateY(0px);
-          }
+          0% { transform:translateY(0); }
+          50% { transform:translateY(-10px); }
+          100% { transform:translateY(0); }
         }
-        .yv-card-1 {
-          animation: yvFloat 7s ease-in-out infinite;
-        }
-        .yv-card-2 {
-          animation: yvFloat 8s ease-in-out infinite;
-        }
-        .yv-card-3 {
-          animation: yvFloat 9s ease-in-out infinite;
-        }
-        .yv-card-4 {
-          animation: yvFloat 10s ease-in-out infinite;
-        }
+        .yv-card-1 { animation: yvFloat 7s ease-in-out infinite; }
+        .yv-card-2 { animation: yvFloat 8s ease-in-out infinite; }
+        .yv-card-3 { animation: yvFloat 9s ease-in-out infinite; }
+        .yv-card-4 { animation: yvFloat 10s ease-in-out infinite; }
       `}</style>
     </>
   );
