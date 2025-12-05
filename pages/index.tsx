@@ -138,17 +138,19 @@ export default function Home() {
       />
 
       <main className="px-4 sm:px-6 max-w-7xl mx-auto py-4 sm:py-8 space-y-6 md:space-y-10 select-none">
+
         {/* HERO SECTION */}
-        <section className="relative flex flex-col-reverse md:grid md:grid-cols-2 items-center">
+        <section className="relative flex flex-col-reverse md:grid md:grid-cols-2 md:gap-8 items-center">
+
           {/* LEFT SIDE */}
           <div className="w-full flex flex-col items-center md:items-start space-y-7 text-center md:text-left">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#E8F1FF] rounded-full mt-6 text-xs font-bold text-[#007BFF] tracking-wide shadow-sm">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#E8F1FF] rounded-full text-xs font-bold text-[#007BFF] tracking-wide shadow-sm">
               <Star size={18} className="text-yellow-400 star-animate" />
               Trusted by 100,000+ Creators
             </div>
 
             <h1 className="text-4xl sm:text-5xl font-extrabold text-[#007BFF] leading-snug drop-shadow-sm">
-              Boost Your Social Presence Instantly.{" "}
+              Boost Your Social Presence Instantly.
               <br className="hidden sm:block" />
               <span className="text-[#005FCC]">
                 Premium Growth for Instagram, TikTok, YouTube & More.
@@ -156,12 +158,10 @@ export default function Home() {
             </h1>
 
             <p className="text-[#444] text-base sm:text-lg max-w-md sm:max-w-xl font-medium">
-              Unlock Social Growth with YesViral — Trusted by Creators and Brands for High-Quality
-              Followers, Likes, & Views powered by Exclusive Private Networks built for Speed,
-              Trust, and Results.
+              Unlock Social Growth with YesViral — Trusted by Creators and Brands for High-Quality Followers, Likes, & Views powered by Exclusive Private Networks built for Speed, Trust, and Results.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+            <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto justify-center md:justify-start">
               <button
                 className="bg-[#007BFF] text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:bg-[#005FCC] transition text-base sm:text-lg"
                 onClick={openOrderModalPlatform}
@@ -178,46 +178,45 @@ export default function Home() {
             </div>
 
             <span className="text-xs text-[#555] font-medium">
-              🔒 SSL-encrypted payments · ⭐ 4.8/5 from 10,000+ clients · ⚡ Orders typically start
-              in minutes
+              🔒 SSL-encrypted payments · ⭐ 4.8/5 from 10,000+ clients · ⚡ Orders typically start in minutes
             </span>
           </div>
 
-          {/* RIGHT SIDE — IMAGE + BADGES HUGGING IT */}
-          <div className="relative flex justify-center items-center w-full mt-10 md:mt-0">
+          {/* RIGHT SIDE — FIXED VERSION */}
+          <div className="relative hidden md:flex items-center justify-center">
             <div className="relative inline-block">
-              {/* TOP LEFT BADGE */}
-              <div className="absolute -top-6 -left-6 bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 yv-card-1">
-                <span className="text-[#007BFF] text-lg">🌍</span>
-                <p className="text-[13px] font-semibold text-[#111]">Trusted Worldwide</p>
+
+              {/* TOP LEFT */}
+              <div className="absolute -top-6 -left-6 bg-white shadow-md rounded-xl px-4 py-2 flex items-center gap-2">
+                <span className="text-[#007BFF]">🌍</span>
+                <p className="text-[13px] font-semibold">Trusted Worldwide</p>
               </div>
 
-              {/* TOP RIGHT BADGE */}
-              <div className="absolute -top-6 -right-6 bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 yv-card-2">
-                <span className="text-[#007BFF] text-lg">📦</span>
-                <p className="text-[13px] font-semibold text-[#111]">Delivered Over 5M Orders</p>
+              {/* TOP RIGHT */}
+              <div className="absolute -top-6 -right-6 bg-white shadow-md rounded-xl px-4 py-2 flex items-center gap-2">
+                <span className="text-[#007BFF]">📦</span>
+                <p className="text-[13px] font-semibold">Delivered Over 5M Orders</p>
               </div>
 
-              {/* BOTTOM LEFT BADGE */}
-              <div className="absolute -bottom-6 -left-6 bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 yv-card-3">
-                <span className="text-[#007BFF] text-lg">🔒</span>
-                <p className="text-[13px] font-semibold text-[#111]">Secure Growth Network</p>
+              {/* BOTTOM LEFT */}
+              <div className="absolute -bottom-6 -left-6 bg-white shadow-md rounded-xl px-4 py-2 flex items-center gap-2">
+                <span className="text-[#007BFF]">🔒</span>
+                <p className="text-[13px] font-semibold">Secure Growth Network</p>
               </div>
 
-              {/* BOTTOM RIGHT BADGE */}
-              <div className="absolute -bottom-6 -right-6 bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 yv-card-4">
-                <span className="text-[#007BFF] text-lg">⚡</span>
-                <p className="text-[13px] font-semibold text-[#111]">Ultra-Fast Delivery</p>
+              {/* BOTTOM RIGHT */}
+              <div className="absolute -bottom-6 -right-6 bg-white shadow-md rounded-xl px-4 py-2 flex items-center gap-2">
+                <span className="text-[#007BFF]">⚡</span>
+                <p className="text-[13px] font-semibold">Ultra-Fast Delivery</p>
               </div>
 
               <Image
                 src="/hero-illustration.png"
                 alt="YesViral Notifications Illustration"
                 width={420}
-                height={320}
+                height={420}
                 className="w-full max-w-[420px] h-auto object-contain drop-shadow-2xl"
                 draggable={false}
-                unselectable="on"
                 priority
               />
             </div>
@@ -229,12 +228,9 @@ export default function Home() {
           <h2 className="text-center text-4xl font-extrabold">Place Your Order Instantly</h2>
           <p className="text-[#444] text-center max-w-2xl mx-auto">
             Choose your service — No logins needed, No Hassle.{" "}
-            <span className="font-semibold text-[#007BFF]">
-              Instant delivery starts within minutes.
-            </span>
+            <span className="font-semibold text-[#007BFF]">Instant delivery starts within minutes.</span>
           </p>
 
-          {/* Rating row */}
           <div className="flex items-center justify-center gap-1 mb-6 mt-1">
             {[1, 2, 3, 4].map((_, i) => (
               <Star key={i} size={20} className="text-[#007BFF] fill-[#007BFF]" />
@@ -357,8 +353,7 @@ export default function Home() {
         <section className="text-center space-y-4 mt-6 py-4 md:py-6">
           <h2 className="text-4xl font-extrabold mb-2">Ready to try YesViral?</h2>
           <p className="text-[#444] text-lg mb-6">
-            Join over 100,000+ Creators already growing with YesViral—choose your service and
-            unlock High-Quality results in minutes.
+            Join over 100,000+ Creators already growing with YesViral—choose your service and unlock High-Quality results in minutes.
           </p>
           <div className="mt-6 mb-6">
             <button
