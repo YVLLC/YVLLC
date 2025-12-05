@@ -138,16 +138,18 @@ export default function Home() {
       />
 
       <main className="px-4 sm:px-6 max-w-7xl mx-auto py-4 sm:py-8 space-y-6 md:space-y-10 select-none">
+
         {/* HERO SECTION */}
-        <section className="relative flex flex-col-reverse md:grid md:grid-cols-2 md:gap-12 items-center pt-0 md:pt-0">
+        <section className="relative flex flex-col-reverse md:grid md:grid-cols-2 items-center">
+
           {/* LEFT SIDE */}
-          <div className="w-full flex flex-col items-center md:items-start space-y-7 text-center md:text-left mt-0">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#E8F1FF] rounded-full mb-2 mt-6 sm:mt-0 text-xs font-bold text-[#007BFF] tracking-wide shadow-sm">
+          <div className="w-full flex flex-col items-center md:items-start space-y-7 text-center md:text-left">
+
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#E8F1FF] rounded-full mt-6 text-xs font-bold text-[#007BFF] tracking-wide shadow-sm">
               <Star size={18} className="text-yellow-400 star-animate" />
               Trusted by 100,000+ Creators
             </div>
 
-            {/* NEW HEADER (multi-service) */}
             <h1 className="text-4xl sm:text-5xl font-extrabold text-[#007BFF] leading-snug drop-shadow-sm">
               Boost Your Social Presence Instantly.{" "}
               <br className="hidden sm:block" />
@@ -156,15 +158,13 @@ export default function Home() {
               </span>
             </h1>
 
-            {/* Original subheader kept as requested */}
-            <p className="text-[#444] text-base sm:text-lg max-w-md sm:max-w-xl mx-auto md:mx-0 font-medium">
+            <p className="text-[#444] text-base sm:text-lg max-w-md sm:max-w-xl font-medium">
               Unlock Social Growth with YesViral — Trusted by Creators and Brands for High-Quality
               Followers, Likes, & Views powered by Exclusive Private Networks built for Speed,
               Trust, and Results.
             </p>
 
-            {/* CTA BUTTONS: side-by-side on desktop, stacked on small */}
-            <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto justify-center md:justify-start">
+            <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
               <button
                 className="bg-[#007BFF] text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:bg-[#005FCC] transition text-base sm:text-lg"
                 onClick={openOrderModalPlatform}
@@ -180,45 +180,38 @@ export default function Home() {
               </Link>
             </div>
 
-            <span className="text-xs text-[#555] font-medium mt-2">
-              🔒 SSL-encrypted payments · ⭐ 4.8/5 from 10,000+ clients · ⚡ Orders typically start
-              in minutes
+            <span className="text-xs text-[#555] font-medium">
+              🔒 SSL-encrypted payments · ⭐ 4.8/5 from 10,000+ clients · ⚡ Orders typically start in minutes
             </span>
           </div>
 
-          {/* RIGHT SIDE — HERO IMAGE + TIGHT-ORBIT FLOATING CARDS */}
-          <div className="relative w-full hidden md:flex justify-center mb-0">
-            <div className="relative w-fit">
-              {/* Card: top-right */}
-              <div className="absolute -top-5 -right-6 bg-white/95 backdrop-blur-lg border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg yv-card-1 flex items-center gap-2">
+          {/* RIGHT SIDE WITH TIGHT ORBIT FIX */}
+          <div className="relative flex justify-center items-center w-full mt-10 md:mt-0">
+
+            <div className="relative inline-block">
+
+              {/* CARD – top-right */}
+              <div className="absolute -top-4 -right-5 bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 yv-card-1">
                 <span className="text-[#007BFF] text-lg">📦</span>
-                <p className="text-[13px] font-semibold text-[#111]">
-                  Delivered Over 5M Orders
-                </p>
+                <p className="text-[13px] font-semibold text-[#111]">Delivered Over 5M Orders</p>
               </div>
 
-              {/* Card: top-left */}
-              <div className="absolute -top-4 -left-5 bg-white/95 backdrop-blur-lg border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg yv-card-2 flex items-center gap-2">
+              {/* CARD – top-left */}
+              <div className="absolute -top-4 -left-5 bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 yv-card-2">
                 <span className="text-[#007BFF] text-lg">🌍</span>
-                <p className="text-[13px] font-semibold text-[#111]">
-                  Trusted by Creators Worldwide
-                </p>
+                <p className="text-[13px] font-semibold text-[#111]">Trusted Worldwide</p>
               </div>
 
-              {/* Card: bottom-right */}
-              <div className="absolute -bottom-4 -right-6 bg-white/95 backdrop-blur-lg border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg yv-card-3 flex items-center gap-2">
+              {/* CARD – bottom-right */}
+              <div className="absolute -bottom-4 -right-5 bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 yv-card-3">
                 <span className="text-[#007BFF] text-lg">⚡</span>
-                <p className="text-[13px] font-semibold text-[#111]">
-                  Industry-Leading Speed & Quality
-                </p>
+                <p className="text-[13px] font-semibold text-[#111]">Ultra-Fast Delivery</p>
               </div>
 
-              {/* Card: bottom-left */}
-              <div className="absolute -bottom-6 -left-4 bg-white/95 backdrop-blur-lg border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg yv-card-4 flex items-center gap-2">
+              {/* CARD – bottom-left */}
+              <div className="absolute -bottom-4 -left-5 bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 yv-card-4">
                 <span className="text-[#007BFF] text-lg">🔒</span>
-                <p className="text-[13px] font-semibold text-[#111]">
-                  Protected by Secure Delivery Networks
-                </p>
+                <p className="text-[13px] font-semibold text-[#111]">Secure Growth Network</p>
               </div>
 
               <Image
@@ -226,13 +219,14 @@ export default function Home() {
                 alt="YesViral Notifications Illustration"
                 width={420}
                 height={320}
-                className="w-full max-w-[420px] h-auto object-contain drop-shadow-2xl m-0 p-0"
+                className="w-full max-w-[420px] h-auto object-contain drop-shadow-2xl"
                 draggable={false}
                 unselectable="on"
                 priority
               />
             </div>
           </div>
+
         </section>
 
         {/* SERVICES SECTION */}
@@ -240,12 +234,9 @@ export default function Home() {
           <h2 className="text-center text-4xl font-extrabold">Place Your Order Instantly</h2>
           <p className="text-[#444] text-center max-w-2xl mx-auto">
             Choose your service — No logins needed, No Hassle.{" "}
-            <span className="font-semibold text-[#007BFF]">
-              Instant delivery starts within minutes.
-            </span>
+            <span className="font-semibold text-[#007BFF]">Instant delivery starts within minutes.</span>
           </p>
 
-          {/* Rating row */}
           <div className="flex items-center justify-center gap-1 mb-6 mt-1">
             {[1, 2, 3, 4].map((_, i) => (
               <Star key={i} size={20} className="text-[#007BFF] fill-[#007BFF]" />
@@ -259,7 +250,7 @@ export default function Home() {
               ({ name, price, description, icon, tag, count, key }, idx) => (
                 <div
                   key={idx}
-                  className="bg-white border-2 border-[#CFE4FF] rounded-2xl p-7 shadow-md hover:shadow-2xl transition group flex flex-col gap-3 relative"
+                  className="bg-white border-2 border-[#CFE4FF] rounded-2xl p-7 shadow-md hover:shadow-2xl transition flex flex-col gap-3 relative"
                 >
                   {tag && (
                     <span className="absolute top-4 right-5 bg-[#E8F1FF] text-[#007BFF] text-xs font-bold px-3 py-1 rounded-full shadow">
@@ -280,9 +271,7 @@ export default function Home() {
 
                   <div className="flex items-center gap-2 mt-2">
                     <span className="text-sm font-medium text-[#007BFF]">{price}</span>
-                    <span className="text-xs text-[#111] bg-[#E8F1FF] px-2 py-0.5 rounded">
-                      {count}
-                    </span>
+                    <span className="text-xs text-[#111] bg-[#E8F1FF] px-2 py-0.5 rounded">{count}</span>
                   </div>
 
                   <button
@@ -368,8 +357,7 @@ export default function Home() {
         <section className="text-center space-y-4 mt-6 py-4 md:py-6">
           <h2 className="text-4xl font-extrabold mb-2">Ready to try YesViral?</h2>
           <p className="text-[#444] text-lg mb-6">
-            Join over 100,000+ Creators already growing with YesViral—choose your service and
-            unlock High-Quality results in minutes.
+            Join over 100,000+ Creators already growing with YesViral—choose your service and unlock High-Quality results in minutes.
           </p>
           <div className="mt-6 mb-6">
             <button
@@ -409,32 +397,17 @@ export default function Home() {
         }
         .star-animate {
           animation: starGlow 2.6s cubic-bezier(0.65, 0.05, 0.36, 1) infinite;
-          will-change: transform, filter;
         }
 
         @keyframes yvFloat {
-          0% {
-            transform: translateY(0px);
-          }
-          50% {
-            transform: translateY(-10px);
-          }
-          100% {
-            transform: translateY(0px);
-          }
+          0% { transform: translateY(0px); }
+          50% { transform: translateY(-10px); }
+          100% { transform: translateY(0px); }
         }
-        .yv-card-1 {
-          animation: yvFloat 7s ease-in-out infinite;
-        }
-        .yv-card-2 {
-          animation: yvFloat 8s ease-in-out infinite;
-        }
-        .yv-card-3 {
-          animation: yvFloat 9s ease-in-out infinite;
-        }
-        .yv-card-4 {
-          animation: yvFloat 10s ease-in-out infinite;
-        }
+        .yv-card-1 { animation: yvFloat 7s ease-in-out infinite; }
+        .yv-card-2 { animation: yvFloat 8s ease-in-out infinite; }
+        .yv-card-3 { animation: yvFloat 9s ease-in-out infinite; }
+        .yv-card-4 { animation: yvFloat 10s ease-in-out infinite; }
       `}</style>
     </>
   );
