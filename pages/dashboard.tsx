@@ -1754,7 +1754,7 @@ export default function DashboardPage() {
                 <table className="min-w-full text-xs sm:text-sm">
                   <thead>
                     <tr className="bg-[#F5FAFF] text-left text-[11px] uppercase tracking-wide text-[#6B7280] border-b border-[#E5EDFF]">
-                      <th className="p-3">Followiz ID</th>
+                      <th className="p-3">Order ID</th>
                       <th className="p-3">Platform</th>
                       <th className="p-3">Service</th>
                       <th className="p-3">Quantity</th>
