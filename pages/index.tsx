@@ -191,25 +191,25 @@ export default function Home() {
             <div className="relative inline-block">
 
               {/* CARD – top-right */}
-              <div className="absolute -top-4 -right-5 bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 yv-card-1">
+              <div className="absolute -top-2 -right-2 bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 yv-card-1">
                 <span className="text-[#007BFF] text-lg">📦</span>
                 <p className="text-[13px] font-semibold text-[#111]">Delivered Over 5M Orders</p>
               </div>
 
               {/* CARD – top-left */}
-              <div className="absolute -top-4 -left-5 bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 yv-card-2">
+              <div className="absolute -top-2 -left-2 bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 yv-card-2">
                 <span className="text-[#007BFF] text-lg">🌍</span>
                 <p className="text-[13px] font-semibold text-[#111]">Trusted Worldwide</p>
               </div>
 
               {/* CARD – bottom-right */}
-              <div className="absolute -bottom-4 -right-5 bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 yv-card-3">
+              <div className="absolute -bottom-2 -right-2 bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 yv-card-3">
                 <span className="text-[#007BFF] text-lg">⚡</span>
                 <p className="text-[13px] font-semibold text-[#111]">Ultra-Fast Delivery</p>
               </div>
 
               {/* CARD – bottom-left */}
-              <div className="absolute -bottom-4 -left-5 bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 yv-card-4">
+              <div className="absolute -bottom-2 -left-2 bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 yv-card-4">
                 <span className="text-[#007BFF] text-lg">🔒</span>
                 <p className="text-[13px] font-semibold text-[#111]">Secure Growth Network</p>
               </div>
