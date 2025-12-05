@@ -182,32 +182,32 @@ export default function Home() {
             </span>
           </div>
 
-          {/* RIGHT SIDE — FIXED VERSION */}
+          {/* RIGHT SIDE — HERO IMAGE + CARDS HUGGING IT */}
           <div className="relative hidden md:flex items-center justify-center">
             <div className="relative inline-block">
 
-              {/* TOP LEFT */}
-              <div className="absolute -top-6 -left-6 bg-white shadow-md rounded-xl px-4 py-2 flex items-center gap-2">
-                <span className="text-[#007BFF]">🌍</span>
-                <p className="text-[13px] font-semibold">Trusted Worldwide</p>
+              {/* TOP LEFT CARD */}
+              <div className="absolute top-3 left-3 bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 yv-card-1">
+                <span className="text-[#007BFF] text-lg">🌍</span>
+                <p className="text-[13px] font-semibold text-[#111]">Trusted Worldwide</p>
               </div>
 
-              {/* TOP RIGHT */}
-              <div className="absolute -top-6 -right-6 bg-white shadow-md rounded-xl px-4 py-2 flex items-center gap-2">
-                <span className="text-[#007BFF]">📦</span>
-                <p className="text-[13px] font-semibold">Delivered Over 5M Orders</p>
+              {/* TOP RIGHT CARD */}
+              <div className="absolute top-3 right-3 bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 yv-card-2">
+                <span className="text-[#007BFF] text-lg">📦</span>
+                <p className="text-[13px] font-semibold text-[#111]">Delivered Over 5M Orders</p>
               </div>
 
-              {/* BOTTOM LEFT */}
-              <div className="absolute -bottom-6 -left-6 bg-white shadow-md rounded-xl px-4 py-2 flex items-center gap-2">
-                <span className="text-[#007BFF]">🔒</span>
-                <p className="text-[13px] font-semibold">Secure Growth Network</p>
+              {/* BOTTOM LEFT CARD */}
+              <div className="absolute bottom-3 left-3 bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 yv-card-3">
+                <span className="text-[#007BFF] text-lg">🔒</span>
+                <p className="text-[13px] font-semibold text-[#111]">Secure Growth Network</p>
               </div>
 
-              {/* BOTTOM RIGHT */}
-              <div className="absolute -bottom-6 -right-6 bg-white shadow-md rounded-xl px-4 py-2 flex items-center gap-2">
-                <span className="text-[#007BFF]">⚡</span>
-                <p className="text-[13px] font-semibold">Ultra-Fast Delivery</p>
+              {/* BOTTOM RIGHT CARD */}
+              <div className="absolute bottom-3 right-3 bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 yv-card-4">
+                <span className="text-[#007BFF] text-lg">⚡</span>
+                <p className="text-[13px] font-semibold text-[#111]">Ultra-Fast Delivery</p>
               </div>
 
               <Image
