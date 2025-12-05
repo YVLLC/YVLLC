@@ -24,12 +24,12 @@ const FAQS = [
   {
     question: "What services do you offer?",
     answer:
-      "Our Social Media Marketing services help Individuals, Influencers, and Brands grow their online presence with targeted High-Quality Engagement. Whether you want more Followers, Subscribers, Video views, We offer a wide range of services across platforms like Instagram, YouTube, TikTok, and more."
+      "Our Social Media Marketing services help Individuals, Influencers, and Brands grow their online presence with targeted High-Quality Engagement. We offer Followers, Likes, Views & more across Instagram, YouTube, TikTok, and more."
   },
   {
     question: "Do I need to share my account password?",
     answer:
-      "No, never. We do not require your password for any of our services. Everything is delivered securely without accessing your account. If you ever receive a message asking for your password claiming to be from us, DO NOT share it—Please report it to us immediately."
+      "No, never. We do not require your password for any service. Everything is delivered securely without accessing your account."
   },
   {
     question: "Are the followers, likes, and subscribers real?",
@@ -39,12 +39,12 @@ const FAQS = [
   {
     question: "Is your service safe and legal?",
     answer:
-      "Absolutely. We use safe, secure, and compliant methods to deliver Likes, Followers, Views & more. Your account stays 100% Protected, and everything we do follows platform guidelines to keep your profile secure."
+      "Absolutely. We use safe, secure, and compliant delivery methods. Your account stays 100% protected."
   },
   {
     question: "What is your refill guarantee?",
     answer:
-      "Our 30-day refill guarantee means that if any Followers, Likes, Views, or Engagement drop within 30 days of your purchase, we’ll replace them free of charge. This keeps your results strong and consistent. Just reach out through our contact form—No hassle, No extra cost."
+      "Our 30-day refill guarantee means if any results drop within 30 days of your purchase, we refill them free of charge."
   }
 ];
 
@@ -132,34 +132,6 @@ export default function Home() {
         {/* HERO SECTION */}
         <section className="relative flex flex-col-reverse md:grid md:grid-cols-2 md:gap-12 items-center pt-0 md:pt-0">
 
-          {/* FLOATING POSITIVE YESVIRAL CARDS */}
-          <div className="hidden md:block">
-
-            {/* Card 1 */}
-            <div className="absolute top-6 right-10 bg-white/90 backdrop-blur-lg border border-[#CFE4FF] rounded-2xl px-4 py-2 shadow-lg yv-card-1 flex items-center gap-2">
-              <span className="text-[#007BFF] text-lg">📦</span>
-              <p className="text-[13px] font-semibold text-[#111]">Thousands of Orders Delivered</p>
-            </div>
-
-            {/* Card 2 */}
-            <div className="absolute bottom-10 right-0 bg-white/90 backdrop-blur-lg border border-[#CFE4FF] rounded-2xl px-4 py-2 shadow-lg yv-card-2 flex items-center gap-2">
-              <span className="text-[#007BFF] text-lg">⚡</span>
-              <p className="text-[13px] font-semibold text-[#111]">Fast, Real, High-Quality Results</p>
-            </div>
-
-            {/* Card 3 */}
-            <div className="absolute top-24 -left-10 bg-white/90 backdrop-blur-lg border border-[#CFE4FF] rounded-2xl px-4 py-2 shadow-lg yv-card-3 flex items-center gap-2">
-              <span className="text-[#007BFF] text-lg">🔒</span>
-              <p className="text-[13px] font-semibold text-[#111]">Safe & Secure Growth</p>
-            </div>
-
-            {/* Card 4 */}
-            <div className="absolute bottom-4 left-6 bg-white/90 backdrop-blur-lg border border-[#CFE4FF] rounded-2xl px-4 py-2 shadow-lg yv-card-4 flex items-center gap-2">
-              <span className="text-[#007BFF] text-lg">⭐</span>
-              <p className="text-[13px] font-semibold text-[#111]">Trusted by 100,000+ Creators</p>
-            </div>
-          </div>
-
           {/* LEFT SIDE */}
           <div className="w-full flex flex-col items-center md:items-start space-y-7 text-center md:text-left mt-0">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#E8F1FF] rounded-full mb-2 mt-6 sm:mt-0 text-xs font-bold text-[#007BFF] tracking-wide shadow-sm">
@@ -167,14 +139,14 @@ export default function Home() {
               Trusted by 100,000+ Creators
             </div>
 
-            {/* UPDATED HEADER */}
+            {/* UPDATED PREMIUM HEADER */}
             <h1 className="text-4xl sm:text-5xl font-extrabold text-[#007BFF] leading-tight drop-shadow-sm">
               Buy Premium Followers. <br className="hidden sm:block" />
               <span className="text-[#005FCC]">Real Growth,</span> Delivered Fast.
             </h1>
 
             <p className="text-[#444] text-base sm:text-lg max-w-md sm:max-w-xl mx-auto md:mx-0 font-medium">
-              Unlock Social Growth with YesViral — Trusted by Creators and Brands for High-Quality Followers, Likes, & Views powered by Exclusive Private Networks built for Speed, Trust, and Results.
+              Unlock Social Growth with YesViral — High-Quality Followers, Likes, & Views powered by Exclusive Private Networks built for Speed, Trust, and Results.
             </p>
 
             {/* CTA BUTTONS */}
@@ -200,22 +172,46 @@ export default function Home() {
             </span>
           </div>
 
-          {/* RIGHT IMAGE */}
-          <div className="w-full hidden md:flex justify-center mb-0">
+          {/* RIGHT SIDE — IMAGE + FLOATING CARDS */}
+          <div className="relative w-full hidden md:flex justify-center mb-0">
+
+            {/* Card 1 — Delivered Over 5M Orders */}
+            <div className="absolute -top-6 right-2 bg-white/90 backdrop-blur-lg border border-[#CFE4FF] rounded-2xl px-4 py-2 shadow-lg yv-card-1 flex items-center gap-2">
+              <span className="text-[#007BFF] text-lg">📦</span>
+              <p className="text-[13px] font-semibold text-[#111]">Delivered Over 5M Orders</p>
+            </div>
+
+            {/* Card 2 — Industry-Leading Speed */}
+            <div className="absolute bottom-4 -right-6 bg-white/90 backdrop-blur-lg border border-[#CFE4FF] rounded-2xl px-4 py-2 shadow-lg yv-card-2 flex items-center gap-2">
+              <span className="text-[#007BFF] text-lg">⚡</span>
+              <p className="text-[13px] font-semibold text-[#111]">Industry-Leading Speed & Quality</p>
+            </div>
+
+            {/* Card 3 — Secure Delivery Networks */}
+            <div className="absolute top-6 -left-6 bg-white/90 backdrop-blur-lg border border-[#CFE4FF] rounded-2xl px-4 py-2 shadow-lg yv-card-3 flex items-center gap-2">
+              <span className="text-[#007BFF] text-lg">🔒</span>
+              <p className="text-[13px] font-semibold text-[#111]">Protected by Secure Delivery Networks</p>
+            </div>
+
+            {/* Card 4 — Trusted Worldwide */}
+            <div className="absolute bottom-10 left-0 bg-white/90 backdrop-blur-lg border border-[#CFE4FF] rounded-2xl px-4 py-2 shadow-lg yv-card-4 flex items-center gap-2">
+              <span className="text-[#007BFF] text-lg">🌟</span>
+              <p className="text-[13px] font-semibold text-[#111]">Trusted by Creators Worldwide</p>
+            </div>
+
             <Image
               src="/hero-illustration.png"
               alt="YesViral Notifications Illustration"
               width={420}
               height={320}
-              className="w-full max-w-[420px] h-auto object-contain drop-shadow-2xl m-0 p-0"
+              className="w-full max-w-[420px] h-auto object-contain drop-shadow-2xl"
               draggable={false}
-              unselectable="on"
               priority
             />
           </div>
         </section>
 
-        {/* EVERYTHING BELOW IS UNCHANGED */}
+        {/* EVERYTHING BELOW IS UNCHANGED — SERVICES, ABOUT, FAQ, ETC */}
         {/* SERVICES SECTION */}
         <section id="order" className="space-y-7 py-8 md:py-14">
           <h2 className="text-center text-4xl font-extrabold">Place Your Order Instantly</h2>
@@ -224,7 +220,6 @@ export default function Home() {
             <span className="font-semibold text-[#007BFF]">Instant delivery starts within minutes.</span>
           </p>
 
-          {/* ⭐⭐⭐⭐⭐ YESVIRAL RATING */}
           <div className="flex items-center justify-center gap-1 mb-6 mt-1">
             {[1, 2, 3, 4].map((_, i) => (
               <Star key={i} size={20} className="text-[#007BFF] fill-[#007BFF]" />
@@ -374,6 +369,7 @@ export default function Home() {
           50% { transform: translateY(-12px); }
           100% { transform: translateY(0px); }
         }
+
         .yv-card-1 { animation: yvFloat 7s ease-in-out infinite; }
         .yv-card-2 { animation: yvFloat 8s ease-in-out infinite; }
         .yv-card-3 { animation: yvFloat 9s ease-in-out infinite; }
