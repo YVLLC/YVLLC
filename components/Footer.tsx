@@ -113,7 +113,7 @@ export default function Footer({ onServiceOrder }: FooterProps) {
             </span>
           </div>
           <p className="text-sm text-[#444] leading-relaxed mb-3">
-            Trusted by 100,000+ creators & businesses. YesViral helps you get real followers, views & engagement on Instagram, TikTok & YouTube—fast, safe, and guaranteed.
+            Trusted by 100,000+ creators & businesses. YesViral helps you get High-Quality Followers, Views & Engagement via Instagram, TikTok & YouTube—Fast, Safe, and Guaranteed.
           </p>
           <div className="flex items-center gap-2 mt-4">
             <Link href="/track-order">
