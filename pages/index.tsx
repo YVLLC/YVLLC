@@ -187,13 +187,13 @@ export default function Home() {
             <div className="relative inline-block">
 
               {/* TOP LEFT */}
-              <div className="absolute top-3 left-0 bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 yv-card-1">
+              <div className="absolute top-6 left-0 bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 yv-card-1">
                 <span className="text-[#007BFF] text-lg">💙</span>
                 <p className="text-[13px] font-semibold text-[#111]">Trusted by Brands & Creators</p>
               </div>
 
               {/* TOP RIGHT */}
-              <div className="absolute top-3 right-0 bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 yv-card-2">
+              <div className="absolute top-6 right-0 bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 yv-card-2">
                 <span className="text-[#007BFF] text-lg">📦</span>
                 <p className="text-[13px] font-semibold text-[#111]">Millions of Orders Delivered</p>
               </div>
