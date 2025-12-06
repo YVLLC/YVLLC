@@ -213,7 +213,7 @@ export default function Home() {
           <div className="relative hidden md:flex items-center justify-center">
             <div className="relative inline-block">
 
-              {/* ⭐ TOP ROW — NOW MOVED DOWN TOWARD PHONE */}
+              {/* TOP FLOATING CARDS */}
               <div className="absolute top-[40px] left-1/2 -translate-x-1/2 flex flex-nowrap gap-3">
                 <div className="bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 whitespace-nowrap yv-card-1">
                   <span className="text-[#007BFF] text-lg">💙</span>
@@ -226,7 +226,7 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* ⭐ BOTTOM ROW — NOW MOVED UP TOWARD PHONE */}
+              {/* BOTTOM FLOATING CARDS */}
               <div className="absolute bottom-[40px] left-1/2 -translate-x-1/2 flex flex-nowrap gap-3">
                 <div className="bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 whitespace-nowrap yv-card-3">
                   <span className="text-[#007BFF] text-lg">🔒</span>
@@ -324,53 +324,125 @@ export default function Home() {
         </section>
 
         {/* =============================================== */}
-        {/* ABOUT SECTION */}
+        {/* WHY CHOOSE YESVIRAL — PREMIUM UPGRADED */}
         {/* =============================================== */}
         <section
           id="about"
-          className="bg-[#F5FAFF] p-8 md:p-12 rounded-2xl text-center shadow-sm space-y-8"
+          className="
+            bg-white/90 backdrop-blur-xl 
+            p-10 md:p-14 
+            rounded-3xl 
+            shadow-xl 
+            border border-[#CFE4FF] 
+            space-y-10 
+            text-center
+          "
         >
-          <h2 className="text-4xl font-extrabold text-[#111]">
+          <h2 className="text-4xl md:text-5xl font-extrabold text-[#007BFF] tracking-tight">
             Why Choose YesViral?
           </h2>
 
-          {/* ICON GRID */}
-          <div className="flex flex-wrap gap-7 justify-center mt-6">
-            <div className="flex flex-col items-center max-w-[170px]">
-              <Zap className="text-[#007BFF]" size={32} />
-              <span className="font-semibold mt-2">Instant Start</span>
-              <span className="text-sm text-[#444]">Growth begins in 1–10 min</span>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-10 mt-6">
+
+            {/* CARD 1 */}
+            <div className="
+              bg-[#E6F0FF]/70 
+              backdrop-blur-md 
+              border border-[#CFE4FF] 
+              rounded-2xl 
+              p-8 
+              shadow-md 
+              transition-all duration-300 
+              hover:-translate-y-1 hover:shadow-xl hover:border-[#007BFF]
+              flex flex-col items-center text-center
+            ">
+              <Zap className="text-[#007BFF]" size={40} />
+              <span className="font-bold text-lg mt-3 text-[#111]">Instant Start</span>
+              <span className="text-sm text-[#444] leading-relaxed">
+                Growth begins in 1–10 minutes.
+              </span>
             </div>
 
-            <div className="flex flex-col items-center max-w-[170px]">
-              <UserCheck className="text-[#007BFF]" size={32} />
-              <span className="font-semibold mt-2">Quality Results</span>
-              <span className="text-sm text-[#444]">100% High Quality</span>
+            {/* CARD 2 */}
+            <div className="
+              bg-[#E6F0FF]/70 
+              backdrop-blur-md 
+              border border-[#CFE4FF] 
+              rounded-2xl 
+              p-8 
+              shadow-md  
+              transition-all duration-300 
+              hover:-translate-y-1 hover:shadow-xl hover:border-[#007BFF]
+              flex flex-col items-center text-center
+            ">
+              <UserCheck className="text-[#007BFF]" size={40} />
+              <span className="font-bold text-lg mt-3 text-[#111]">Quality Results</span>
+              <span className="text-sm text-[#444] leading-relaxed">
+                Real, High-Quality engagement only.
+              </span>
             </div>
 
-            <div className="flex flex-col items-center max-w-[170px]">
-              <ShieldCheck className="text-[#007BFF]" size={32} />
-              <span className="font-semibold mt-2">Safe & Secure</span>
-              <span className="text-sm text-[#444]">No passwords, 256-bit SSL</span>
+            {/* CARD 3 */}
+            <div className="
+              bg-[#E6F0FF]/70 
+              backdrop-blur-md 
+              border border-[#CFE4FF] 
+              rounded-2xl 
+              p-8 
+              shadow-md  
+              transition-all duration-300 
+              hover:-translate-y-1 hover:shadow-xl hover:border-[#007BFF]
+              flex flex-col items-center text-center
+            ">
+              <ShieldCheck className="text-[#007BFF]" size={40} />
+              <span className="font-bold text-lg mt-3 text-[#111]">Safe & Secure</span>
+              <span className="text-sm text-[#444] leading-relaxed">
+                No passwords. 256-bit SSL. Fully protected.
+              </span>
             </div>
 
-            <div className="flex flex-col items-center max-w-[170px]">
-              <Clock className="text-[#007BFF]" size={32} />
-              <span className="font-semibold mt-2">24/7 Support</span>
-              <span className="text-sm text-[#444]">Always online</span>
+            {/* CARD 4 */}
+            <div className="
+              bg-[#E6F0FF]/70 
+              backdrop-blur-md 
+              border border-[#CFE4FF] 
+              rounded-2xl 
+              p-8 
+              shadow-md  
+              transition-all duration-300 
+              hover:-translate-y-1 hover:shadow-xl hover:border-[#007BFF]
+              flex flex-col items-center text-center
+            ">
+              <Clock className="text-[#007BFF]" size={40} />
+              <span className="font-bold text-lg mt-3 text-[#111]">24/7 Support</span>
+              <span className="text-sm text-[#444] leading-relaxed">
+                Always online when you need us.
+              </span>
             </div>
 
-            <div className="flex flex-col items-center max-w-[170px]">
-              <RefreshCcw className="text-[#007BFF]" size={32} />
-              <span className="font-semibold mt-2">30 Day Refill</span>
-              <span className="text-sm text-[#444]">
-                If drops occur, we'll refill for 30 days—free.
+            {/* CARD 5 */}
+            <div className="
+              bg-[#E6F0FF]/70 
+              backdrop-blur-md 
+              border border-[#CFE4FF] 
+              rounded-2xl 
+              p-8 
+              shadow-md  
+              transition-all duration-300 
+              hover:-translate-y-1 hover:shadow-xl hover:border-[#007BFF]
+              flex flex-col items-center text-center
+            ">
+              <RefreshCcw className="text-[#007BFF]" size={40} />
+              <span className="font-bold text-lg mt-3 text-[#111]">30 Day Refill</span>
+              <span className="text-sm text-[#444] leading-relaxed">
+                Drops? We refill instantly — free for 30 days.
               </span>
             </div>
           </div>
 
-          <div className="flex justify-center gap-8 mt-7 text-[#007BFF] font-bold text-lg">
+          <div className="flex flex-col sm:flex-row justify-center gap-6 mt-10 text-[#007BFF] font-bold text-lg">
             <span>100k+ Followers Delivered</span>
+            <span className="hidden sm:inline">•</span>
             <span className="hidden sm:inline">Rated 4.8/5 by 10,000+ Clients</span>
           </div>
         </section>

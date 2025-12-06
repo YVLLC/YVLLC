@@ -107,8 +107,8 @@ export default function OurPromise() {
       <div className="flex flex-col items-center justify-center gap-2 mt-14 px-4">
         <span className="font-semibold text-[#111111] text-base text-center leading-relaxed">
           <span className="text-[#007BFF] font-black">YesViral</span> is committed to your growth.  
-          Every service is powered by exclusive, high-performance private networks—
-          elevating quality, reliability, and results across the industry.
+          Every service is Powered by Eexclusive, High-Performance Private Networks—
+          Elevating quality, Reliability, and results across the industry.
         </span>
       </div>
     </section>
