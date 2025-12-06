@@ -54,60 +54,57 @@ export default function TestimonialsPage() {
         />
       </Head>
 
-      <main className="min-h-screen bg-gradient-to-b from-white to-[#E6F0FF] px-4 py-20">
+      <main className="min-h-screen bg-gradient-to-b from-white to-[#E6F0FF] px-4 py-16 md:py-20">
         {/* HEADER */}
-        <div className="max-w-4xl mx-auto text-center mb-14">
+        <div className="max-w-4xl mx-auto text-center mb-12 md:mb-16">
           <h1 className="text-4xl md:text-5xl font-extrabold text-[#007BFF] tracking-tight mb-4">
-            Trusted by Over 50,000+ Creators
+            Trusted by 50,000+ Creators
           </h1>
           <p className="text-lg text-[#444] max-w-2xl mx-auto leading-relaxed">
             Real, verified feedback from influencers, entrepreneurs, and artists
             who use YesViral to grow with confidence.
           </p>
 
-          {/* PREMIUM STAR RATING */}
-          <div className="flex items-center justify-center gap-2 mt-6">
+          {/* ⭐ STAR RATING */}
+          <div className="flex items-center justify-center gap-2 mt-5">
             {[1, 2, 3, 4].map((_, i) => (
               <Star
                 key={i}
-                size={24}
+                size={22}
                 className="text-[#007BFF] fill-[#007BFF]"
               />
             ))}
             <Star
-              size={24}
+              size={22}
               className="text-[#007BFF] fill-[#007BFF] opacity-50"
             />
 
             <span className="ml-2 text-[#007BFF] font-semibold text-sm">
-              4.8 / 5 based on 2,000+ reviews
+              4.8 / 5 rating
             </span>
           </div>
         </div>
 
         {/* GRID */}
-        <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-8">
+        <div className="max-w-5xl mx-auto grid gap-6 sm:gap-8 md:grid-cols-2">
           {testimonials.map((t, i) => (
             <div
               key={i}
               className="
-              bg-white/90 backdrop-blur-md border border-[#CFE4FF]
-              rounded-2xl p-7 shadow-lg hover:shadow-xl
-              transition-all duration-300 hover:-translate-y-1
-            "
+                bg-white/90 backdrop-blur-md border border-[#CFE4FF]
+                rounded-2xl p-6 md:p-7 shadow-lg hover:shadow-xl
+                transition-all duration-300 hover:-translate-y-1
+              "
             >
-              {/* TOP ROW */}
+              {/* TOP */}
               <div className="flex items-center mb-3">
-                <div className="bg-[#E6F0FF] p-2 rounded-full">
-                  {t.icon}
-                </div>
+                <div className="bg-[#E6F0FF] p-2 rounded-full">{t.icon}</div>
 
                 <div className="ml-3">
                   <h3 className="text-lg font-bold text-[#111]">{t.name}</h3>
-                  <p className="text-sm text-[#777] -mt-0.5">{t.title}</p>
+                  <p className="text-sm text-[#777]">{t.title}</p>
                 </div>
 
-                {/* VERIFIED BADGE */}
                 <div className="ml-auto flex items-center gap-1 bg-[#007BFF] text-white text-xs font-semibold px-2.5 py-1 rounded-full shadow-sm">
                   <CheckCircle size={14} className="text-blue-200" />
                   Verified Buyer
@@ -115,7 +112,7 @@ export default function TestimonialsPage() {
               </div>
 
               {/* QUOTE */}
-              <p className="text-[#222] leading-relaxed italic mb-4 text-[15.5px]">
+              <p className="text-[#222] leading-relaxed italic text-[15.5px] mb-4">
                 “{t.quote}”
               </p>
 
@@ -123,27 +120,12 @@ export default function TestimonialsPage() {
               <div className="flex items-center text-sm text-[#444]">
                 <span>{t.title}</span>
                 <span className="mx-2 text-[#888]">•</span>
-                <span className="font-semibold text-[#007BFF]">{t.platform}</span>
+                <span className="font-semibold text-[#007BFF]">
+                  {t.platform}
+                </span>
               </div>
             </div>
           ))}
-        </div>
-
-        {/* CTA */}
-        <div className="max-w-4xl mx-auto text-center mt-16">
-          <h2 className="text-2xl font-bold text-[#111] mb-2">
-            Ready to Grow Your Social Presence?
-          </h2>
-          <p className="text-[#444] mb-6">
-            Join thousands of creators getting premium, fast, and safe engagement.
-          </p>
-
-          <a
-            href="/"
-            className="inline-block bg-[#007BFF] hover:bg-[#005FCC] text-white font-semibold px-8 py-3 rounded-xl shadow-md transition-all"
-          >
-            Get Started Today
-          </a>
         </div>
       </main>
     </>
