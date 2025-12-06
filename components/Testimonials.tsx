@@ -58,11 +58,11 @@ export default function TestimonialsPage() {
         {/* HEADER */}
         <div className="max-w-4xl mx-auto text-center mb-12 md:mb-16">
           <h1 className="text-4xl md:text-5xl font-extrabold text-[#007BFF] tracking-tight mb-4">
-            Trusted by 50,000+ Creators
+            Trusted by 100,000+ Creators
           </h1>
           <p className="text-lg text-[#444] max-w-2xl mx-auto leading-relaxed">
-            Real, verified feedback from influencers, entrepreneurs, and artists
-            who use YesViral to grow with confidence.
+            Real, Verified feedback from Influencers, Entrepreneurs, and Artists
+            who used YesViral to grow with confidence.
           </p>
 
           {/* ⭐ STAR RATING */}
