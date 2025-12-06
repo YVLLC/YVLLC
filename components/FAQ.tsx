@@ -22,7 +22,7 @@ const FAQ: React.FC<FAQProps> = ({ faqs }) => {
       </h2>
 
       <p className="text-center text-[#444] mb-10 text-lg max-w-2xl mx-auto">
-        Everything you need to know about our services, safety, delivery, and support.
+        Everything you need to know about our Services, Safety, and Support.
       </p>
 
       <div className="max-w-3xl mx-auto space-y-5">
