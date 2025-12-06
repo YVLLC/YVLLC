@@ -17,13 +17,13 @@ export default function OurPromise() {
     >
       {/* HEADER */}
       <div className="flex flex-col items-center text-center mb-14">
-        <h2 className="text-4xl md:text-5xl font-black text-[#111111] mb-4 tracking-tight">
+        <h2 className="text-4xl md:text-5xl font-black tracking-tight mb-4 text-[#007BFF]">
           The YesViral Promise
         </h2>
         <p className="max-w-2xl mx-auto text-[#444444] text-lg md:text-xl leading-relaxed font-medium">
-          We are always growing—expanding our network, upgrading our technology, 
-          and obsessing over your results.  
-          Experience real engagement, ironclad safety, and relentless innovation.
+          We are always growing—expanding our network, upgrading our technology,
+          and obsessing over your results. Experience real engagement,
+          ironclad safety, and relentless innovation.
         </p>
       </div>
 
@@ -46,8 +46,8 @@ export default function OurPromise() {
             Always Expanding
           </h3>
           <p className="text-[#444444] text-base font-medium leading-relaxed">
-            Our network grows constantly—unlocking new sources, platforms, and 
-            strategies for unmatched reach.
+            Our network grows constantly—unlocking new sources, platforms, 
+            and strategies for unmatched reach.
           </p>
           <span className="text-[#888888] text-xs mt-3">
             7X network scale since 2021
@@ -103,7 +103,7 @@ export default function OurPromise() {
         </div>
       </div>
 
-      {/* FOOTER STATEMENT */}
+      {/* FOOTER TEXT */}
       <div className="flex flex-col items-center justify-center gap-2 mt-14 px-4">
         <span className="font-semibold text-[#111111] text-base text-center leading-relaxed">
           <span className="text-[#007BFF] font-black">YesViral</span> is committed to your growth.  
