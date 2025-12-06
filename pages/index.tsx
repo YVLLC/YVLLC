@@ -250,10 +250,9 @@ export default function Home() {
         {/* SERVICES SECTION */}
         {/* =============================================== */}
         <section id="order" className="space-y-7 py-8 md:py-14">
-          <h2 className="text-center text-4xl font-extrabold">
-            Place Your Order Instantly
-          </h2>
-
+<h2 className="text-center text-4xl font-extrabold text-[#007BFF]">
+  Place Your Order Instantly
+</h2>
           <p className="text-[#444] text-center max-w-2xl mx-auto">
             Choose your service —{" "}
             <span className="font-semibold text-[#007BFF]">
