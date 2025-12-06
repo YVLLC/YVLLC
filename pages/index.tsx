@@ -142,7 +142,7 @@ export default function Home() {
         {/* HERO SECTION */}
         <section className="relative flex flex-col-reverse md:grid md:grid-cols-2 md:gap-8 items-center">
 
-          {/* LEFT SIDE (UNCHANGED) */}
+          {/* LEFT SIDE — UNCHANGED */}
           <div className="w-full flex flex-col items-center md:items-start space-y-7 text-center md:text-left">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#E8F1FF] rounded-full text-xs font-bold text-[#007BFF] tracking-wide shadow-sm">
               <Star size={18} className="text-yellow-400 star-animate" />
@@ -185,57 +185,45 @@ export default function Home() {
             </span>
           </div>
 
-          {/* RIGHT SIDE — ⭐ UPDATED SPACING (CLOSER + MORE SEPARATION) ⭐ */}
+          {/* RIGHT SIDE — OPTION A PERFECT LAYOUT */}
           <div className="relative hidden md:flex items-center justify-center">
             <div className="relative inline-block">
 
-              <div className="pointer-events-none">
-
-                {/* TOP ROW */}
-                <div className="absolute -top-1 w-full flex justify-between px-10">
-
-                  {/* TOP LEFT */}
-                  <div className="bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 yv-card-1 translate-x-[-14px]">
-                    <span className="text-[#007BFF] text-lg">💙</span>
-                    <p className="text-[13px] font-semibold text-[#111]">
-                      Trusted by Brands & Creators
-                    </p>
-                  </div>
-
-                  {/* TOP RIGHT */}
-                  <div className="bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 yv-card-2 translate-x-[14px]">
-                    <span className="text-[#007BFF] text-lg">📦</span>
-                    <p className="text-[13px] font-semibold text-[#111]">
-                      Millions of Orders Delivered
-                    </p>
-                  </div>
-
+              {/* TOP ROW (CENTERED) */}
+              <div className="absolute -top-4 left-1/2 -translate-x-1/2 flex gap-4">
+                <div className="bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 yv-card-1">
+                  <span className="text-[#007BFF] text-lg">💙</span>
+                  <p className="text-[13px] font-semibold text-[#111]">
+                    Trusted by Brands & Creators
+                  </p>
                 </div>
 
-                {/* BOTTOM ROW */}
-                <div className="absolute -bottom-1 w-full flex justify-between px-10">
-
-                  {/* BOTTOM LEFT */}
-                  <div className="bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 yv-card-3 translate-x-[-14px]">
-                    <span className="text-[#007BFF] text-lg">🔒</span>
-                    <p className="text-[13px] font-semibold text-[#111]">
-                      Private Delivery Networks
-                    </p>
-                  </div>
-
-                  {/* BOTTOM RIGHT */}
-                  <div className="bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 yv-card-4 translate-x-[14px]">
-                    <span className="text-[#007BFF] text-lg">⚡</span>
-                    <p className="text-[13px] font-semibold text-[#111]">
-                      Industry-Leading Speed & Quality
-                    </p>
-                  </div>
-
+                <div className="bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 yv-card-2">
+                  <span className="text-[#007BFF] text-lg">📦</span>
+                  <p className="text-[13px] font-semibold text-[#111]">
+                    Millions of Orders Delivered
+                  </p>
                 </div>
-
               </div>
 
-              {/* PHONE IMAGE */}
+              {/* BOTTOM ROW (CENTERED) */}
+              <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 flex gap-4">
+                <div className="bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 yv-card-3">
+                  <span className="text-[#007BFF] text-lg">🔒</span>
+                  <p className="text-[13px] font-semibold text-[#111]">
+                    Private Delivery Networks
+                  </p>
+                </div>
+
+                <div className="bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 yv-card-4">
+                  <span className="text-[#007BFF] text-lg">⚡</span>
+                  <p className="text-[13px] font-semibold text-[#111]">
+                    Industry-Leading Speed & Quality
+                  </p>
+                </div>
+              </div>
+
+              {/* PHONE */}
               <Image
                 src="/hero-illustration.png"
                 alt="YesViral Notifications Illustration"
@@ -250,6 +238,7 @@ export default function Home() {
 
         </section>
 
+        {/* ALL OTHER SECTIONS BELOW ARE 100% UNCHANGED */}
         {/* SERVICES SECTION */}
         <section id="order" className="space-y-7 py-8 md:py-14">
           <h2 className="text-center text-4xl font-extrabold">Place Your Order Instantly</h2>
