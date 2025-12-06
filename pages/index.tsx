@@ -343,7 +343,7 @@ export default function Home() {
               <UserCheck className="text-[#007BFF]" size={38} />
               <h3 className="font-bold text-lg mt-3 text-[#111]">High-Quality Engagement</h3>
               <p className="text-sm text-[#444] leading-relaxed">
-                Exclusive private networks ensure authentic, stable, premium engagement.
+                Exclusive Private Networks ensure Fast, Stable & Premium Engagement, every order.
               </p>
             </div>
 
@@ -352,7 +352,7 @@ export default function Home() {
               <ShieldCheck className="text-[#007BFF]" size={38} />
               <h3 className="font-bold text-lg mt-3 text-[#111]">Advanced Security</h3>
               <p className="text-sm text-[#444] leading-relaxed">
-                Zero passwords required. Full SSL encryption + strict privacy safeguards.
+                Zero passwords required. Full SSL encryption + Strict privacy safeguards.
               </p>
             </div>
 
@@ -370,7 +370,7 @@ export default function Home() {
               <RefreshCcw className="text-[#007BFF]" size={38} />
               <h3 className="font-bold text-lg mt-3 text-[#111]">30-Day Refill Guarantee</h3>
               <p className="text-sm text-[#444] leading-relaxed">
-                Drops? We instantly refill your order at no cost — fully guaranteed.
+                Drops? We instantly refill your order at no cost for 30-days — fully guaranteed.
               </p>
             </div>
 
@@ -379,7 +379,7 @@ export default function Home() {
               <Star className="text-[#007BFF]" size={38} />
               <h3 className="font-bold text-lg mt-3 text-[#111]">Proven Reputation</h3>
               <p className="text-sm text-[#444] leading-relaxed">
-                Trusted by over 100,000 creators worldwide with a verified 4.8/5 rating.
+                Trusted by over 100,000+ creators worldwide with a 4.8/5 rating.
               </p>
             </div>
 
