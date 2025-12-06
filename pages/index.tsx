@@ -33,28 +33,32 @@ const FAQS = [
   {
     question: "Why choose us?",
     answer:
-      "Unlike other Social Growth Services, YesViral constantly upgrades our Private Delivery Networks (PDNs) to ensure users receive the Highest-Quality services every time.",
+      "Unlike other Social Growth Services, YesViral constantly upgrades our Private Delivery Networks (PDNs) to ensure users receive the Highest-Quality services every time. We focus on Fast, Reliable, and High-Quality results that evolve and improve with every order placed.",
   },
   {
     question: "What services do you offer?",
     answer:
-      "High-Quality Engagement across Instagram, YouTube, TikTok, and more.",
+      "Our Social Media Marketing services help Individuals, Influencers, and Brands grow their online presence with targeted High-Quality Engagement across Instagram, YouTube, TikTok, and more.",
   },
   {
     question: "Do I need to share my account password?",
-    answer: "No. We never require your password for delivery.",
+    answer:
+      "No. We never require your password to deliver services. Everything is securely delivered without accessing your account.",
   },
   {
     question: "Are the followers real?",
-    answer: "Yes. All engagement comes from real users — never bots.",
+    answer:
+      "Yes. All engagement comes from real users — never bots — to help boost reach and authenticity.",
   },
   {
     question: "Is your service safe and legal?",
-    answer: "Absolutely. Our delivery systems are secure and compliant.",
+    answer:
+      "Absolutely. We use safe, secure, and compliant delivery systems designed to protect your account.",
   },
   {
     question: "What is your refill guarantee?",
-    answer: "30 days of free refills if drops occur.",
+    answer:
+      "If any drops occur within 30 days of your order, we refill them free of charge — no hassle.",
   },
 ];
 
@@ -131,8 +135,11 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>YesViral – Buy High-Quality Followers, Likes & Views</title>
-        <meta name="description" content="Grow your social media with YesViral. Buy real followers, likes, views, and more — fast, secure, and trusted by 100,000+ creators." />
+        <title>YesViral – Buy High-Quality Followers, Likes & Views.</title>
+        <meta
+          name="description"
+          content="Grow your social media with YesViral. Buy real followers, likes, views, and more — fast, secure, and trusted by 100,000+ creators."
+        />
       </Head>
 
       <OrderModal
@@ -144,8 +151,12 @@ export default function Home() {
 
       <main className="px-4 sm:px-6 max-w-7xl mx-auto py-6 sm:py-10 space-y-10 select-none">
 
-        {/* HERO */}
+        {/* =============================================== */}
+        {/* HERO SECTION */}
+        {/* =============================================== */}
         <section className="relative flex flex-col-reverse md:grid md:grid-cols-2 md:gap-8 items-center">
+
+          {/* LEFT */}
           <div className="w-full flex flex-col items-center md:items-start space-y-7 text-center md:text-left">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#E8F1FF] rounded-full text-xs font-bold text-[#007BFF]">
               <Star size={18} className="text-yellow-400 star-animate" />
@@ -159,47 +170,51 @@ export default function Home() {
             </h1>
 
             <p className="text-[#444] text-base sm:text-lg max-w-md sm:max-w-xl font-medium">
-              Unlock Social Growth with YesViral — High-Quality Followers, Likes & Views via Private Delivery Networks.
+              Unlock Social Growth with YesViral — Trusted for delivering High-Quality Followers,
+              Likes & Views through Exclusive Private Delivery Networks.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
               <button className="bg-[#007BFF] text-white font-semibold px-6 py-3 rounded-xl shadow-md hover:bg-[#005FCC] transition" onClick={openOrderModalPlatform}>
                 Get Started
               </button>
-
               <Link href="/track-order" className="bg-white border border-[#CFE4FF] text-[#007BFF] font-semibold px-6 py-3 rounded-xl shadow hover:bg-[#F5FAFF] transition">
                 Track Order
               </Link>
             </div>
 
-            <span className="text-xs text-[#555]">🔒 SSL-secured · ⭐ 4.8/5 rating · ⚡ Orders start in minutes</span>
+            <span className="text-xs text-[#555]">🔒 SSL-secured payments · ⭐ 4.8/5 rating · ⚡ Orders typically start in minutes</span>
           </div>
 
-          {/* HERO IMAGE + FLOATING CARDS */}
+          {/* RIGHT — PHONE */}
           <div className="relative hidden md:flex items-center justify-center">
             <div className="relative inline-block">
 
-              <div className="absolute top-[40px] left-1/2 -translate-x-1/2 flex gap-3">
-                <div className="bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 text-[13px] yv-card-1">
-                  💙 <p className="font-semibold text-[#111]">Trusted by Brands</p>
+              <div className="absolute top-[40px] left-1/2 -translate-x-1/2 flex flex-nowrap gap-3">
+                <div className="bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 whitespace-nowrap yv-card-1">
+                  <span className="text-[#007BFF] text-lg">💙</span>
+                  <p className="text-[13px] font-semibold text-[#111]">Trusted by Brands & Creators</p>
                 </div>
 
-                <div className="bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 text-[13px] yv-card-2">
-                  📦 <p className="font-semibold text-[#111]">Millions Delivered</p>
-                </div>
-              </div>
-
-              <div className="absolute bottom-[40px] left-1/2 -translate-x-1/2 flex gap-3">
-                <div className="bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 text-[13px] yv-card-3">
-                  🔒 <p className="font-semibold text-[#111]">Private Networks</p>
-                </div>
-
-                <div className="bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 text-[13px] yv-card-4">
-                  ⚡ <p className="font-semibold text-[#111]">Fastest Delivery</p>
+                <div className="bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 whitespace-nowrap yv-card-2">
+                  <span className="text-[#007BFF] text-lg">📦</span>
+                  <p className="text-[13px] font-semibold text-[#111]">Millions of Orders Delivered</p>
                 </div>
               </div>
 
-              <Image src="/hero-illustration.png" alt="YesViral Hero" width={420} height={420} className="w-full max-w-[420px] drop-shadow-2xl" priority />
+              <div className="absolute bottom-[40px] left-1/2 -translate-x-1/2 flex flex-nowrap gap-3">
+                <div className="bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 whitespace-nowrap yv-card-3">
+                  <span className="text-[#007BFF] text-lg">🔒</span>
+                  <p className="text-[13px] font-semibold text-[#111]">Private Delivery Networks</p>
+                </div>
+
+                <div className="bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 whitespace-nowrap yv-card-4">
+                  <span className="text-[#007BFF] text-lg">⚡</span>
+                  <p className="text-[13px] font-semibold text-[#111]">Industry-Leading Speed & Quality</p>
+                </div>
+              </div>
+
+              <Image src="/hero-illustration.png" alt="YesViral Hero" width={420} height={420} className="w-full max-w-[420px] h-auto object-contain drop-shadow-2xl" draggable={false} priority />
             </div>
           </div>
         </section>
@@ -207,24 +222,18 @@ export default function Home() {
         {/* SERVICES */}
         <section id="order" className="space-y-7 py-8 md:py-14">
           <h2 className="text-center text-4xl font-extrabold">Place Your Order Instantly</h2>
-
-          <p className="text-[#444] text-center max-w-2xl mx-auto">
-            Choose your service — <span className="text-[#007BFF] font-semibold">Instant delivery starts within minutes.</span>
-          </p>
+          <p className="text-[#444] text-center max-w-2xl mx-auto">Choose your service — <span className="font-semibold text-[#007BFF]">Instant delivery starts within minutes.</span></p>
 
           <div className="flex justify-center gap-1 mb-6">
-            {[1, 2, 3, 4].map((i) => (
-              <Star key={i} size={20} className="text-[#007BFF] fill-[#007BFF]" />
-            ))}
+            {[1, 2, 3, 4].map((i) => <Star key={i} size={20} className="text-[#007BFF] fill-[#007BFF]" />)}
             <Star size={20} className="text-[#007BFF] fill-[#007BFF] opacity-50" />
             <span className="ml-2 text-[#007BFF] text-sm font-semibold">4.8 / 5 rating</span>
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {SERVICES.map(({ name, price, description, icon, tag, count, key }, idx) => (
-              <div key={idx} className="bg-white border-2 border-[#CFE4FF] rounded-2xl p-7 shadow-md hover:shadow-2xl transition flex flex-col gap-3 relative">
+              <div key={idx} className="bg-white border-2 border-[#CFE4FF] rounded-2xl p-7 shadow-md hover:shadow-2xl transition group flex flex-col gap-3 relative">
                 {tag && <span className="absolute top-4 right-5 bg-[#E8F1FF] text-[#007BFF] text-xs font-bold px-3 py-1 rounded-full shadow">{tag}</span>}
-
                 <div className="flex items-center gap-3 mb-2">
                   <div className="bg-[#F5FAFF] p-2 rounded-full">{icon}</div>
                   <h3 className="text-xl font-bold text-[#111]">{name}</h3>
@@ -247,42 +256,47 @@ export default function Home() {
           </div>
         </section>
 
-        {/* -------------------------------------------------------------- */}
-        {/* 🔥 WHY CHOOSE YESVIRAL — FULLY FIXED, SINGLE-LINE CLASSNAMES */}
-        {/* -------------------------------------------------------------- */}
-        <section id="about" className="bg-white/90 backdrop-blur-xl p-10 md:p-14 rounded-3xl shadow-xl border border-[#CFE4FF] space-y-10 text-center">
-          <h2 className="text-4xl md:text-5xl font-extrabold text-[#007BFF] tracking-tight">Why Choose YesViral?</h2>
+        {/* =============================================== */}
+        {/* PREMIUM UPGRADED — WHY CHOOSE YESVIRAL */}
+        {/* =============================================== */}
+        <section
+          id="about"
+          className="bg-white/90 backdrop-blur-xl p-10 md:p-14 rounded-3xl shadow-xl border border-[#CFE4FF] space-y-10 text-center"
+        >
+          <h2 className="text-4xl md:text-5xl font-extrabold text-[#007BFF] tracking-tight">
+            Why Choose YesViral?
+          </h2>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-10 mt-6">
 
-            <div className="bg-[#E6F0FF]/70 backdrop-blur-md border border-[#CFE4FF] rounded-2xl p-8 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-[#007BFF] flex flex-col items-center text-center">
-              <Zap className="text-[#007BFF]" size={40} />
+            <div className="bg-[#E6F0FF]/70 backdrop-blur-md border border-[#CFE4FF] rounded-2xl p-7 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-[#007BFF] flex flex-col items-center text-center">
+              <Zap className="text-[#007BFF]" size={36} />
               <span className="font-bold text-lg mt-3 text-[#111]">Instant Start</span>
-              <span className="text-sm text-[#444] leading-relaxed">Growth begins in 1–10 minutes.</span>
+              <span className="text-sm text-[#444] leading-relaxed">Growth begins in minutes.</span>
             </div>
 
-            <div className="bg-[#E6F0FF]/70 backdrop-blur-md border border-[#CFE4FF] rounded-2xl p-8 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-[#007BFF] flex flex-col items-center text-center">
-              <UserCheck className="text-[#007BFF]" size={40} />
+            <div className="bg-[#E6F0FF]/70 backdrop-blur-md border border-[#CFE4FF] rounded-2xl p-7 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-[#007BFF] flex flex-col items-center text-center">
+              <UserCheck className="text-[#007BFF]" size={36} />
               <span className="font-bold text-lg mt-3 text-[#111]">Quality Results</span>
-              <span className="text-sm text-[#444] leading-relaxed">Real, High-Quality engagement only.</span>
+              <span className="text-sm text-[#444] leading-relaxed">High-Quality engagement only.</span>
             </div>
 
-            <div className="bg-[#E6F0FF]/70 backdrop-blur-md border border-[#CFE4FF] rounded-2xl p-8 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-[#007BFF] flex flex-col items-center text-center">
-              <ShieldCheck className="text-[#007BFF]" size={40} />
+            <div className="bg-[#E6F0FF]/70 backdrop-blur-md border border-[#CFE4FF] rounded-2xl p-7 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-[#007BFF] flex flex-col items-center text-center">
+              <ShieldCheck className="text-[#007BFF]" size={36} />
               <span className="font-bold text-lg mt-3 text-[#111]">Safe & Secure</span>
-              <span className="text-sm text-[#444] leading-relaxed">No passwords. 256-bit SSL. Fully protected.</span>
+              <span className="text-sm text-[#444] leading-relaxed">No passwords. Fully protected.</span>
             </div>
 
-            <div className="bg-[#E6F0FF]/70 backdrop-blur-md border border-[#CFE4FF] rounded-2xl p-8 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-[#007BFF] flex flex-col items-center text-center">
-              <Clock className="text-[#007BFF]" size={40} />
+            <div className="bg-[#E6F0FF]/70 backdrop-blur-md border border-[#CFE4FF] rounded-2xl p-7 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-[#007BFF] flex flex-col items-center text-center">
+              <Clock className="text-[#007BFF]" size={36} />
               <span className="font-bold text-lg mt-3 text-[#111]">24/7 Support</span>
               <span className="text-sm text-[#444] leading-relaxed">Always online when you need us.</span>
             </div>
 
-            <div className="bg-[#E6F0FF]/70 backdrop-blur-md border border-[#CFE4FF] rounded-2xl p-8 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-[#007BFF] flex flex-col items-center text-center">
-              <RefreshCcw className="text-[#007BFF]" size={40} />
-              <span className="font-bold text-lg mt-3 text-[#111]">30 Day Refill</span>
-              <span className="text-sm text-[#444] leading-relaxed">Drops? We refill instantly — free 30 days.</span>
+            <div className="bg-[#E6F0FF]/70 backdrop-blur-md border border-[#CFE4FF] rounded-2xl p-7 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-[#007BFF] flex flex-col items-center text-center">
+              <RefreshCcw className="text-[#007BFF]" size={36} />
+              <span className="font-bold text-lg mt-3 text-[#111]">30-Day Refill</span>
+              <span className="text-sm text-[#444] leading-relaxed">Free refills if drops occur.</span>
             </div>
 
           </div>
@@ -295,7 +309,7 @@ export default function Home() {
         </section>
 
         {/* OTHER SECTIONS */}
-        <section className="py-2 md:py-3">
+        <section className="py-2 md:py-3 mb-2 md:mb-3">
           <HowItWorks />
         </section>
 
@@ -307,10 +321,22 @@ export default function Home() {
           <Testimonials />
         </section>
 
-        <section className="mb-6">
+        <section className="mb-4 md:mb-6">
           <FAQ faqs={FAQS} />
         </section>
 
+        {/* FINAL CTA */}
+        <section className="text-center space-y-4 py-4 md:py-6">
+          <h2 className="text-4xl font-extrabold mb-2">Ready to try YesViral?</h2>
+          <p className="text-[#444] text-lg">
+            Join over 100,000+ creators already growing with YesViral—choose your service and unlock High-Quality results in minutes.
+          </p>
+          <div className="mt-6 mb-6">
+            <button className="bg-[#007BFF] text-white px-8 py-3 text-lg rounded-xl hover:bg-[#005FCC] font-bold shadow transition" onClick={openOrderModalPlatform}>
+              View Services
+            </button>
+          </div>
+        </section>
       </main>
 
       <SalesNotifications />
@@ -326,7 +352,7 @@ export default function Home() {
         }
 
         .star-animate {
-          animation: starGlow 2.6s ease-in-out infinite;
+          animation: starGlow 2.6s cubic-bezier(0.65, 0.05, 0.36, 1) infinite;
         }
 
         @keyframes yvFloat {
@@ -335,10 +361,10 @@ export default function Home() {
           100% { transform: translateY(0px); }
         }
 
-        .yv-card-1 { animation: yvFloat 7s infinite; }
-        .yv-card-2 { animation: yvFloat 8s infinite; }
-        .yv-card-3 { animation: yvFloat 9s infinite; }
-        .yv-card-4 { animation: yvFloat 10s infinite; }
+        .yv-card-1 { animation: yvFloat 7s ease-in-out infinite; }
+        .yv-card-2 { animation: yvFloat 8s ease-in-out infinite; }
+        .yv-card-3 { animation: yvFloat 9s ease-in-out infinite; }
+        .yv-card-4 { animation: yvFloat 10s ease-in-out infinite; }
       `}</style>
     </>
   );
