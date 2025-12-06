@@ -142,7 +142,7 @@ export default function Home() {
         {/* HERO SECTION */}
         <section className="relative flex flex-col-reverse md:grid md:grid-cols-2 md:gap-8 items-center">
 
-          {/* LEFT SIDE — UNCHANGED */}
+          {/* LEFT SIDE (unchanged) */}
           <div className="w-full flex flex-col items-center md:items-start space-y-7 text-center md:text-left">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#E8F1FF] rounded-full text-xs font-bold text-[#007BFF] tracking-wide shadow-sm">
               <Star size={18} className="text-yellow-400 star-animate" />
@@ -152,9 +152,7 @@ export default function Home() {
             <h1 className="text-4xl sm:text-5xl font-extrabold text-[#007BFF] leading-snug drop-shadow-sm">
               Boost Your Social Presence Instantly.
               <br className="hidden sm:block" />
-              <span className="text-[#005FCC]">
-                Premium Growth for Instagram, TikTok, YouTube & More.
-              </span>
+              <span className="text-[#005FCC]">Premium Growth for Instagram, TikTok, YouTube & More.</span>
             </h1>
 
             <p className="text-[#444] text-base sm:text-lg max-w-md sm:max-w-xl font-medium">
@@ -180,42 +178,45 @@ export default function Home() {
             </div>
 
             <span className="text-xs text-[#555] font-medium">
-              🔒 SSL-encrypted payments · ⭐ 4.8/5 from 10,000+ clients · ⚡ Orders typically start
-              in minutes
+              🔒 SSL-encrypted payments · ⭐ 4.8/5 from 10,000+ clients · ⚡ Orders typically start in minutes
             </span>
           </div>
 
-          {/* ⭐⭐⭐ FIXED RIGHT SIDE — CLEAN, PERFECT, NOT STACKED ⭐⭐⭐ */}
+          {/* RIGHT SIDE — moved closer to the phone */}
           <div className="relative hidden md:flex items-center justify-center">
             <div className="relative inline-block">
 
-              {/* TOP ROW — side by side, not stacking */}
-              <div className="absolute -top-5 left-1/2 -translate-x-1/2 flex flex-nowrap gap-3">
-                <div className="bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex flex-nowrap items-center gap-2 yv-card-1 whitespace-nowrap">
+              {/* TOP ROW — closer (-top-3) */}
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 flex flex-nowrap gap-3">
+                <div className="bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg 
+                                flex flex-nowrap items-center gap-2 yv-card-1 whitespace-nowrap">
                   <span className="text-[#007BFF] text-lg">💙</span>
                   <p className="text-[13px] font-semibold text-[#111]">Trusted by Brands & Creators</p>
                 </div>
 
-                <div className="bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex flex-nowrap items-center gap-2 yv-card-2 whitespace-nowrap">
+                <div className="bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg 
+                                flex flex-nowrap items-center gap-2 yv-card-2 whitespace-nowrap">
                   <span className="text-[#007BFF] text-lg">📦</span>
                   <p className="text-[13px] font-semibold text-[#111]">Millions of Orders Delivered</p>
                 </div>
               </div>
 
-              {/* BOTTOM ROW — same, side by side */}
-              <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 flex flex-nowrap gap-3">
-                <div className="bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex flex-nowrap items-center gap-2 yv-card-3 whitespace-nowrap">
+              {/* BOTTOM ROW — closer (-bottom-3) */}
+              <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 flex flex-nowrap gap-3">
+                <div className="bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg 
+                                flex flex-nowrap items-center gap-2 yv-card-3 whitespace-nowrap">
                   <span className="text-[#007BFF] text-lg">🔒</span>
                   <p className="text-[13px] font-semibold text-[#111]">Private Delivery Networks</p>
                 </div>
 
-                <div className="bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex flex-nowrap items-center gap-2 yv-card-4 whitespace-nowrap">
+                <div className="bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg 
+                                flex flex-nowrap items-center gap-2 yv-card-4 whitespace-nowrap">
                   <span className="text-[#007BFF] text-lg">⚡</span>
                   <p className="text-[13px] font-semibold text-[#111]">Industry-Leading Speed & Quality</p>
                 </div>
               </div>
 
-              {/* PHONE */}
+              {/* PHONE IMAGE */}
               <Image
                 src="/hero-illustration.png"
                 alt="YesViral Notifications Illustration"
@@ -230,15 +231,13 @@ export default function Home() {
 
         </section>
 
-        {/* EVERYTHING BELOW IS UNCHANGED */}
+        {/* EVERYTHING BELOW UNCHANGED */}
         {/* SERVICES SECTION */}
         <section id="order" className="space-y-7 py-8 md:py-14">
           <h2 className="text-center text-4xl font-extrabold">Place Your Order Instantly</h2>
           <p className="text-[#444] text-center max-w-2xl mx-auto">
             Choose your service — No logins needed, No Hassle.{" "}
-            <span className="font-semibold text-[#007BFF]">
-              Instant delivery starts within minutes.
-            </span>
+            <span className="font-semibold text-[#007BFF]">Instant delivery starts within minutes.</span>
           </p>
 
           <div className="flex items-center justify-center gap-1 mb-6 mt-1">
@@ -290,7 +289,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ABOUT, HOW IT WORKS, PROMISE, TESTIMONIALS, FAQ, CTA — UNCHANGED */}
+        {/* ABOUT SECTION */}
         <section
           id="about"
           className="bg-[#F5FAFF] p-8 md:p-12 rounded-2xl text-center shadow-sm space-y-8 py-8 md:py-14"
@@ -337,6 +336,7 @@ export default function Home() {
           </div>
         </section>
 
+        {/* REST OF PAGE UNCHANGED */}
         <section className="py-2 md:py-3 mb-2 md:mb-3">
           <HowItWorks />
         </section>
