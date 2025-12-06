@@ -38,7 +38,7 @@ const FAQS = [
   {
     question: "What services do you offer?",
     answer:
-      "Our Social Media Marketing services help Individuals, Influencers, and Brands grow their online presence with targeted High-Quality Engagement. Whether you want more Followers, Subscribers, or Views — we offer top-tier services across Instagram, TikTok, YouTube and more.",
+      "Our Social Media Marketing services help Individuals, Influencers, and Brands grow their online presence with targeted High-Quality Engagement across Instagram, YouTube, TikTok, and more.",
   },
   {
     question: "Do I need to share my account password?",
@@ -46,9 +46,9 @@ const FAQS = [
       "No. We never require your password to deliver services. Everything is securely delivered without accessing your account.",
   },
   {
-    question: "Are the followers, likes, and subscribers real?",
+    question: "Are the followers real?",
     answer:
-      "Yes. All engagement comes from real users, not bots — helping boost reach and authenticity.",
+      "Yes. All engagement comes from real users — never bots — to help boost reach and authenticity.",
   },
   {
     question: "Is your service safe and legal?",
@@ -182,7 +182,7 @@ export default function Home() {
 
             <p className="text-[#444] text-base sm:text-lg max-w-md sm:max-w-xl font-medium">
               Unlock Social Growth with YesViral — Trusted for delivering High-Quality Followers,
-              Likes & Views through Exclusive Private Networks.
+              Likes & Views through Exclusive Private Delivery Networks.
             </p>
 
             {/* CTA BUTTONS */}
@@ -213,8 +213,8 @@ export default function Home() {
           <div className="relative hidden md:flex items-center justify-center">
             <div className="relative inline-block">
 
-              {/* ⭐ TOP ROW — FORCED CLOSER (-80px) */}
-              <div className="absolute -top-[80px] left-1/2 -translate-x-1/2 flex flex-nowrap gap-3">
+              {/* ⭐ TOP ROW — NOW MOVED DOWN TOWARD PHONE */}
+              <div className="absolute top-[40px] left-1/2 -translate-x-1/2 flex flex-nowrap gap-3">
                 <div className="bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 whitespace-nowrap yv-card-1">
                   <span className="text-[#007BFF] text-lg">💙</span>
                   <p className="text-[13px] font-semibold text-[#111]">Trusted by Brands & Creators</p>
@@ -226,8 +226,8 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* ⭐ BOTTOM ROW — FORCED CLOSER (-80px) */}
-              <div className="absolute -bottom-[80px] left-1/2 -translate-x-1/2 flex flex-nowrap gap-3">
+              {/* ⭐ BOTTOM ROW — NOW MOVED UP TOWARD PHONE */}
+              <div className="absolute bottom-[40px] left-1/2 -translate-x-1/2 flex flex-nowrap gap-3">
                 <div className="bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 whitespace-nowrap yv-card-3">
                   <span className="text-[#007BFF] text-lg">🔒</span>
                   <p className="text-[13px] font-semibold text-[#111]">Private Delivery Networks</p>
@@ -242,7 +242,7 @@ export default function Home() {
               {/* PHONE IMAGE */}
               <Image
                 src="/hero-illustration.png"
-                alt="YesViral Notifications Illustration"
+                alt="YesViral Hero"
                 width={420}
                 height={420}
                 className="w-full max-w-[420px] h-auto object-contain drop-shadow-2xl"
@@ -257,7 +257,9 @@ export default function Home() {
         {/* SERVICES SECTION */}
         {/* =============================================== */}
         <section id="order" className="space-y-7 py-8 md:py-14">
-          <h2 className="text-center text-4xl font-extrabold">Place Your Order Instantly</h2>
+          <h2 className="text-center text-4xl font-extrabold">
+            Place Your Order Instantly
+          </h2>
 
           <p className="text-[#444] text-center max-w-2xl mx-auto">
             Choose your service —{" "}
@@ -272,7 +274,9 @@ export default function Home() {
               <Star key={i} size={20} className="text-[#007BFF] fill-[#007BFF]" />
             ))}
             <Star size={20} className="text-[#007BFF] fill-[#007BFF] opacity-50" />
-            <span className="ml-2 text-[#007BFF] text-sm font-semibold">4.8 / 5 rating</span>
+            <span className="ml-2 text-[#007BFF] text-sm font-semibold">
+              4.8 / 5 rating
+            </span>
           </div>
 
           {/* SERVICE CARDS */}
@@ -300,7 +304,9 @@ export default function Home() {
                 </ul>
 
                 <div className="flex items-center gap-2 mt-2">
-                  <span className="text-sm font-medium text-[#007BFF]">{price}</span>
+                  <span className="text-sm font-medium text-[#007BFF]">
+                    {price}
+                  </span>
                   <span className="text-xs text-[#111] bg-[#E8F1FF] px-2 py-0.5 rounded">
                     {count}
                   </span>
@@ -324,7 +330,9 @@ export default function Home() {
           id="about"
           className="bg-[#F5FAFF] p-8 md:p-12 rounded-2xl text-center shadow-sm space-y-8"
         >
-          <h2 className="text-4xl font-extrabold text-[#111]">Why Choose YesViral?</h2>
+          <h2 className="text-4xl font-extrabold text-[#111]">
+            Why Choose YesViral?
+          </h2>
 
           {/* ICON GRID */}
           <div className="flex flex-wrap gap-7 justify-center mt-6">
@@ -349,7 +357,7 @@ export default function Home() {
             <div className="flex flex-col items-center max-w-[170px]">
               <Clock className="text-[#007BFF]" size={32} />
               <span className="font-semibold mt-2">24/7 Support</span>
-              <span className="text-sm text-[#444]">Chat any time, any day.</span>
+              <span className="text-sm text-[#444]">Always online</span>
             </div>
 
             <div className="flex flex-col items-center max-w-[170px]">
@@ -391,7 +399,8 @@ export default function Home() {
         <section className="text-center space-y-4 py-4 md:py-6">
           <h2 className="text-4xl font-extrabold mb-2">Ready to try YesViral?</h2>
           <p className="text-[#444] text-lg">
-            Join over 100,000+ creators already growing with YesViral—choose your service and unlock High-Quality results in minutes.
+            Join over 100,000+ creators already growing with YesViral—choose
+            your service and unlock High-Quality results in minutes.
           </p>
           <div className="mt-6 mb-6">
             <button
