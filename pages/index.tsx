@@ -186,26 +186,26 @@ export default function Home() {
           <div className="relative hidden md:flex items-center justify-center">
             <div className="relative inline-block">
 
-              {/* TOP LEFT */}
-              <div className="absolute top-8 left-4 bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 yv-card-1">
+              {/* TOP LEFT — FIXED */}
+              <div className="absolute top-12 left-3 bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg mx-1 flex items-center gap-2 yv-card-1">
                 <span className="text-[#007BFF] text-lg">💙</span>
                 <p className="text-[13px] font-semibold text-[#111]">Trusted by Brands & Creators</p>
               </div>
 
-              {/* TOP RIGHT */}
-              <div className="absolute top-8 right-4 bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 yv-card-2">
+              {/* TOP RIGHT — FIXED */}
+              <div className="absolute top-12 right-3 bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg mx-1 flex items-center gap-2 yv-card-2">
                 <span className="text-[#007BFF] text-lg">📦</span>
                 <p className="text-[13px] font-semibold text-[#111]">Millions of Orders Delivered</p>
               </div>
 
-              {/* BOTTOM LEFT */}
-              <div className="absolute bottom-8 left-4 bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 yv-card-3">
+              {/* BOTTOM LEFT — FIXED */}
+              <div className="absolute bottom-12 left-3 bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg mx-1 flex items-center gap-2 yv-card-3">
                 <span className="text-[#007BFF] text-lg">🔒</span>
                 <p className="text-[13px] font-semibold text-[#111]">Private Delivery Networks</p>
               </div>
 
-              {/* BOTTOM RIGHT */}
-              <div className="absolute bottom-8 right-4 bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 yv-card-4">
+              {/* BOTTOM RIGHT — FIXED */}
+              <div className="absolute bottom-12 right-3 bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg mx-1 flex items-center gap-2 yv-card-4">
                 <span className="text-[#007BFF] text-lg">⚡</span>
                 <p className="text-[13px] font-semibold text-[#111]">Industry-Leading Speed & Quality</p>
               </div>

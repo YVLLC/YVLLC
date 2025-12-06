@@ -128,7 +128,7 @@ export default function TrackOrderPage() {
         {/* LEFT CARD */}
         <div className="relative w-full lg:flex-[1.2]">
 
-          {/* UPDATED BLUE GRADIENT BORDER */}
+          {/* BLUE BORDER */}
           <div className="absolute -inset-[1px] rounded-[26px] bg-gradient-to-br from-[#007BFF] via-[#0EA5E9] to-[#005FCC] opacity-80" />
 
           {/* MAIN CARD */}
@@ -149,7 +149,7 @@ export default function TrackOrderPage() {
                 Drop your order ID below to see the latest status across our private delivery networks in real time.
               </p>
 
-              {/* MAIN BADGE */}
+              {/* MAIN BADGE (kept) */}
               <div className="mt-3 flex items-center justify-center">
                 <span className="inline-flex items-center gap-2 rounded-full bg-[#F0F5FF] px-4 py-1.5 border border-[#CFE4FF] shadow-sm text-[11px] font-semibold text-[#007BFF]">
                   <span className="h-2.5 w-2.5 rounded-full bg-[#22C55E] animate-pulse" />
@@ -206,7 +206,7 @@ export default function TrackOrderPage() {
                 </p>
               </div>
 
-              {/* TRACK BUTTON (BLUE OVERLAY FIXED) */}
+              {/* TRACK BUTTON */}
               <button
                 type="submit"
                 disabled={loading || !orderId.trim()}
@@ -215,7 +215,7 @@ export default function TrackOrderPage() {
                 }`}
               >
                 {!loading && (
-                  <span className="absolute inset-[1px] rounded-[11px] bg-gradient-to-r from-[#007BFF] to-[#005FCC] opacity-0 transition group-hover:opacity-100" />
+                  <span className="absolute inset-[1px] rounded-[11px] bg-gradient-to-r from[#007BFF] to-[#005FCC] opacity-0 transition group-hover:opacity-100" />
                 )}
 
                 <span className="relative flex items-center gap-2">
@@ -225,7 +225,7 @@ export default function TrackOrderPage() {
               </button>
             </form>
 
-            {/* STATUS OUTPUT */}
+            {/* STATUS */}
             {(statusKey || error) && (
               <div className="mt-1 flex flex-col items-center gap-3 rounded-2xl border border-[#E0EDFF] bg-[#F5F7FF] px-4 py-4 sm:px-6 sm:py-5">
 
@@ -255,7 +255,7 @@ export default function TrackOrderPage() {
                   </div>
                 </div>
 
-                {/* BLUE PROGRESS BAR */}
+                {/* PROGRESS BAR */}
                 <div className="mt-1 flex w-full max-w-md flex-col gap-2">
                   <div className="flex items-center justify-between text-[11px] text-[#6B7280] font-semibold uppercase tracking-[0.16em]">
                     <span>Order Placed</span>
@@ -287,7 +287,6 @@ export default function TrackOrderPage() {
                 </button>
               </Link>
 
-              {/* PLACE ANOTHER ORDER — BLUE */}
               <button
                 className="group flex w-full items-center justify-center gap-2 rounded-xl bg-[#007BFF] px-6 py-2.5 text-[14px] font-semibold text-white shadow-[0_16px_35px_rgba(15,23,42,0.6)] transition hover:bg-[#005FCC] sm:flex-1"
                 onClick={() => setShowOrderModal(true)}
@@ -308,11 +307,6 @@ export default function TrackOrderPage() {
               <div>
                 <h2 className="text-[16px] font-black tracking-tight text-[#0F172A]">Tracking help & FAQs</h2>
                 <p className="mt-1 text-[12px] text-[#64748B] max-w-xs">Quick answers for the most common tracking questions.</p>
-              </div>
-
-              <div className="hidden sm:flex items-center gap-2 rounded-full bg-[#F3F6FF] px-3 py-1 text-[11px] font-semibold text-[#0B63E6] border border-[#D0E2FF]">
-                <span className="h-2 w-2 rounded-full bg-[#22C55E] animate-pulse" />
-                <span>Support Team: Online</span>
               </div>
             </div>
 
