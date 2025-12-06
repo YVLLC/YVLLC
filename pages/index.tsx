@@ -138,10 +138,8 @@ export default function Home() {
       />
 
       <main className="px-4 sm:px-6 max-w-7xl mx-auto py-4 sm:py-8 space-y-6 md:space-y-10 select-none">
-
         {/* HERO SECTION */}
         <section className="relative flex flex-col-reverse md:grid md:grid-cols-2 md:gap-8 items-center">
-
           {/* LEFT SIDE */}
           <div className="w-full flex flex-col items-center md:items-start space-y-7 text-center md:text-left">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#E8F1FF] rounded-full text-xs font-bold text-[#007BFF] tracking-wide shadow-sm">
@@ -158,7 +156,9 @@ export default function Home() {
             </h1>
 
             <p className="text-[#444] text-base sm:text-lg max-w-md sm:max-w-xl font-medium">
-              Unlock Social Growth with YesViral — Trusted by Creators and Brands for High-Quality Followers, Likes, & Views powered by Exclusive Private Networks built for Speed, Trust, and Results.
+              Unlock Social Growth with YesViral — Trusted by Creators and Brands for High-Quality
+              Followers, Likes, & Views powered by Exclusive Private Networks built for Speed,
+              Trust, and Results.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto justify-center md:justify-start">
@@ -178,17 +178,16 @@ export default function Home() {
             </div>
 
             <span className="text-xs text-[#555] font-medium">
-              🔒 SSL-encrypted payments · ⭐ 4.8/5 from 10,000+ clients · ⚡ Orders typically start in minutes
+              🔒 SSL-encrypted payments · ⭐ 4.8/5 from 10,000+ clients · ⚡ Orders typically start
+              in minutes
             </span>
           </div>
 
-          {/* RIGHT SIDE — FIXED CARD SPACING */}
+          {/* RIGHT SIDE */}
           <div className="relative hidden md:flex items-center justify-center">
             <div className="relative inline-block">
-
               {/* TOP LEFT */}
-              <div className="absolute top-10 left-3 bg-white/95 border border-[#CFE4FF] 
-              rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 yv-card-1">
+              <div className="absolute top-4 left-6 bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 yv-card-1">
                 <span className="text-[#007BFF] text-lg">💙</span>
                 <p className="text-[13px] font-semibold text-[#111]">
                   Trusted by Brands & Creators
@@ -196,8 +195,7 @@ export default function Home() {
               </div>
 
               {/* TOP RIGHT */}
-              <div className="absolute top-10 right-3 bg-white/95 border border-[#CFE4FF] 
-              rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 yv-card-2">
+              <div className="absolute top-4 right-6 bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 yv-card-2">
                 <span className="text-[#007BFF] text-lg">📦</span>
                 <p className="text-[13px] font-semibold text-[#111]">
                   Millions of Orders Delivered
@@ -205,8 +203,7 @@ export default function Home() {
               </div>
 
               {/* BOTTOM LEFT */}
-              <div className="absolute bottom-10 left-3 bg-white/95 border border-[#CFE4FF] 
-              rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 yv-card-3">
+              <div className="absolute bottom-4 left-6 bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 yv-card-3">
                 <span className="text-[#007BFF] text-lg">🔒</span>
                 <p className="text-[13px] font-semibold text-[#111]">
                   Private Delivery Networks
@@ -214,8 +211,7 @@ export default function Home() {
               </div>
 
               {/* BOTTOM RIGHT */}
-              <div className="absolute bottom-10 right-3 bg-white/95 border border-[#CFE4FF] 
-              rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 yv-card-4">
+              <div className="absolute bottom-4 right-6 bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 yv-card-4">
                 <span className="text-[#007BFF] text-lg">⚡</span>
                 <p className="text-[13px] font-semibold text-[#111]">
                   Industry-Leading Speed & Quality
@@ -365,7 +361,8 @@ export default function Home() {
         <section className="text-center space-y-4 mt-6 py-4 md:py-6">
           <h2 className="text-4xl font-extrabold mb-2">Ready to try YesViral?</h2>
           <p className="text-[#444] text-lg mb-6">
-            Join over 100,000+ Creators already growing with YesViral—choose your service and unlock High-Quality results in minutes.
+            Join over 100,000+ Creators already growing with YesViral—choose your service and
+            unlock High-Quality results in minutes.
           </p>
           <div className="mt-6 mb-6">
             <button
