@@ -334,7 +334,7 @@ export default function Home() {
               <Zap className="text-[#007BFF]" size={38} />
               <h3 className="font-bold text-lg mt-3 text-[#111]">Instant Activation</h3>
               <p className="text-sm text-[#444] leading-relaxed">
-                Orders begin processing within minutes through our optimized delivery systems.
+                Orders begin processing within minutes through our Private Delivery Networks (PDNS).
               </p>
             </div>
 
@@ -361,7 +361,7 @@ export default function Home() {
               <Clock className="text-[#007BFF]" size={38} />
               <h3 className="font-bold text-lg mt-3 text-[#111]">24/7 Priority Support</h3>
               <p className="text-sm text-[#444] leading-relaxed">
-                Real humans available around the clock to help with anything you need.
+                Real support available around the clock to help with anything you need.
               </p>
             </div>
 
@@ -370,7 +370,7 @@ export default function Home() {
               <RefreshCcw className="text-[#007BFF]" size={38} />
               <h3 className="font-bold text-lg mt-3 text-[#111]">30-Day Refill Guarantee</h3>
               <p className="text-sm text-[#444] leading-relaxed">
-                Drops? We instantly refill your order at no cost for 30-days — fully guaranteed.
+                Drops? We instantly refill your order at no cost for 30-days — Fully Guaranteed.
               </p>
             </div>
 
