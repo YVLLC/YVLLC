@@ -266,7 +266,7 @@ export default function Home() {
             {[1, 2, 3, 4].map((i) => (
               <Star key={i} size={20} className="text-[#007BFF] fill-[#007BFF]" />
             ))}
-            <Star size={20} className="text-[#007BFF] fill="#007BFF" opacity={0.5} />
+<Star size={20} className="text-[#007BFF] fill-[#007BFF] opacity-50" />
             <span className="ml-2 text-[#007BFF] text-sm font-semibold">
               4.8 / 5 rating
             </span>
