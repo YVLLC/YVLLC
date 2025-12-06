@@ -187,25 +187,25 @@ export default function Home() {
             <div className="relative inline-block">
 
               {/* TOP LEFT */}
-              <div className="absolute top-9 left-0 bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 yv-card-1">
+              <div className="absolute top-9 left-6 bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 yv-card-1">
                 <span className="text-[#007BFF] text-lg">💙</span>
                 <p className="text-[13px] font-semibold text-[#111]">Trusted by Brands & Creators</p>
               </div>
 
               {/* TOP RIGHT */}
-              <div className="absolute top-9 right-0 bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 yv-card-2">
+              <div className="absolute top-9 right-6 bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 yv-card-2">
                 <span className="text-[#007BFF] text-lg">📦</span>
                 <p className="text-[13px] font-semibold text-[#111]">Millions of Orders Delivered</p>
               </div>
 
               {/* BOTTOM LEFT — FIXED */}
-              <div className="absolute bottom-9 left-1 bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 yv-card-3">
+              <div className="absolute bottom-9 left-6 bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 yv-card-3">
                 <span className="text-[#007BFF] text-lg">🔒</span>
                 <p className="text-[13px] font-semibold text-[#111]">Private Delivery Networks</p>
               </div>
 
               {/* BOTTOM RIGHT — FIXED */}
-              <div className="absolute bottom-9 right-1 bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 yv-card-4">
+              <div className="absolute bottom-9 right-6 bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 yv-card-4">
                 <span className="text-[#007BFF] text-lg">⚡</span>
                 <p className="text-[13px] font-semibold text-[#111]">Industry-Leading Speed & Quality</p>
               </div>
