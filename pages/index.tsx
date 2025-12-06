@@ -413,7 +413,9 @@ export default function Home() {
 
         {/* FINAL CTA */}
         <section className="text-center space-y-4 py-4 md:py-6">
-          <h2 className="text-4xl font-extrabold mb-2">Ready to try YesViral?</h2>
+<h2 className="text-4xl font-extrabold mb-2 text-[#007BFF]">
+  Ready to try YesViral?
+</h2>
           <p className="text-[#444] text-lg">
             Join over 100,000+ creators already growing with YesViral — choose your service and unlock High-Quality results in minutes.
           </p>
