@@ -369,6 +369,7 @@ type OrderModalProps = {
   onClose: () => void;
   initialPlatform?: string;
   initialService?: string;
+  initialQuantity?: number; // 🔥 NEW
 };
 
 export default function OrderModal({
@@ -376,6 +377,7 @@ export default function OrderModal({
   onClose,
   initialPlatform,
   initialService,
+  initialQuantity,
 }: OrderModalProps) {
   const [step, setStep] = useState(0);
 
@@ -437,7 +439,7 @@ export default function OrderModal({
 
     setPlatform(selectedPlatform);
     setService(selectedService);
-    setQuantity(100);
+setQuantity(initialQuantity ?? 100);
     setTarget("");
     setEmail("");
     setError("");
