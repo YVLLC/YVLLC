@@ -48,7 +48,7 @@ const FAQS = [
   {
     question: "Are the followers real?",
     answer:
-      "Yes. All engagement comes from real users — never bots — to help boost reach and authenticity.",
+      "Yes. All engagement comes from High-Quality Real Users sourced through our Premium Private Delivery Networks — Never low-quality bots.",
   },
   {
     question: "Is your service safe and legal?",
@@ -156,7 +156,7 @@ export default function Home() {
         {/* =============================================== */}
         <section className="relative flex flex-col-reverse md:grid md:grid-cols-2 md:gap-8 items-center">
 
-          {/* LEFT SIDE CONTENT */}
+          {/* LEFT SIDE */}
           <div className="w-full flex flex-col items-center md:items-start space-y-7 text-center md:text-left">
 
             <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#E8F1FF] rounded-full text-xs font-bold text-[#007BFF]">
@@ -177,7 +177,6 @@ export default function Home() {
               Likes & Views through Exclusive Private Delivery Networks.
             </p>
 
-            {/* CTA BUTTONS */}
             <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
               <button
                 className="bg-[#007BFF] text-white font-semibold px-6 py-3 rounded-xl shadow-md hover:bg-[#005FCC] transition"
@@ -316,7 +315,7 @@ export default function Home() {
         </section>
 
         {/* =============================================== */}
-        {/* WHY CHOOSE YESVIRAL — SUBTEXT ADDED */}
+        {/* WHY CHOOSE YESVIRAL — WITH SUBTEXT + MOBILE FIX */}
         {/* =============================================== */}
         <section
           id="about"
@@ -326,9 +325,9 @@ export default function Home() {
             Why Choose YesViral?
           </h2>
 
-          {/* ⭐ ADDED SUB-TEXT */}
+          {/* ⭐ SUBTEXT ADDED */}
           <p className="text-[#444] text-lg max-w-2xl mx-auto -mt-2">
-            Delivering unmatched Quality, Speed, and Reliability through advanced Private Delivery Networks.
+            Delivering unmatched quality, speed, and reliability through advanced Private Delivery Networks.
           </p>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-10 mt-6">
@@ -389,10 +388,14 @@ export default function Home() {
 
           </div>
 
-          <div className="flex flex-col sm:flex-row justify-center gap-6 mt-10 text-[#007BFF] font-bold text-lg">
+          {/* ⭐ MOBILE FIX APPLIED — BOTH LINES SHOW NOW */}
+          <div className="flex flex-col sm:flex-row justify-center gap-2 sm:gap-6 mt-10 text-[#007BFF] font-bold text-lg">
             <span>100k+ Followers Delivered</span>
+
+            {/* divider dot stays desktop only */}
             <span className="hidden sm:inline">•</span>
-            <span className="hidden sm:inline">Rated 4.8/5 by 10,000+ Clients</span>
+
+            <span>Rated 4.8/5 by 10,000+ Clients</span>
           </div>
         </section>
 
@@ -432,10 +435,8 @@ export default function Home() {
         </section>
       </main>
 
-      {/* SALES NOTIFICATIONS */}
       <SalesNotifications />
 
-      {/* GLOBAL ANIMATIONS */}
       <style jsx global>{`
         @keyframes starGlow {
           0% { transform: rotate(0deg) scale(1); filter: drop-shadow(0 0 0 #ffd700); }
