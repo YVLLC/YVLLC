@@ -31,34 +31,34 @@ const SalesNotifications = dynamic(
 
 const FAQS = [
   {
-    question: "Why choose us?",
+    question: "Why choose YesViral?",
     answer:
-      "Unlike other Social Growth Services, YesViral constantly upgrades our Private Delivery Networks (PDNs) to ensure users receive the Highest-Quality services every time. We focus on Fast, Reliable, and High-Quality results that evolve and improve with every order placed.",
+      "People choose YesViral when they’re done dealing with Slow, Low-Quality services that don’t deliver. YesViral was built to be the opposite — Consistent Results, Fast Delivery, Real Support, and a level of Quality you can actually rely on. We focus on Growth that looks Clean, feels Natural, and strengthens your Credibility instantly. No confusion. No surprises. Just Results that make a Difference.",
   },
   {
     question: "What services do you offer?",
     answer:
-      "Our Social Media Marketing services help Individuals, Influencers, and Brands grow their online presence with targeted High-Quality Engagement across Instagram, YouTube, TikTok, and more.",
+      "We provide Clean, High-Quality Social Growth across Instagram, TikTok, and YouTube — including Followers, Likes, Views, Subscribers, and more. Everything is tailored for people who want their page to look Established, Respected, and Active. Whether you’re building a Brand, growing a Business, or trying to Stand Out, our services help you look the part Immediately.",
   },
   {
-    question: "Do I need to share my account password?",
+    question: "Do I need to share my password?",
     answer:
-      "No. We never require your password to deliver services. Everything is securely delivered without accessing your account.",
+      "Never. You stay in Full Control of your account the entire time. We don’t log in, access, or request anything Private — your Privacy and Security stay untouched. All you provide is the Link or Username needed for Delivery. That’s it.",
   },
   {
     question: "Are the followers real?",
     answer:
-      "Yes. All engagement comes from High-Quality, Real Users sourced through our Premium Private Delivery Networks — Never low-quality bots.",
+      "We deliver High-Quality, Natural-Looking Engagement designed to make your page appear Active and Trustworthy. We don’t use Cheap, Risky, or Obviously Fake methods. Our goal is to boost your Presence in a Clean, Realistic way that actually improves how People see your Page.",
   },
   {
-    question: "Is your service safe and legal?",
+    question: "Is your service safe?",
     answer:
-      "Absolutely. We use safe, secure, and compliant delivery systems designed to protect your account.",
+      "Yes. Everything we deliver is done in a way that keeps your Account Protected. We don’t access your Login, we don’t request Sensitive Info, and we use Secure Payment processing to keep your details Safe. Thousands of Users trust us daily because the process is Simple, Direct, and designed with Safety in mind.",
   },
   {
-    question: "What is your refill guarantee?",
+    question: "How does the 30-day refill guarantee work?",
     answer:
-      "If any drops occur within 30 days of your order, we refill them free of charge — no hassle.",
+      "If anything Drops within 30 Days, we Refill it quickly at No Extra Cost — no hoops to jump through, no waiting weeks for support, and no excuses. Just message us with your Order ID and we handle the rest. It’s our way of making sure your Results stay as Strong as the day you bought them.",
   },
 ];
 
@@ -223,9 +223,9 @@ export default function Home() {
               Trusted by 100,000+ Creators
             </div>
 <h1
-  className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#007BFF] leading-[1.15] sm:leading-tight md:leading-snug tracking-tight max-w-[330px] sm:max-w-none"
+  className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#007BFF] leading-[1.15] sm:leading-tight md:leading-snug tracking-tight text-balance max-w-[340px] sm:max-w-none"
 >
-  Boost Your Social Presence Instantly.&nbsp;
+  Boost Your Social Presence Instantly.
   <br className="hidden sm:block" />
   <span className="text-[#005FCC]">
     Premium Growth for Instagram, TikTok & YouTube.
