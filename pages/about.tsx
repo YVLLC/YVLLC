@@ -21,13 +21,13 @@ export default function AboutPage() {
               HERO / INTRO
           ============================ */}
           <div className="text-center mb-20">
-            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-[#111111]">
+            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-[#007BFF]">
               The Story Behind <span className="text-[#007BFF]">YesViral</span>
             </h1>
 
             <p className="text-lg text-[#444444] mt-5 max-w-2xl mx-auto leading-relaxed">
               A next-generation growth platform created for creators, brands, and businesses
-              who expect more than just “followers.” YesViral was built to deliver{" "}
+              who expect more than just “Followers.” YesViral was built to deliver{" "}
               <strong>Speed</strong>, <strong>Quality</strong>, and{" "}
               <strong>True Reliability</strong> in an industry that desperately needed it.
             </p>

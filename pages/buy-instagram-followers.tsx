@@ -209,17 +209,17 @@ export default function BuyInstagramFollowersPage() {
                 >
                   Get Instagram Followers
                 </button>
-                <Link
-                  href="/"
-                  className="bg-white border border-[#CFE4FF] text-[#007BFF] font-semibold px-7 py-3 rounded-xl shadow hover:bg-[#F5FAFF] transition text-center"
-                >
-                  View All Services
-                </Link>
+<button
+  onClick={() => openOrderModal?.()} // STEP 1 — NO PLATFORM PRESELECTED
+  className="bg-white border border-[#CFE4FF] text-[#007BFF] font-semibold px-7 py-3 rounded-xl shadow hover:bg-[#F5FAFF] transition text-center"
+>
+  View All Services
+</button>
               </div>
 
               <p className="text-xs text-[#555]">
                 🔒 No Password Required · ⚡ Orders Typically Start In Minutes ·
-                ⭐ Trusted By 100,000+ Creators & Brands
+                ⭐ Trusted By 100,000+ Creators
               </p>
             </div>
 
@@ -236,7 +236,7 @@ export default function BuyInstagramFollowersPage() {
                     </p>
                     <p className="text-xs text-[#444]">
                       YesViral uses upgraded Private Delivery Networks (PDNs) to
-                      keep delivery stable, discreet, and secure.
+                      keep delivery Stable, Discreet, and Secure.
                     </p>
                   </div>
                 </div>
@@ -366,9 +366,9 @@ export default function BuyInstagramFollowersPage() {
                   High-Quality Profiles
                 </h3>
                 <p className="text-sm text-[#444] mt-2">
-                  Our delivery network prioritizes stable, realistic-looking
+                  Our delivery network prioritizes stable, High-Quality
                   profiles that strengthen Social Proof instead of cheap-looking
-                  spikes.
+                  bots.
                 </p>
               </div>
               <div className="bg-[#E6F0FF]/70 border border-[#CFE4FF] rounded-2xl p-7 flex flex-col items-center text-center shadow-md">
@@ -408,8 +408,8 @@ export default function BuyInstagramFollowersPage() {
                   Proven Reputation
                 </h3>
                 <p className="text-sm text-[#444] mt-2">
-                  YesViral is trusted by creators, brands, agencies, and
-                  businesses as a consistent, long-term growth partner.
+                  YesViral is trusted by Creators, Brands, Agencies, and
+                  Businesses as a consistent, long-term growth partner.
                 </p>
               </div>
             </div>
@@ -435,9 +435,9 @@ export default function BuyInstagramFollowersPage() {
                   Are These Instagram Followers Real?
                 </h3>
                 <p className="text-sm text-[#444] leading-relaxed">
-                  YesViral uses Private Delivery Networks that focus on
-                  High-Quality, realistic-looking profiles. Our infrastructure
-                  is designed to provide stable, believable Social Proof — not
+                  Yes, YesViral uses Private Delivery Networks that focus on
+                  High-Quality, Premium profiles. Our infrastructure
+                  is designed to provide Stable, High-Impact Social Proof — not
                   low-quality bot floods or random spikes.
                 </p>
               </div>
