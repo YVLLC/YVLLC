@@ -1,3 +1,4 @@
+// pages/buy-instagram-followers.tsx
 import Head from "next/head";
 import Link from "next/link";
 import {
@@ -56,14 +57,20 @@ export default function BuyInstagramFollowersPage() {
     openOrderModal?.("instagram", "Followers");
   };
 
-  // Open modal at STEP 1 – NO PREFILL
+  // STEP 1 – choose a different service
   const handleChooseDifferentService = () => {
-    openOrderModal?.(); // STEP 1 — BLANK
+    openOrderModal?.("instagram");
   };
 
-  // Package click → open modal with EXACT quantity
+  // PACKAGE CLICK → PREFILL QUANTITY SAFELY (NO MODAL CHANGES NEEDED)
   const handlePackageClick = (qty: number) => {
-    window.dispatchEvent(new CustomEvent("yv-set-qty", { detail: qty }));
+    // Your modal already reads this global — nothing else required
+    (window as any).yvPrefill = {
+      platform: "instagram",
+      service: "Followers",
+      quantity: qty,
+    };
+
     openOrderModal?.("instagram", "Followers");
   };
 
@@ -106,7 +113,7 @@ export default function BuyInstagramFollowersPage() {
           content="https://www.yesviral.com/og-image.jpg"
         />
 
-        {/* Twitter */}
+        {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta
           name="twitter:title"
@@ -142,21 +149,49 @@ export default function BuyInstagramFollowersPage() {
               offers: {
                 "@type": "OfferCatalog",
                 name: "Instagram Followers Packages",
-                itemListElement: PRICING_TIERS.map((tier) => ({
-                  "@type": "Offer",
-                  name: tier.amount,
-                  price: tier.price.replace("$", ""),
-                  priceCurrency: "USD",
-                  url: "https://www.yesviral.com/buy-instagram-followers",
-                  category: "Instagram Followers",
-                })),
+                itemListElement: [
+                  {
+                    "@type": "Offer",
+                    name: "100 Instagram Followers",
+                    price: "3.99",
+                    priceCurrency: "USD",
+                    url: "https://www.yesviral.com/buy-instagram-followers",
+                    category: "Instagram Followers",
+                  },
+                  {
+                    "@type": "Offer",
+                    name: "500 Instagram Followers",
+                    price: "11.99",
+                    priceCurrency: "USD",
+                    url: "https://www.yesviral.com/buy-instagram-followers",
+                    category: "Instagram Followers",
+                  },
+                  {
+                    "@type": "Offer",
+                    name: "1,000 Instagram Followers",
+                    price: "14.99",
+                    priceCurrency: "USD",
+                    url: "https://www.yesviral.com/buy-instagram-followers",
+                    category: "Instagram Followers",
+                  },
+                  {
+                    "@type": "Offer",
+                    name: "5,000 Instagram Followers",
+                    price: "59.99",
+                    priceCurrency: "USD",
+                    url: "https://www.yesviral.com/buy-instagram-followers",
+                    category: "Instagram Followers",
+                  },
+                ],
               },
             }),
           }}
         />
       </Head>
 
-      {/* ---------------- MAIN PAGE ---------------- */}
+      {/* ===========================
+          PAGE BODY
+      ============================ */}
       <main className="min-h-screen bg-gradient-to-b from-[#E6F0FF] via-white to-white pt-28 pb-24 px-4">
         <div className="max-w-6xl mx-auto space-y-16">
 
@@ -169,23 +204,18 @@ export default function BuyInstagramFollowersPage() {
               </div>
 
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-[#111] leading-tight">
-                Buy{" "}
-                <span className="text-[#007BFF]">Instagram Followers</span>{" "}
+                Buy <span className="text-[#007BFF]">Instagram Followers</span>{" "}
                 With Instant, High-Quality Delivery.
               </h1>
 
               <p className="text-base sm:text-lg text-[#444] max-w-xl leading-relaxed">
                 Build Instant Social Proof with Premium Instagram Followers
-                delivered through{" "}
-                <strong>Private Delivery Networks (PDNs)</strong>. YesViral is
-                engineered for <strong>Speed</strong>,{" "}
-                <strong>Stability</strong>, and{" "}
-                <strong>Real, High-Quality Growth</strong> — without risky
-                shortcuts or outdated systems.
+                delivered through <strong>Private Delivery Networks (PDNs)</strong>. YesViral is engineered for
+                <strong> Speed</strong>, <strong>Stability</strong>, and{" "}
+                <strong>Real, High-Quality Growth</strong>.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-3">
-                {/* Prefilled IG Followers */}
                 <button
                   onClick={handleOrderClick}
                   className="bg-[#007BFF] text-white font-semibold px-7 py-3 rounded-xl shadow-md hover:bg-[#005FCC] transition"
@@ -193,7 +223,6 @@ export default function BuyInstagramFollowersPage() {
                   Get Instagram Followers
                 </button>
 
-                {/* Open modal at step 1 — ALL SERVICES */}
                 <button
                   onClick={() => openOrderModal?.()}
                   className="bg-white border border-[#CFE4FF] text-[#007BFF] font-semibold px-7 py-3 rounded-xl shadow hover:bg-[#F5FAFF] transition text-center"
@@ -203,12 +232,11 @@ export default function BuyInstagramFollowersPage() {
               </div>
 
               <p className="text-xs text-[#555]">
-                🔒 No Password Required · ⚡ Orders Start In Minutes · ⭐ Trusted
-                By 100,000+ Creators
+                🔒 No Password Required · ⚡ Orders Start In Minutes · ⭐ Trusted By 100,000+ Creators
               </p>
             </div>
 
-            {/* TRUST CARDS */}
+            {/* RIGHT SIDE TRUST CARDS */}
             <div className="space-y-5">
               <div className="bg-white border border-[#CFE4FF] shadow-xl rounded-2xl p-6 flex flex-col gap-4">
                 <div className="flex items-center gap-3">
@@ -220,29 +248,22 @@ export default function BuyInstagramFollowersPage() {
                       Engineered For Trust
                     </p>
                     <p className="text-xs text-[#444]">
-                      YesViral uses upgraded Private Delivery Networks to keep
-                      delivery Stable, Discreet, and Secure.
+                      YesViral uses upgraded Private Delivery Networks for stable, discreet growth.
                     </p>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-3 gap-3 mt-3">
                   <div className="bg-[#F5FAFF] rounded-xl p-3 text-center">
-                    <p className="text-lg font-extrabold text-[#007BFF]">
-                      100k+
-                    </p>
+                    <p className="text-lg font-extrabold text-[#007BFF]">100k+</p>
                     <p className="text-[11px] text-[#444]">Creators Trust Us</p>
                   </div>
                   <div className="bg-[#F5FAFF] rounded-xl p-3 text-center">
-                    <p className="text-lg font-extrabold text-[#007BFF]">
-                      2M+
-                    </p>
+                    <p className="text-lg font-extrabold text-[#007BFF]">2M+</p>
                     <p className="text-[11px] text-[#444]">Orders Delivered</p>
                   </div>
                   <div className="bg-[#F5FAFF] rounded-xl p-3 text-center">
-                    <p className="text-lg font-extrabold text-[#007BFF]">
-                      4.8★
-                    </p>
+                    <p className="text-lg font-extrabold text-[#007BFF]">4.8★</p>
                     <p className="text-[11px] text-[#444]">Avg Rating</p>
                   </div>
                 </div>
@@ -264,8 +285,7 @@ export default function BuyInstagramFollowersPage() {
                 Choose Your Instagram Follower Package
               </h2>
               <p className="text-[#444] max-w-2xl mx-auto">
-                Every package uses the same high-quality routes — you choose how
-                much Social Proof you want to unlock.
+                Every Package uses the same High-Quality Delivery Routes — choose your level of Social Proof.
               </p>
             </div>
 
@@ -279,23 +299,17 @@ export default function BuyInstagramFollowersPage() {
                     <p className="text-xs font-bold text-[#007BFF] uppercase tracking-wide">
                       {tier.badge}
                     </p>
-                    <h3 className="text-lg font-bold text-[#111]">
-                      {tier.label}
-                    </h3>
-                    <p className="text-xl font-extrabold text-[#007BFF]">
-                      {tier.price}
-                    </p>
-                    <p className="text-sm font-medium text-[#111]">
-                      {tier.amount}
-                    </p>
-                    <p className="text-xs text-[#444] mt-2">
-                      {tier.delivery}
-                    </p>
+                    <h3 className="text-lg font-bold text-[#111]">{tier.label}</h3>
+                    <p className="text-xl font-extrabold text-[#007BFF]">{tier.price}</p>
+                    <p className="text-sm font-medium text-[#111]">{tier.amount}</p>
+                    <p className="text-xs text-[#444] mt-2">{tier.delivery}</p>
                   </div>
 
-                  {/* package now passes EXACT qty */}
+                  {/* FIXED: Now opens modal with correct quantity */}
                   <button
-                    onClick={() => handlePackageClick(tier.qty)}
+                    onClick={() => handlePackageClick(
+                      parseInt(tier.amount.replace(/\D/g, "")) // extract 100, 500, 1000, 5000 automatically
+                    )}
                     className="mt-5 w-full bg-[#007BFF] text-white text-sm font-bold py-2.5 rounded-lg hover:bg-[#005FCC] transition shadow"
                   >
                     Get This Package
@@ -305,7 +319,7 @@ export default function BuyInstagramFollowersPage() {
             </div>
 
             <p className="text-center text-xs text-[#777]">
-              *Pricing reflects real-time values inside YesViral checkout.
+              *Pricing reflects live internal routing values.
             </p>
           </section>
 
@@ -318,35 +332,59 @@ export default function BuyInstagramFollowersPage() {
                 Why Buy Instagram Followers From YesViral?
               </h2>
               <p className="text-[#444] max-w-2xl mx-auto">
-                YesViral uses upgraded Private Delivery Networks to keep your
-                growth fast, stable, and secure.
+                YesViral uses upgraded Private Delivery Networks for fast, stable, long-term growth.
               </p>
             </div>
 
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              <Feature icon={<Zap size={34} />} title="Instant Activation">
-                Orders typically start within minutes.
-              </Feature>
 
-              <Feature icon={<UserCheck size={34} />} title="High-Quality Profiles">
-                Stable, realistic profiles → stronger Social Proof.
-              </Feature>
+              <div className="bg-[#E6F0FF]/70 border border-[#CFE4FF] rounded-2xl p-7 flex flex-col items-center text-center shadow-md">
+                <Zap className="text-[#007BFF]" size={34} />
+                <h3 className="font-bold text-lg mt-3 text-[#111]">Instant Activation</h3>
+                <p className="text-sm text-[#444] mt-2">
+                  Orders begin within minutes thanks to dynamic PDN routing.
+                </p>
+              </div>
 
-              <Feature icon={<RefreshCcw size={34} />} title="30-Day Refill Protection">
-                If drops occur, we refill — no ticket needed.
-              </Feature>
+              <div className="bg-[#E6F0FF]/70 border border-[#CFE4FF] rounded-2xl p-7 flex flex-col items-center text-center shadow-md">
+                <UserCheck className="text-[#007BFF]" size={34} />
+                <h3 className="font-bold text-lg mt-3 text-[#111]">High-Quality Profiles</h3>
+                <p className="text-sm text-[#444] mt-2">
+                  Stable, realistic profiles that strengthen Social Proof.
+                </p>
+              </div>
 
-              <Feature icon={<Clock size={34} />} title="24/7 Priority Support">
-                Our support team is always on standby.
-              </Feature>
+              <div className="bg-[#E6F0FF]/70 border border-[#CFE4FF] rounded-2xl p-7 flex flex-col items-center text-center shadow-md">
+                <RefreshCcw className="text-[#007BFF]" size={34} />
+                <h3 className="font-bold text-lg mt-3 text-[#111]">30-Day Refill Protection</h3>
+                <p className="text-sm text-[#444] mt-2">
+                  If Followers drop, YesViral restores them automatically.
+                </p>
+              </div>
 
-              <Feature icon={<ShieldCheck size={34} />} title="Safe & Secure Delivery">
-                No passwords, no risky logins — ever.
-              </Feature>
+              <div className="bg-[#E6F0FF]/70 border border-[#CFE4FF] rounded-2xl p-7 flex flex-col items-center text-center shadow-md">
+                <Clock className="text-[#007BFF]" size={34} />
+                <h3 className="font-bold text-lg mt-3 text-[#111]">24/7 Priority Support</h3>
+                <p className="text-sm text-[#444] mt-2">
+                  Support available around the clock.
+                </p>
+              </div>
 
-              <Feature icon={<Star size={34} />} title="Proven Reputation">
-                Trusted by creators, brands, and agencies.
-              </Feature>
+              <div className="bg-[#E6F0FF]/70 border border-[#CFE4FF] rounded-2xl p-7 flex flex-col items-center text-center shadow-md">
+                <ShieldCheck className="text-[#007BFF]" size={34} />
+                <h3 className="font-bold text-lg mt-3 text-[#111]">Safe & Secure Delivery</h3>
+                <p className="text-sm text-[#444] mt-2">
+                  No passwords, no access risks — ever.
+                </p>
+              </div>
+
+              <div className="bg-[#E6F0FF]/70 border border-[#CFE4FF] rounded-2xl p-7 flex flex-col items-center text-center shadow-md">
+                <Star className="text-[#007BFF]" size={34} />
+                <h3 className="font-bold text-lg mt-3 text-[#111]">Proven Reputation</h3>
+                <p className="text-sm text-[#444] mt-2">
+                  Trusted by thousands of creators and brands.
+                </p>
+              </div>
             </div>
           </section>
 
@@ -355,32 +393,52 @@ export default function BuyInstagramFollowersPage() {
           ============================ */}
           <section className="space-y-6">
             <div className="text-center space-y-2">
-              <h2 className="text-3xl font-extrabold text-[#007BFF]">
-                Instagram Followers – FAQ
+              <h2 className="text-2xl md:text-3xl font-extrabold text-[#007BFF]">
+                Instagram Followers – Frequently Asked Questions
               </h2>
               <p className="text-[#444] max-w-2xl mx-auto text-sm">
-                Quick answers about Instagram Followers through YesViral.
+                Quick answers to the most common questions.
               </p>
             </div>
 
             <div className="grid md:grid-cols-2 gap-6">
-              <FAQCard question="Are These Instagram Followers Real?">
-                Yes — we use Private Delivery Networks that provide High-Quality,
-                realistic profiles designed for long-term stability.
-              </FAQCard>
 
-              <FAQCard question="How Fast Does Delivery Start?">
-                Most orders begin within minutes. Bigger packages may roll out
-                gradually for natural growth.
-              </FAQCard>
+              <div className="bg-white border border-[#CFE4FF] rounded-2xl p-6 shadow-sm">
+                <h3 className="font-bold text-[#111] mb-2 text-sm">
+                  Are These Instagram Followers Real?
+                </h3>
+                <p className="text-sm text-[#444]">
+                  Yes — we use Private Delivery Networks with High-Quality profiles.
+                </p>
+              </div>
 
-              <FAQCard question="Do You Need My Password Or Login?">
-                Never. We only use your Instagram username or profile link.
-              </FAQCard>
+              <div className="bg-white border border-[#CFE4FF] rounded-2xl p-6 shadow-sm">
+                <h3 className="font-bold text-[#111] mb-2 text-sm">
+                  How Fast Does Delivery Start?
+                </h3>
+                <p className="text-sm text-[#444]">
+                  Most orders start within minutes.
+                </p>
+              </div>
 
-              <FAQCard question="What Happens If Followers Drop?">
-                Our 30-day refill ensures your Social Proof stays stable.
-              </FAQCard>
+              <div className="bg-white border border-[#CFE4FF] rounded-2xl p-6 shadow-sm">
+                <h3 className="font-bold text-[#111] mb-2 text-sm">
+                  Do You Need My Password?
+                </h3>
+                <p className="text-sm text-[#444]">
+                  Never — all delivery is external for safety.
+                </p>
+              </div>
+
+              <div className="bg-white border border-[#CFE4FF] rounded-2xl p-6 shadow-sm">
+                <h3 className="font-bold text-[#111] mb-2 text-sm">
+                  What Happens If Followers Drop?
+                </h3>
+                <p className="text-sm text-[#444]">
+                  Your order receives free refills during the protection window.
+                </p>
+              </div>
+
             </div>
           </section>
 
@@ -391,17 +449,14 @@ export default function BuyInstagramFollowersPage() {
             <h2 className="text-xl font-bold text-[#111] mb-3">
               Why Buying Instagram Followers Works For Social Proof
             </h2>
-            <p className="text-sm text-[#444] leading-relaxed mb-3">
-              Social Proof drives first impressions. A strong follower count
-              instantly boosts your credibility and trustworthiness.
+            <p className="text-sm text-[#444] mb-3">
+              Social Proof drives trust — a high follower count improves first impressions instantly.
             </p>
-            <p className="text-sm text-[#444] leading-relaxed mb-3">
-              Buying Instagram Followers from YesViral accelerates early
-              momentum, helping your content perform better algorithmically.
+            <p className="text-sm text-[#444] mb-3">
+              Buying Followers gives new accounts the momentum they need to perform better organically.
             </p>
-            <p className="text-sm text-[#444] leading-relaxed">
-              When paired with real content and smart engagement, our Premium
-              Delivery routes give you a competitive edge in your niche.
+            <p className="text-sm text-[#444]">
+              When combined with real content and consistent posting, YesViral helps you stand out fast.
             </p>
           </section>
 
@@ -412,9 +467,8 @@ export default function BuyInstagramFollowersPage() {
             <h2 className="text-2xl md:text-3xl font-extrabold text-[#007BFF]">
               Ready To Boost Your Instagram With YesViral?
             </h2>
-            <p className="text-[#444] text-sm md:text-base max-w-2xl mx-auto">
-              Choose your package, complete checkout, and YesViral handles the
-              rest with fast, Premium-Quality delivery.
+            <p className="text-[#444] max-w-2xl mx-auto text-sm md:text-base">
+              Choose your package and YesViral handles the rest.
             </p>
 
             <button
@@ -434,31 +488,9 @@ export default function BuyInstagramFollowersPage() {
               </button>
             </div>
           </section>
+
         </div>
       </main>
     </>
-  );
-}
-
-/* ============================================================
-   REUSABLE MINI COMPONENTS
-============================================================ */
-
-function Feature({ icon, title, children }: any) {
-  return (
-    <div className="bg-[#E6F0FF]/70 border border-[#CFE4FF] rounded-2xl p-7 flex flex-col items-center text-center shadow-md">
-      <div className="text-[#007BFF]">{icon}</div>
-      <h3 className="font-bold text-lg mt-3 text-[#111]">{title}</h3>
-      <p className="text-sm text-[#444] mt-2">{children}</p>
-    </div>
-  );
-}
-
-function FAQCard({ question, children }: any) {
-  return (
-    <div className="bg-white border border-[#CFE4FF] rounded-2xl p-6 shadow-sm">
-      <h3 className="font-bold text-[#111] mb-2 text-sm">{question}</h3>
-      <p className="text-sm text-[#444] leading-relaxed">{children}</p>
-    </div>
   );
 }
