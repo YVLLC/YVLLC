@@ -182,12 +182,12 @@ export default function BuyInstagramFollowersPage() {
           <section className="grid md:grid-cols-2 gap-10 items-center">
             {/* Left Side */}
             <div className="space-y-7">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#007BFF] rounded-full text-xs font-bold text-[#007BFF]">
-                <Instagram size={18} className="text-[#007BFF]" />
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#E8F1FF] rounded-full text-xs font-bold text-[#007BFF]">
+                <Instagram size={18} className="text-[#E8F1FF]" />
                 <span>Buy Instagram Followers – YesViral</span>
               </div>
 
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-[#111] leading-tight">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-[#007BFF] leading-tight">
                 Buy <span className="text-[#007BFF]">Instagram Followers</span>{" "}
                 With Instant, High-Quality Delivery.
               </h1>
