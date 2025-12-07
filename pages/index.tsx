@@ -223,14 +223,7 @@ export default function Home() {
               Trusted by 100,000+ Creators
             </div>
 <h1
-  className="
-    text-3xl sm:text-4xl md:text-5xl 
-    font-extrabold 
-    text-[#007BFF] 
-    leading-[1.15] sm:leading-tight md:leading-snug 
-    tracking-tight
-    max-w-[330px] sm:max-w-none
-  "
+  className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#007BFF] leading-[1.15] sm:leading-tight md:leading-snug tracking-tight max-w-[330px] sm:max-w-none"
 >
   Boost Your Social Presence Instantly.&nbsp;
   <br className="hidden sm:block" />
@@ -238,7 +231,6 @@ export default function Home() {
     Premium Growth for Instagram, TikTok & YouTube.
   </span>
 </h1>
-
             <p className="text-[#444] text-base sm:text-lg max-w-md sm:max-w-xl font-medium">
               Unlock Social Growth with YesViral — Trusted for delivering High-Quality Followers,
               Likes & Views through Exclusive Private Delivery Networks.
