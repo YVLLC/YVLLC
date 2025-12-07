@@ -121,7 +121,7 @@ export default function UpdatePasswordPage() {
 
         {/* Footer */}
         <div className="mt-8 text-xs text-[#888] text-center">
-          Protecting your account with SSL + encrypted authentication.
+          Protecting your account with SSL + Encrypted Authentication. 💙
         </div>
 
       </div>
