@@ -27,11 +27,11 @@ export default function AboutPage() {
 
             <p className="text-lg text-[#444444] mt-5 max-w-2xl mx-auto leading-relaxed">
               A next-generation growth platform created for creators, brands, and businesses
-              who expect more than just “followers.” YesViral was built to deliver **speed**, 
-              **quality**, and **true reliability** in an industry that desperately needed it.
+              who expect more than just “followers.” YesViral was built to deliver{" "}
+              <strong>speed</strong>, <strong>quality</strong>, and{" "}
+              <strong>true reliability</strong> in an industry that desperately needed it.
             </p>
 
-            {/* subtle gradient banner */}
             <div className="mt-10 mx-auto max-w-3xl bg-white border border-[#CFE4FF] shadow-lg rounded-2xl p-5">
               <p className="text-sm text-[#444] leading-relaxed">
                 Trusted by over <span className="font-semibold text-[#007BFF]">100,000+</span>{" "}
@@ -48,13 +48,14 @@ export default function AboutPage() {
           <div className="bg-white border border-[#CFE4FF] shadow-xl rounded-2xl p-12 mb-16">
             <h2 className="text-3xl font-bold text-[#111111] mb-6">Our Mission</h2>
             <p className="text-[#444444] text-lg leading-relaxed">
-              At YesViral, our mission has always been simple: **make growth effortless**.
+              At YesViral, our mission has always been simple:{" "}
+              <strong>make growth effortless</strong>.
               <br /><br />
               The social media space moves fast — creators shouldn’t have to deal with 
               outdated platforms, inconsistent delivery, or unreliable services. So we 
               built a platform that combines modern engineering, smart automation, and 
-              optimized delivery systems to give creators exactly what they’re looking for:
-              <span className="font-semibold text-[#007BFF]"> premium results, delivered fast and safely.</span>
+              optimized delivery systems to give creators exactly what they’re looking for:{" "}
+              <span className="font-semibold text-[#007BFF]">premium results, delivered fast and safely.</span>
               <br /><br />
               Every feature of YesViral is designed to remove friction, save time, and 
               provide creators with a smooth, stress-free experience from start to finish.
@@ -66,22 +67,39 @@ export default function AboutPage() {
           ============================ */}
           <div className="bg-white border border-[#CFE4FF] shadow-xl rounded-2xl p-12 mb-20">
             <h2 className="text-3xl font-bold text-[#111111] mb-6">Why YesViral Is Different</h2>
+
             <p className="text-[#444444] text-lg leading-relaxed mb-8">
               Unlike traditional platforms that rely on outdated delivery systems, YesViral is 
               powered by constantly-upgraded Private Delivery Networks. This ensures:
             </p>
 
+            {/* FIXED LIST — NO MARKDOWN, ONLY JSX */}
             <ul className="space-y-4 text-[#444444] text-lg leading-relaxed ml-1">
-              <li>• **Faster processing** powered by dynamic routing technology</li>
-              <li>• **Higher consistency** with stress-tested premium-quality channels</li>
-              <li>• **Smarter automation** to minimize downtime and delays</li>
-              <li>• **Enhanced security** with zero-access requirements and encrypted processing</li>
-              <li>• **Real, trackable performance** driven by real PDN infrastructure</li>
+              <li>
+                <span className="inline-block w-3 h-3 bg-[#007BFF] rounded-full mr-3"></span>
+                <strong>Faster processing</strong> powered by dynamic routing technology
+              </li>
+              <li>
+                <span className="inline-block w-3 h-3 bg-[#007BFF] rounded-full mr-3"></span>
+                <strong>Higher consistency</strong> with stress-tested premium-quality channels
+              </li>
+              <li>
+                <span className="inline-block w-3 h-3 bg-[#007BFF] rounded-full mr-3"></span>
+                <strong>Smarter automation</strong> to minimize downtime and delays
+              </li>
+              <li>
+                <span className="inline-block w-3 h-3 bg-[#007BFF] rounded-full mr-3"></span>
+                <strong>Enhanced security</strong> with zero-access requirements and encrypted processing
+              </li>
+              <li>
+                <span className="inline-block w-3 h-3 bg-[#007BFF] rounded-full mr-3"></span>
+                <strong>Real, trackable performance</strong> driven by real PDN infrastructure
+              </li>
             </ul>
 
             <p className="text-[#444444] text-lg leading-relaxed mt-8">
-              We’re not here to be “just another” growth service. We’re building the next 
-              generation of creator tools — reliable, polished, and built to scale with you.
+              We’re not here to be “just another” growth service — we’re building the next 
+              generation of creator tools: reliable, polished, and built to scale with you.
             </p>
           </div>
 
@@ -89,7 +107,6 @@ export default function AboutPage() {
               TRUST CARDS
           ============================ */}
           <div className="grid md:grid-cols-3 gap-10 mb-24">
-            {/* Instant Delivery */}
             <div className="bg-white border border-[#CFE4FF] shadow-lg rounded-2xl p-10 text-center">
               <div className="text-[#007BFF] text-5xl mb-4">⚡</div>
               <h3 className="text-2xl font-bold text-[#111111] mb-2">Instant Delivery</h3>
@@ -98,7 +115,6 @@ export default function AboutPage() {
               </p>
             </div>
 
-            {/* Secure */}
             <div className="bg-white border border-[#CFE4FF] shadow-lg rounded-2xl p-10 text-center">
               <div className="text-[#007BFF] text-5xl mb-4">🔒</div>
               <h3 className="text-2xl font-bold text-[#111111] mb-2">Safe & Secure</h3>
@@ -107,7 +123,6 @@ export default function AboutPage() {
               </p>
             </div>
 
-            {/* Premium Quality */}
             <div className="bg-white border border-[#CFE4FF] shadow-lg rounded-2xl p-10 text-center">
               <div className="text-[#007BFF] text-5xl mb-4">⭐</div>
               <h3 className="text-2xl font-bold text-[#111111] mb-2">Premium Quality</h3>
