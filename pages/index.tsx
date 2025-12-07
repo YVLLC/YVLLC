@@ -328,7 +328,7 @@ export default function Home() {
 
           {/* ⭐ ADDED SUB-TEXT */}
           <p className="text-[#444] text-lg max-w-2xl mx-auto -mt-2">
-            Delivering unmatched quality, speed, and reliability through advanced Private Delivery Networks.
+            Delivering unmatched Quality, Speed, and Reliability through advanced Private Delivery Networks.
           </p>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-10 mt-6">
