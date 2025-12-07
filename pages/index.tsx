@@ -164,8 +164,9 @@ export default function Home() {
               Trusted by 100,000+ Creators
             </div>
 
+            {/* ⭐ FIX APPLIED: Added &nbsp; after Instantly. */}
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#007BFF] leading-tight md:leading-snug">
-              Boost Your Social Presence Instantly.
+              Boost Your Social Presence Instantly.&nbsp;
               <br className="hidden sm:block" />
               <span className="text-[#005FCC]">
                 Premium Growth for Instagram, TikTok & YouTube.
@@ -325,7 +326,6 @@ export default function Home() {
             Why Choose YesViral?
           </h2>
 
-          {/* ⭐ SUBTEXT ADDED */}
           <p className="text-[#444] text-lg max-w-2xl mx-auto -mt-2">
             Delivering unmatched quality, speed, and reliability through advanced Private Delivery Networks.
           </p>
@@ -379,7 +379,7 @@ export default function Home() {
 
             {/* CARD 6 */}
             <div className="bg-[#E6F0FF]/70 backdrop-blur-md border border-[#CFE4FF] rounded-2xl p-7 shadow-md hover:shadow-xl hover:-translate-y-1 hover:border-[#007BFF] transition flex flex-col items-center">
-              <Star className="text-[#007BFF]" size={38} />
+              <Star className="text-[#007BFF]" size={38} />}
               <h3 className="font-bold text-lg mt-3 text-[#111]">Proven Reputation</h3>
               <p className="text-sm text-[#444] leading-relaxed">
                 Trusted by over 100,000+ creators worldwide with a 4.8/5 rating.
@@ -388,13 +388,10 @@ export default function Home() {
 
           </div>
 
-          {/* ⭐ MOBILE FIX APPLIED — BOTH LINES SHOW NOW */}
+          {/* ⭐ MOBILE FIX — BOTH LINES SHOW, DOT ONLY ON DESKTOP */}
           <div className="flex flex-col sm:flex-row justify-center gap-2 sm:gap-6 mt-10 text-[#007BFF] font-bold text-lg">
             <span>100k+ Followers Delivered</span>
-
-            {/* divider dot stays desktop only */}
             <span className="hidden sm:inline">•</span>
-
             <span>Rated 4.8/5 by 10,000+ Clients</span>
           </div>
         </section>
