@@ -222,15 +222,22 @@ export default function Home() {
               <Star size={18} className="text-yellow-400 star-animate" />
               Trusted by 100,000+ Creators
             </div>
-
-            {/* ⭐ FIX APPLIED: Added &nbsp; after Instantly. */}
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#007BFF] leading-tight md:leading-snug">
-              Boost Your Social Presence Instantly.&nbsp;
-              <br className="hidden sm:block" />
-              <span className="text-[#005FCC]">
-                Premium Growth for Instagram, TikTok & YouTube.
-              </span>
-            </h1>
+<h1
+  className="
+    text-3xl sm:text-4xl md:text-5xl 
+    font-extrabold 
+    text-[#007BFF] 
+    leading-[1.15] sm:leading-tight md:leading-snug 
+    tracking-tight
+    max-w-[330px] sm:max-w-none
+  "
+>
+  Boost Your Social Presence Instantly.&nbsp;
+  <br className="hidden sm:block" />
+  <span className="text-[#005FCC]">
+    Premium Growth for Instagram, TikTok & YouTube.
+  </span>
+</h1>
 
             <p className="text-[#444] text-base sm:text-lg max-w-md sm:max-w-xl font-medium">
               Unlock Social Growth with YesViral — Trusted for delivering High-Quality Followers,
