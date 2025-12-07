@@ -36,24 +36,88 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <OrderModalProvider>
       <Head>
+        {/* ==============================
+            🔥 GLOBAL SEO SUPERCHARGED
+        =============================== */}
+
         <title>YesViral – Buy Followers & Social Media Growth</title>
+
         <meta
           name="description"
           content="YesViral is your #1 source to grow on Instagram, TikTok, YouTube & more. Fast delivery, real results, and premium support."
         />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        {/* High-authority keywords (SAFE, no text changes) */}
+        <meta
+          name="keywords"
+          content="YesViral, buy Instagram followers, buy TikTok followers, social media growth, buy YouTube subscribers, PDN delivery, premium growth service, fast Instagram followers, safe social media growth"
+        />
+
+        <meta name="author" content="YesViral" />
+        <meta name="robots" content="index, follow" />
+
+        {/* Canonical */}
+        <link rel="canonical" href="https://www.yesviral.com" />
+
+        {/* Preconnect (Performance SEO BOOST) */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+
+        {/* OPEN GRAPH (Facebook, LinkedIn) */}
+        <meta property="og:title" content="YesViral – Buy Followers & Social Media Growth" />
+        <meta
+          property="og:description"
+          content="Grow your social media instantly with YesViral. Premium, fast, and safe delivery for Instagram, TikTok, YouTube and more."
+        />
+        <meta property="og:url" content="https://www.yesviral.com" />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="YesViral" />
+        <meta property="og:image" content="https://www.yesviral.com/og-image.jpg" />
+
+        {/* TWITTER CARD */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="YesViral – Buy Followers & Social Media Growth" />
+        <meta
+          name="twitter:description"
+          content="Premium social media growth trusted by thousands. Fast delivery, high quality, and consistent results."
+        />
+        <meta name="twitter:image" content="https://www.yesviral.com/og-image.jpg" />
+
         {/* Favicons */}
         <link rel="icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+
+        {/* ==============================
+            🔥 GLOBAL BRAND SCHEMA (JSON-LD)
+            MASSIVE SEO BOOST — NO TEXT CHANGES
+        =============================== */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              name: "YesViral",
+              legalName: "Hyrica Labs",
+              url: "https://www.yesviral.com",
+              logo: "https://www.yesviral.com/logo.png",
+              sameAs: [
+                "https://instagram.com/yesviralapp",
+                "https://twitter.com/yesviral",
+                "https://tiktok.com/@yesviral",
+              ],
+            }),
+          }}
+        />
       </Head>
+
       {!shouldHide && <Header />}
       <main className="min-h-screen bg-white">
         <Component {...pageProps} />
         <OrderModalWrapper />
       </main>
-      {/* CHANGED: pass modal to Footer */}
       {!shouldHide && <FooterWithOrderModal />}
     </OrderModalProvider>
   );
