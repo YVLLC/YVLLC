@@ -4,8 +4,8 @@ interface OrderModalContextType {
   open: boolean;
   platform: string | null;
   service: string | null;
-  quantity: number | null; // 🔥 NEW
-  openOrderModal: (platform?: string, service?: string, quantity?: number) => void; // 🔥 NEW
+  quantity: number | null;          // 🔥 ADDED
+  openOrderModal: (platform?: string, service?: string, quantity?: number) => void; // 🔥 quantity allowed
   closeOrderModal: () => void;
 }
 
@@ -22,12 +22,16 @@ export function OrderModalProvider({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
   const [platform, setPlatform] = useState<string | null>(null);
   const [service, setService] = useState<string | null>(null);
-  const [quantity, setQuantity] = useState<number | null>(null); // 🔥 NEW
+  const [quantity, setQuantity] = useState<number | null>(null); // 🔥
 
-  const openOrderModal = (platform?: string, service?: string, quantity?: number) => {
+  const openOrderModal = (
+    platform?: string,
+    service?: string,
+    quantity?: number
+  ) => {
     setPlatform(platform ?? null);
     setService(service ?? null);
-    setQuantity(quantity ?? null); // 🔥 NEW
+    setQuantity(quantity ?? null);   // 🔥 store clicked amount
     setOpen(true);
   };
 
@@ -35,7 +39,14 @@ export function OrderModalProvider({ children }: { children: ReactNode }) {
 
   return (
     <OrderModalContext.Provider
-      value={{ open, platform, service, quantity, openOrderModal, closeOrderModal }}
+      value={{
+        open,
+        platform,
+        service,
+        quantity,          // 🔥 expose quantity
+        openOrderModal,
+        closeOrderModal,
+      }}
     >
       {children}
     </OrderModalContext.Provider>

@@ -7,20 +7,21 @@ import Footer from "@/components/Footer";
 import OrderModal from "@/components/OrderModal";
 import { OrderModalProvider, useOrderModal } from "@/context/OrderModalContext";
 
-// Wraps OrderModal so you don't have to use context directly here
+// Wraps OrderModal so it receives platform, service AND quantity
 function OrderModalWrapper() {
-  const { open, closeOrderModal, platform, service } = useOrderModal();
+  const { open, closeOrderModal, platform, service, quantity } = useOrderModal();
+
   return (
     <OrderModal
       open={open}
       onClose={closeOrderModal}
       initialPlatform={platform ?? undefined}
       initialService={service ?? undefined}
+      initialQuantity={quantity ?? undefined}  // 🔥 the missing piece
     />
   );
 }
 
-// NEW: Wrap Footer to connect to modal context
 function FooterWithOrderModal() {
   const { openOrderModal } = useOrderModal();
   return <Footer onServiceOrder={openOrderModal} />;
@@ -36,18 +37,11 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <OrderModalProvider>
       <Head>
-        {/* ==============================
-            🔥 GLOBAL SEO SUPERCHARGED
-        =============================== */}
-
         <title>YesViral – Buy Followers & Social Media Growth</title>
-
         <meta
           name="description"
           content="YesViral is your #1 source to grow on Instagram, TikTok, YouTube & more. Fast delivery, real results, and premium support."
         />
-
-        {/* High-authority keywords (SAFE, no text changes) */}
         <meta
           name="keywords"
           content="YesViral, buy Instagram followers, buy TikTok followers, social media growth, buy YouTube subscribers, PDN delivery, premium growth service, fast Instagram followers, safe social media growth"
@@ -55,17 +49,11 @@ export default function App({ Component, pageProps }: AppProps) {
 
         <meta name="author" content="YesViral" />
         <meta name="robots" content="index, follow" />
-
-        {/* Canonical */}
         <link rel="canonical" href="https://www.yesviral.com" />
 
-        {/* Preconnect */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
 
-        {/* ==============================
-            🔥 PRELOAD ASSETS (SEO + SPEED)
-        =============================== */}
         <link
           rel="preload"
           href="/fonts/Inter.var.woff2"
@@ -75,11 +63,8 @@ export default function App({ Component, pageProps }: AppProps) {
         />
         <link rel="preload" as="image" href="/hero-illustration.png" />
 
-        {/* ==============================
-            🔥 GOOGLE ANALYTICS (GA4)
-            Measurement ID: G-XYD80ZBH20
-        =============================== */}
-        <script async src={`https://www.googletagmanager.com/gtag/js?id=G-XYD80ZBH20`}></script>
+        {/* GOOGLE ANALYTICS */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-XYD80ZBH20"></script>
         <script
           id="ga4-init"
           dangerouslySetInnerHTML={{
@@ -92,7 +77,7 @@ export default function App({ Component, pageProps }: AppProps) {
           }}
         />
 
-        {/* OPEN GRAPH */}
+        {/* OG + TWITTER */}
         <meta property="og:title" content="YesViral – Buy Followers & Social Media Growth" />
         <meta
           property="og:description"
@@ -100,10 +85,8 @@ export default function App({ Component, pageProps }: AppProps) {
         />
         <meta property="og:url" content="https://www.yesviral.com" />
         <meta property="og:type" content="website" />
-        <meta property="og:site_name" content="YesViral" />
         <meta property="og:image" content="https://www.yesviral.com/og-image.jpg" />
 
-        {/* TWITTER CARD */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="YesViral – Buy Followers & Social Media Growth" />
         <meta
@@ -112,15 +95,13 @@ export default function App({ Component, pageProps }: AppProps) {
         />
         <meta name="twitter:image" content="https://www.yesviral.com/og-image.jpg" />
 
-        {/* Favicons */}
+        {/* FAVICONS */}
         <link rel="icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
 
-        {/* ==============================
-            🔥 GLOBAL BRAND SCHEMA (JSON-LD)
-        =============================== */}
+        {/* GLOBAL ORG SCHEMA */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
