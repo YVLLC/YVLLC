@@ -140,6 +140,11 @@ export default function Footer({ onServiceOrder }: FooterProps) {
               </Link>
             </li>
             <li>
+              <Link className="hover:text-[#005FCC]" href="/about">
+                About Us
+              </Link>
+            </li>
+            <li>
               <Link className="hover:text-[#005FCC]" href="/#faq">
                 FAQ
               </Link>
@@ -246,7 +251,7 @@ export default function Footer({ onServiceOrder }: FooterProps) {
         </div>
       </div>
 
-      {/* Trust Bar AT THE BOTTOM */}
+      {/* Trust Bar */}
       <div className="max-w-7xl mx-auto my-10 grid md:grid-cols-4 grid-cols-2 gap-4 py-6 px-4 bg-white rounded-2xl shadow-lg border border-[#CFE4FF]">
         <div className="flex items-center gap-2 text-[#007BFF] font-semibold text-sm">
           <ShieldCheck size={20} className="text-[#007BFF]" /> 100% Safe & Secure
@@ -263,11 +268,9 @@ export default function Footer({ onServiceOrder }: FooterProps) {
         </div>
       </div>
 
-      {/* Copyright & Powered */}
+      {/* Copyright */}
       <div className="text-center text-xs text-[#888] mt-6 flex flex-col items-center gap-2">
-        <span>
-          &copy; {new Date().getFullYear()} YesViral. All rights reserved.
-        </span>
+        <span>&copy; {new Date().getFullYear()} YesViral. All rights reserved.</span>
         <span className="flex items-center gap-1">
           Powered by <span className="font-bold text-[#007BFF]">YesViral</span> ·{" "}
           <Link href="/privacy" className="hover:underline hover:text-[#005FCC]">
