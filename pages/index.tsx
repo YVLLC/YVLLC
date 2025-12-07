@@ -26,35 +26,39 @@ const SalesNotifications = dynamic(
 );
 
 // ----------------------------------------------------------
-// FAQ CONTENT
+// FAQ CONTENT  (🔥 FIXED WITH YOUR EXACT FAQS)
 // ----------------------------------------------------------
 
 const FAQS = [
   {
     question: "Why choose us?",
     answer:
-      "Unlike other Social Growth Services, YesViral constantly upgrades our Private Delivery Networks (PDNs) to ensure users receive the Highest-Quality services every time.",
+      "Unlike other Social Growth Services, YesViral constantly upgrades our Private Delivery Networks (PDNs) to ensure users receive the Highest-Quality services every time. We focus on Fast, Reliable, and High-Quality results that evolve and improve with every order placed.",
   },
   {
     question: "What services do you offer?",
     answer:
-      "High-Quality Engagement across Instagram, YouTube, TikTok, and more.",
+      "Our Social Media Marketing services help Individuals, Influencers, and Brands grow their online presence with targeted High-Quality Engagement across Instagram, YouTube, TikTok, and more.",
   },
   {
     question: "Do I need to share my account password?",
-    answer: "No. We never require your password for delivery.",
+    answer:
+      "No. We never require your password to deliver services. Everything is securely delivered without accessing your account.",
   },
   {
     question: "Are the followers real?",
-    answer: "Yes. All engagement comes from real users — never bots.",
+    answer:
+      "Yes. All engagement comes from real users — never bots — to help boost reach and authenticity.",
   },
   {
     question: "Is your service safe and legal?",
-    answer: "Absolutely. Our delivery systems are secure and compliant.",
+    answer:
+      "Absolutely. We use safe, secure, and compliant delivery systems designed to protect your account.",
   },
   {
     question: "What is your refill guarantee?",
-    answer: "30 days of free refills if drops occur.",
+    answer:
+      "If any drops occur within 30 days of your order, we refill them free of charge — no hassle.",
   },
 ];
 
@@ -160,10 +164,10 @@ export default function Home() {
             </div>
 
             <h1 className="text-4xl sm:text-5xl font-extrabold text-[#007BFF] leading-snug">
-              Boost Your Social Presence Instantly.
+              Boost Your Social Presence Instantly. 
               <br className="hidden sm:block" />
               <span className="text-[#005FCC]">
-                Premium Growth for Instagram, TikTok, YouTube & More.
+                Premium Growth for Instagram, TikTok & YouTube.
               </span>
             </h1>
 
