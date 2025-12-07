@@ -54,7 +54,9 @@ export default function TestimonialsPage() {
         />
       </Head>
 
-      <main className="min-h-screen bg-gradient-to-b from-white to-[#E6F0FF] px-4 py-16 md:py-20">
+      {/* ⭐ BACKGROUND REMOVED HERE – NOTHING ELSE CHANGED */}
+      <main className="min-h-screen px-4 py-16 md:py-20">
+
         {/* HEADER */}
         <div className="max-w-4xl mx-auto text-center mb-12 md:mb-16">
           <h1 className="text-4xl md:text-5xl font-extrabold text-[#007BFF] tracking-tight mb-4">
