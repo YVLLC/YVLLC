@@ -136,7 +136,7 @@ export default function AboutPage() {
               CTA / ENDING
           ============================ */}
           <div className="text-center mt-24">
-            <h2 className="text-3xl font-bold text-[#111111] mb-4">
+            <h2 className="text-3xl font-bold text-[#007bff] mb-4">
               The Future of Creator Growth Starts Here.
             </h2>
 
