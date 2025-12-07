@@ -159,13 +159,11 @@ export default function Home() {
           {/* LEFT SIDE CONTENT */}
           <div className="w-full flex flex-col items-center md:items-start space-y-7 text-center md:text-left">
 
-            {/* ⭐ ORIGINAL BADGE RESTORED — NO COLOR CHANGES */}
             <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#E8F1FF] rounded-full text-xs font-bold text-[#007BFF]">
               <Star size={18} className="text-yellow-400 star-animate" />
               Trusted by 100,000+ Creators
             </div>
 
-            {/* ⭐ HERO TITLE — FIXED SPACING + OPTION A */}
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#007BFF] leading-tight md:leading-snug">
               Boost Your Social Presence Instantly.
               <br className="hidden sm:block" />
@@ -201,11 +199,10 @@ export default function Home() {
             </span>
           </div>
 
-          {/* RIGHT SIDE — PHONE + FLOATING CARDS */}
+          {/* RIGHT SIDE PHONE */}
           <div className="relative hidden md:flex items-center justify-center">
             <div className="relative inline-block">
 
-              {/* TOP FLOATING CARDS */}
               <div className="absolute top-[40px] left-1/2 -translate-x-1/2 flex flex-nowrap gap-3">
                 <div className="bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 whitespace-nowrap yv-card-1">
                   <span className="text-[#007BFF] text-lg">💙</span>
@@ -222,7 +219,6 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* BOTTOM FLOATING CARDS */}
               <div className="absolute bottom-[40px] left-1/2 -translate-x-1/2 flex flex-nowrap gap-3">
                 <div className="bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 whitespace-nowrap yv-card-3">
                   <span className="text-[#007BFF] text-lg">🔒</span>
@@ -239,7 +235,6 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* PHONE IMAGE */}
               <Image
                 src="/hero-illustration.png"
                 alt="YesViral Hero"
@@ -267,7 +262,6 @@ export default function Home() {
             </span>
           </p>
 
-          {/* RATING */}
           <div className="flex justify-center gap-1 mb-6">
             {[1, 2, 3, 4].map((i) => (
               <Star key={i} size={20} className="text-[#007BFF] fill-[#007BFF]" />
@@ -278,7 +272,6 @@ export default function Home() {
             </span>
           </div>
 
-          {/* SERVICE CARDS */}
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {SERVICES.map(({ name, price, description, icon, tag, count, key }, idx) => (
               <div
@@ -323,7 +316,7 @@ export default function Home() {
         </section>
 
         {/* =============================================== */}
-        {/* PREMIUM UPDATED — WHY CHOOSE YESVIRAL (6 CARDS) */}
+        {/* WHY CHOOSE YESVIRAL — SUBTEXT ADDED */}
         {/* =============================================== */}
         <section
           id="about"
@@ -332,6 +325,11 @@ export default function Home() {
           <h2 className="text-4xl md:text-5xl font-extrabold text-[#007BFF] tracking-tight">
             Why Choose YesViral?
           </h2>
+
+          {/* ⭐ ADDED SUB-TEXT */}
+          <p className="text-[#444] text-lg max-w-2xl mx-auto -mt-2">
+            Delivering unmatched quality, speed, and reliability through advanced Private Delivery Networks.
+          </p>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-10 mt-6">
 
