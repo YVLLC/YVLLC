@@ -51,14 +51,14 @@ export default function AboutPage() {
               At YesViral, our mission has always been simple:{" "}
               <strong>Make Growth Effortless</strong>.
               <br /><br />
-              The social media landscape moves quickly — creators shouldn’t have to deal with 
+              The Social Media landscape moves quickly — Creators shouldn’t have to deal with 
               Outdated Platforms, Inconsistent Delivery, or Unreliable Services. So we 
               built a platform that combines Modern Engineering, Smart Automation, and 
               Optimized Delivery Systems to give creators exactly what they’re looking for:{" "}
               <span className="font-semibold text-[#007BFF]">Premium Results, Delivered Fast and Safely.</span>
               <br /><br />
               Every feature of YesViral is designed to remove friction, save time, and 
-              provide creators with a Smooth, Stress-Free Experience from start to finish.
+              provide Creators with a Smooth, Stress-Free Experience from start to finish.
             </p>
           </div>
 
@@ -98,7 +98,7 @@ export default function AboutPage() {
             </ul>
 
             <p className="text-[#444444] text-lg leading-relaxed mt-8">
-              We’re not here to be “just another” growth service — we’re building the next 
+              We’re not here to be “Just Another” Growth Service — we’re building the next 
               generation of Creator Tools: Reliable, Polished, and Built To Scale With You.
             </p>
           </div>
