@@ -416,8 +416,7 @@ export default function BuyInstagramFollowersPage() {
               <div className="bg-white border border-[#CFE4FF] rounded-2xl p-6 shadow-sm">
                 <h3 className="font-bold text-[#111] mb-2 text-sm">How Fast Does Delivery Start?</h3>
                 <p className="text-sm text-[#444] leading-relaxed">
-                  Most Instagram Follower orders start within a few minutes. Larger packages may roll
-                  out gradually to keep growth looking more natural over time.
+Delivery typically starts within minutes. Larger or custom requests may take additional time depending on order size.
                 </p>
               </div>
 
