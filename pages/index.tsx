@@ -26,7 +26,7 @@ const SalesNotifications = dynamic(
 );
 
 // ----------------------------------------------------------
-// FAQ CONTENT  (🔥 FIXED WITH YOUR EXACT FAQS)
+// FAQ CONTENT (EXACT VERSION YOU REQUESTED)
 // ----------------------------------------------------------
 
 const FAQS = [
