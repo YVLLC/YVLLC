@@ -183,11 +183,11 @@ export default function BuyInstagramFollowersPage() {
             {/* Left Side */}
             <div className="space-y-7">
               <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#E8F1FF] rounded-full text-xs font-bold text-[#007BFF]">
-                <Instagram size={18} className="text-[#E1306C]" /> {/* FIXED ICON */}
+                <Instagram size={18} className="text-[#E1306C]" />
                 <span>Buy Instagram Followers – YesViral</span>
               </div>
 
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-[#007BFF] leading-tight">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-[#007bff] leading-tight">
                 Buy <span className="text-[#007BFF]">Instagram Followers</span>{" "}
                 With Instant, High-Quality Delivery.
               </h1>
@@ -263,9 +263,9 @@ export default function BuyInstagramFollowersPage() {
             </div>
           </section>
 
-          {/* =============================
-              PRICING SECTION
-          ============================= */}
+          {/* ===========================
+              PRICING / PACKAGES
+          ============================ */}
           <section className="space-y-6">
             <div className="text-center space-y-2">
               <h2 className="text-3xl font-extrabold text-[#007BFF]">
@@ -294,12 +294,11 @@ export default function BuyInstagramFollowersPage() {
                     <p className="text-xs text-[#444] mt-2">{tier.delivery}</p>
                   </div>
 
-                  {/* PACKAGE BUTTON */}
+                  {/* FIX APPLIED HERE — PASS quantity */}
                   <button
                     onClick={() => {
                       const qty = parseInt(tier.amount.replace(/\D/g, ""), 10);
-                      openOrderModal?.("instagram", "Followers");
-                      (window as any).yesViralPackagePrefill = qty;
+                      openOrderModal?.("instagram", "Followers", qty); // 🔥 FIX
                     }}
                     className="mt-5 w-full bg-[#007BFF] text-white text-sm font-bold py-2.5 rounded-lg hover:bg-[#005FCC] transition shadow"
                   >
@@ -316,9 +315,9 @@ export default function BuyInstagramFollowersPage() {
             </p>
           </section>
 
-          {/* =============================
-              WHY YESVIRAL SECTION
-          ============================= */}
+          {/* ===========================
+              WHY YESVIRAL FOR IG FOLLOWERS
+          ============================ */}
           <section className="bg-white/90 backdrop-blur-xl border border-[#CFE4FF] rounded-3xl shadow-xl p-10 space-y-10">
             <div className="text-center space-y-3">
               <h2 className="text-3xl font-extrabold text-[#007BFF]">
@@ -356,7 +355,7 @@ export default function BuyInstagramFollowersPage() {
                 <RefreshCcw className="text-[#007BFF]" size={34} />
                 <h3 className="font-bold text-lg mt-3 text-[#111]">30-Day Refill Protection</h3>
                 <p className="text-sm text-[#444] mt-2">
-                  If Followers drop within the refill period, your order can be restored based on the
+                  If Followers drop within the refill window, your order can be restored based on the
                   original package terms — simple and hassle-free.
                 </p>
               </div>
@@ -390,9 +389,9 @@ export default function BuyInstagramFollowersPage() {
             </div>
           </section>
 
-          {/* =============================
+          {/* ===========================
               FAQ SNIPPET
-          ============================= */}
+          ============================ */}
           <section className="space-y-6">
             <div className="text-center space-y-2">
               <h2 className="text-2xl md:text-3xl font-extrabold text-[#007BFF]">
@@ -417,7 +416,7 @@ export default function BuyInstagramFollowersPage() {
               <div className="bg-white border border-[#CFE4FF] rounded-2xl p-6 shadow-sm">
                 <h3 className="font-bold text-[#111] mb-2 text-sm">How Fast Does Delivery Start?</h3>
                 <p className="text-sm text-[#444] leading-relaxed">
-                  Delivery typically starts within minutes. Larger or custom requests may take additional time depending on order size.
+Delivery typically starts within minutes. Larger or custom requests may take additional time depending on order size.
                 </p>
               </div>
 
@@ -440,9 +439,9 @@ export default function BuyInstagramFollowersPage() {
             </div>
           </section>
 
-          {/* =============================
+          {/* ===========================
               SEO CONTENT BLOCK
-          ============================= */}
+          ============================ */}
           <section className="max-w-4xl mx-auto bg-white border border-[#CFE4FF] rounded-2xl p-8 shadow-sm">
             <h2 className="text-xl font-bold text-[#111] mb-3">
               Why Buying Instagram Followers Works For Social Proof
@@ -464,9 +463,9 @@ export default function BuyInstagramFollowersPage() {
             </p>
           </section>
 
-          {/* =============================
+          {/* ===========================
               FINAL CTA
-          ============================= */}
+          ============================ */}
           <section className="text-center space-y-3">
             <h2 className="text-2xl md:text-3xl font-extrabold text-[#007BFF]">
               Ready To Boost Your Instagram With YesViral?
