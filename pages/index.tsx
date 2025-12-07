@@ -379,7 +379,7 @@ export default function Home() {
 
             {/* CARD 6 */}
             <div className="bg-[#E6F0FF]/70 backdrop-blur-md border border-[#CFE4FF] rounded-2xl p-7 shadow-md hover:shadow-xl hover:-translate-y-1 hover:border-[#007BFF] transition flex flex-col items-center">
-              <Star className="text-[#007BFF]" size={38} />}
+              <Star className="text-[#007BFF]" size={38} />
               <h3 className="font-bold text-lg mt-3 text-[#111]">Proven Reputation</h3>
               <p className="text-sm text-[#444] leading-relaxed">
                 Trusted by over 100,000+ creators worldwide with a 4.8/5 rating.
