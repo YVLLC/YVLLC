@@ -9,160 +9,135 @@ export default function AboutPage() {
         <title>About Us – YesViral</title>
         <meta
           name="description"
-          content="Discover the technology, mission, and story behind YesViral — the premium growth platform trusted by creators worldwide."
+          content="Learn about YesViral — the premium, technology-driven growth platform trusted by thousands of creators worldwide."
         />
       </Head>
 
-      <div className="relative min-h-screen bg-gradient-to-br from-[#E6F0FF] to-white pt-32 pb-32 overflow-hidden">
-
-        {/* Floating Gradient Blobs */}
-        <div className="absolute top-[-120px] left-[-120px] w-[300px] h-[300px] bg-[#007BFF33] rounded-full blur-3xl opacity-40 animate-floatSlow"></div>
-        <div className="absolute bottom-[-150px] right-[-150px] w-[280px] h-[280px] bg-[#005FCC33] rounded-full blur-3xl opacity-40 animate-floatSlow2"></div>
-
-        <div className="relative max-w-6xl mx-auto px-6">
+      <div className="min-h-screen bg-gradient-to-br from-[#E6F0FF] to-white pt-32 pb-28">
+        <div className="max-w-6xl mx-auto px-6">
 
           {/* ===========================
-              HERO SECTION
+              HERO / INTRO
           ============================ */}
           <div className="text-center mb-24 animate-fadeIn">
-            <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight text-[#111] leading-tight">
-              The Future of <span className="text-[#007BFF]">Creator Growth</span> Starts Here
+            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-[#111111]">
+              The Story Behind <span className="text-[#007BFF]">YesViral</span>
             </h1>
 
-            <p className="text-lg text-[#444] mt-6 max-w-2xl mx-auto leading-relaxed">
-              YesViral is a technology-powered growth platform offering <strong>Instant Delivery</strong>, 
-              <strong> Premium Quality</strong>, and <strong>Reliable Performance</strong> through advanced Private Delivery Networks.
+            <p className="text-lg text-[#444444] mt-5 max-w-2xl mx-auto leading-relaxed">
+              A premium, next-generation platform created for creators, brands, and businesses
+              who expect more than just engagement — they expect <strong>Instant Delivery</strong>,
+              <strong> Premium Quality</strong>, and <strong>Reliable Performance</strong>.
             </p>
-          </div>
 
-          {/* ===========================
-              STATS (ANIMATED)
-          ============================ */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-28 animate-fadeIn">
-            {[
-              { label: "Creators Trust YesViral", value: "100,000+" },
-              { label: "Orders Processed", value: "2 Million+" },
-              { label: "Automated Delivery", value: "24/7" },
-            ].map((stat, i) => (
-              <div
-                key={i}
-                className="backdrop-blur-xl bg-white/90 border border-[#CFE4FF] rounded-2xl shadow-xl p-8 text-center"
-              >
-                <h3 className="text-4xl font-extrabold text-[#007BFF] animate-counter">
-                  {stat.value}
-                </h3>
-                <p className="text-sm text-[#444] mt-2">{stat.label}</p>
+            {/* Stats Section */}
+            <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+              <div className="bg-white border border-[#CFE4FF] rounded-xl shadow-lg p-6">
+                <h3 className="text-3xl font-extrabold text-[#007BFF]">100K+</h3>
+                <p className="text-sm text-[#444] mt-1">Creators Trust YesViral</p>
               </div>
-            ))}
+
+              <div className="bg-white border border-[#CFE4FF] rounded-xl shadow-lg p-6">
+                <h3 className="text-3xl font-extrabold text-[#007BFF]">2M+</h3>
+                <p className="text-sm text-[#444] mt-1">Orders Processed</p>
+              </div>
+
+              <div className="bg-white border border-[#CFE4FF] rounded-xl shadow-lg p-6">
+                <h3 className="text-3xl font-extrabold text-[#007BFF]">24/7</h3>
+                <p className="text-sm text-[#444] mt-1">Automated Delivery</p>
+              </div>
+            </div>
           </div>
 
           {/* ===========================
               OUR MISSION
           ============================ */}
-          <div className="bg-white border border-[#CFE4FF] shadow-xl rounded-2xl p-12 mb-24 animate-fadeIn">
-            <h2 className="text-3xl font-bold text-[#111] mb-6">Our Mission</h2>
-            <p className="text-[#444] text-lg leading-relaxed">
-              Our mission is to deliver <strong>Effortless Growth</strong> to every creator.
+          <div className="bg-white border border-[#CFE4FF] shadow-xl rounded-2xl p-12 mb-20 animate-fadeIn">
+            <h2 className="text-3xl font-bold text-[#111111] mb-6">Our Mission</h2>
+            <p className="text-[#444444] text-lg leading-relaxed">
+              Our mission is simple: <strong>make growth effortless</strong>.
               <br /><br />
-              Instead of outdated delivery systems and unpredictable performance, YesViral provides 
-              creators with a platform engineered for <strong>Instant Delivery</strong>, 
-              <strong> Consistency</strong>, and <strong>Trust</strong>.
+              The creator economy is evolving fast. Outdated delivery systems, inconsistent
+              platforms, and unreliable services slow creators down. YesViral was designed
+              from the ground up to remove those limitations using advanced technology,
+              optimized routing systems, and premium delivery solutions.
               <br /><br />
-              We focus on removing friction with the most reliable and modern growth infrastructure in the industry.
+              Everything we build is focused on <strong>speed</strong>, 
+              <strong> consistency</strong>, and <strong>trust</strong>.
             </p>
           </div>
 
           {/* ===========================
-              PDN EXPLAINER — VISUAL DIAGRAM
+              PDN EXPLAINER
           ============================ */}
-          <div className="bg-white border border-[#CFE4FF] rounded-2xl shadow-xl p-12 mb-24 animate-fadeIn">
-            <h2 className="text-3xl font-bold text-[#111] mb-6">
+          <div className="bg-white border border-[#CFE4FF] shadow-xl rounded-2xl p-12 mb-20 animate-fadeIn">
+            <h2 className="text-3xl font-bold text-[#111111] mb-6">
               What Powers YesViral: Private Delivery Networks
             </h2>
 
-            <p className="text-lg text-[#444] leading-relaxed mb-10">
-              Private Delivery Networks (PDNs) allow YesViral to deliver unmatched speed,
-              stability, and premium quality — far beyond traditional delivery systems.
+            <p className="text-[#444] text-lg leading-relaxed mb-6">
+              Instead of relying on traditional outdated systems, YesViral uses 
+              <strong> Private Delivery Networks (PDNs)</strong> — advanced, constantly-optimized
+              routing frameworks that allow true <strong>Instant Delivery</strong>,
+              <strong> Premium Quality</strong>, and <strong>Real Performance Tracking</strong>.
             </p>
 
-            {/* Diagram */}
-            <div className="grid md:grid-cols-3 gap-8 text-center">
-              <div className="p-8 bg-[#F5FAFF] border border-[#CFE4FF] rounded-xl shadow-md">
-                <h3 className="text-xl font-bold mb-2 text-[#007BFF]">Dynamic Routing</h3>
-                <p className="text-sm text-[#444]">
-                  Routes every order through the fastest possible channel in real time.
-                </p>
-              </div>
-
-              <div className="p-8 bg-[#F5FAFF] border border-[#CFE4FF] rounded-xl shadow-md">
-                <h3 className="text-xl font-bold mb-2 text-[#007BFF]">Smarter Automation</h3>
-                <p className="text-sm text-[#444]">
-                  Removes delays and downtime with intelligent rerouting systems.
-                </p>
-              </div>
-
-              <div className="p-8 bg-[#F5FAFF] border border-[#CFE4FF] rounded-xl shadow-md">
-                <h3 className="text-xl font-bold mb-2 text-[#007BFF]">Premium Quality</h3>
-                <p className="text-sm text-[#444]">
-                  Ensures stable, consistent, and high-quality results through vetted channels.
-                </p>
-              </div>
+            {/* PDN Card */}
+            <div className="bg-[#F5FAFF] border border-[#CFE4FF] rounded-xl p-8 text-center shadow-lg">
+              <p className="text-[#444] text-lg leading-relaxed">
+                PDNs enable dynamic routing, minimize downtime, improve accuracy, and deliver
+                orders through the highest-quality channels available — all without requiring
+                any access to your accounts.
+              </p>
             </div>
           </div>
 
           {/* ===========================
-              TIMELINE
+              WHY YESVIRAL IS DIFFERENT
           ============================ */}
-          <div className="bg-white border border-[#CFE4FF] shadow-xl rounded-2xl p-12 mb-24 animate-fadeIn">
-            <h2 className="text-3xl font-bold text-[#111] mb-8">How YesViral Evolved</h2>
+          <div className="bg-white border border-[#CFE4FF] shadow-xl rounded-2xl p-12 mb-20 animate-fadeIn">
+            <h2 className="text-3xl font-bold text-[#111111] mb-6">Why YesViral Is Different</h2>
 
-            <div className="space-y-10 border-l-4 border-[#007BFF] pl-8">
-              <div>
-                <h3 className="text-xl font-bold text-[#111]">2023 — Foundation</h3>
-                <p className="text-[#444] mt-2">
-                  YesViral begins development with a mission to modernize social growth.
-                </p>
-              </div>
-
-              <div>
-                <h3 className="text-xl font-bold text-[#111]">2024 — PDN Infrastructure</h3>
-                <p className="text-[#444] mt-2">
-                  Launch of Private Delivery Networks for instant, stable delivery.
-                </p>
-              </div>
-
-              <div>
-                <h3 className="text-xl font-bold text-[#111]">2025 — Automation Expansion</h3>
-                <p className="text-[#444] mt-2">
-                  Automated smart routing and upgraded systems scale YesViral globally.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* ===========================
-              FOUNDER INSIGHT
-          ============================ */}
-          <div className="bg-white border border-[#CFE4FF] shadow-xl rounded-2xl p-12 mb-24 animate-fadeIn">
-            <h2 className="text-3xl font-bold text-[#111] mb-6">A Message from the Team</h2>
-
-            <p className="text-lg text-[#444] leading-relaxed max-w-3xl">
-              “We built YesViral because creators deserve a platform that values 
-              speed, reliability, and real technology — not outdated systems. 
-              Every feature we create is designed to help you grow without limits.”
+            <p className="text-[#444444] text-lg leading-relaxed mb-8">
+              YesViral stands apart from traditional platforms by focusing on modern engineering
+              and automated optimization. Here's what sets us apart:
             </p>
+
+            <ul className="space-y-4 text-[#444444] text-lg leading-relaxed ml-1">
+              <li>
+                <span className="inline-block w-3 h-3 bg-[#007BFF] rounded-full mr-3"></span>
+                <strong>Faster Processing</strong> powered by dynamic routing technology
+              </li>
+              <li>
+                <span className="inline-block w-3 h-3 bg-[#007BFF] rounded-full mr-3"></span>
+                <strong>Higher Consistency</strong> with stress-tested delivery channels
+              </li>
+              <li>
+                <span className="inline-block w-3 h-3 bg-[#007BFF] rounded-full mr-3"></span>
+                <strong>Smart Automation</strong> to minimize downtime and delays
+              </li>
+              <li>
+                <span className="inline-block w-3 h-3 bg-[#007BFF] rounded-full mr-3"></span>
+                <strong>Enhanced Security</strong> with encrypted, zero-access processing
+              </li>
+              <li>
+                <span className="inline-block w-3 h-3 bg-[#007BFF] rounded-full mr-3"></span>
+                <strong>Real Performance Tracking</strong> using real PDN infrastructure
+              </li>
+            </ul>
           </div>
 
           {/* ===========================
               CTA
           ============================ */}
           <div className="text-center mt-24 animate-fadeIn">
-            <h2 className="text-3xl font-bold text-[#111] mb-4">
-              Your Growth Starts Now
+            <h2 className="text-3xl font-bold text-[#111111] mb-4">
+              The Future of Creator Growth Starts Here
             </h2>
 
-            <p className="text-[#444] max-w-2xl mx-auto mb-8 text-lg">
-              Join thousands of creators using YesViral to scale smarter and faster than ever before.
+            <p className="text-[#444444] max-w-2xl mx-auto mb-8 text-lg">
+              Join the creators and brands using YesViral to grow smarter, faster, and
+              more consistently — backed by premium-quality delivery and real automation.
             </p>
 
             <Link
