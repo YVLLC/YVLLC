@@ -59,11 +59,40 @@ export default function App({ Component, pageProps }: AppProps) {
         {/* Canonical */}
         <link rel="canonical" href="https://www.yesviral.com" />
 
-        {/* Preconnect (Performance SEO BOOST) */}
+        {/* Preconnect */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
 
-        {/* OPEN GRAPH (Facebook, LinkedIn) */}
+        {/* ==============================
+            🔥 PRELOAD ASSETS (SEO + SPEED)
+        =============================== */}
+        <link
+          rel="preload"
+          href="/fonts/Inter.var.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+        <link rel="preload" as="image" href="/hero-illustration.png" />
+
+        {/* ==============================
+            🔥 GOOGLE ANALYTICS (GA4)
+            Measurement ID: G-XYD80ZBH20
+        =============================== */}
+        <script async src={`https://www.googletagmanager.com/gtag/js?id=G-XYD80ZBH20`}></script>
+        <script
+          id="ga4-init"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-XYD80ZBH20', { send_page_view: true });
+            `,
+          }}
+        />
+
+        {/* OPEN GRAPH */}
         <meta property="og:title" content="YesViral – Buy Followers & Social Media Growth" />
         <meta
           property="og:description"
@@ -91,7 +120,6 @@ export default function App({ Component, pageProps }: AppProps) {
 
         {/* ==============================
             🔥 GLOBAL BRAND SCHEMA (JSON-LD)
-            MASSIVE SEO BOOST — NO TEXT CHANGES
         =============================== */}
         <script
           type="application/ld+json"
