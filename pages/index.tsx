@@ -26,7 +26,7 @@ const SalesNotifications = dynamic(
 );
 
 // ----------------------------------------------------------
-// FAQ CONTENT (EXACT VERSION YOU REQUESTED)
+// FAQ CONTENT
 // ----------------------------------------------------------
 
 const FAQS = [
@@ -158,14 +158,16 @@ export default function Home() {
 
           {/* LEFT SIDE CONTENT */}
           <div className="w-full flex flex-col items-center md:items-start space-y-7 text-center md:text-left">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#E8FF] rounded-full text-xs font-bold text-[#007BFF]">
+
+            {/* ⭐ ORIGINAL BADGE RESTORED — NO COLOR CHANGES */}
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#E8F1FF] rounded-full text-xs font-bold text-[#007BFF]">
               <Star size={18} className="text-yellow-400 star-animate" />
               Trusted by 100,000+ Creators
             </div>
 
-            {/* ⭐ FIXED TITLE — ONLY CHANGE YOU REQUESTED */}
+            {/* ⭐ HERO TITLE — FIXED SPACING + OPTION A */}
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#007BFF] leading-tight md:leading-snug">
-              Boost Your Social Presence Instantly. 
+              Boost Your Social Presence Instantly.
               <br className="hidden sm:block" />
               <span className="text-[#005FCC]">
                 Premium Growth for Instagram, TikTok & YouTube.
@@ -332,6 +334,7 @@ export default function Home() {
           </h2>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-10 mt-6">
+
             {/* CARD 1 */}
             <div className="bg-[#E6F0FF]/70 backdrop-blur-md border border-[#CFE4FF] rounded-2xl p-7 shadow-md hover:shadow-xl hover:-translate-y-1 hover:border-[#007BFF] transition flex flex-col items-center">
               <Zap className="text-[#007BFF]" size={38} />
@@ -385,6 +388,7 @@ export default function Home() {
                 Trusted by over 100,000+ creators worldwide with a 4.8/5 rating.
               </p>
             </div>
+
           </div>
 
           <div className="flex flex-col sm:flex-row justify-center gap-6 mt-10 text-[#007BFF] font-bold text-lg">
@@ -394,10 +398,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* =============================================== */}
         {/* OTHER SECTIONS */}
-        {/* =============================================== */}
-
         <section className="py-2 md:py-3">
           <HowItWorks />
         </section>
