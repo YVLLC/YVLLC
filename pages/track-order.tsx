@@ -116,7 +116,7 @@ export default function TrackOrderPage() {
 
           <div className="flex flex-col leading-tight">
             <span className="text-sm font-extrabold tracking-tight text-[#0F172A]">YesViral</span>
-            <span className="text-[11px] font-medium text-[#64748B]">Real-time growth tracking</span>
+            <span className="text-[11px] font-medium text-[#64748B]">Real-time Growth Tracking</span>
             <span className="text-[11px] font-medium text-[#94A3B8]">Powered by Private Delivery Networks</span>
           </div>
         </Link>
