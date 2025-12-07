@@ -48,7 +48,7 @@ const FAQS = [
   {
     question: "Are the followers real?",
     answer:
-      "Yes. All engagement comes from High-Quality Real Users sourced through our Premium Private Delivery Networks — Never low-quality bots.",
+      "Yes. All engagement comes from High-Quality, Real Users sourced through our Premium Private Delivery Networks — Never low-quality bots.",
   },
   {
     question: "Is your service safe and legal?",
@@ -140,6 +140,65 @@ export default function Home() {
           name="description"
           content="Grow your social media with YesViral. Buy real followers, likes, views, and more — fast, secure, and trusted by 100,000+ creators."
         />
+
+        {/* ================= PREMIUM SEO BLOCK (ADDED) ================= */}
+
+        {/* Canonical URL */}
+        <link rel="canonical" href="https://www.yesviral.com/" />
+
+        {/* Keywords */}
+        <meta
+          name="keywords"
+          content="buy instagram followers, buy tiktok followers, buy youtube views, buy instagram likes, social media growth, premium followers, yesviral, yes viral, fast delivery followers, private delivery networks"
+        />
+
+        {/* Robots */}
+        <meta name="robots" content="index, follow" />
+
+        {/* Open Graph */}
+        <meta property="og:title" content="YesViral – Premium Social Media Growth" />
+        <meta
+          property="og:description"
+          content="Buy real, high-quality followers, likes & views for Instagram, TikTok, and YouTube. Instant delivery. Trusted by 100,000+ creators."
+        />
+        <meta property="og:image" content="https://www.yesviral.com/og-image.jpg" />
+        <meta property="og:url" content="https://www.yesviral.com/" />
+        <meta property="og:site_name" content="YesViral" />
+        <meta property="og:type" content="website" />
+
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="YesViral – Premium Social Growth" />
+        <meta
+          name="twitter:description"
+          content="Unlock instant social media growth with YesViral. High-quality followers, likes & views delivered in minutes."
+        />
+        <meta name="twitter:image" content="https://www.yesviral.com/og-image.jpg" />
+
+        {/* App / Theme */}
+        <meta name="theme-color" content="#007BFF" />
+        <meta name="apple-mobile-web-app-title" content="YesViral" />
+        <meta name="application-name" content="YesViral" />
+
+        {/* Structured Data */}
+        <script type="application/ld+json">
+          {`
+            {
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "name": "YesViral",
+              "url": "https://www.yesviral.com",
+              "logo": "https://www.yesviral.com/logo.png",
+              "description": "YesViral delivers premium social media growth with instant, secure, high-quality followers, likes, and views for Instagram, TikTok, and YouTube.",
+              "sameAs": [
+                "https://www.instagram.com/yesviralapp",
+                "https://www.tiktok.com/@yesviralapp"
+              ]
+            }
+          `}
+        </script>
+
+        {/* ================= END PREMIUM SEO BLOCK ================= */}
       </Head>
 
       <OrderModal
