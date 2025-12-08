@@ -48,7 +48,7 @@ const FAQS = [
   {
     question: "Are the followers real?",
     answer:
-      "We deliver High-Quality, Natural-Looking Engagement designed to make your page appear Active and Trustworthy. We don’t use Cheap, Risky, or Obviously Fake methods. Our goal is to boost your Presence in a Clean, Realistic way that actually improves how People see your Page.",
+      "We deliver High-Quality, Premium Engagement designed to make your page Active and Trustworthy. We don’t use Cheap, Risky, or Fake methods. Our goal is to boost your Presence in a Clean, Realistic way that actually improves how People see your Page.",
   },
   {
     question: "Is your service safe?",
