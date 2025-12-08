@@ -15,19 +15,19 @@ const MEGA_MENUS = {
       name: "Buy Instagram Followers",
       service: { platform: "instagram", type: "Followers" },
       icon: <UserPlus size={18} className="text-[#E1306C]" />,
-      desc: "Boost Your Instagram With Real, High-Quality Followers Fast."
+      desc: "Boost Your Instagram With High-Quality Followers Fast."
     },
     {
       name: "Buy Instagram Likes",
       service: { platform: "instagram", type: "Likes" },
       icon: <ThumbsUp size={18} className="text-[#E1306C]" />,
-      desc: "Boost Your Instagram Posts With Real, High-Quality Likes Fast."
+      desc: "Boost Your Posts With High-Quality Likes Fast."
     },
     {
       name: "Buy Instagram Views",
       service: { platform: "instagram", type: "Views" },
       icon: <Eye size={18} className="text-[#E1306C]" />,
-      desc: "Boost Your Instagram Reach With Real, High-Quality Views Fast."
+      desc: "Boost Your Reach With High-Quality Views Fast."
     }
   ],
   tiktok: [
@@ -35,19 +35,19 @@ const MEGA_MENUS = {
       name: "Buy TikTok Followers",
       service: { platform: "tiktok", type: "Followers" },
       icon: <UserPlus size={18} className="text-[#00F2EA]" />,
-      desc: "Boost Your TikTok With Real, High-Quality Followers Fast."
+      desc: "Boost Your TikTok With High-Quality Followers Fast."
     },
     {
       name: "Buy TikTok Likes",
       service: { platform: "tiktok", type: "Likes" },
       icon: <ThumbsUp size={18} className="text-[#00F2EA]" />,
-      desc: "Boost Your TikTok Videos With Real, High-Quality Likes Fast."
+      desc: "Boost Your Videos With High-Quality Likes Fast."
     },
     {
       name: "Buy TikTok Views",
       service: { platform: "tiktok", type: "Views" },
       icon: <Eye size={18} className="text-[#00F2EA]" />,
-      desc: "Boost Your TikTok Reach With Real, High-Quality Views Fast."
+      desc: "Boost Your TikTok Reach With High-Quality Views Fast."
     }
   ],
   youtube: [
@@ -55,19 +55,19 @@ const MEGA_MENUS = {
       name: "Buy YouTube Subscribers",
       service: { platform: "youtube", type: "Subscribers" },
       icon: <UserPlus size={18} className="text-[#FF0000]" />,
-      desc: "Boost Your YouTube Channel With Real, High-Quality Subscribers Fast."
+      desc: "Boost Your Channel With High-Quality Subscribers Fast."
     },
     {
       name: "Buy YouTube Likes",
       service: { platform: "youtube", type: "Likes" },
       icon: <ThumbsUp size={18} className="text-[#FF0000]" />,
-      desc: "Boost Your YouTube Videos With Real, High-Quality Likes Fast."
+      desc: "Boost Your Videos With High-Quality Likes Fast."
     },
     {
       name: "Buy YouTube Views",
       service: { platform: "youtube", type: "Views" },
       icon: <Eye size={18} className="text-[#FF0000]" />,
-      desc: "Boost Your YouTube Growth With Real, High-Quality Views Fast."
+      desc: "Boost Your YouTube Growth With High-Quality Views Fast."
     }
   ]
 };
@@ -146,70 +146,76 @@ export default function Header() {
 
   return (
     <header className="bg-white border-b border-[#CFE4FF] sticky top-0 z-50 shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-8 py-3 flex items-center justify-between min-h-[72px]">
-        
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 group">
+      
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between min-h-[72px]">
+
+        {/* LOGO */}
+        <Link href="/" className="flex items-center gap-2 group whitespace-nowrap">
           <Image
             src="/logo.png"
             alt="YesViral Logo"
             width={40}
             height={40}
-            className="rounded-full group-hover:scale-105 transition-transform duration-150 shadow"
+            className="rounded-full group-hover:scale-105 transition-transform shadow"
             priority
           />
-          <span className="text-2xl font-extrabold text-[#007BFF] group-hover:text-[#005FCC] tracking-tight transition-colors duration-200">
+          <span className="text-2xl font-extrabold text-[#007BFF] group-hover:text-[#005FCC] transition">
             YesViral
           </span>
         </Link>
 
-        {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-1 ml-2">
+        {/* DESKTOP NAV */}
+        <nav className="hidden md:flex items-center gap-[6px] ml-2 whitespace-nowrap">
+
           {megaTabs.map(tab => (
             <div
               key={tab.key}
               className="relative flex items-center h-full"
-              onMouseEnter={() => startMenuHover(tab.key as MegaKey)}
+              onMouseEnter={() => startMenuHover(tab.key)}
               onMouseLeave={scheduleMenuClose}
             >
               <button
+                type="button"
                 className={`
-                  flex items-center gap-1 px-3 py-2 rounded-full text-[16px] font-medium transition 
+                  flex items-center gap-1 px-3 py-2 rounded-full text-[15px] font-medium transition 
                   hover:bg-[#F5FAFF]
                   ${hoverTab === tab.key ? "text-[#007BFF]" : "text-[#1A1A1A]"}
                 `}
-                type="button"
               >
                 {tab.icon}
-                <span>{tab.label}</span>
-                <ChevronDown className={`w-4 h-4 ml-1 transition-transform ${hoverTab === tab.key ? "rotate-180" : ""}`} />
+                {tab.label}
+                <ChevronDown
+                  className={`w-4 h-4 ml-1 transition-transform ${hoverTab === tab.key ? "rotate-180" : ""}`}
+                />
               </button>
 
-              {/* Mega Menu */}
+              {/* MEGA MENU (WIDER: w-96) */}
               <div
                 className={`
-                  absolute left-0 top-[110%] w-80 bg-white rounded-xl border border-[#CFE4FF] shadow-2xl z-50 py-3
-                  ${hoveredMenu === tab.key ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 translate-y-2 pointer-events-none"}
-                  transition-all duration-200
+                  absolute left-0 top-[110%] w-96 max-w-[380px] bg-white rounded-xl border border-[#CFE4FF]
+                  shadow-2xl py-3 z-50 transition-all duration-200
+                  ${hoveredMenu === tab.key ? "opacity-100 translate-y-0 pointer-events-auto"
+                    : "opacity-0 translate-y-2 pointer-events-none"}
                 `}
                 onMouseEnter={cancelMenuClose}
                 onMouseLeave={scheduleMenuClose}
               >
                 <div className="flex flex-col gap-1">
-                  {MEGA_MENUS[tab.key as MegaKey].map(item => (
+                  {MEGA_MENUS[tab.key].map(item => (
                     <button
                       key={item.name}
-                      className="flex items-center gap-3 px-5 py-3 rounded-lg hover:bg-[#F5FAFF] transition group text-left w-full"
+                      type="button"
                       onClick={() => {
                         openOrderModal(item.service.platform, item.service.type);
-                        setHoverTab(null);
                         setHoveredMenu(null);
+                        setHoverTab(null);
                       }}
+                      className="flex items-center gap-3 px-5 py-3 rounded-lg hover:bg-[#F5FAFF] transition text-left w-full"
                     >
                       {item.icon}
                       <span>
-                        <span className="font-semibold text-[#007BFF] group-hover:underline">{item.name}</span>
-                        <div className="text-xs text-[#444]">{item.desc}</div>
+                        <span className="font-semibold text-[#007BFF]">{item.name}</span>
+                        <div className="text-xs text-[#444] mt-0.5">{item.desc}</div>
                       </span>
                     </button>
                   ))}
@@ -218,51 +224,57 @@ export default function Header() {
             </div>
           ))}
 
-          <span className="w-px h-7 mx-3 bg-[#E7ECF3]" />
+          {/* DIVIDER */}
+          <span className="w-px h-7 mx-2 bg-[#E7ECF3]" />
 
+          {/* TOP LINKS */}
           {navLinks.map(link => (
             <Link
               key={link.name}
               href={link.href}
-              className={`px-3 py-2 rounded-full text-[15px] font-medium transition hover:bg-[#F5FAFF] hover:text-[#007BFF] ${
-                router.asPath === link.href ? "text-[#007BFF]" : "text-[#222]"
-              }`}
+              className={`
+                px-3 py-2 rounded-full text-[15px] font-medium transition
+                ${router.asPath === link.href ? "text-[#007BFF]" : "text-[#222]"}
+                hover:bg-[#F5FAFF] hover:text-[#007BFF]
+              `}
             >
               {link.name}
             </Link>
           ))}
 
+          {/* AUTH BUTTONS */}
           {!user ? (
             <>
-              <Link href="/login" className="ml-4">
-                <button className="px-5 py-2 rounded-full text-[#007BFF] bg-white border border-[#007BFF] font-semibold shadow-sm hover:bg-[#F2F9FF] hover:text-[#005FCC] transition">
+              <Link href="/login">
+                <button className="px-4 py-2 rounded-full text-[#007BFF] bg-white border border-[#007BFF] font-semibold hover:bg-[#F2F9FF]">
                   Login
                 </button>
               </Link>
-              <Link href="/signup" className="ml-2">
-                <button className="px-5 py-2 rounded-full text-white bg-[#007BFF] border-2 border-[#007BFF] font-bold shadow hover:bg-[#005FCC] transition">
+              <Link href="/signup">
+                <button className="px-4 py-2 rounded-full text-white bg-[#007BFF] border-2 border-[#007BFF] font-bold hover:bg-[#005FCC]">
                   Sign Up
                 </button>
               </Link>
             </>
           ) : (
-            <div className="flex items-center gap-2 ml-5">
+            <div className="flex items-center gap-2">
               <Link href="/dashboard">
-                <button className="px-4 py-2 rounded-lg text-[#007BFF] bg-[#F5FAFF] border border-[#E7ECF3] font-semibold hover:bg-[#E6F0FF] transition">
+                <button className="px-4 py-2 rounded-lg text-[#007BFF] bg-[#F5FAFF] border border-[#E7ECF3] font-semibold hover:bg-[#E6F0FF]">
                   Dashboard
                 </button>
               </Link>
               <button
-                className="flex items-center gap-1 px-4 py-2 rounded-lg text-[#007BFF] bg-white border border-[#007BFF] font-semibold hover:bg-[#F2F9FF] transition"
                 onClick={handleSignOut}
+                className="flex items-center gap-1 px-4 py-2 rounded-lg text-[#007BFF] bg-white border border-[#007BFF] font-semibold hover:bg-[#F2F9FF]"
               >
                 <LogOut size={18} /> Sign Out
               </button>
             </div>
           )}
+
         </nav>
 
-        {/* Mobile Menu Toggle */}
+        {/* MOBILE TOGGLE */}
         <button
           className="md:hidden text-[#007BFF]"
           onClick={() => setIsOpen(!isOpen)}
@@ -271,27 +283,27 @@ export default function Header() {
         </button>
       </div>
 
-      {/* Mobile Nav */}
+      {/* MOBILE NAV */}
       {isOpen && (
         <div className="md:hidden px-4 pb-4 space-y-3 bg-white border-t border-[#CFE4FF] shadow-inner">
 
           {megaTabs.map(tab => (
             <details key={tab.key} className="group">
-              <summary className="flex items-center gap-2 px-2 py-2 text-[#007BFF] font-semibold">
+              <summary className="flex items-center gap-2 px-2 py-2 text-[#007BFF] font-semibold cursor-pointer">
                 {tab.icon}
                 {tab.label}
                 <ChevronDown className="ml-auto w-4 h-4 transition-transform group-open:rotate-180" />
               </summary>
 
               <div className="ml-6 mt-1 flex flex-col gap-1">
-                {MEGA_MENUS[tab.key as MegaKey].map(item => (
+                {MEGA_MENUS[tab.key].map(item => (
                   <button
                     key={item.name}
-                    className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-[#F5FAFF] transition text-left"
                     onClick={() => {
                       openOrderModal(item.service.platform, item.service.type);
                       setIsOpen(false);
                     }}
+                    className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-[#F5FAFF]"
                   >
                     {item.icon}
                     <span className="font-semibold text-[#007BFF]">{item.name}</span>
@@ -308,9 +320,11 @@ export default function Header() {
               key={link.name}
               href={link.href}
               onClick={() => setIsOpen(false)}
-              className={`block py-2 text-base font-semibold rounded-full px-3 hover:bg-[#E6F0FF] transition ${
-                router.asPath === link.href ? "text-[#005FCC]" : "text-[#111]"
-              }`}
+              className={`
+                block py-2 text-base font-semibold rounded-full px-3 
+                hover:bg-[#E6F0FF]
+                ${router.asPath === link.href ? "text-[#005FCC]" : "text-[#111]"}
+              `}
             >
               {link.name}
             </Link>
@@ -319,12 +333,12 @@ export default function Header() {
           {!user ? (
             <div className="flex gap-2 mt-3">
               <Link href="/login" className="flex-1">
-                <button className="w-full px-4 py-2 rounded-full text-[#007BFF] bg-white border border-[#007BFF] font-semibold shadow-sm hover:bg-[#F2F9FF] transition">
+                <button className="w-full px-4 py-2 rounded-full text-[#007BFF] bg-white border border-[#007BFF] font-semibold hover:bg-[#F2F9FF]">
                   Login
                 </button>
               </Link>
               <Link href="/signup" className="flex-1">
-                <button className="w-full px-4 py-2 rounded-full text-white bg-[#007BFF] border-2 border-[#007BFF] font-bold shadow hover:bg-[#005FCC] transition">
+                <button className="w-full px-4 py-2 rounded-full text-white bg-[#007BFF] border-2 border-[#007BFF] font-bold hover:bg-[#005FCC]">
                   Sign Up
                 </button>
               </Link>
@@ -332,13 +346,13 @@ export default function Header() {
           ) : (
             <div className="flex gap-2 mt-3">
               <Link href="/dashboard" className="flex-1">
-                <button className="w-full px-4 py-2 rounded-lg text-[#007BFF] bg-[#F5FAFF] border border-[#E7ECF3] font-semibold hover:bg-[#E6F0FF] transition">
+                <button className="w-full px-4 py-2 rounded-lg text-[#007BFF] bg-[#F5FAFF] border border-[#E7ECF3] font-semibold hover:bg-[#E6F0FF]">
                   Dashboard
                 </button>
               </Link>
               <button
-                className="flex-1 flex items-center justify-center gap-1 px-4 py-2 rounded-lg text-[#007BFF] bg-white border border-[#007BFF] font-semibold hover:bg-[#F2F9FF] transition"
                 onClick={handleSignOut}
+                className="flex-1 flex items-center justify-center gap-1 px-4 py-2 rounded-lg text-[#007BFF] bg-white border border-[#007BFF] font-semibold hover:bg-[#F2F9FF]"
               >
                 <LogOut size={18} /> Sign Out
               </button>
@@ -348,15 +362,6 @@ export default function Header() {
         </div>
       )}
 
-      <style jsx global>{`
-        @keyframes fadeInFast {
-          from { opacity: 0; transform: translateY(20px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fadeInFast {
-          animation: fadeInFast 0.18s cubic-bezier(.39,1.7,.47,.99);
-        }
-      `}</style>
     </header>
   );
 }
