@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
-import Link from "next/link";
 import {
   Menu, X, ChevronDown, Instagram, Youtube, Music2,
   UserPlus, ThumbsUp, Eye, LogOut
@@ -15,19 +14,19 @@ const MEGA_MENUS = {
       name: "Buy Instagram Followers",
       service: { platform: "instagram", type: "Followers" },
       icon: <UserPlus size={18} className="text-[#E1306C]" />,
-      desc: "Real, High-Quality Followers. Instant Start."
+      desc: "Real, lasting followers. Instant start."
     },
     {
       name: "Buy Instagram Likes",
       service: { platform: "instagram", type: "Likes" },
       icon: <ThumbsUp size={18} className="text-[#E1306C]" />,
-      desc: "Premium Engagement Boost. Fast Delivery."
+      desc: "Boost post engagement. Organic style."
     },
     {
       name: "Buy Instagram Views",
       service: { platform: "instagram", type: "Views" },
       icon: <Eye size={18} className="text-[#E1306C]" />,
-      desc: "Go Viral on Stories & Reels."
+      desc: "Go viral on Stories & Reels."
     }
   ],
   tiktok: [
@@ -35,13 +34,13 @@ const MEGA_MENUS = {
       name: "Buy TikTok Followers",
       service: { platform: "tiktok", type: "Followers" },
       icon: <UserPlus size={18} className="text-[#00F2EA]" />,
-      desc: "Jumpstart your Audience. Fast Delivery."
+      desc: "Jumpstart your audience. Fast delivery."
     },
     {
       name: "Buy TikTok Likes",
       service: { platform: "tiktok", type: "Likes" },
       icon: <ThumbsUp size={18} className="text-[#00F2EA]" />,
-      desc: "Get Viral with Real, High-Quality Likes."
+      desc: "Get videos trending with real likes."
     },
     {
       name: "Buy TikTok Views",
@@ -55,19 +54,19 @@ const MEGA_MENUS = {
       name: "Buy YouTube Subscribers",
       service: { platform: "youtube", type: "Subscribers" },
       icon: <UserPlus size={18} className="text-[#FF0000]" />,
-      desc: "Grow your Channel Authentically."
+      desc: "Grow your channel authentically."
     },
     {
       name: "Buy YouTube Likes",
       service: { platform: "youtube", type: "Likes" },
       icon: <ThumbsUp size={18} className="text-[#FF0000]" />,
-      desc: "Like Boosts for every Video."
+      desc: "Like boosts for every video."
     },
     {
       name: "Buy YouTube Views",
       service: { platform: "youtube", type: "Views" },
       icon: <Eye size={18} className="text-[#FF0000]" />,
-      desc: "Skyrocket your Views. Real Users."
+      desc: "Skyrocket your views. Real users."
     }
   ]
 };
@@ -170,25 +169,25 @@ export default function Header() {
               onMouseLeave={scheduleMenuClose}
             >
               <button
-                className={
+                className={`
                   flex items-center gap-1 px-3 py-2 rounded-full text-[16px] font-medium transition 
                   hover:bg-[#F5FAFF] focus:outline-none
                   ${hoverTab === tab.key ? "text-[#007BFF]" : "text-[#1A1A1A]"}
-                }
+                `}
                 type="button"
                 onFocus={() => startMenuHover(tab.key as MegaKey)}
                 onBlur={scheduleMenuClose}
               >
                 {tab.icon}
                 <span>{tab.label}</span>
-                <ChevronDown className={w-4 h-4 ml-1 transition-transform duration-150 ${hoverTab === tab.key ? "rotate-180" : ""}} />
+                <ChevronDown className={`w-4 h-4 ml-1 transition-transform duration-150 ${hoverTab === tab.key ? "rotate-180" : ""}`} />
               </button>
               <div
-                className={
+                className={`
                   absolute left-0 top-[110%] w-80 bg-white rounded-xl border border-[#CFE4FF] shadow-2xl z-50 py-3
                   ${hoveredMenu === tab.key ? "opacity-100 pointer-events-auto translate-y-0" : "opacity-0 pointer-events-none translate-y-2"}
                   transition-all duration-200
-                }
+                `}
                 onMouseEnter={cancelMenuClose}
                 onMouseLeave={scheduleMenuClose}
                 style={{ transitionTimingFunction: "cubic-bezier(.45,1.8,.25,.99)" }}
@@ -223,9 +222,9 @@ export default function Header() {
             <Link
               key={link.name}
               href={link.href}
-              className={px-3 py-2 rounded-full text-[15px] font-medium transition 
+              className={`px-3 py-2 rounded-full text-[15px] font-medium transition 
                 ${router.asPath === link.href ? "text-[#007BFF]" : "text-[#222]"}
-                hover:bg-[#F5FAFF] hover:text-[#007BFF]}
+                hover:bg-[#F5FAFF] hover:text-[#007BFF]`}
             >
               {link.name}
             </Link>
@@ -304,9 +303,9 @@ export default function Header() {
             <Link
               key={link.name}
               href={link.href}
-              className={block py-2 text-base font-semibold rounded-full px-3 hover:bg-[#E6F0FF] transition ${
+              className={`block py-2 text-base font-semibold rounded-full px-3 hover:bg-[#E6F0FF] transition ${
                 router.asPath === link.href ? "text-[#005FCC]" : "text-[#111]"
-              }}
+              }`}
               onClick={() => setIsOpen(false)}
             >
               {link.name}
@@ -343,7 +342,7 @@ export default function Header() {
         </div>
       )}
 
-      <style jsx global>{
+      <style jsx global>{`
         @keyframes fadeInFast {
           from { opacity: 0; transform: translateY(20px);}
           to   { opacity: 1; transform: translateY(0);}
@@ -351,7 +350,7 @@ export default function Header() {
         .animate-fadeInFast {
           animation: fadeInFast 0.18s cubic-bezier(.39,1.7,.47,.99);
         }
-      }</style>
+      `}</style>
     </header>
   );
 }
