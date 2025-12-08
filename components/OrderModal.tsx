@@ -848,8 +848,8 @@ setQuantity(initialQuantity ?? 100);
                 Choose Platform
               </h3>
               <p className="text-center text-sm text-[#64748B] mt-2">
-                YesViral’s Top-Rated Growth services to Boost your
-                visibility, Elevate your presence and deliver High-Quality
+                YesViral’s Top-Rated Growth Services to Boost your
+                Visibility, Elevate your Presence and deliver High-Quality
                 results.
               </p>
 
