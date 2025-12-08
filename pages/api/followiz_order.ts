@@ -12,7 +12,7 @@ const NORMALIZE_SERVICE: Record<string, string> = {
 // FOLLOWIZ SERVICE IDS
 const FOLLOWIZ_SERVICE_IDS = {
   youtube: {
-    views: 4023,
+    views: 4196,
     likes: 2450,
     subscribers: 1238,
     followers: null,
@@ -21,14 +21,14 @@ const FOLLOWIZ_SERVICE_IDS = {
 
   tiktok: {
     views: 1016,
-    likes: 1283,
+    likes: 1280,
     followers: 6951,
     subscribers: null,
     comments: null,
   },
 
   instagram: {
-    views: 811,
+    views: 810,
     likes: 483,
     followers: 511,
     comments: null,

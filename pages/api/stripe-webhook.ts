@@ -26,9 +26,9 @@ const supabase = createClient(
 
 // Followiz service IDs
 const SERVICE_IDS: Record<string, Record<string, number>> = {
-  instagram: { Followers: 511, Likes: 483, Views: 811 },
-  tiktok: { Followers: 6951, Likes: 1283, Views: 1016 },
-  youtube: { Subscribers: 1238, Likes: 2450, Views: 4023 },
+  instagram: { Followers: 511, Likes: 483, Views: 810 },
+  tiktok: { Followers: 6951, Likes: 1280, Views: 1016 },
+  youtube: { Subscribers: 1238, Likes: 2450, Views: 4196 },
 };
 
 function getServiceId(platform: string, service: string): number | null {

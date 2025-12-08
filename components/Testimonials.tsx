@@ -22,7 +22,7 @@ const testimonials = [
     platform: "TikTok",
     icon: <Music2 className="text-[#25F4EE]" size={22} />,
     quote:
-      "Gave my tracks the push they needed. Engagement boosted instantly and support was extremely responsive. Way better results than ads.",
+      "Gave my music the push it needed. Engagement boosted instantly and support was extremely responsive. Way better results than ads.",
   },
   {
     name: "Evan W.",
@@ -38,7 +38,7 @@ const testimonials = [
     platform: "Business",
     icon: <Briefcase className="text-[#007BFF]" size={22} />,
     quote:
-      "My store page finally grew. Within the same week I got new customers. Everything looked natural and the growth stayed consistent.",
+      "My store page finally grew. Within the same week I got a few new customers. Everything looks great and the growth stayed consistent.",
   },
 ];
 
