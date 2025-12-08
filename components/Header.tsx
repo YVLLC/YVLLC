@@ -9,7 +9,7 @@ import {
 import { supabase } from "../lib/supabaseClient";
 import { useOrderModal } from "@/context/OrderModalContext";
 
-const MEGA_MENUS = {
+const megaTabs: { label: string; key: MegaKey; icon: JSX.Element }[] = [
   instagram: [
     {
       name: "Buy Instagram Followers",
