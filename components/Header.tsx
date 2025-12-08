@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
+import Link from "next/link";
 import {
   Menu, X, ChevronDown, Instagram, Youtube, Music2,
   UserPlus, ThumbsUp, Eye, LogOut
