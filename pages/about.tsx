@@ -26,7 +26,7 @@ export default function AboutPage() {
             </h1>
 
             <p className="text-lg text-[#444444] mt-5 max-w-2xl mx-auto leading-relaxed">
-              A next-generation growth platform created for creators, brands, and businesses
+              A Next-Generation Growth Platform created for Creators, Brands, and Businesses
               who expect more than just “Followers.” YesViral was built to deliver{" "}
               <strong>Speed</strong>, <strong>Quality</strong>, and{" "}
               <strong>True Reliability</strong> in an industry that desperately needed it.
@@ -35,8 +35,8 @@ export default function AboutPage() {
             <div className="mt-10 mx-auto max-w-3xl bg-white border border-[#CFE4FF] shadow-lg rounded-2xl p-5">
               <p className="text-sm text-[#444] leading-relaxed">
                 Trusted by over <span className="font-semibold text-[#007BFF]">100,000+</span>{" "}
-                creators worldwide, YesViral runs on advanced Private Delivery Networks (PDNs), 
-                automated systems, and Premium-Quality routing to ensure your growth is Instant, 
+                creators worldwide, YesViral runs on Advanced Private Delivery Networks (PDNs), 
+                Automated Systems, and Premium-Quality Routing to ensure your Growth is Instant, 
                 Consistent, and Secure.
               </p>
             </div>
@@ -54,10 +54,10 @@ export default function AboutPage() {
               The Social Media landscape moves quickly — Creators shouldn’t have to deal with 
               Outdated Platforms, Inconsistent Delivery, or Unreliable Services. So we 
               built a platform that combines Modern Engineering, Smart Automation, and 
-              Optimized Delivery Systems to give creators exactly what they’re looking for:{" "}
+              Optimized Delivery Systems to give Creators exactly what they’re looking for:{" "}
               <span className="font-semibold text-[#007BFF]">Premium Results, Delivered Fast and Safely.</span>
               <br /><br />
-              Every feature of YesViral is designed to remove friction, save time, and 
+              Every feature of YesViral is designed to remove Friction, Save Time, and 
               provide Creators with a Smooth, Stress-Free Experience from start to finish.
             </p>
           </div>
@@ -69,11 +69,10 @@ export default function AboutPage() {
             <h2 className="text-3xl font-bold text-[#111111] mb-6">Why YesViral Is Different</h2>
 
             <p className="text-[#444444] text-lg leading-relaxed mb-8">
-              Unlike traditional platforms that rely on outdated delivery systems, YesViral is 
-              powered by constantly-upgraded Private Delivery Networks. This ensures:
+              Unlike Traditional Platforms that rely on outdated delivery systems, YesViral is 
+              powered by Constantly-Upgraded Private Delivery Networks. This ensures:
             </p>
 
-            {/* FIXED LIST — NO MARKDOWN, ONLY JSX */}
             <ul className="space-y-4 text-[#444444] text-lg leading-relaxed ml-1">
               <li>
                 <span className="inline-block w-3 h-3 bg-[#007BFF] rounded-full mr-3"></span>
@@ -98,8 +97,8 @@ export default function AboutPage() {
             </ul>
 
             <p className="text-[#444444] text-lg leading-relaxed mt-8">
-              We’re not here to be “Just Another” Growth Service — we’re building the next 
-              generation of Creator Tools: Reliable, Polished, and Built To Scale With You.
+              We’re not here to be “Just Another” Growth Service — we’re building the Next 
+              Generation of Creator Tools: Reliable, Polished, and Built To Scale With You.
             </p>
           </div>
 
@@ -111,7 +110,7 @@ export default function AboutPage() {
               <div className="text-[#007BFF] text-5xl mb-4">⚡</div>
               <h3 className="text-2xl font-bold text-[#111111] mb-2">Instant Delivery</h3>
               <p className="text-[#444444] text-sm leading-relaxed">
-                Orders begin processing within minutes thanks to real-time PDN routing.
+                Orders begin processing within minutes thanks to Real-Time PDN Routing.
               </p>
             </div>
 
@@ -119,7 +118,7 @@ export default function AboutPage() {
               <div className="text-[#007BFF] text-5xl mb-4">🔒</div>
               <h3 className="text-2xl font-bold text-[#111111] mb-2">Safe & Secure</h3>
               <p className="text-[#444444] text-sm leading-relaxed">
-                No passwords or access required — your privacy and account security are always protected.
+                No Passwords or Access Required — your Privacy and Account Security are always protected.
               </p>
             </div>
 
@@ -127,7 +126,7 @@ export default function AboutPage() {
               <div className="text-[#007BFF] text-5xl mb-4">⭐</div>
               <h3 className="text-2xl font-bold text-[#111111] mb-2">Premium Quality</h3>
               <p className="text-[#444444] text-sm leading-relaxed">
-                Every service is vetted, optimized, and tested to deliver the Highest-Quality Growth Possible.
+                Every service is Vetted, Optimized, and Tested to deliver the Highest-Quality Growth Possible.
               </p>
             </div>
           </div>

@@ -848,7 +848,7 @@ setQuantity(initialQuantity ?? 100);
                 Choose Platform
               </h3>
               <p className="text-center text-sm text-[#64748B] mt-2">
-                Trust YesViral’s Top-Rated Growth services to Boost your
+                YesViral’s Top-Rated Growth services to Boost your
                 visibility, Elevate your presence and deliver High-Quality
                 results.
               </p>
@@ -955,7 +955,7 @@ setQuantity(initialQuantity ?? 100);
                             {s.type}
                           </div>
                           <div className="text-[11px] text-[#94A3B8]">
-                            Real • High Quality • Safe
+                            Trusted • High Quality • Secure
                           </div>
                         </div>
 
@@ -1029,8 +1029,8 @@ setQuantity(initialQuantity ?? 100);
                       <line x1="12" y1="16" x2="12" y2="16" />
                     </svg>
                     <span className="leading-tight font-medium">
-                      Make sure your account is <b>public</b> and your
-                      username/link is entered <b>correctly</b>. Incorrect
+                      Make sure your account is <b>Public</b> and your
+                      Username/Link is entered <b>correctly</b>. Incorrect
                       details can delay delivery.
                     </span>
                   </div>

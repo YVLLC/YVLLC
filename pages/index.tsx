@@ -28,37 +28,36 @@ const SalesNotifications = dynamic(
 // ----------------------------------------------------------
 // FAQ CONTENT
 // ----------------------------------------------------------
-
 const FAQS = [
   {
     question: "Why choose YesViral?",
     answer:
-      "People choose YesViral when they’re done dealing with Slow, Low-Quality services that don’t deliver. YesViral was built to be the opposite — Consistent Results, Fast Delivery, Real Support, and a level of Quality you can actually rely on. We focus on Growth that looks Clean, feels Natural, and strengthens your Credibility instantly. No confusion. No surprises. Just Results that make a Difference.",
+      "YesViral was built for customers who want Dependable, High-Quality Growth without Inconsistencies or Delays. Our focus is simple: Fast Delivery, Clean Results, and a Smooth Experience from start to finish. Everything we provide is designed to strengthen your Credibility and make your page look Established Immediately.",
   },
   {
     question: "What services do you offer?",
     answer:
-      "We provide Clean, High-Quality Social Growth across Instagram, TikTok, and YouTube — including Followers, Likes, Views, Subscribers, and more. Everything is tailored for people who want their page to look Established, Respected, and Active. Whether you’re building a Brand, growing a Business, or trying to Stand Out, our services help you look the part Immediately.",
+      "We offer Premium Followers, Likes, Views, Comments, and Subscribers for Instagram, TikTok, and YouTube. Our services help Creators, Influencers, and Businesses present a Stronger, more Trusted Social Presence the moment the order begins.",
   },
   {
     question: "Do I need to share my password?",
     answer:
-      "Never. You stay in Full Control of your account the entire time. We don’t log in, access, or request anything Private — your Privacy and Security stay untouched. All you provide is the Link or Username needed for Delivery. That’s it.",
+      "No. You never share your Password with us. Your account stays fully Secure and 100% in your Control. We only need your Public Username or Post Link to complete your order.",
   },
   {
     question: "Are the followers real?",
     answer:
-      "We deliver High-Quality, Premium Engagement designed to make your page Active and Trustworthy. We don’t use Cheap, Risky, or Fake methods. Our goal is to boost your Presence in a Clean, Realistic way that actually improves how People see your Page.",
+      "We deliver High-Quality, Clean Engagement designed to make your profile look Active and Credible. We avoid Low-Grade methods entirely. Our priority is Realistic Delivery that enhances your Presence while keeping your account Safe.",
   },
   {
     question: "Is your service safe?",
     answer:
-      "Yes. Everything we deliver is done in a way that keeps your Account Protected. We don’t access your Login, we don’t request Sensitive Info, and we use Secure Payment processing to keep your details Safe. Thousands of Users trust us daily because the process is Simple, Direct, and designed with Safety in mind.",
+      "Yes. Every order is processed through Secure, Proven Systems, and we never ask for Sensitive Information. Thousands of Customers use YesViral daily because the process is Stable, Consistent, and built with Account Safety in mind.",
   },
   {
     question: "How does the 30-day refill guarantee work?",
     answer:
-      "If anything Drops within 30 Days, we Refill it quickly at No Extra Cost — no hoops to jump through, no waiting weeks for support, and no excuses. Just message us with your Order ID and we handle the rest. It’s our way of making sure your Results stay as Strong as the day you bought them.",
+      "If you experience any Drops within 30 Days after your order is completed, we Refill them quickly at No Additional Cost. Simply provide your Order ID and our team handles the rest. The guarantee ensures your Results stay exactly as Strong as they were on Day One.",
   },
 ];
 

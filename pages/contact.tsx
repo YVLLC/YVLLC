@@ -23,7 +23,7 @@ export default function Contact() {
               priority
             />
             <h1 className="text-4xl font-extrabold text-center text-[#007BFF] drop-shadow mb-1">
-              Contact YesViral Support
+              Contact Support Team
             </h1>
             <div className="flex items-center gap-2 text-[#444] text-base font-medium">
               <ShieldCheck className="text-[#007BFF]" size={20} />
