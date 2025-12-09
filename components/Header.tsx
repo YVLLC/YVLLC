@@ -187,7 +187,7 @@ export default function Header() {
               </button>
               <div
                 className={`
-                  absolute left-0 top-[110%] w-80 bg-white rounded-xl border border-[#CFE4FF] shadow-2xl z-50 py-3
+                  absolute left-0 top-[110%] w-96 bg-white rounded-xl border border-[#CFE4FF] shadow-2xl z-50 py-3
                   ${hoveredMenu === tab.key ? "opacity-100 pointer-events-auto translate-y-0" : "opacity-0 pointer-events-none translate-y-2"}
                   transition-all duration-200
                 `}
