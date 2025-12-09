@@ -32,7 +32,7 @@ const FAQS = [
   {
     question: "Why choose YesViral?",
     answer:
-      "YesViral was built for customers who want Premium, High-Quality Growth without Inconsistencies or Delays. Our focus is simple: Fast Delivery, Clean Results, and a Smooth Experience from start to finish. Everything we provide is designed to strengthen your Credibility and make your profile look Established Immediately.",
+      "YesViral was built for customers who want Premium, High-Quality Growth without Inconsistencies or Delays. Our priority is simple: Fast Delivery, High-Quality Results, and a Smooth Experience from start to finish. Everything we provide is designed to strengthen your Credibility and make your profile look Established Immediately.",
   },
   {
     question: "What services do you offer?",
