@@ -86,7 +86,6 @@ const SERVICES = [
   },
 ];
 
-// -- Utility --
 function shuffle<T>(arr: T[]): T[] {
   const a = arr.slice();
   for (let i = a.length - 1; i > 0; i--) {
@@ -155,7 +154,6 @@ export default function SalesNotifications() {
   const fadeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const showTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Setup notifications data and initial idx
   useEffect(() => {
     if (typeof window === "undefined") return;
     let notifications: NotificationData[];
@@ -177,7 +175,6 @@ export default function SalesNotifications() {
     setNotifs(notifications);
     setIdx(idxInit);
 
-    // Show notification after interval (or immediately if time has passed)
     const now = Date.now();
     const lastShownRaw = window.sessionStorage.getItem("sales_notifs_last_time");
     const lastShown = lastShownRaw ? parseInt(lastShownRaw, 10) : 0;
@@ -198,13 +195,11 @@ export default function SalesNotifications() {
     };
   }, []);
 
-  // Fade out and schedule next notification
   useEffect(() => {
     if (!visible) return;
-    // Show notification for ~5s, then fade out
+
     fadeTimeoutRef.current = setTimeout(() => {
       setVisible(false);
-      // After fade animation (0.7s), increment idx and schedule next notification
       setTimeout(() => {
         let newIdx: number;
         if (typeof window !== "undefined" && window.sessionStorage) {
@@ -215,20 +210,20 @@ export default function SalesNotifications() {
           newIdx = idx + 1;
           setIdx(newIdx);
         }
-        // Only show next if there are more notifications
+
         if (notifs && newIdx < notifs.length) {
           showTimeoutRef.current = setTimeout(() => {
             setVisible(true);
             window.sessionStorage.setItem("sales_notifs_last_time", Date.now().toString());
           }, NOTIFY_INTERVAL);
         }
-      }, 700); // matches fade-out duration
+      }, 700);
     }, 4800 + Math.random() * 600);
+
     return () => {
       if (fadeTimeoutRef.current) clearTimeout(fadeTimeoutRef.current);
       if (showTimeoutRef.current) clearTimeout(showTimeoutRef.current);
     };
-    // eslint-disable-next-line
   }, [visible, idx, notifs]);
 
   if (!notifs || idx >= notifs.length) return null;
@@ -240,36 +235,75 @@ export default function SalesNotifications() {
     <>
       <div
         className={`
-          fixed z-[60] bottom-7 left-4 sm:left-8 md:left-12
-          max-w-xs sm:max-w-sm bg-white border-2 border-[#CFE4FF] rounded-2xl shadow-2xl flex items-center gap-3 px-4 py-3
+          fixed z-[9999] bottom-7 left-4 sm:left-8 md:left-12
+          w-[300px] sm:w-[340px]
+          
+          bg-white/80 backdrop-blur-xl 
+          border border-[#CFE4FF]/70
+          shadow-[0_8px_40px_rgba(0,123,255,0.18)]
+          rounded-3xl
+
+          flex items-start gap-4 px-5 py-4
+          
           transition-all duration-700
-          ${visible ? "opacity-100 translate-y-0 pointer-events-auto animate-notify-in" : "opacity-0 translate-y-8 pointer-events-none"}
+          ${visible ? "opacity-100 translate-y-0 pointer-events-auto animate-notify-in" 
+                    : "opacity-0 translate-y-8 pointer-events-none"}
         `}
         style={{
-          minWidth: 235,
-          willChange: "opacity,transform",
-          fontFamily: "inherit"
+          fontFamily: "inherit",
+          willChange: "opacity, transform"
         }}
         aria-live="polite"
       >
-        <div className="bg-[#F5FAFF] p-2 rounded-full">{icon}</div>
-        <div>
-          <div className="font-semibold text-[#007BFF] text-sm mb-0.5 flex items-center gap-1">
-            Recent Sale
-            <span className="inline-block w-1.5 h-1.5 bg-[#22C55E] rounded-full ml-1 animate-pulse" />
+        <div className="flex items-center justify-center w-12 h-12 
+                        rounded-2xl bg-gradient-to-br from-[#E6F0FF] to-white 
+                        border border-[#CFE4FF]/70 shadow-inner">
+          <div className="scale-[1.15] opacity-90">{icon}</div>
+        </div>
+
+        <div className="flex flex-col">
+          <div className="flex items-center gap-2 mb-0.5">
+            <span className="text-[13px] font-bold text-[#007BFF] tracking-tight">
+              Recent Order
+            </span>
+            <span className="inline-block w-2 h-2 bg-[#22C55E] rounded-full animate-pulse" />
           </div>
-          <div className="text-xs text-[#444] font-medium">{notification.location}</div>
-          <div className="text-sm font-bold text-[#222] mt-1">{label}</div>
-          <div className="text-[11px] text-[#888] mt-0.5">{notification.timeAgo}</div>
+
+          <div className="text-[12px] text-[#444] font-medium leading-tight">
+            {notification.location}
+          </div>
+
+          <div className="text-sm font-extrabold text-[#111] mt-1 tracking-tight">
+            {label}
+          </div>
+
+          <div className="text-[11px] text-[#777] mt-1">
+            {notification.timeAgo}
+          </div>
         </div>
       </div>
+
       <style jsx global>{`
         @keyframes notify-in {
-          0% { opacity:0; transform: translateY(40px);}
-          65% { opacity:1; transform: translateY(-4px);}
-          100% { opacity:1; transform: translateY(0);}
+          0% { 
+            opacity: 0; 
+            transform: translateY(40px) scale(.95); 
+            filter: blur(6px);
+          }
+          60% { 
+            opacity: 1; 
+            transform: translateY(-3px) scale(1.02);
+            filter: blur(0);
+          }
+          100% {
+            opacity: 1; 
+            transform: translateY(0) scale(1);
+            filter: blur(0);
+          }
         }
-        .animate-notify-in { animation: notify-in 0.8s cubic-bezier(.52,2,.24,1) 1; }
+        .animate-notify-in {
+          animation: notify-in 0.75s cubic-bezier(.22,1.45,.36,1) forwards;
+        }
       `}</style>
     </>
   );

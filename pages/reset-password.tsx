@@ -45,7 +45,7 @@ export default function ResetPasswordPage() {
             Enter your email and we’ll send you a secure link to reset your password.<br />
             Need help?{" "}
             <Link href="/contact" className="text-[#007BFF] hover:underline">
-              Contact support
+              Contact Support
             </Link>
           </p>
         </div>
