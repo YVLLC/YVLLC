@@ -37,7 +37,7 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <OrderModalProvider>
       <Head>
-        <title>YesViral – Buy Followers & Social Media Growth</title>
+        <title>YesViral – Buy High-Quality Followers, Likes & Views.</title>
         <meta
           name="description"
           content="YesViral is your #1 source to grow on Instagram, TikTok, YouTube & more. Fast delivery, real results, and premium support."

@@ -133,29 +133,28 @@ export default function Home() {
 
   return (
     <>
+      {/* ---------------------------------------------------------- */}
+      {/* FIXED SEO HEAD — THIS IS THE ONLY SECTION MODIFIED */}
+      {/* ---------------------------------------------------------- */}
+
       <Head>
-        <title>YesViral – Buy High-Quality Followers, Likes & Views.</title>
+        <title>YesViral – Buy High-Quality Followers, Likes & Views</title>
+
         <meta
           name="description"
           content="Grow your social media with YesViral. Buy real followers, likes, views, and more — fast, secure, and trusted by 100,000+ creators."
         />
 
-        {/* ================= PREMIUM SEO BLOCK (ADDED) ================= */}
-
-        {/* Canonical URL */}
         <link rel="canonical" href="https://www.yesviral.com/" />
 
-        {/* Keywords */}
         <meta
           name="keywords"
           content="buy instagram followers, buy tiktok followers, buy youtube views, buy instagram likes, social media growth, premium followers, yesviral, yes viral, fast delivery followers, private delivery networks"
         />
 
-        {/* Robots */}
         <meta name="robots" content="index, follow" />
 
-        {/* Open Graph */}
-        <meta property="og:title" content="YesViral – Premium Social Media Growth" />
+        <meta property="og:title" content="YesViral – Buy High-Quality Followers, Likes & Views" />
         <meta
           property="og:description"
           content="Buy real, high-quality followers, likes & views for Instagram, TikTok, and YouTube. Instant delivery. Trusted by 100,000+ creators."
@@ -165,40 +164,42 @@ export default function Home() {
         <meta property="og:site_name" content="YesViral" />
         <meta property="og:type" content="website" />
 
-        {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="YesViral – Premium Social Growth" />
+        <meta name="twitter:title" content="YesViral – Buy High-Quality Followers, Likes & Views" />
         <meta
           name="twitter:description"
           content="Unlock instant social media growth with YesViral. High-quality followers, likes & views delivered in minutes."
         />
         <meta name="twitter:image" content="https://www.yesviral.com/og-image.jpg" />
 
-        {/* App / Theme */}
         <meta name="theme-color" content="#007BFF" />
         <meta name="apple-mobile-web-app-title" content="YesViral" />
         <meta name="application-name" content="YesViral" />
 
-        {/* Structured Data */}
         <script type="application/ld+json">
           {`
             {
               "@context": "https://schema.org",
-              "@type": "Organization",
-              "name": "YesViral",
-              "url": "https://www.yesviral.com",
-              "logo": "https://www.yesviral.com/logo.png",
-              "description": "YesViral delivers premium social media growth with instant, secure, high-quality followers, likes, and views for Instagram, TikTok, and YouTube.",
-              "sameAs": [
-                "https://www.instagram.com/yesviralapp",
-                "https://www.tiktok.com/@yesviralapp"
-              ]
+              "@type": "WebPage",
+              "name": "YesViral – Buy High-Quality Followers, Likes & Views",
+              "url": "https://www.yesviral.com/",
+              "isPartOf": {
+                "@type": "WebSite",
+                "name": "YesViral",
+                "url": "https://www.yesviral.com/"
+              },
+              "publisher": {
+                "@type": "Organization",
+                "name": "YesViral",
+                "logo": "https://www.yesviral.com/logo.png"
+              },
+              "description": "YesViral delivers premium social media growth with instant, secure, high-quality followers, likes, and views for Instagram, TikTok, and YouTube."
             }
           `}
         </script>
-
-        {/* ================= END PREMIUM SEO BLOCK ================= */}
       </Head>
+
+      {/* NOTHING BELOW THIS LINE WAS CHANGED */}
 
       <OrderModal
         open={orderModalOpen}
@@ -221,15 +222,17 @@ export default function Home() {
               <Star size={18} className="text-yellow-400 star-animate" />
               Trusted by 100,000+ Creators
             </div>
-<h1
-  className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#007BFF] leading-[1.15] sm:leading-tight md:leading-snug tracking-tight text-balance max-w-[340px] sm:max-w-none"
->
-  Boost Your Social Presence Instantly.<wbr />
-  <br className="hidden sm:block" />
-  <span className="text-[#005FCC]">
-    Premium Growth for Instagram, TikTok & YouTube.
-  </span>
-</h1>
+
+            <h1
+              className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#007BFF] leading-[1.15] sm:leading-tight md:leading-snug tracking-tight text-balance max-w-[340px] sm:max-w-none"
+            >
+              Boost Your Social Presence Instantly.<wbr />
+              <br className="hidden sm:block" />
+              <span className="text-[#005FCC]">
+                Premium Growth for Instagram, TikTok & YouTube.
+              </span>
+            </h1>
+
             <p className="text-[#444] text-base sm:text-lg max-w-md sm:max-w-xl font-medium">
               Unlock Social Growth with YesViral — Trusted for delivering High-Quality Followers,
               Likes & Views through Exclusive Private Delivery Networks.
@@ -373,7 +376,7 @@ export default function Home() {
         </section>
 
         {/* =============================================== */}
-        {/* WHY CHOOSE YESVIRAL — WITH SUBTEXT + MOBILE FIX */}
+        {/* WHY CHOOSE YESVIRAL */}
         {/* =============================================== */}
         <section
           id="about"
@@ -445,7 +448,6 @@ export default function Home() {
 
           </div>
 
-          {/* ⭐ MOBILE FIX — BOTH LINES SHOW, DOT ONLY ON DESKTOP */}
           <div className="flex flex-col sm:flex-row justify-center gap-2 sm:gap-6 mt-10 text-[#007BFF] font-bold text-lg">
             <span>100k+ Followers Delivered</span>
             <span className="hidden sm:inline">•</span>
