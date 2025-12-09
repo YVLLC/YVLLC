@@ -32,7 +32,7 @@ const FAQS = [
   {
     question: "Why choose YesViral?",
     answer:
-      "YesViral was built for customers who want Dependable, High-Quality Growth without Inconsistencies or Delays. Our focus is simple: Fast Delivery, Clean Results, and a Smooth Experience from start to finish. Everything we provide is designed to strengthen your Credibility and make your page look Established Immediately.",
+      "YesViral was built for customers who want Premium, High-Quality Growth without Inconsistencies or Delays. Our focus is simple: Fast Delivery, Clean Results, and a Smooth Experience from start to finish. Everything we provide is designed to strengthen your Credibility and make your profile look Established Immediately.",
   },
   {
     question: "What services do you offer?",
@@ -47,7 +47,7 @@ const FAQS = [
   {
     question: "Are the followers real?",
     answer:
-      "We deliver High-Quality, Clean Engagement designed to make your profile look Active and Credible. We avoid Low-Grade methods entirely. Our priority is Realistic Delivery that enhances your Presence while keeping your account Safe.",
+      "We deliver High-Quality, Premium Engagement designed to make your profile Active and Credible. We avoid Low-Grade methods entirely. Our priority is High-Quality Social Growth that enhances your Presence while keeping your account Safe.",
   },
   {
     question: "Is your service safe?",
