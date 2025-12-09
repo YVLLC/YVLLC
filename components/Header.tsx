@@ -15,59 +15,61 @@ const MEGA_MENUS = {
       name: "Buy Instagram Followers",
       service: { platform: "instagram", type: "Followers" },
       icon: <UserPlus size={18} className="text-[#E1306C]" />,
-      desc: "Real, lasting followers. Instant start."
+      desc: "High-Quality Followers. Instant, Reliable Growth."
     },
     {
       name: "Buy Instagram Likes",
       service: { platform: "instagram", type: "Likes" },
       icon: <ThumbsUp size={18} className="text-[#E1306C]" />,
-      desc: "Boost post engagement. Organic style."
+      desc: "Premium Likes for Stronger Engagement."
     },
     {
       name: "Buy Instagram Views",
       service: { platform: "instagram", type: "Views" },
       icon: <Eye size={18} className="text-[#E1306C]" />,
-      desc: "Go viral on Stories & Reels."
+      desc: "Boost Story & Reels Reach with Real Views."
     }
   ],
+
   tiktok: [
     {
       name: "Buy TikTok Followers",
       service: { platform: "tiktok", type: "Followers" },
       icon: <UserPlus size={18} className="text-[#00F2EA]" />,
-      desc: "Jumpstart your audience. Fast delivery."
+      desc: "Kickstart Your Growth with High-Quality Followers."
     },
     {
       name: "Buy TikTok Likes",
       service: { platform: "tiktok", type: "Likes" },
       icon: <ThumbsUp size={18} className="text-[#00F2EA]" />,
-      desc: "Get videos trending with real likes."
+      desc: "Boost Engagement & Help Videos Take Off."
     },
     {
       name: "Buy TikTok Views",
       service: { platform: "tiktok", type: "Views" },
       icon: <Eye size={18} className="text-[#00F2EA]" />,
-      desc: "Push your content to FYP."
+      desc: "Premium Views to Push Your Content to the FYP."
     }
   ],
+
   youtube: [
     {
       name: "Buy YouTube Subscribers",
       service: { platform: "youtube", type: "Subscribers" },
       icon: <UserPlus size={18} className="text-[#FF0000]" />,
-      desc: "Grow your channel authentically."
+      desc: "Authentic Subscriber Growth for Your Channel."
     },
     {
       name: "Buy YouTube Likes",
       service: { platform: "youtube", type: "Likes" },
       icon: <ThumbsUp size={18} className="text-[#FF0000]" />,
-      desc: "Like boosts for every video."
+      desc: "Strengthen Engagement Across Your Videos."
     },
     {
       name: "Buy YouTube Views",
       service: { platform: "youtube", type: "Views" },
       icon: <Eye size={18} className="text-[#FF0000]" />,
-      desc: "Skyrocket your views. Real users."
+      desc: "Real Views to Boost Ranking & Visibility."
     }
   ]
 };
