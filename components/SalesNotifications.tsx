@@ -26,63 +26,63 @@ const SERVICES = [
     type: "Followers",
     icon: <Instagram className="text-[#E1306C]" size={19} />,
     amounts: [100, 200, 350, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
-    label: (amt: number) => ${amt.toLocaleString()} Instagram Followers
+    label: (amt: number) => `${amt.toLocaleString()} Instagram Followers`
   },
   {
     platform: "Instagram",
     type: "Likes",
     icon: <Instagram className="text-[#E1306C]" size={19} />,
     amounts: [50, 100, 300, 500, 1000, 2000, 5000, 10000, 20000],
-    label: (amt: number) => ${amt.toLocaleString()} Instagram Likes
+    label: (amt: number) => `${amt.toLocaleString()} Instagram Likes`
   },
   {
     platform: "Instagram",
     type: "Views",
     icon: <Instagram className="text-[#E1306C]" size={19} />,
     amounts: [500, 2000, 5000, 10000, 20000, 50000],
-    label: (amt: number) => ${amt.toLocaleString()} Instagram Views
+    label: (amt: number) => `${amt.toLocaleString()} Instagram Views`
   },
   {
     platform: "TikTok",
     type: "Followers",
     icon: <Music2 className="text-[#25F4EE]" size={19} />,
     amounts: [100, 250, 500, 1000, 2000, 5000, 10000],
-    label: (amt: number) => ${amt.toLocaleString()} TikTok Followers
+    label: (amt: number) => `${amt.toLocaleString()} TikTok Followers`
   },
   {
     platform: "TikTok",
     type: "Likes",
     icon: <Music2 className="text-[#25F4EE]" size={19} />,
     amounts: [100, 250, 500, 1000, 2000, 5000, 10000],
-    label: (amt: number) => ${amt.toLocaleString()} TikTok Likes
+    label: (amt: number) => `${amt.toLocaleString()} TikTok Likes`
   },
   {
     platform: "TikTok",
     type: "Views",
     icon: <Music2 className="text-[#25F4EE]" size={19} />,
     amounts: [1000, 2000, 5000, 10000, 20000, 50000],
-    label: (amt: number) => ${amt.toLocaleString()} TikTok Views
+    label: (amt: number) => `${amt.toLocaleString()} TikTok Views`
   },
   {
     platform: "YouTube",
     type: "Subscribers",
     icon: <Youtube className="text-[#FF0000]" size={19} />,
     amounts: [200, 500, 1000, 2000, 5000, 10000],
-    label: (amt: number) => ${amt.toLocaleString()} YouTube Subscribers
+    label: (amt: number) => `${amt.toLocaleString()} YouTube Subscribers`
   },
   {
     platform: "YouTube",
     type: "Likes",
     icon: <Youtube className="text-[#FF0000]" size={19} />,
     amounts: [250, 500, 1000, 2000, 5000, 10000],
-    label: (amt: number) => ${amt.toLocaleString()} YouTube Likes
+    label: (amt: number) => `${amt.toLocaleString()} YouTube Likes`
   },
   {
     platform: "YouTube",
     type: "Views",
     icon: <Youtube className="text-[#FF0000]" size={19} />,
     amounts: [200, 500, 1000, 2000, 5000, 10000],
-    label: (amt: number) => ${amt.toLocaleString()} YouTube Views
+    label: (amt: number) => `${amt.toLocaleString()} YouTube Views`
   },
 ];
 
@@ -126,11 +126,9 @@ function makeNotifications(howMany = 50): NotificationData[] {
 }
 
 function getServiceLabel(platform: string, type: string, amount: number): string {
-  const svc = SERVICES.find(
-    s => s.platform === platform && s.type === type
-  );
+  const svc = SERVICES.find(s => s.platform === platform && s.type === type);
   if (svc) return svc.label(amount);
-  return ${amount.toLocaleString()} ${platform} ${type};
+  return `${amount.toLocaleString()} ${platform} ${type}`;
 }
 
 function getServiceIcon(platform: string): JSX.Element {
@@ -155,7 +153,6 @@ export default function SalesNotifications() {
   const fadeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const showTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Setup notifications data and initial idx
   useEffect(() => {
     if (typeof window === "undefined") return;
     let notifications: NotificationData[];
@@ -170,18 +167,18 @@ export default function SalesNotifications() {
       }
       const prevIdx = window.sessionStorage.getItem("sales_notifs_idx");
       idxInit = prevIdx ? parseInt(prevIdx, 10) : 0;
-    } catch (err) {
+    } catch {
       notifications = makeNotifications(50);
       idxInit = 0;
     }
     setNotifs(notifications);
     setIdx(idxInit);
 
-    // Show notification after interval (or immediately if time has passed)
     const now = Date.now();
     const lastShownRaw = window.sessionStorage.getItem("sales_notifs_last_time");
     const lastShown = lastShownRaw ? parseInt(lastShownRaw, 10) : 0;
     const msAgo = now - lastShown;
+
     if (msAgo >= NOTIFY_INTERVAL) {
       setVisible(true);
       window.sessionStorage.setItem("sales_notifs_last_time", now.toString());
@@ -192,46 +189,45 @@ export default function SalesNotifications() {
         window.sessionStorage.setItem("sales_notifs_last_time", Date.now().toString());
       }, NOTIFY_INTERVAL - msAgo);
     }
+
     return () => {
       if (fadeTimeoutRef.current) clearTimeout(fadeTimeoutRef.current);
       if (showTimeoutRef.current) clearTimeout(showTimeoutRef.current);
     };
   }, []);
 
-  // Fade out and schedule next notification
   useEffect(() => {
     if (!visible) return;
-    // Show notification for ~5s, then fade out
+
     fadeTimeoutRef.current = setTimeout(() => {
       setVisible(false);
-      // After fade animation (0.7s), increment idx and schedule next notification
+
       setTimeout(() => {
-        let newIdx: number;
-        if (typeof window !== "undefined" && window.sessionStorage) {
-          newIdx = idx + 1;
-          setIdx(newIdx);
+        let newIdx = idx + 1;
+        setIdx(newIdx);
+        if (typeof window !== "undefined") {
           window.sessionStorage.setItem("sales_notifs_idx", newIdx.toString());
-        } else {
-          newIdx = idx + 1;
-          setIdx(newIdx);
         }
-        // Only show next if there are more notifications
+
         if (notifs && newIdx < notifs.length) {
           showTimeoutRef.current = setTimeout(() => {
             setVisible(true);
-            window.sessionStorage.setItem("sales_notifs_last_time", Date.now().toString());
+            if (typeof window !== "undefined") {
+              window.sessionStorage.setItem("sales_notifs_last_time", Date.now().toString());
+            }
           }, NOTIFY_INTERVAL);
         }
-      }, 700); // matches fade-out duration
+      }, 700);
     }, 4800 + Math.random() * 600);
+
     return () => {
       if (fadeTimeoutRef.current) clearTimeout(fadeTimeoutRef.current);
       if (showTimeoutRef.current) clearTimeout(showTimeoutRef.current);
     };
-    // eslint-disable-next-line
   }, [visible, idx, notifs]);
 
   if (!notifs || idx >= notifs.length) return null;
+
   const notification = notifs[idx];
   const icon = getServiceIcon(notification.platform);
   const label = getServiceLabel(notification.platform, notification.type, notification.amount);
@@ -239,17 +235,12 @@ export default function SalesNotifications() {
   return (
     <>
       <div
-        className={
-          fixed z-[60] bottom-7 left-4 sm:left-8 md:left-12
-          max-w-xs sm:max-w-sm bg-white border-2 border-[#CFE4FF] rounded-2xl shadow-2xl flex items-center gap-3 px-4 py-3
-          transition-all duration-700
-          ${visible ? "opacity-100 translate-y-0 pointer-events-auto animate-notify-in" : "opacity-0 translate-y-8 pointer-events-none"}
-        }
-        style={{
-          minWidth: 235,
-          willChange: "opacity,transform",
-          fontFamily: "inherit"
-        }}
+        className={`fixed z-[60] bottom-7 left-4 sm:left-8 md:left-12
+          max-w-xs sm:max-w-sm bg-white border-2 border-[#CFE4FF] rounded-2xl shadow-2xl 
+          flex items-center gap-3 px-4 py-3 transition-all duration-700
+          ${visible ? "opacity-100 translate-y-0 pointer-events-auto animate-notify-in" :
+                      "opacity-0 translate-y-8 pointer-events-none"}`}
+        style={{ minWidth: 235, willChange: "opacity,transform", fontFamily: "inherit" }}
         aria-live="polite"
       >
         <div className="bg-[#F5FAFF] p-2 rounded-full">{icon}</div>
@@ -263,14 +254,15 @@ export default function SalesNotifications() {
           <div className="text-[11px] text-[#888] mt-0.5">{notification.timeAgo}</div>
         </div>
       </div>
-      <style jsx global>{
+
+      <style jsx global>{`
         @keyframes notify-in {
-          0% { opacity:0; transform: translateY(40px);}
-          65% { opacity:1; transform: translateY(-4px);}
-          100% { opacity:1; transform: translateY(0);}
+          0% { opacity:0; transform: translateY(40px); }
+          65% { opacity:1; transform: translateY(-4px); }
+          100% { opacity:1; transform: translateY(0); }
         }
         .animate-notify-in { animation: notify-in 0.8s cubic-bezier(.52,2,.24,1) 1; }
-      }</style>
+      `}</style>
     </>
   );
 }
