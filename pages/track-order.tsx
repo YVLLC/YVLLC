@@ -79,18 +79,18 @@ export default function TrackOrderPage() {
 
   const statusKey =
     loading
-      ? "Searching"
+      ? "searching"
       : status === "delivered" || status === "completed"
-      ? "Delivered"
+      ? "delivered"
       : status === "in progress" ||
         status === "processing" ||
         status === "pending" ||
         status === "in_progress"
-      ? "In_Progress"
+      ? "in_progress"
       : status === "error" || error
-      ? "Error"
+      ? "error"
       : status === "unknown"
-      ? "Unknown"
+      ? "unknown"
       : "";
 
   return (

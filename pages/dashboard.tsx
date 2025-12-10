@@ -2093,28 +2093,55 @@ function DashboardStat({
 }
 
 function StatusPill({ status }: { status: string }) {
-  const normalized = (status || "").toLowerCase();
+  // Normalize Followiz variants
+  const normalized = (status || "")
+    .toLowerCase()
+    .replace(/_/g, " ") // in_progress → in progress
+    .trim();
+
   let bg = "#E5E7EB";
   let text = "#374151";
-  let label = status || "Unknown";
 
+  // Capitalize every word for UI label
+  let label = normalized.replace(/\b\w/g, (c) => c.toUpperCase());
+
+  // Processing (queued / starting)
   if (normalized === "processing") {
     bg = "#E0ECFF";
     text = "#1D4ED8";
     label = "Processing";
-  } else if (normalized === "completed") {
+  }
+
+  // In Progress (actively delivering)
+  else if (normalized === "in progress") {
+    bg = "#E0ECFF";
+    text = "#1D4ED8";
+    label = "In Progress";
+  }
+
+  // Completed
+  else if (normalized === "completed") {
     bg = "#DCFCE7";
     text = "#15803D";
     label = "Completed";
-  } else if (normalized === "pending") {
+  }
+
+  // Pending
+  else if (normalized === "pending") {
     bg = "#FEF9C3";
     text = "#92400E";
     label = "Pending";
-  } else if (normalized === "partial") {
+  }
+
+  // Partial
+  else if (normalized === "partial") {
     bg = "#FEF3C7";
     text = "#92400E";
     label = "Partial";
-  } else if (normalized === "canceled" || normalized === "cancelled") {
+  }
+
+  // Canceled
+  else if (normalized === "canceled" || normalized === "cancelled") {
     bg = "#FEE2E2";
     text = "#B91C1C";
     label = "Canceled";
