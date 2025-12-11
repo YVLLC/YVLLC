@@ -18,7 +18,7 @@ export default function OurPromise() {
       {/* HEADER */}
       <div className="flex flex-col items-center text-center mb-14">
         <h2 className="text-4xl md:text-5xl font-black tracking-tight mb-4 text-[#007BFF]">
-          The YesViral Promise
+         Our Promise
         </h2>
         <p className="max-w-2xl mx-auto text-[#444444] text-lg md:text-xl leading-relaxed font-medium">
           We are always growing—expanding our network, upgrading our technology,
