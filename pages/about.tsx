@@ -146,7 +146,7 @@ export default function AboutPage() {
 
             <Link
               href="/"
-              className="inline-block bg-[#007BFF] hover:bg-[#005FCC] text-white font-semibold py-3 px-10 rounded-xl shadow-md transition-all"
+              className="inline-block bg-[#007BFF] hover:bg-[#005FCC] text-white hover:text-white font-semibold py-3 px-10 rounded-xl shadow-md transition-all"
             >
               Back to Home
             </Link>
