@@ -142,11 +142,11 @@ export default function TrackOrderPage() {
               </div>
 
               <h1 className="text-3xl md:text-[2.3rem] font-black text-[#0B63E6] mb-2 tracking-tight">
-                Track Your YesViral Order
+                Track Your Order
               </h1>
 
               <p className="mx-auto max-w-md text-sm md:text-base text-[#4B5563]">
-                Drop your order ID below to see the latest status across our private delivery networks in real time.
+                Drop your order ID below to see the latest status across our Private Delivery Networks in real time.
               </p>
 
               {/* MAIN BADGE (kept) */}
