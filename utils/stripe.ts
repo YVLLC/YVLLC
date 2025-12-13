@@ -43,8 +43,7 @@ export async function createPaymentIntent({
      * Never store objects or numbers (Stripe converts ALL metadata to strings).
      */
     metadata: metadata || {},
-
-    receipt_email: customerEmail || undefined,
+    
   });
 
   return {

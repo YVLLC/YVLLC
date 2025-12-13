@@ -28,9 +28,6 @@ export default async function handler(
         email: email || "",     // ⭐ ADDED
         user_id: user_id || "", // ⭐ EXISTING FIX
       },
-
-      // ⭐ STRIPE CUSTOMER EMAIL (for receipts + fallback)
-      customerEmail: email || null,
     });
 
     return res.status(200).json({
