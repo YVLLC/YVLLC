@@ -44,7 +44,7 @@ const testimonials = [
 
 export default function TestimonialsPage() {
   return (
-    <main className="min-h-screen px-4 py-16 md:py-20">
+    <main className="px-4 py-16 md:py-20">
       {/* HEADER */}
       <div className="max-w-4xl mx-auto text-center mb-12 md:mb-16">
         <h1 className="text-4xl md:text-5xl font-extrabold text-[#007BFF] tracking-tight mb-4">
