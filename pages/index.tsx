@@ -516,8 +516,8 @@ export default function Home() {
             Ready to try YesViral?
           </h2>
           <p className="text-[#444] text-lg">
-            Join over 100,000+ creators already growing with YesViral — choose
-            your service and unlock High-Quality results in minutes.
+            Join over 100,000+ Creators already growing with YesViral — Choose
+            your Service and unlock High-Quality results in minutes.
           </p>
           <div className="mt-6 mb-6">
             <button
