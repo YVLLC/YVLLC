@@ -22,7 +22,7 @@ export default async function handler(
   const { postUrl, email, captchaToken } = req.body;
 
   /* --------------------------------------------------------
-     CAPTCHA VERIFICATION (ONLY ADDITION)
+     CAPTCHA VERIFICATION
   --------------------------------------------------------- */
   if (!captchaToken) {
     return res.status(403).json({ message: "Captcha required" });
@@ -53,9 +53,6 @@ export default async function handler(
     return res.status(400).json({ message: "Missing required fields" });
   }
 
-  /* --------------------------------------------------------
-     BASIC POST URL SANITY CHECK
-  --------------------------------------------------------- */
   if (!postUrl.includes("instagram.com")) {
     return res.status(400).json({
       message: "Please enter a valid Instagram post URL",
@@ -109,22 +106,25 @@ export default async function handler(
 
     const orderId = String(followizResponse.data.order);
 
-    const { error: insertError } = await supabase
+    /* --------------------------------------------------------
+       SAVE FREE TRIAL RECORD (NON-BLOCKING)
+    --------------------------------------------------------- */
+    await supabase
       .from("free_trials")
-      .insert({
-        email,
-        post_url: normalizedPostUrl,
-        ip_address: ip,
-        followiz_order_id: orderId,
-        status: "completed",
-      });
+      .upsert(
+        {
+          email,
+          post_url: normalizedPostUrl,
+          ip_address: ip,
+          followiz_order_id: orderId,
+          status: "completed",
+        },
+        { onConflict: "post_url" }
+      );
 
-    if (insertError) {
-      return res.status(500).json({
-        message: "Failed to save free trial record",
-      });
-    }
-
+    /* --------------------------------------------------------
+       ALWAYS RETURN SUCCESS AFTER FOLLOWIZ
+    --------------------------------------------------------- */
     return res.status(200).json({
       success: true,
       orderId,
