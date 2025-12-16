@@ -234,7 +234,7 @@ export default function Home() {
             </h1>
 
             <p className="text-[#444] text-base sm:text-lg max-w-md sm:max-w-xl font-medium">
-              Unlock Social Growth with YesViral — Trusted for delivering High-Quality Followers,
+              Premium Social Growth with YesViral — #1 Trusted for Delivering High-Quality Followers,
               Likes & Views through Exclusive Private Delivery Networks.
             </p>
 
