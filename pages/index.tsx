@@ -154,23 +154,35 @@ export default function Home() {
 
         <meta name="robots" content="index, follow" />
 
-        <meta property="og:title" content="YesViral – Buy High-Quality Followers, Likes & Views" />
+        <meta
+          property="og:title"
+          content="YesViral – Buy High-Quality Followers, Likes & Views"
+        />
         <meta
           property="og:description"
           content="Buy real, high-quality followers, likes & views for Instagram, TikTok, and YouTube. Instant delivery. Trusted by 100,000+ creators."
         />
-        <meta property="og:image" content="https://www.yesviral.com/og-image.jpg" />
+        <meta
+          property="og:image"
+          content="https://www.yesviral.com/og-image.jpg"
+        />
         <meta property="og:url" content="https://www.yesviral.com/" />
         <meta property="og:site_name" content="YesViral" />
         <meta property="og:type" content="website" />
 
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="YesViral – Buy High-Quality Followers, Likes & Views" />
+        <meta
+          name="twitter:title"
+          content="YesViral – Buy High-Quality Followers, Likes & Views"
+        />
         <meta
           name="twitter:description"
           content="Unlock instant social media growth with YesViral. High-quality followers, likes & views delivered in minutes."
         />
-        <meta name="twitter:image" content="https://www.yesviral.com/og-image.jpg" />
+        <meta
+          name="twitter:image"
+          content="https://www.yesviral.com/og-image.jpg"
+        />
 
         <meta name="theme-color" content="#007BFF" />
         <meta name="apple-mobile-web-app-title" content="YesViral" />
@@ -209,23 +221,18 @@ export default function Home() {
       />
 
       <main className="px-4 sm:px-6 max-w-7xl mx-auto py-6 sm:py-10 space-y-10 select-none">
-        
         {/* =============================================== */}
         {/* HERO SECTION */}
         {/* =============================================== */}
         <section className="relative flex flex-col-reverse md:grid md:grid-cols-2 md:gap-8 items-center">
-
           {/* LEFT SIDE */}
           <div className="w-full flex flex-col items-center md:items-start space-y-7 text-center md:text-left">
-
             <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#E8F1FF] rounded-full text-xs font-bold text-[#007BFF]">
               <Star size={18} className="text-yellow-400 star-animate" />
               Trusted by 100,000+ Creators
             </div>
 
-            <h1
-              className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#000000] leading-[1.15] sm:leading-tight md:leading-snug tracking-tight text-balance max-w-[340px] sm:max-w-none"
-            >
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#000000] leading-[1.15] sm:leading-tight md:leading-snug tracking-tight text-balance max-w-[340px] sm:max-w-none">
               Boost Your Social Growth Instantly.<wbr />
               <br className="hidden sm:block" />
               <span className="text-[#007BFF]">
@@ -234,8 +241,9 @@ export default function Home() {
             </h1>
 
             <p className="text-[#444] text-base sm:text-lg max-w-md sm:max-w-xl font-medium">
-              Premium Social Growth with YesViral — #1 Trusted for Delivering High-Quality Followers,
-              Likes & Views through Exclusive Private Delivery Networks.
+              Premium Social Growth with YesViral — #1 Trusted for Delivering
+              High-Quality Followers, Likes & Views through Exclusive Private
+              Delivery Networks.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
@@ -255,14 +263,14 @@ export default function Home() {
             </div>
 
             <span className="text-xs text-[#555]">
-              🔒 SSL-secured payments · ⭐ 4.8/5 rating · ⚡ Orders typically start in minutes
+              🔒 SSL-secured payments · ⭐ 4.8/5 rating · ⚡ Orders typically
+              start in minutes
             </span>
           </div>
 
           {/* RIGHT SIDE PHONE */}
           <div className="relative hidden md:flex items-center justify-center">
             <div className="relative inline-block">
-
               <div className="absolute top-[40px] left-1/2 -translate-x-1/2 flex flex-nowrap gap-3">
                 <div className="bg-white/95 border border-[#CFE4FF] rounded-xl px-4 py-2 shadow-lg flex items-center gap-2 whitespace-nowrap yv-card-1">
                   <span className="text-[#007BFF] text-lg">💙</span>
@@ -324,55 +332,73 @@ export default function Home() {
 
           <div className="flex justify-center gap-1 mb-6">
             {[1, 2, 3, 4].map((i) => (
-              <Star key={i} size={20} className="text-[#007BFF] fill-[#007BFF]" />
+              <Star
+                key={i}
+                size={20}
+                className="text-[#007BFF] fill-[#007BFF]"
+              />
             ))}
-            <Star size={20} className="text-[#007BFF] fill-[#007BFF] opacity-50" />
+            <Star
+              size={20}
+              className="text-[#007BFF] fill-[#007BFF] opacity-50"
+            />
             <span className="ml-2 text-[#007BFF] text-sm font-semibold">
               4.8 / 5 rating
             </span>
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {SERVICES.map(({ name, price, description, icon, tag, count, key }, idx) => (
-              <div
-                key={idx}
-                className="bg-white border-2 border-[#CFE4FF] rounded-2xl p-7 shadow-md hover:shadow-2xl transition group flex flex-col gap-3 relative"
-              >
-                {tag && (
-                  <span className="absolute top-4 right-5 bg-[#E8F1FF] text-[#007BFF] text-xs font-bold px-3 py-1 rounded-full shadow">
-                    {tag}
-                  </span>
-                )}
-
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="bg-[#F5FAFF] p-2 rounded-full">{icon}</div>
-                  <h3 className="text-xl font-bold text-[#111]">{name}</h3>
-                </div>
-
-                <ul className="text-sm text-[#444] pl-5 list-disc space-y-1">
-                  {description.map((d, i) => (
-                    <li key={i}>{d}</li>
-                  ))}
-                </ul>
-
-                <div className="flex items-center gap-2 mt-2">
-                  <span className="text-sm font-medium text-[#007BFF]">
-                    {price}
-                  </span>
-                  <span className="text-xs text-[#111] bg-[#E8F1FF] px-2 py-0.5 rounded">
-                    {count}
-                  </span>
-                </div>
-
-                <button
-                  className="mt-4 w-full bg-[#007BFF] text-white text-sm px-4 py-2 rounded-lg font-bold hover:bg-[#005FCC] shadow transition"
-                  onClick={() => openOrderModalService(key)}
+            {SERVICES.map(
+              ({ name, price, description, icon, tag, count, key }, idx) => (
+                <div
+                  key={idx}
+                  className="bg-white border-2 border-[#CFE4FF] rounded-2xl p-7 shadow-md hover:shadow-2xl transition group flex flex-col gap-3 relative"
                 >
-                  Order
-                </button>
-              </div>
-            ))}
+                  {tag && (
+                    <span className="absolute top-4 right-5 bg-[#E8F1FF] text-[#007BFF] text-xs font-bold px-3 py-1 rounded-full shadow">
+                      {tag}
+                    </span>
+                  )}
+
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="bg-[#F5FAFF] p-2 rounded-full">
+                      {icon}
+                    </div>
+                    <h3 className="text-xl font-bold text-[#111]">{name}</h3>
+                  </div>
+
+                  <ul className="text-sm text-[#444] pl-5 list-disc space-y-1">
+                    {description.map((d, i) => (
+                      <li key={i}>{d}</li>
+                    ))}
+                  </ul>
+
+                  <div className="flex items-center gap-2 mt-2">
+                    <span className="text-sm font-medium text-[#007BFF]">
+                      {price}
+                    </span>
+                    <span className="text-xs text-[#111] bg-[#E8F1FF] px-2 py-0.5 rounded">
+                      {count}
+                    </span>
+                  </div>
+
+                  <button
+                    className="mt-4 w-full bg-[#007BFF] text-white text-sm px-4 py-2 rounded-lg font-bold hover:bg-[#005FCC] shadow transition"
+                    onClick={() => openOrderModalService(key)}
+                  >
+                    Order
+                  </button>
+                </div>
+              )
+            )}
           </div>
+        </section>
+
+        {/* =============================================== */}
+        {/* TESTIMONIALS (MOVED HERE ONLY) */}
+        {/* =============================================== */}
+        <section className="py-2 md:py-3">
+          <Testimonials />
         </section>
 
         {/* =============================================== */}
@@ -387,65 +413,81 @@ export default function Home() {
           </h2>
 
           <p className="text-[#444] text-lg max-w-2xl mx-auto -mt-2">
-            Delivering unmatched quality, speed, and reliability through advanced Private Delivery Networks.
+            Delivering unmatched quality, speed, and reliability through
+            advanced Private Delivery Networks.
           </p>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-10 mt-6">
-
             {/* CARD 1 */}
             <div className="bg-[#E6F0FF]/70 backdrop-blur-md border border-[#CFE4FF] rounded-2xl p-7 shadow-md hover:shadow-xl hover:-translate-y-1 hover:border-[#007BFF] transition flex flex-col items-center">
               <Zap className="text-[#007BFF]" size={38} />
-              <h3 className="font-bold text-lg mt-3 text-[#111]">Instant Activation</h3>
+              <h3 className="font-bold text-lg mt-3 text-[#111]">
+                Instant Activation
+              </h3>
               <p className="text-sm text-[#444] leading-relaxed">
-                Orders begin processing within minutes through our Private Delivery Networks (PDNS).
+                Orders begin processing within minutes through our Private
+                Delivery Networks (PDNS).
               </p>
             </div>
 
             {/* CARD 2 */}
             <div className="bg-[#E6F0FF]/70 backdrop-blur-md border border-[#CFE4FF] rounded-2xl p-7 shadow-md hover:shadow-xl hover:-translate-y-1 hover:border-[#007BFF] transition flex flex-col items-center">
               <UserCheck className="text-[#007BFF]" size={38} />
-              <h3 className="font-bold text-lg mt-3 text-[#111]">High-Quality Engagement</h3>
+              <h3 className="font-bold text-lg mt-3 text-[#111]">
+                High-Quality Engagement
+              </h3>
               <p className="text-sm text-[#444] leading-relaxed">
-                Exclusive Private Networks ensure Fast, Stable & Premium Engagement, every order.
+                Exclusive Private Networks ensure Fast, Stable & Premium
+                Engagement, every order.
               </p>
             </div>
 
             {/* CARD 3 */}
             <div className="bg-[#E6F0FF]/70 backdrop-blur-md border border-[#CFE4FF] rounded-2xl p-7 shadow-md hover:shadow-xl hover:-translate-y-1 hover:border-[#007BFF] transition flex flex-col items-center">
               <ShieldCheck className="text-[#007BFF]" size={38} />
-              <h3 className="font-bold text-lg mt-3 text-[#111]">Advanced Security</h3>
+              <h3 className="font-bold text-lg mt-3 text-[#111]">
+                Advanced Security
+              </h3>
               <p className="text-sm text-[#444] leading-relaxed">
-                Zero passwords required. Full SSL encryption + Strict privacy safeguards.
+                Zero passwords required. Full SSL encryption + Strict privacy
+                safeguards.
               </p>
             </div>
 
             {/* CARD 4 */}
             <div className="bg-[#E6F0FF]/70 backdrop-blur-md border border-[#CFE4FF] rounded-2xl p-7 shadow-md hover:shadow-xl hover:-translate-y-1 hover:border-[#007BFF] transition flex flex-col items-center">
               <Clock className="text-[#007BFF]" size={38} />
-              <h3 className="font-bold text-lg mt-3 text-[#111]">24/7 Priority Support</h3>
+              <h3 className="font-bold text-lg mt-3 text-[#111]">
+                24/7 Priority Support
+              </h3>
               <p className="text-sm text-[#444] leading-relaxed">
-                Real support available around the clock to help with anything you need.
+                Real support available around the clock to help with anything
+                you need.
               </p>
             </div>
 
             {/* CARD 5 */}
             <div className="bg-[#E6F0FF]/70 backdrop-blur-md border border-[#CFE4FF] rounded-2xl p-7 shadow-md hover:shadow-xl hover:-translate-y-1 hover:border-[#007BFF] transition flex flex-col items-center">
               <RefreshCcw className="text-[#007BFF]" size={38} />
-              <h3 className="font-bold text-lg mt-3 text-[#111]">30-Day Refill Guarantee</h3>
+              <h3 className="font-bold text-lg mt-3 text-[#111]">
+                30-Day Refill Guarantee
+              </h3>
               <p className="text-sm text-[#444] leading-relaxed">
-                Drops? We instantly refill your order at no cost for 30-days — Fully Guaranteed.
+                Drops? We instantly refill your order at no cost for 30-days —
+                Fully Guaranteed.
               </p>
             </div>
 
             {/* CARD 6 */}
             <div className="bg-[#E6F0FF]/70 backdrop-blur-md border border-[#CFE4FF] rounded-2xl p-7 shadow-md hover:shadow-xl hover:-translate-y-1 hover:border-[#007BFF] transition flex flex-col items-center">
               <Star className="text-[#007BFF]" size={38} />
-              <h3 className="font-bold text-lg mt-3 text-[#111]">Proven Reputation</h3>
+              <h3 className="font-bold text-lg mt-3 text-[#111]">
+                Proven Reputation
+              </h3>
               <p className="text-sm text-[#444] leading-relaxed">
                 Trusted by over 100,000+ creators worldwide with a 4.8/5 rating.
               </p>
             </div>
-
           </div>
 
           <div className="flex flex-col sm:flex-row justify-center gap-2 sm:gap-6 mt-10 text-[#007BFF] font-bold text-lg">
@@ -464,10 +506,6 @@ export default function Home() {
           <OurPromise />
         </section>
 
-        <section className="py-2 md:py-3">
-          <Testimonials />
-        </section>
-
         <section className="mb-4 md:mb-6">
           <FAQ faqs={FAQS} />
         </section>
@@ -478,7 +516,8 @@ export default function Home() {
             Ready to try YesViral?
           </h2>
           <p className="text-[#444] text-lg">
-            Join over 100,000+ creators already growing with YesViral — choose your service and unlock High-Quality results in minutes.
+            Join over 100,000+ creators already growing with YesViral — choose
+            your service and unlock High-Quality results in minutes.
           </p>
           <div className="mt-6 mb-6">
             <button
@@ -495,27 +534,57 @@ export default function Home() {
 
       <style jsx global>{`
         @keyframes starGlow {
-          0% { transform: rotate(0deg) scale(1); filter: drop-shadow(0 0 0 #ffd700); }
-          30% { transform: rotate(8deg) scale(1.16); filter: drop-shadow(0 0 8px #ffd700); }
-          55% { transform: rotate(-7deg) scale(1.09); filter: drop-shadow(0 0 12px #fff78a); }
-          80% { transform: rotate(0deg) scale(1.13); filter: drop-shadow(0 0 10px #ffd700); }
-          100% { transform: rotate(0deg) scale(1); filter: drop-shadow(0 0 0 #ffd700); }
+          0% {
+            transform: rotate(0deg) scale(1);
+            filter: drop-shadow(0 0 0 #ffd700);
+          }
+          30% {
+            transform: rotate(8deg) scale(1.16);
+            filter: drop-shadow(0 0 8px #ffd700);
+          }
+          55% {
+            transform: rotate(-7deg) scale(1.09);
+            filter: drop-shadow(0 0 12px #fff78a);
+          }
+          80% {
+            transform: rotate(0deg) scale(1.13);
+            filter: drop-shadow(0 0 10px #ffd700);
+          }
+          100% {
+            transform: rotate(0deg) scale(1);
+            filter: drop-shadow(0 0 0 #ffd700);
+          }
         }
 
         .star-animate {
-          animation: starGlow 2.6s cubic-bezier(0.65, 0.05, 0.36, 1) infinite;
+          animation: starGlow 2.6s cubic-bezier(0.65, 0.05, 0.36, 1)
+            infinite;
         }
 
         @keyframes yvFloat {
-          0% { transform: translateY(0px); }
-          50% { transform: translateY(-10px); }
-          100% { transform: translateY(0px); }
+          0% {
+            transform: translateY(0px);
+          }
+          50% {
+            transform: translateY(-10px);
+          }
+          100% {
+            transform: translateY(0px);
+          }
         }
 
-        .yv-card-1 { animation: yvFloat 7s ease-in-out infinite; }
-        .yv-card-2 { animation: yvFloat 8s ease-in-out infinite; }
-        .yv-card-3 { animation: yvFloat 9s ease-in-out infinite; }
-        .yv-card-4 { animation: yvFloat 10s ease-in-out infinite; }
+        .yv-card-1 {
+          animation: yvFloat 7s ease-in-out infinite;
+        }
+        .yv-card-2 {
+          animation: yvFloat 8s ease-in-out infinite;
+        }
+        .yv-card-3 {
+          animation: yvFloat 9s ease-in-out infinite;
+        }
+        .yv-card-4 {
+          animation: yvFloat 10s ease-in-out infinite;
+        }
       `}</style>
     </>
   );
