@@ -228,7 +228,7 @@ export default function Home() {
             >
               Boost Your Social Growth Instantly.<wbr />
               <br className="hidden sm:block" />
-              <span className="text-[#007bff]">
+              <span className="text-[#007BFF]">
                 Premium Growth for Instagram, TikTok & YouTube.
               </span>
             </h1>
