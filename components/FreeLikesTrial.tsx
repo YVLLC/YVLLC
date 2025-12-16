@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import {
   ShieldCheck,
@@ -14,6 +14,7 @@ type Status = "idle" | "loading" | "success" | "error" | "already";
 declare global {
   interface Window {
     turnstile: any;
+    onTurnstileSuccess: (token: string) => void;
   }
 }
 
@@ -24,13 +25,21 @@ export default function FreeLikesTrial() {
   const [status, setStatus] = useState<Status>("idle");
   const [message, setMessage] = useState("");
 
+  const turnstileRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    window.onTurnstileSuccess = (token: string) => {
+      setCaptchaToken(token);
+    };
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (status === "loading") return;
 
-    if (!captchaToken) {
-      setStatus("error");
-      setMessage("Please verify you’re human.");
+    // 🔑 EXECUTE INVISIBLE TURNSTILE FIRST
+    if (!captchaToken && window.turnstile && turnstileRef.current) {
+      window.turnstile.execute(turnstileRef.current);
       return;
     }
 
@@ -77,8 +86,6 @@ export default function FreeLikesTrial() {
       />
 
       <section className="relative py-24">
-        {/* ❌ BACKGROUND REMOVED — NOTHING HERE */}
-
         <div className="relative max-w-7xl mx-auto px-4">
           <div className="relative overflow-hidden rounded-[32px] border border-[#CFE4FF] bg-white shadow-[0_30px_80px_-30px_rgba(0,0,0,0.15)]">
             <div className="flex items-center justify-between px-8 py-4 border-b border-[#E6F0FF] bg-[#F9FAFB]">
@@ -106,23 +113,23 @@ export default function FreeLikesTrial() {
                   how engagement instantly changes perception.
                 </p>
 
-                <div className="grid sm:grid-cols-3 gap-5 pt-2">
-                  <div className="flex items-center gap-3">
-                    <ShieldCheck size={20} className="text-[#007BFF]" />
-                    <span className="text-sm font-medium text-[#444]">
-                      Safe & Secure delivery 📦
+                <div className="grid sm:grid-cols-3 gap-6 pt-4">
+                  <div className="flex items-center gap-4 bg-white border border-[#E6F0FF] rounded-xl px-4 py-3 shadow-sm">
+                    <ShieldCheck size={18} className="text-[#007BFF]" />
+                    <span className="text-sm font-semibold text-[#111]">
+                      Secure Delivery
                     </span>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <Lock size={20} className="text-[#007BFF]" />
-                    <span className="text-sm font-medium text-[#444]">
-                      No password Required 🔒
+                  <div className="flex items-center gap-4 bg-white border border-[#E6F0FF] rounded-xl px-4 py-3 shadow-sm">
+                    <Lock size={18} className="text-[#007BFF]" />
+                    <span className="text-sm font-semibold text-[#111]">
+                      No Password Needed
                     </span>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <Zap size={20} className="text-[#007BFF]" />
-                    <span className="text-sm font-medium text-[#444]">
-                      Starts within minutes ⌛️
+                  <div className="flex items-center gap-4 bg-white border border-[#E6F0FF] rounded-xl px-4 py-3 shadow-sm">
+                    <Zap size={18} className="text-[#007BFF]" />
+                    <span className="text-sm font-semibold text-[#111]">
+                      Starts in Minutes
                     </span>
                   </div>
                 </div>
@@ -161,13 +168,13 @@ export default function FreeLikesTrial() {
                   />
                 </div>
 
-                {/* Turnstile widget (invisible style) */}
+                {/* INVISIBLE TURNSTILE */}
                 <div
+                  ref={turnstileRef}
                   className="cf-turnstile"
                   data-sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
-                  data-callback={(token: string) =>
-                    setCaptchaToken(token)
-                  }
+                  data-callback="onTurnstileSuccess"
+                  data-size="invisible"
                 />
 
                 <button
@@ -175,26 +182,17 @@ export default function FreeLikesTrial() {
                   disabled={status === "loading"}
                   className="w-full flex items-center justify-center gap-2 bg-[#007BFF] text-white font-extrabold py-4 rounded-xl hover:bg-[#005FCC] transition disabled:opacity-60"
                 >
-                  {status === "loading" ? (
-                    "Sending Likes…"
-                  ) : (
-                    <>
-                      Get 5 Free Likes
-                      <ArrowRight size={18} />
-                    </>
-                  )}
+                  {status === "loading" ? "Sending Likes…" : <>Get 5 Free Likes <ArrowRight size={18} /></>}
                 </button>
 
                 {status !== "idle" && (
-                  <p
-                    className={`text-sm text-center ${
-                      status === "success"
-                        ? "text-[#22C55E]"
-                        : status === "already"
-                        ? "text-[#FACC15]"
-                        : "text-[#EF4444]"
-                    }`}
-                  >
+                  <p className={`text-sm text-center ${
+                    status === "success"
+                      ? "text-[#22C55E]"
+                      : status === "already"
+                      ? "text-[#FACC15]"
+                      : "text-[#EF4444]"
+                  }`}>
                     {message}
                   </p>
                 )}
