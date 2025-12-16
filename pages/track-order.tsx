@@ -111,13 +111,26 @@ export default function TrackOrderPage() {
         <Link href="/" className="flex items-center gap-2">
 
           <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-white shadow-md border border-[#CFE4FF]/80 overflow-hidden">
-            <Image src="/logo.png" alt="YesViral Logo" width={34} height={34} className="object-contain" />
+            <Image
+              src="/logo.png"
+              alt="YesViral Logo"
+              width={34}
+              height={34}
+              className="object-contain"
+              priority
+            />
           </div>
 
           <div className="flex flex-col leading-tight">
-            <span className="text-sm font-extrabold tracking-tight text-[#0F172A]">YesViral</span>
-            <span className="text-[11px] font-medium text-[#64748B]">Real-time Growth Tracking</span>
-            <span className="text-[11px] font-medium text-[#94A3B8]">Powered by Private Delivery Networks</span>
+            <span className="text-sm font-extrabold tracking-tight text-[#0F172A]">
+              YesViral
+            </span>
+            <span className="text-[11px] font-medium text-[#64748B]">
+              Real-time Growth Tracking
+            </span>
+            <span className="text-[11px] font-medium text-[#94A3B8]">
+              Powered by Private Delivery Networks
+            </span>
           </div>
         </Link>
       </header>
@@ -136,7 +149,6 @@ export default function TrackOrderPage() {
 
             {/* HEADER CONTENT */}
             <div className="text-center mb-2">
-
               <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#E6F0FF] shadow-inner">
                 <Search className="text-[#007BFF]" size={26} />
               </div>
@@ -148,46 +160,22 @@ export default function TrackOrderPage() {
               <p className="mx-auto max-w-md text-sm md:text-base text-[#4B5563]">
                 Drop your order ID below to see the latest status across our Private Delivery Networks in real time.
               </p>
-
-              {/* MAIN BADGE (kept) */}
-              <div className="mt-3 flex items-center justify-center">
-                <span className="inline-flex items-center gap-2 rounded-full bg-[#F0F5FF] px-4 py-1.5 border border-[#CFE4FF] shadow-sm text-[11px] font-semibold text-[#007BFF]">
-                  <span className="h-2.5 w-2.5 rounded-full bg-[#22C55E] animate-pulse" />
-                  Order Tracker: Online
-                </span>
-              </div>
-
-              {/* Stars */}
-              <div className="mt-4 flex items-center justify-center gap-2 text-[11px] text-[#64748B]">
-                <div className="flex items-center gap-[2px]">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <svg
-                      key={i}
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-3.5 w-3.5"
-                      fill={i < 4 ? "#007BFF" : "#E5E7EB"}
-                      stroke={i < 4 ? "#005FCC" : "#9CA3AF"}
-                      strokeWidth="1.1"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M12 17.3l6.18 3.7-1.64-7.03L21 9.24l-7.19-.61L12 2 10.19 8.63 3 9.24l4.46 4.73L5.82 21z" />
-                    </svg>
-                  ))}
-                </div>
-                <span className="font-semibold text-[#0F172A]">4.8 / 5</span>
-                <span>Avg. satisfaction on tracked orders</span>
-              </div>
             </div>
 
             {/* FORM */}
             <form onSubmit={handleTrack} className="space-y-4 w-full">
               <div className="relative">
-                <label htmlFor="order-id" className="mb-1 block text-xs font-semibold uppercase tracking-[0.12em] text-[#64748B]">
+                <label
+                  htmlFor="order-id"
+                  className="mb-1 block text-xs font-semibold uppercase tracking-[0.12em] text-[#64748B]"
+                >
                   Order ID
                 </label>
 
                 <div className="relative">
-                  <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-[#9CA3AF]">#</span>
+                  <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-[#9CA3AF]">
+                    #
+                  </span>
 
                   <input
                     id="order-id"
@@ -211,13 +199,11 @@ export default function TrackOrderPage() {
                 type="submit"
                 disabled={loading || !orderId.trim()}
                 className={`group relative flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#007BFF] to-[#005FCC] py-3.5 text-[15px] font-semibold text-white shadow-[0_16px_40px_rgba(37,99,235,0.55)] transition hover:brightness-[1.03] active:scale-[0.99] ${
-                  loading || !orderId.trim() ? "opacity-70 cursor-not-allowed" : ""
+                  loading || !orderId.trim()
+                    ? "opacity-70 cursor-not-allowed"
+                    : ""
                 }`}
               >
-                {!loading && (
-                  <span className="absolute inset-[1px] rounded-[11px] bg-gradient-to-r from[#007BFF] to-[#005FCC] opacity-0 transition group-hover:opacity-100" />
-                )}
-
                 <span className="relative flex items-center gap-2">
                   {loading && <RefreshCw className="animate-spin" size={18} />}
                   {loading ? "Checking live status..." : "Track Order"}
@@ -225,9 +211,9 @@ export default function TrackOrderPage() {
               </button>
             </form>
 
-            {/* STATUS */}
+            {/* STATUS — ONLY CHANGE IS bg-white */}
             {(statusKey || error) && (
-              <div className="mt-1 flex flex-col items-center gap-3 rounded-2xl border border-[#E0EDFF] bg-[#F5F7FF] px-4 py-4 sm:px-6 sm:py-5">
+              <div className="mt-1 flex flex-col items-center gap-3 rounded-2xl border border-[#E0EDFF] bg-white px-4 py-4 sm:px-6 sm:py-5">
 
                 <div className="flex items-center gap-3">
                   <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white shadow-inner border border-[#E0ECFF]">
@@ -251,7 +237,11 @@ export default function TrackOrderPage() {
                       </p>
                     )}
 
-                    {error && <p className="mt-1 text-[13px] font-medium text-red-500">{error}</p>}
+                    {error && (
+                      <p className="mt-1 text-[13px] font-medium text-red-500">
+                        {error}
+                      </p>
+                    )}
                   </div>
                 </div>
 
@@ -268,7 +258,8 @@ export default function TrackOrderPage() {
                       className={`absolute left-0 top-0 h-full rounded-full bg-gradient-to-r from-[#007BFF] via-[#0EA5E9] to-[#005FCC] transition-all duration-500 ${
                         statusKey === "delivered"
                           ? "w-full"
-                          : statusKey === "in_progress" || statusKey === "searching"
+                          : statusKey === "in_progress" ||
+                            statusKey === "searching"
                           ? "w-1/2"
                           : "w-1/3"
                       }`}
@@ -305,8 +296,12 @@ export default function TrackOrderPage() {
 
             <div className="mb-4 flex items-center justify-between">
               <div>
-                <h2 className="text-[16px] font-black tracking-tight text-[#0F172A]">Tracking help & FAQs</h2>
-                <p className="mt-1 text-[12px] text-[#64748B] max-w-xs">Quick answers for the most common tracking questions.</p>
+                <h2 className="text-[16px] font-black tracking-tight text-[#0F172A]">
+                  Tracking help & FAQs
+                </h2>
+                <p className="mt-1 text-[12px] text-[#64748B] max-w-xs">
+                  Quick answers for the most common tracking questions.
+                </p>
               </div>
             </div>
 
@@ -314,15 +309,29 @@ export default function TrackOrderPage() {
               {FAQS.map((item, i) => (
                 <div
                   key={i}
-                  className={`cursor-pointer rounded-xl border border-[#CFE4FF] bg-[#F9FAFF] p-4 transition-all ${showFaq === i ? "shadow-xl scale-[1.02]" : "shadow-sm"}`}
-                  onClick={() => setShowFaq(showFaq === i ? null : i)}
+                  className={`cursor-pointer rounded-xl border border-[#CFE4FF] bg-[#F9FAFF] p-4 transition-all ${
+                    showFaq === i ? "shadow-xl scale-[1.02]" : "shadow-sm"
+                  }`}
+                  onClick={() =>
+                    setShowFaq(showFaq === i ? null : i)
+                  }
                 >
                   <div className="flex items-center justify-between select-none">
-                    <span className="text-[14px] font-semibold text-[#0B63E6]">{item.q}</span>
-                    <ChevronDown className={`h-5 w-5 text-[#64748B] transition-transform ${showFaq === i ? "rotate-180" : ""}`} />
+                    <span className="text-[14px] font-semibold text-[#0B63E6]">
+                      {item.q}
+                    </span>
+                    <ChevronDown
+                      className={`h-5 w-5 text-[#64748B] transition-transform ${
+                        showFaq === i ? "rotate-180" : ""
+                      }`}
+                    />
                   </div>
 
-                  {showFaq === i && <p className="mt-3 text-[13px] leading-relaxed text-[#4B5563]">{item.a}</p>}
+                  {showFaq === i && (
+                    <p className="mt-3 text-[13px] leading-relaxed text-[#4B5563]">
+                      {item.a}
+                    </p>
+                  )}
                 </div>
               ))}
             </div>
@@ -335,7 +344,6 @@ export default function TrackOrderPage() {
                 </button>
               </Link>
             </div>
-
           </div>
         </aside>
       </div>
