@@ -224,11 +224,11 @@ export default function Home() {
             </div>
 
             <h1
-              className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#007BFF] leading-[1.15] sm:leading-tight md:leading-snug tracking-tight text-balance max-w-[340px] sm:max-w-none"
+              className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#000000] leading-[1.15] sm:leading-tight md:leading-snug tracking-tight text-balance max-w-[340px] sm:max-w-none"
             >
               Boost Your Social Presence Instantly.<wbr />
               <br className="hidden sm:block" />
-              <span className="text-[#005FCC]">
+              <span className="text-[#007bff]">
                 Premium Growth for Instagram, TikTok & YouTube.
               </span>
             </h1>
