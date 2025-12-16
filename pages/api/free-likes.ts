@@ -19,26 +19,59 @@ export default async function handler(
     return res.status(405).json({ message: "Method not allowed" });
   }
 
-  const { username, email } = req.body;
+  const { postUrl, email, captchaToken } = req.body;
+
+  /* --------------------------------------------------------
+     CAPTCHA VERIFICATION (ONLY ADDITION)
+  --------------------------------------------------------- */
+  if (!captchaToken) {
+    return res.status(403).json({ message: "Captcha required" });
+  }
+
+  try {
+    const captchaVerify = await axios.post(
+      "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+      new URLSearchParams({
+        secret: process.env.TURNSTILE_SECRET_KEY!,
+        response: captchaToken,
+      })
+    );
+
+    if (!captchaVerify.data.success) {
+      return res.status(403).json({ message: "Captcha failed" });
+    }
+  } catch {
+    return res.status(403).json({ message: "Captcha verification failed" });
+  }
+
   const ip =
     (req.headers["x-forwarded-for"] as string)?.split(",")[0] ||
     req.socket.remoteAddress ||
     "unknown";
 
-  if (!username || !email) {
+  if (!postUrl || !email) {
     return res.status(400).json({ message: "Missing required fields" });
   }
 
-  const cleanUsername = username.replace("@", "").toLowerCase();
+  /* --------------------------------------------------------
+     BASIC POST URL SANITY CHECK
+  --------------------------------------------------------- */
+  if (!postUrl.includes("instagram.com")) {
+    return res.status(400).json({
+      message: "Please enter a valid Instagram post URL",
+    });
+  }
+
+  const normalizedPostUrl = postUrl.trim();
 
   /* --------------------------------------------------------
-     1. CHECK IF FREE TRIAL ALREADY USED
+     CHECK IF FREE TRIAL ALREADY USED
   --------------------------------------------------------- */
   const { data: existing, error: existingError } = await supabase
     .from("free_trials")
     .select("id")
     .or(
-      `email.eq.${email},instagram_username.eq.${cleanUsername},ip_address.eq.${ip}`
+      `email.eq.${email},post_url.eq.${normalizedPostUrl},ip_address.eq.${ip}`
     )
     .limit(1)
     .maybeSingle();
@@ -52,18 +85,16 @@ export default async function handler(
   }
 
   /* --------------------------------------------------------
-     2. SUBMIT FOLLOWIZ ORDER
+     SUBMIT FOLLOWIZ ORDER
   --------------------------------------------------------- */
   try {
-    const link = `https://instagram.com/${cleanUsername}`;
-
     const followizResponse = await axios.post(
       "https://followiz.com/api/v2",
       {
         key: FOLLOWIZ_API_KEY,
         action: "add",
         service: SERVICE_ID,
-        link,
+        link: normalizedPostUrl,
         quantity: LIKES_QUANTITY,
       },
       { timeout: 10000 }
@@ -78,21 +109,20 @@ export default async function handler(
 
     const orderId = String(followizResponse.data.order);
 
-    /* --------------------------------------------------------
-       3. SAVE FREE TRIAL RECORD
-    --------------------------------------------------------- */
     const { error: insertError } = await supabase
       .from("free_trials")
       .insert({
         email,
-        instagram_username: cleanUsername,
+        post_url: normalizedPostUrl,
         ip_address: ip,
         followiz_order_id: orderId,
         status: "completed",
       });
 
     if (insertError) {
-      return res.status(500).json({ message: "Failed to save trial record" });
+      return res.status(500).json({
+        message: "Failed to save free trial record",
+      });
     }
 
     return res.status(200).json({
