@@ -1,6 +1,5 @@
 import Head from "next/head";
-import FreeLikesForm from "@/components/FreeLikesForm";
-
+import FreeLikesTrial from "@/components/FreeLikesTrial";
 export default function FreeLikesPage() {
   return (
     <>
@@ -18,7 +17,7 @@ export default function FreeLikesPage() {
           We’re confident you’ll love our services — that’s why your first 5 likes are completely free.
         </p>
 
-        <FreeLikesForm />
+        <FreeLikesTrial />
       </main>
     </>
   );
