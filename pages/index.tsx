@@ -142,7 +142,7 @@ export default function Home() {
 
         <meta
           name="description"
-          content="Grow your social media with YesViral. Buy real followers, likes, views, and more — fast, secure, and trusted by 100,000+ creators."
+          content="Grow your Social Media with YesViral. Buy Real Followers, Likes & Views — Fast Delivery, Safe & Trusted by 100,000+ Creators."
         />
 
         <link rel="canonical" href="https://www.yesviral.com/" />
