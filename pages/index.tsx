@@ -20,6 +20,9 @@ import Testimonials from "@/components/Testimonials";
 import HowItWorks from "@/components/HowItWorks";
 import FAQ from "@/components/FAQ";
 
+/* ✅ ADDED — FREE LIKES TRIAL (ONLY ADDITION) */
+import FreeLikesTrial from "@/components/FreeLikesTrial";
+
 const SalesNotifications = dynamic(
   () => import("@/components/SalesNotifications"),
   { ssr: false }
@@ -509,6 +512,9 @@ export default function Home() {
         <section className="mb-4 md:mb-6">
           <FAQ faqs={FAQS} />
         </section>
+
+        {/* ✅ ADDED — FREE LIKES SECTION (ONLY ADDITION) */}
+        <FreeLikesTrial />
 
         {/* FINAL CTA */}
         <section className="text-center space-y-4 py-4 md:py-6">

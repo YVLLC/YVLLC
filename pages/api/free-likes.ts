@@ -1,48 +1,108 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import axios from "axios";
+import { createClient } from "@supabase/supabase-js";
 
-const JAP_API_KEY = process.env.JAP_API_KEY || "";
-const FREE_LIKES_SERVICE_ID = 1845; // Instagram Likes
-const SENT_CACHE: { [key: string]: boolean } = {};
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+const FOLLOWIZ_API_KEY = process.env.FOLLOWIZ_API_KEY!;
+const SERVICE_ID = Number(process.env.FOLLOWIZ_FREE_LIKES_SERVICE_ID || 1845);
+const LIKES_QUANTITY = 5;
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
+    return res.status(405).json({ message: "Method not allowed" });
   }
 
   const { username, email } = req.body;
-  const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+  const ip =
+    (req.headers["x-forwarded-for"] as string)?.split(",")[0] ||
+    req.socket.remoteAddress ||
+    "unknown";
 
   if (!username || !email) {
-    return res.status(400).json({ error: "Missing required fields" });
+    return res.status(400).json({ message: "Missing required fields" });
   }
 
-  const key = `${email}_${ip}`;
+  const cleanUsername = username.replace("@", "").toLowerCase();
 
-  if (SENT_CACHE[key]) {
-    return res.status(429).json({ error: "You already received your free likes." });
+  /* --------------------------------------------------------
+     1. CHECK IF FREE TRIAL ALREADY USED
+  --------------------------------------------------------- */
+  const { data: existing, error: existingError } = await supabase
+    .from("free_trials")
+    .select("id")
+    .or(
+      `email.eq.${email},instagram_username.eq.${cleanUsername},ip_address.eq.${ip}`
+    )
+    .limit(1)
+    .maybeSingle();
+
+  if (existing) {
+    return res.status(200).json({ status: "already_used" });
   }
 
+  if (existingError) {
+    return res.status(500).json({ message: "Database check failed" });
+  }
+
+  /* --------------------------------------------------------
+     2. SUBMIT FOLLOWIZ ORDER
+  --------------------------------------------------------- */
   try {
-    const link = `https://instagram.com/${username}`;
+    const link = `https://instagram.com/${cleanUsername}`;
 
-    const response = await axios.post("https://justanotherpanel.com/api/v2", null, {
-      params: {
-        key: JAP_API_KEY,
+    const followizResponse = await axios.post(
+      "https://followiz.com/api/v2",
+      {
+        key: FOLLOWIZ_API_KEY,
         action: "add",
-        service: FREE_LIKES_SERVICE_ID,
+        service: SERVICE_ID,
         link,
-        quantity: 5,
+        quantity: LIKES_QUANTITY,
       },
-    });
+      { timeout: 10000 }
+    );
 
-    if (response.data && response.data.order) {
-      SENT_CACHE[key] = true;
-      return res.status(200).json({ success: true, orderId: response.data.order });
-    } else {
-      return res.status(500).json({ error: "JAP API failed", details: response.data });
+    if (!followizResponse.data?.order) {
+      return res.status(500).json({
+        message: "Followiz order failed",
+        details: followizResponse.data,
+      });
     }
+
+    const orderId = String(followizResponse.data.order);
+
+    /* --------------------------------------------------------
+       3. SAVE FREE TRIAL RECORD
+    --------------------------------------------------------- */
+    const { error: insertError } = await supabase
+      .from("free_trials")
+      .insert({
+        email,
+        instagram_username: cleanUsername,
+        ip_address: ip,
+        followiz_order_id: orderId,
+        status: "completed",
+      });
+
+    if (insertError) {
+      return res.status(500).json({ message: "Failed to save trial record" });
+    }
+
+    return res.status(200).json({
+      success: true,
+      orderId,
+    });
   } catch (err: any) {
-    return res.status(500).json({ error: "Failed to submit order", details: err.message });
+    return res.status(500).json({
+      message: "Failed to submit Followiz order",
+      error: err?.message,
+    });
   }
 }
