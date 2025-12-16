@@ -38,7 +38,7 @@ export default function FreeLikesTrial() {
     setMessage("");
 
     try {
-      const res = await axios.post("/api/free-likes-followiz", {
+      const res = await axios.post("/api/free-likes", {
         postUrl,
         email,
         captchaToken,
@@ -77,34 +77,32 @@ export default function FreeLikesTrial() {
       />
 
       <section className="relative py-24">
-        <div className="absolute inset-0 bg-gradient-to-b from-[#F5FAFF] via-white to-white pointer-events-none" />
+        {/* ❌ BACKGROUND REMOVED — NOTHING HERE */}
 
         <div className="relative max-w-7xl mx-auto px-4">
           <div className="relative overflow-hidden rounded-[32px] border border-[#CFE4FF] bg-white shadow-[0_30px_80px_-30px_rgba(0,0,0,0.15)]">
             <div className="flex items-center justify-between px-8 py-4 border-b border-[#E6F0FF] bg-[#F9FAFB]">
               <div className="flex items-center gap-2 text-sm font-bold text-[#007BFF]">
                 <Star className="fill-[#007BFF]" size={16} />
-                FREE TRIAL — LIMITED
+                FREE TRIAL — LIMITED TIME
               </div>
               <span className="text-xs text-[#555]">
-                Used by 100,000+ creators
+                Used by 100,000+ Creators
               </span>
             </div>
 
             <div className="grid lg:grid-cols-2 gap-16 px-8 py-14">
               {/* LEFT */}
               <div className="space-y-7">
-                <h2 className="text-4xl md:text-5xl font-extrabold text-[#111] leading-tight">
+                <h2 className="text-4xl md:text-5xl font-extrabold text-[#007BFF] leading-tight">
                   See the Difference
                   <br />
-                  <span className="text-[#007BFF]">
-                    Real Engagement Makes.
-                  </span>
+                  Real Engagement Makes.
                 </h2>
 
                 <p className="text-[#444] text-lg max-w-lg">
-                  Try YesViral with a free test.  
-                  Get <strong>5 real Instagram likes</strong> on one post and see
+                  Try YesViral with 5 Free Likes.  
+                  Get <strong>5 High-Quality Instagram Likes</strong> on one post and see
                   how engagement instantly changes perception.
                 </p>
 
@@ -112,19 +110,19 @@ export default function FreeLikesTrial() {
                   <div className="flex items-center gap-3">
                     <ShieldCheck size={20} className="text-[#007BFF]" />
                     <span className="text-sm font-medium text-[#444]">
-                      Secure delivery
+                      Safe & Secure delivery 📦
                     </span>
                   </div>
                   <div className="flex items-center gap-3">
                     <Lock size={20} className="text-[#007BFF]" />
                     <span className="text-sm font-medium text-[#444]">
-                      No password
+                      No password Required 🔒
                     </span>
                   </div>
                   <div className="flex items-center gap-3">
                     <Zap size={20} className="text-[#007BFF]" />
                     <span className="text-sm font-medium text-[#444]">
-                      Starts fast
+                      Starts within minutes ⌛️
                     </span>
                   </div>
                 </div>
