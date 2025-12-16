@@ -7,10 +7,14 @@ export default function Contact() {
     <>
       <Head>
         <title>Contact Us | YesViral</title>
-        <meta name="description" content="Need help? Contact YesViral's support team and get fast assistance with your orders or questions." />
+        <meta
+          name="description"
+          content="Need help? Contact YesViral's support team and get fast assistance with your orders or questions."
+        />
       </Head>
 
-      <main className="bg-[#F9FAFB] min-h-screen py-16 px-4">
+      {/* REMOVED min-h-screen */}
+      <main className="bg-[#F9FAFB] py-16 px-4">
         <div className="max-w-3xl mx-auto bg-white rounded-3xl shadow-2xl p-8 md:p-14 animate-fadeInFast">
           {/* Logo & Heading */}
           <div className="flex flex-col items-center gap-2 mb-8">
@@ -31,10 +35,10 @@ export default function Contact() {
             </div>
           </div>
 
-          {/* Info Bar – fixed to always be clean and responsive! */}
+          {/* Info Bar */}
           <div className="flex flex-col md:flex-row justify-center items-stretch gap-3 mb-8">
             <div className="flex-1 min-w-[200px] flex items-center justify-center gap-2 bg-[#F5FAFF] rounded-xl px-4 py-3 text-[#007BFF] text-sm font-semibold shadow text-center whitespace-nowrap">
-              <MessageCircle size={18} /> 
+              <MessageCircle size={18} />
               <div className="flex flex-col items-center md:items-start">
                 <span>Live Support, 7 Days a Week</span>
               </div>
@@ -48,7 +52,9 @@ export default function Contact() {
             <div className="flex-1 min-w-[200px] flex items-center justify-center gap-2 bg-[#F5FAFF] rounded-xl px-4 py-3 text-[#007BFF] text-sm font-semibold shadow text-center whitespace-nowrap">
               <Clock size={18} />
               <div className="flex flex-col items-center md:items-start">
-                <span>Replies <span className="font-bold">in under 48h</span></span>
+                <span>
+                  Replies <span className="font-bold">in under 48h</span>
+                </span>
               </div>
             </div>
           </div>
@@ -56,7 +62,9 @@ export default function Contact() {
           {/* Contact Form */}
           <form className="space-y-7">
             <div>
-              <label className="block text-[15px] font-semibold text-[#111] mb-1">Your Name</label>
+              <label className="block text-[15px] font-semibold text-[#111] mb-1">
+                Your Name
+              </label>
               <input
                 type="text"
                 placeholder="Enter your full name"
@@ -65,7 +73,9 @@ export default function Contact() {
               />
             </div>
             <div>
-              <label className="block text-[15px] font-semibold text-[#111] mb-1">Email Address</label>
+              <label className="block text-[15px] font-semibold text-[#111] mb-1">
+                Email Address
+              </label>
               <input
                 type="email"
                 placeholder="you@example.com"
@@ -74,7 +84,9 @@ export default function Contact() {
               />
             </div>
             <div>
-              <label className="block text-[15px] font-semibold text-[#111] mb-1">Your Message</label>
+              <label className="block text-[15px] font-semibold text-[#111] mb-1">
+                Your Message
+              </label>
               <textarea
                 rows={5}
                 placeholder="How can we help you? (Order ID, details, feedback…)"
@@ -94,10 +106,16 @@ export default function Contact() {
           <div className="text-center mt-10 space-y-2">
             <div className="text-[#222] text-sm font-semibold flex items-center justify-center gap-2">
               <Clock size={16} className="text-[#007BFF]" />
-              Fastest responses: <span className="font-medium text-[#005FCC]">10am – 10pm (GMT+4)</span>
+              Fastest responses:{" "}
+              <span className="font-medium text-[#005FCC]">
+                10am – 10pm (GMT+4)
+              </span>
             </div>
             <div className="text-xs text-[#888]">
-              All queries answered within 48 hours. Order-related? Please include your <span className="font-medium text-[#007BFF]">Order ID</span> for the fastest help.
+              All queries answered within 48 hours. Order-related? Please include
+              your{" "}
+              <span className="font-medium text-[#007BFF]">Order ID</span> for
+              the fastest help.
             </div>
           </div>
         </div>
@@ -106,11 +124,17 @@ export default function Contact() {
       {/* Animations */}
       <style jsx global>{`
         @keyframes fadeInFast {
-          from { opacity: 0; transform: translateY(30px);}
-          to   { opacity: 1; transform: translateY(0);}
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
         }
         .animate-fadeInFast {
-          animation: fadeInFast 0.38s cubic-bezier(.39,1.7,.47,.99);
+          animation: fadeInFast 0.38s cubic-bezier(.39, 1.7, .47, .99);
         }
       `}</style>
     </>
