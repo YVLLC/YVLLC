@@ -75,8 +75,8 @@ const SERVICES = [
     price: "$0.09 / 100",
     description: [
       "💎 High-Quality Followers, Likes & Views",
-      "⚡ Rapid Delivery",
-      "🛡️ Drop Protection",
+      "⚡  Deliverd in Minutes",
+      "🛡️ Refill Protection",
       "🔒 100% Secure Checkout",
     ],
     icon: <Instagram className="text-[#E1306C]" size={28} />,
@@ -235,7 +235,7 @@ export default function Home() {
               Trusted by 100,000+ Creators
             </div>
 <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#007bff] leading-[1.15] sm:leading-tight md:leading-snug tracking-tight text-balance">
-  Buy Instagram & TikTok Followers, Likes & Views. Delivery in Minutes!
+  Buy Instagram & TikTok Followers, Likes & Views. Delivered in Minutes!
 </h1>
             <p className="text-[#444] text-base sm:text-lg max-w-md sm:max-w-xl font-medium">
               Premium Social Growth with YesViral — #1 Trusted for Delivering
