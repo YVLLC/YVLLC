@@ -85,7 +85,7 @@ export default function FreeLikesTrial() {
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-6 sm:px-10 py-4 border-b border-[#E6F0FF] bg-[#F9FAFB]">
               <div className="flex items-center gap-2 text-sm font-extrabold text-[#007BFF]">
                 <Star size={16} className="fill-[#007BFF]" />
-                FREE TRIAL — ONE TIME
+                FREE TRIAL — LIMITED TIME
               </div>
               <span className="text-xs text-[#666]">
                 Trusted By 100,000+ Creators
@@ -206,7 +206,7 @@ export default function FreeLikesTrial() {
                 )}
 
                 <p className="pt-2 text-xs text-center font-medium text-[#444]">
-                  See The Results. Scale With A Paid Order.
+Try For Free & See The Results First — Then Scale With A Paid Order For Real.
                 </p>
               </form>
             </div>
