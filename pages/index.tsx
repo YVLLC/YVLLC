@@ -256,12 +256,13 @@ export default function Home() {
               >
                 Get Started
               </button>
-<Link
-  href="#FreeLikesTrial"
-  className="bg-white border border-[#CFE4FF] text-[#007BFF] font-semibold px-6 py-3 rounded-xl shadow hover:bg-[#F5FAFF] transition"
->
-  Try Free Likes
-</Link>
+
+              <Link
+                href="#FreeLikesTrial"
+                className="bg-white border border-[#CFE4FF] text-[#007BFF] font-semibold px-6 py-3 rounded-xl shadow hover:bg-[#F5FAFF] transition"
+              >
+                Try Free Likes
+              </Link>
             </div>
 
             <span className="text-xs text-[#555]">
@@ -513,7 +514,10 @@ export default function Home() {
         </section>
 
         {/* ✅ ADDED — FREE LIKES SECTION (ONLY ADDITION) */}
-        <FreeLikesTrial />
+        {/* ✅ FIX: add matching anchor id so hero button scrolls here */}
+        <section id="FreeLikesTrial">
+          <FreeLikesTrial />
+        </section>
 
         {/* FINAL CTA */}
         <section className="text-center space-y-4 py-4 md:py-6">
