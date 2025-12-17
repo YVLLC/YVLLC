@@ -234,8 +234,8 @@ export default function Home() {
               <Star size={18} className="text-yellow-400 star-animate" />
               Trusted by 100,000+ Creators
             </div>
-<h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#000000] leading-[1.15] sm:leading-tight md:leading-snug tracking-tight text-balance">
-  Buy Instagram & TikTok Followers, Likes & Views — Safe, Trusted & Fast Delivery in Minutes.
+<h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#007bff] leading-[1.15] sm:leading-tight md:leading-snug tracking-tight text-balance">
+  Buy Instagram & TikTok Followers, Likes & Views. Delivery in Minutes!
 </h1>
             <p className="text-[#444] text-base sm:text-lg max-w-md sm:max-w-xl font-medium">
               Premium Social Growth with YesViral — #1 Trusted for Delivering
