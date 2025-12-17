@@ -86,7 +86,7 @@ export default function FreeLikesTrial() {
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-6 sm:px-10 py-4 border-b border-[#E6F0FF] bg-[#F9FAFB]">
               <div className="flex items-center gap-2 text-sm font-extrabold text-[#007BFF]">
                 <Star size={16} className="fill-[#007BFF]" />
-                FREE TRIAL — ONE TIME
+                FREE TRIAL — LIMITED TIME
               </div>
               <span className="text-xs text-[#666]">
                 Trusted By 100,000+ Creators
@@ -97,13 +97,13 @@ export default function FreeLikesTrial() {
             <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 px-6 sm:px-10 py-10 sm:py-16">
               {/* Left */}
               <div className="space-y-6">
-                {/* LOGO */}
-                <div className="mb-2">
+                {/* ✅ CENTERED LOGO — FIX */}
+                <div className="flex justify-center md:justify-start">
                   <Image
                     src="/logo.png"
                     alt="YesViral Logo"
-                    width={48}
-                    height={48}
+                    width={52}
+                    height={52}
                     priority
                   />
                 </div>
@@ -115,13 +115,13 @@ export default function FreeLikesTrial() {
                 </h2>
 
                 <p className="text-[#444] text-base sm:text-lg max-w-xl">
-                  Test Our Service With A One-Time Free Trial. You’ll Receive{" "}
-                  <strong>5 Real Instagram Likes</strong> On One Post To See How
-                  YesViral Engagement Looks Before You Buy.
+                  Test our Service with a One-Time Free Trial. You’ll Receive{" "}
+                  <strong>5 Real Instagram Likes</strong> on one post to see how
+                  YesViral's Engagement looks before you buy.
                 </p>
 
                 <p className="text-sm text-[#666]">
-                  One-Time Trial • No Password Required • No Subscription
+See The Results. Scale With A Paid Order.
                 </p>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
