@@ -91,7 +91,7 @@ const SERVICES = [
       "✨ High-impact Likes & Views",
       "🚀 Instant Start",
       "🙅‍♂️ No Login Needed",
-      "🛡️ Protected Service",
+      "🛡️ Refill Protection",
     ],
     icon: <Music2 className="text-[#25F4EE]" size={28} />,
     tag: "🔥 Hot",
