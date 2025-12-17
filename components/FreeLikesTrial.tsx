@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import { ShieldCheck, Zap, Lock, Star, ArrowRight } from "lucide-react";
 import Script from "next/script";
+import Image from "next/image";
 
 type Status = "idle" | "loading" | "success" | "error" | "already";
 
@@ -31,7 +32,6 @@ export default function FreeLikesTrial() {
     e.preventDefault();
     if (status === "loading") return;
 
-    // Execute Invisible Turnstile first
     if (!captchaToken && window.turnstile && turnstileRef.current) {
       window.turnstile.execute(turnstileRef.current);
       return;
@@ -49,13 +49,13 @@ export default function FreeLikesTrial() {
 
       if (res.data?.status === "already_used") {
         setStatus("already");
-        setMessage("This free trial has already been used.");
+        setMessage("This Free Trial Has Already Been Used.");
         return;
       }
 
       setStatus("success");
       setMessage(
-        "Done — your 5 likes are being delivered now. Most trials start within minutes."
+        "Your 5 Likes Are Being Delivered Now. Most Trials Start Within Minutes."
       );
 
       setPostUrl("");
@@ -65,7 +65,7 @@ export default function FreeLikesTrial() {
       setStatus("error");
       setMessage(
         err?.response?.data?.message ||
-          "We couldn’t process your trial right now. Please try again."
+          "We Couldn’t Process Your Trial Right Now. Please Try Again."
       );
     }
   };
@@ -89,7 +89,7 @@ export default function FreeLikesTrial() {
                 FREE TRIAL — ONE TIME
               </div>
               <span className="text-xs text-[#666]">
-                Trusted by 100,000+ creators
+                Trusted By 100,000+ Creators
               </span>
             </div>
 
@@ -97,6 +97,17 @@ export default function FreeLikesTrial() {
             <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 px-6 sm:px-10 py-10 sm:py-16">
               {/* Left */}
               <div className="space-y-6">
+                {/* LOGO */}
+                <div className="mb-2">
+                  <Image
+                    src="/logo.png"
+                    alt="YesViral Logo"
+                    width={48}
+                    height={48}
+                    priority
+                  />
+                </div>
+
                 <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#007BFF] leading-tight">
                   Try YesViral.
                   <br />
@@ -104,34 +115,34 @@ export default function FreeLikesTrial() {
                 </h2>
 
                 <p className="text-[#444] text-base sm:text-lg max-w-xl">
-                  Test our service with a one-time free trial. You’ll receive{" "}
-                  <strong>5 real Instagram likes</strong> on one post to see how
-                  YesViral engagement looks before you buy.
+                  Test Our Service With A One-Time Free Trial. You’ll Receive{" "}
+                  <strong>5 Real Instagram Likes</strong> On One Post To See How
+                  YesViral Engagement Looks Before You Buy.
                 </p>
 
                 <p className="text-sm text-[#666]">
-                  One-time trial • No password required • No subscription
+                  One-Time Trial • No Password Required • No Subscription
                 </p>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
                   <div className="flex items-center gap-3 rounded-xl border border-[#E6F0FF] bg-white px-4 py-3 shadow-sm">
                     <ShieldCheck size={18} className="text-[#007BFF]" />
                     <span className="text-sm font-semibold text-[#111]">
-                      Private delivery
+                      Private Delivery
                     </span>
                   </div>
 
                   <div className="flex items-center gap-3 rounded-xl border border-[#E6F0FF] bg-white px-4 py-3 shadow-sm">
                     <Lock size={18} className="text-[#007BFF]" />
                     <span className="text-sm font-semibold text-[#111]">
-                      No password required
+                      No Password Required
                     </span>
                   </div>
 
                   <div className="flex items-center gap-3 rounded-xl border border-[#E6F0FF] bg-white px-4 py-3 shadow-sm">
                     <Zap size={18} className="text-[#007BFF]" />
                     <span className="text-sm font-semibold text-[#111]">
-                      Starts within minutes
+                      Starts Within Minutes
                     </span>
                   </div>
                 </div>
@@ -158,7 +169,7 @@ export default function FreeLikesTrial() {
 
                 <div>
                   <label className="block text-sm font-bold text-[#111] mb-1.5">
-                    Email address
+                    Email Address
                   </label>
                   <input
                     type="email"
@@ -170,7 +181,6 @@ export default function FreeLikesTrial() {
                   />
                 </div>
 
-                {/* Invisible Turnstile */}
                 <div
                   ref={turnstileRef}
                   className="cf-turnstile"
@@ -208,7 +218,7 @@ export default function FreeLikesTrial() {
                 )}
 
                 <p className="pt-2 text-xs text-center text-[#888]">
-                  Protected by Cloudflare • One-time use • No login required
+                  Protected By Cloudflare • One-Time Use • No Login Required
                 </p>
               </form>
             </div>
@@ -218,4 +228,3 @@ export default function FreeLikesTrial() {
     </>
   );
 }
-
