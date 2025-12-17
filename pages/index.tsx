@@ -50,7 +50,7 @@ const FAQS = [
   {
     question: "Are the followers real?",
     answer:
-      "We deliver High-Quality, Premium Engagement designed to make your profile Active and Credible. We avoid Low-Grade methods entirely. Our priority is High-Quality Social Growth that enhances your Presence while keeping your account Safe.",
+      "Yes, We deliver High-Quality, Premium Engagement designed to make your profile Active and Credible. We avoid Low-Grade methods entirely. Our priority is High-Quality Social Growth that enhances your Presence while keeping your account Safe.",
   },
   {
     question: "Is your service safe?",
@@ -234,15 +234,14 @@ export default function Home() {
               <Star size={18} className="text-yellow-400 star-animate" />
               Trusted by 100,000+ Creators
             </div>
-
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#000000] leading-[1.15] sm:leading-tight md:leading-snug tracking-tight text-balance max-w-[340px] sm:max-w-none">
-              Boost Your Social Growth Instantly.<wbr />
-              <br className="hidden sm:block" />
-              <span className="text-[#007BFF]">
-                Premium Growth for Instagram, TikTok & YouTube.
-              </span>
-            </h1>
-
+<h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#000000] leading-[1.15] sm:leading-tight md:leading-snug tracking-tight text-balance max-w-[340px] sm:max-w-none">
+  Buy Instagram, TikTok & YouTube Growth
+  <wbr />
+  <br className="hidden sm:block" />
+  <span className="text-[#007BFF]">
+    Followers, Likes & Views Delivered Fast.
+  </span>
+</h1>
             <p className="text-[#444] text-base sm:text-lg max-w-md sm:max-w-xl font-medium">
               Premium Social Growth with YesViral — #1 Trusted for Delivering
               High-Quality Followers, Likes & Views through Exclusive Private
