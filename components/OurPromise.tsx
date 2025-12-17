@@ -8,17 +8,17 @@ export default function OurPromise() {
         relative z-10 
         bg-white/90 backdrop-blur-xl 
         rounded-3xl shadow-xl 
-        px-6 py-16 md:py-24 
+        px-6 py-12 md:py-16
         mx-auto max-w-5xl 
-        mt-20 mb-14 
+        mt-10 mb-8
         border border-[#CFE4FF]
         overflow-hidden
       "
     >
       {/* HEADER */}
-      <div className="flex flex-col items-center text-center mb-14">
+      <div className="flex flex-col items-center text-center mb-10">
         <h2 className="text-4xl md:text-5xl font-black tracking-tight mb-4 text-[#007BFF]">
-         Our Promise
+          Our Promise
         </h2>
         <p className="max-w-2xl mx-auto text-[#444444] text-lg md:text-xl leading-relaxed font-medium">
           We are always growing—expanding our network, upgrading our technology,
@@ -29,7 +29,6 @@ export default function OurPromise() {
 
       {/* GRID */}
       <div className="grid md:grid-cols-3 gap-6 sm:gap-8">
-        
         {/* CARD 1 */}
         <div
           className="
@@ -104,11 +103,11 @@ export default function OurPromise() {
       </div>
 
       {/* FOOTER TEXT */}
-      <div className="flex flex-col items-center justify-center gap-2 mt-14 px-4">
+      <div className="flex flex-col items-center justify-center gap-2 mt-10 px-4">
         <span className="font-semibold text-[#111111] text-base text-center leading-relaxed">
           <span className="text-[#007BFF] font-black">YesViral</span> is committed to your growth.  
-          Every service is Powered by Eexclusive, High-Performance Private Networks—
-          Elevating quality, Reliability, and results across the industry.
+          Every service is Powered by Exclusive, High-Performance Private Networks—
+          Elevating quality, reliability, and results across the industry.
         </span>
       </div>
     </section>

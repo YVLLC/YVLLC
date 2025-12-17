@@ -21,11 +21,11 @@ const STEPS = [
 export default function HowItWorks() {
   return (
     <>
-      <section className="max-w-5xl mx-auto px-4 py-10 sm:py-16">
+      <section className="max-w-5xl mx-auto px-4 py-8 sm:py-12">
         <h2 className="text-4xl font-extrabold text-[#007BFF] text-center mb-2 drop-shadow-sm">
           How YesViral Works
         </h2>
-        <p className="text-center text-[#444] mb-12 text-lg max-w-xl mx-auto font-medium">
+        <p className="text-center text-[#444] mb-8 text-lg max-w-xl mx-auto font-medium">
           Real growth made simple. Three steps, zero hassle—just high-quality results.
         </p>
 
@@ -34,7 +34,7 @@ export default function HowItWorks() {
           {STEPS.map((step, idx) => (
             <div
               key={idx}
-              className="relative z-10 flex flex-col items-center text-center bg-white rounded-3xl shadow-xl border-2 border-[#e4f0ff] px-8 py-10 w-full max-w-xs md:max-w-md mx-auto md:mx-0 mb-12 md:mb-0"
+              className="relative z-10 flex flex-col items-center text-center bg-white rounded-3xl shadow-xl border-2 border-[#e4f0ff] px-8 py-10 w-full max-w-xs md:max-w-md mx-auto md:mx-0 mb-8 md:mb-0"
               style={{
                 minHeight: 230,
                 minWidth: 280,
@@ -47,8 +47,12 @@ export default function HowItWorks() {
                 {idx + 1}
               </div>
 
-              <h3 className="text-xl font-extrabold text-[#111] mb-2">{step.title}</h3>
-              <p className="text-[#444] text-base font-medium">{step.desc}</p>
+              <h3 className="text-xl font-extrabold text-[#111] mb-2">
+                {step.title}
+              </h3>
+              <p className="text-[#444] text-base font-medium">
+                {step.desc}
+              </p>
             </div>
           ))}
 
@@ -71,9 +75,7 @@ export default function HowItWorks() {
                         <span
                           key={d}
                           className="block w-2 h-2 rounded-full bg-[#36afff] opacity-80 animate-dot-pulse"
-                          style={{
-                            animationDelay: `${d * 0.1}s`,
-                          }}
+                          style={{ animationDelay: `${d * 0.1}s` }}
                         />
                       ))}
                     </div>
@@ -85,13 +87,13 @@ export default function HowItWorks() {
 
           {/* Mobile Vertical Connector */}
           <div
-            className="absolute left-1/2 top-[130px] md:hidden flex flex-col items-center z-0"
-            style={{ height: "calc(100% - 130px)" }}
+            className="absolute left-1/2 top-[120px] md:hidden flex flex-col items-center z-0"
+            style={{ height: "calc(100% - 120px)" }}
           >
             {[...Array(STEPS.length - 1)].map((_, i) => (
               <div
                 key={i}
-                className="flex flex-col items-center h-[95px] justify-center"
+                className="flex flex-col items-center h-[85px] justify-center"
               >
                 {[...Array(7)].map((_, d) => (
                   <span
