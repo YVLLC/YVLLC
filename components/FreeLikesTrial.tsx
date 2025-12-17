@@ -103,9 +103,9 @@ export default function FreeLikesTrial() {
                 </h2>
 
                 <p className="text-[#444] text-base sm:text-lg max-w-xl">
-                  Test Our Service With A One-Time Free Trial. You’ll Receive{" "}
-                  <strong>5 Real Instagram Likes</strong> On One Post To See How
-                  YesViral Engagement Looks Before You Buy.
+                  Test Our Service with a One-Time Free Trial. You’ll Receive{" "}
+                  <strong>5 Real Instagram Likes</strong> on one post to see how
+                  YesViral Engagement looks before you buy.
                 </p>
 
                 <p className="text-sm text-[#666]">
