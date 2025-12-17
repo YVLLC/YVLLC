@@ -2,7 +2,6 @@ import { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import { ShieldCheck, Zap, Lock, Star, ArrowRight } from "lucide-react";
 import Script from "next/script";
-import Image from "next/image";
 
 type Status = "idle" | "loading" | "success" | "error" | "already";
 
@@ -86,7 +85,7 @@ export default function FreeLikesTrial() {
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-6 sm:px-10 py-4 border-b border-[#E6F0FF] bg-[#F9FAFB]">
               <div className="flex items-center gap-2 text-sm font-extrabold text-[#007BFF]">
                 <Star size={16} className="fill-[#007BFF]" />
-                FREE TRIAL — LIMITED TIME
+                FREE TRIAL — ONE TIME
               </div>
               <span className="text-xs text-[#666]">
                 Trusted By 100,000+ Creators
@@ -97,17 +96,6 @@ export default function FreeLikesTrial() {
             <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 px-6 sm:px-10 py-10 sm:py-16">
               {/* Left */}
               <div className="space-y-6">
-                {/* ✅ CENTERED LOGO — FIX */}
-                <div className="flex justify-center md:justify-start">
-                  <Image
-                    src="/logo.png"
-                    alt="YesViral Logo"
-                    width={52}
-                    height={52}
-                    priority
-                  />
-                </div>
-
                 <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#007BFF] leading-tight">
                   Try YesViral.
                   <br />
@@ -115,13 +103,13 @@ export default function FreeLikesTrial() {
                 </h2>
 
                 <p className="text-[#444] text-base sm:text-lg max-w-xl">
-                  Test our Service with a One-Time Free Trial. You’ll Receive{" "}
-                  <strong>5 Real Instagram Likes</strong> on one post to see how
-                  YesViral's Engagement looks before you buy.
+                  Test Our Service With A One-Time Free Trial. You’ll Receive{" "}
+                  <strong>5 Real Instagram Likes</strong> On One Post To See How
+                  YesViral Engagement Looks Before You Buy.
                 </p>
 
                 <p className="text-sm text-[#666]">
-See The Results. Scale With A Paid Order.
+                  One-Time Trial • No Password Required • No Subscription
                 </p>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
@@ -217,8 +205,8 @@ See The Results. Scale With A Paid Order.
                   </p>
                 )}
 
-                <p className="pt-2 text-xs text-center text-[#888]">
-                  Protected By Cloudflare • One-Time Use • No Login Required
+                <p className="pt-2 text-xs text-center font-medium text-[#444]">
+                  See The Results. Scale With A Paid Order.
                 </p>
               </form>
             </div>
