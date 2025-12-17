@@ -256,13 +256,12 @@ export default function Home() {
               >
                 Get Started
               </button>
-
-              <Link
-                href="/track-order"
-                className="bg-white border border-[#CFE4FF] text-[#007BFF] font-semibold px-6 py-3 rounded-xl shadow hover:bg-[#F5FAFF] transition"
-              >
-                Track Order
-              </Link>
+<Link
+  href="#free-likes"
+  className="bg-white border border-[#CFE4FF] text-[#007BFF] font-semibold px-6 py-3 rounded-xl shadow hover:bg-[#F5FAFF] transition"
+>
+  Try Free Likes
+</Link>
             </div>
 
             <span className="text-xs text-[#555]">
